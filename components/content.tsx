@@ -24,6 +24,10 @@ const LABEL = {
     fileSize: "Ukuran Gambar Terlalu Besar!",
     validateRoute: "Route Invalid!",
   },
+  connection: {
+    success: "Database connected!",
+    error: "Database connection failed!",
+  },
 };
 // #endregion
 

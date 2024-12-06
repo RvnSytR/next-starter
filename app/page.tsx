@@ -20,11 +20,11 @@ export default function Page() {
 
       <CustomButton
         customType="nav"
-        href="/testing"
+        href="/coverage"
         icon={<FlaskConical />}
         variant="outline"
       >
-        Go to Testing Page
+        Go to Testing Page (Coverage)
       </CustomButton>
     </div>
   );
