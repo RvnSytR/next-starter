@@ -1,36 +1,197 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## Tech Stack
 
-## Getting Started
+List the stack i used in this kit, including:
 
-First, run the development server:
+- **Framework :** [Next.js 15](https://nextjs.org/) with [React 18](https://react.dev/)
+- **Language :** [TypeScript](https://www.typescriptlang.org/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Styling:**
+
+  - [Tailwind CSS](https://tailwindcss.com/)
+  - [ShadCn](https://ui.shadcn.com/)
+
+- **Database:**
+  - [MySQL](https://www.mysql.com/) database, managed with [Drizzle ORM](https://orm.drizzle.team/).
+
+## Manual Package Install Guide (NPM)
+
+This guide provides step-by-step instructions how i manually installing this package using NPM. Primarily intended for personal reference, it may also be helpful for others setting up the package manually.
+
+### Step 1 : Credential Setup
+
+- Downgrade to React 18
+- Tailwind Animated
+- Sharp, Prettier and Prettier Plugin Tailwind CSS
+
+```sh
+npm i react@18 react-dom@18
+
+npm install -D tailwindcss-animated
+
+npm i sharp prettier prettier-plugin-tailwindcss
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+#### Update `tailwind.config.ts`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+@/tailwind.config.ts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+plugins: [require("tailwindcss-animated")],
+```
 
-## Learn More
+```
+@/.prettierrc
 
-To learn more about Next.js, take a look at the following resources:
+{
+  "plugins": ["prettier-plugin-tailwindcss"]
+}
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Format and Check All Files with Prettier (Run on Order, write first)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```sh
+npx prettier . --write
+npx prettier . --check
+```
 
-## Deploy on Vercel
+### Step 2 : ShadCN
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Installation
+- Adding Component
+  - alert-dialog
+  - badge
+  - breadcrumb
+  - button (custom)
+  - calendar
+  - card
+  - checkbox
+  - dialog
+  - dropdown-menu
+  - form
+  - input
+  - label
+  - pagination
+  - radio-group
+  - scroll-area
+  - select
+  - separator
+  - sheet
+  - skeleton
+  - sooner
+  - table
+  - textarea
+  - tooltip
+- Next Themes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```sh
+npx shadcn@latest init
+
+npx shadcn@latest add
+
+npm install next-themes
+```
+
+#### Update `tailwind.config.ts`
+
+```
+@/tailwind.config.ts
+
+theme: {
+  extend: {
+    keyframes: {
+      pulse: {
+        "0%, 100%": { boxShadow: "0 0 0 0 var(--pulse-color)" },
+        "50%": { boxShadow: "0 0 0 8px var(--pulse-color)" },
+      },
+    },
+  },
+},
+```
+
+### Step 3 : Database, Drizzle and S3
+
+- Intallation (Mysql2, Drizzle ORM, Drizzle Zod)
+- Drizzle Kit
+- S3 (AWS Client SDK)
+
+```sh
+npm i mysql2 drizzle-orm drizzle-zod
+
+npm i -D drizzle-kit tsx
+
+npm i @aws-sdk/client-s3
+npm i @aws-sdk/s3-request-presigner
+```
+
+### Step 4 : Auth
+
+- Bcrypt
+- AuthJs
+
+```sh
+npm i bcrypt
+npm i --save-dev @types/bcrypt
+
+npm install next-auth@beta
+```
+
+## Environment
+
+```
+@/.env
+
+MYSQL_HOST=host
+MYSQL_USER=root
+MYSQL_PASSWORD=yourpassword
+MYSQL_DATABASE=db_starter
+
+AUTH_SECRET=secretkey
+
+NEVA_ACCESS_KEY=nevaaccesskey
+NEVA_SECRET_KEY=necasecretkey
+NEVA_BUCKET_NAME=nevabucketname
+NEVA_S3_ENDPOINT=nevas3endpoint
+```
+
+## Coverage App (Testing)
+
+### Page Component
+
+```
+@/app/coverage/page.tsx
+
+export default function CoveragePage() {
+  return (
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4">
+      <p>CoveragePage</p>
+    </div>
+  );
+}
+```
+
+### Route
+
+```
+@/app/coverage/route/route.ts
+
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import { NextResponse } from "next/server";
+import { state } from "@/lib/db/state";
+
+export async function GET() {
+  const email = "user@gmail.com";
+  const email2 = "admin@gmail.com";
+
+  try {
+    const res = new Promise((resolve) =>
+      setTimeout(() => {
+        resolve("Hello From Promises Response");
+      }, 1000),
+    );
+
+    return NextResponse.json(await res);
+  } catch (e) {
+    return NextResponse.json({ error: e }, { status: 500 });
+  }
+}
+```
