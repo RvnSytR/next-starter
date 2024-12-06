@@ -128,7 +128,7 @@ npx prettier . --check
 
 ### Step 2 : ShadCN and Next Themes
 
-- Installation
+- ShadCn Installation
 - Adding Component
   - alert-dialog
   - badge
@@ -184,33 +184,54 @@ theme: {
 
 #### Next setup :
 
-- Update CSS (Enable all base layer)
+- Update CSS - Enable all base layer
 - Update and Add helper in `@/lib/utils.ts`
-- Update all the component with Prettier
+- Update all `@/components/ui` component with Prettier
 - Rework `use-mobile.tsx`
 - Rework Button and Sidebar Component
-- Add `Content.tsx` in `@/components/` (Disable Menu and Role)
-- Add global folder : `@/components/global`, and Add these files which include some component:
-  - `custom-button.tsx` - CustomButton (Disable Revalidate and Logout)
-  - `icon.tsx` - ICON_SIZE, CustomLoader
-  - `theme.tsx` - ThemeProvider, ThemeToggle (Enable on `layout.tsx` and `page.tsx`)
+- Add `Content.tsx` in `@/components` - Disable Menu and Role
+- Add layout folder `@/components/layout`, and Add `section.tsx`
+- Add global folder `@/components/global`, and Add these:
+  - `custom-button.tsx` - Disable Revalidate and Logout
+  - `icon.tsx`
+  - `theme.tsx` - Enable ThemeProvider and ThemeToggle on `layout.tsx` and `page.tsx`
 
 ---
 
 ### Step 3 : Database, Drizzle and S3
 
-- Intallation (Mysql2, Drizzle ORM, Drizzle Zod)
-- Drizzle Kit
+- MySql2 and Node Types
+- Drizzle ORM and Drizzle Kit
+- Drizzle Zod
 - S3 (AWS Client SDK)
 
 ```sh
-npm i mysql2 drizzle-orm drizzle-zod
+npm install --save mysql2
+npm install --save-dev @types/node
 
-npm i -D drizzle-kit tsx
+npm i drizzle-orm
+npm i -D drizzle-kit
+
+npm i drizzle-zod
 
 npm i @aws-sdk/client-s3
 npm i @aws-sdk/s3-request-presigner
 ```
+
+#### Next setup :
+
+- Add db folder `@/lib/db`, and Add these:
+  - `config.ts`
+  - `schema.ts`
+  - `starter.sql`
+  - `state.ts`
+- Add `zod.ts` in `@/lib`
+- Add server folder `@/server`, and Add these:
+  - `action.ts` - Disable ValidateSession and ValidateRoute
+  - `s3.ts`
+- Update `@/components/content.tsx` - Enable All
+
+---
 
 ### Step 4 : Auth
 

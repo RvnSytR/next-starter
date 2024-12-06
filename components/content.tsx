@@ -1,5 +1,5 @@
-// import type { Role } from "@/lib/db/schema";
-// import { type LucideIcon, LayoutDashboard } from "lucide-react";
+import type { Role } from "@/lib/db/schema";
+import { type LucideIcon, LayoutDashboard } from "lucide-react";
 
 // #region // * Content Management
 const currentYear = new Date().getFullYear();
@@ -28,43 +28,42 @@ const LABEL = {
 // #endregion
 
 // #region // * Menu
-// type Menu = {
-//   section: string;
-//   body: MenuBody[];
-// };
+type Menu = {
+  section: string;
+  body: MenuBody[];
+};
 
-// type MenuBody = {
-//   href: string;
-//   label: string;
-//   role?: Exclude<Role, "pending">;
-//   icon?: LucideIcon;
-//   isDisable?: boolean;
-// };
+type MenuBody = {
+  href: string;
+  label: string;
+  role?: Exclude<Role, "pending">;
+  icon?: LucideIcon;
+  isDisable?: boolean;
+};
 
-// const MENU: Menu[] = [
-//   {
-//     section: "Dashboard",
-//     body: [
-//       {
-//         href: "/dashboard",
-//         label: "Dashboard",
-//         // role: "admin",
-//         icon: LayoutDashboard,
-//       },
-//     ],
-//   },
-// ];
+const MENU: Menu[] = [
+  {
+    section: "Dashboard",
+    body: [
+      {
+        href: "/dashboard",
+        label: "Dashboard",
+        // role: "admin",
+        icon: LayoutDashboard,
+      },
+    ],
+  },
+];
 
-// const GetMenu = (path: string): MenuBody | null => {
-//   const allMenu = Object.values(MENU).flat();
-//   const result = allMenu
-//     .flatMap((item) => item.body)
-//     .filter((item) => item.href === path);
-//   return result.length ? result[0] : null;
-// };
+const GetMenu = (path: string): MenuBody | null => {
+  const allMenu = Object.values(MENU).flat();
+  const result = allMenu
+    .flatMap((item) => item.body)
+    .filter((item) => item.href === path);
+  return result.length ? result[0] : null;
+};
 
 // #endregion
 
-// export type { Menu };
-// export { GetMenu, PATH, LABEL, MENU };
-export { PATH, LABEL };
+export type { Menu };
+export { GetMenu, PATH, LABEL, MENU };
