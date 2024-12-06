@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* * DEFAULT THEME */
-/* @layer base {
+@layer base {
   :root {
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
@@ -58,10 +58,10 @@
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-} */
+}
 
 /* * HTML STYLES */
-/* @layer base {
+@layer base {
   * {
     @apply border-border scroll-smooth;
   }
@@ -109,10 +109,10 @@
   small {
     @apply text-sm font-light leading-tight;
   }
-} */
+}
 
 /* * CUSTOM CSS APPLY HERE */
-/* @layer base {
+@layer base {
   .desc {
     @apply text-muted-foreground text-sm leading-tight;
   }
@@ -120,4 +120,4 @@
   .link {
     @apply text-muted-foreground w-fit cursor-pointer underline-offset-4 hover:text-foreground hover:underline;
   }
-} */
+}

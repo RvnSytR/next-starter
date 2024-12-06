@@ -13,9 +13,75 @@ List the stack i used in this kit, including:
 - **Database:**
   - [MySQL](https://www.mysql.com/) database, managed with [Drizzle ORM](https://orm.drizzle.team/).
 
+## Cleaning Up and Preparing Initial Setup
+
+Usually i clean up the initial NextJs files and update the file structure. Adding and Updating some credential files until the project feels clean and ready for my package installation.
+
+### Step 1 : Setup `/app` folder
+
+- Delete Local Font
+- Add `@/public`, and Move `favicon.ico` to this folder
+- Update `layout.tsx` and `page.tsx`
+- Add `not-found.tsx`
+
+### Step 2 : Setup CSS
+
+- Move CSS to `@/styles/globals.css`
+- Update the CSS and disable each base layer. Each base layer in this CSS includes:
+  - Layer 1 : Default Themes
+  - Layer 2 : HTML Styles
+  - Layer 3 : Custom CSS Class
+
+### Step 3 : Add `.env.local`
+
+```
+@/.env.local
+
+MYSQL_HOST=host
+MYSQL_USER=root
+MYSQL_PASSWORD=yourpassword
+MYSQL_DATABASE=db_starter
+
+AUTH_SECRET=secretkey
+
+NEVA_ACCESS_KEY=nevaaccesskey
+NEVA_SECRET_KEY=necasecretkey
+NEVA_BUCKET_NAME=nevabucketname
+NEVA_S3_ENDPOINT=nevas3endpoint
+```
+
+### Step 4 : Update `next.config.ts`
+
+```
+@/next.config.ts
+
+import type { NextConfig } from "next";
+const bucketName = process.env.NEVA_BUCKET_NAME;
+
+if (!bucketName) {
+  throw new Error("Environment variable NEVA_BUCKET_NAME is not set");
+}
+
+const nextConfig: NextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: `${bucketName}.s3.nevaobjects.id`,
+        port: "",
+        pathname: "/*",
+      },
+    ],
+  },
+};
+
+export default nextConfig;
+
+```
+
 ## Manual Package Install Guide (NPM)
 
-This guide provides step-by-step instructions how i manually installing this package using NPM. Primarily intended for personal reference, it may also be helpful for others setting up the package manually.
+This guide provides step-by-step instructions how i manually installing this package using NPM. Primarily intended for personal reference, it may also be helpful for setting up the package manually.
 
 ### Step 1 : Credential Setup
 
@@ -36,8 +102,12 @@ npm i sharp prettier prettier-plugin-tailwindcss
 ```
 @/tailwind.config.ts
 
-plugins: [require("tailwindcss-animated")],
+import twAnimate from "tailwindcss-animate";
+
+plugins: [twAnimated],
 ```
+
+#### Add `.prettierrc`
 
 ```
 @/.prettierrc
@@ -54,7 +124,9 @@ npx prettier . --write
 npx prettier . --check
 ```
 
-### Step 2 : ShadCN
+---
+
+### Step 2 : ShadCN and Next Themes
 
 - Installation
 - Adding Component
@@ -76,9 +148,11 @@ npx prettier . --check
   - select
   - separator
   - sheet
+  - sidebar(custom)
   - skeleton
   - sooner
   - table
+  - tabs
   - textarea
   - tooltip
 - Next Themes
@@ -108,6 +182,21 @@ theme: {
 },
 ```
 
+#### Next setup :
+
+- Update CSS (Enable all base layer)
+- Update and Add helper in `@/lib/utils.ts`
+- Update all the component with Prettier
+- Rework `use-mobile.tsx`
+- Rework Button and Sidebar Component
+- Add `Content.tsx` in `@/components/` (Disable Menu and Role)
+- Add global folder : `@/components/global`, and Add these files which include some component:
+  - `custom-button.tsx` - CustomButton (Disable Revalidate and Logout)
+  - `icon.tsx` - ICON_SIZE, CustomLoader
+  - `theme.tsx` - ThemeProvider, ThemeToggle (Enable on `layout.tsx` and `page.tsx`)
+
+---
+
 ### Step 3 : Database, Drizzle and S3
 
 - Intallation (Mysql2, Drizzle ORM, Drizzle Zod)
@@ -133,24 +222,6 @@ npm i bcrypt
 npm i --save-dev @types/bcrypt
 
 npm install next-auth@beta
-```
-
-## Environment
-
-```
-@/.env
-
-MYSQL_HOST=host
-MYSQL_USER=root
-MYSQL_PASSWORD=yourpassword
-MYSQL_DATABASE=db_starter
-
-AUTH_SECRET=secretkey
-
-NEVA_ACCESS_KEY=nevaaccesskey
-NEVA_SECRET_KEY=necasecretkey
-NEVA_BUCKET_NAME=nevabucketname
-NEVA_S3_ENDPOINT=nevas3endpoint
 ```
 
 ## Coverage App (Testing)

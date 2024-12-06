@@ -2,7 +2,7 @@ import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-// import { ThemeProvider } from "next-themes";
+import { ThemeProvider } from "next-themes";
 // import { Toaster } from "@/components/ui/sonner";
 
 const font = Inter({
@@ -23,11 +23,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={font.className}>
-        {/* <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          <Toaster position="top-center" closeButton richColors />
-        </ThemeProvider> */}
-        {children}
+          {/* <Toaster position="top-center" closeButton richColors /> */}
+        </ThemeProvider>
       </body>
     </html>
   );
