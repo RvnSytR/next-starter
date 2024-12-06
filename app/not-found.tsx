@@ -1,3 +1,5 @@
+import { CustomButton } from "@/components/global/custom-button";
+
 export default function NotFound() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-y-8">
@@ -11,14 +13,9 @@ export default function NotFound() {
         </h1>
       </div>
 
-      {/* <CustomButton
-        customType="nav"
-        href="/"
-        variant="outline"
-        prefetch
-      >
+      <CustomButton customType="nav" href="/" variant="outline" prefetch>
         Go to Dashboard
-      </CustomButton> */}
+      </CustomButton>
     </div>
   );
 }

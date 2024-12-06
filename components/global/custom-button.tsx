@@ -4,17 +4,17 @@ import { Fragment, ReactNode } from "react";
 import Link, { LinkProps } from "next/link";
 import { useState } from "react";
 
-// import { SignOutHandler } from "@/app/login/sign";
-// import { ClientRedirect, ClientRevalidatePath } from "@/server/action";
+import { SignOutHandler } from "@/app/login/sign";
+import { ClientRedirect, ClientRevalidatePath } from "@/server/action";
 
 import { cn } from "@/lib/utils";
-// import { Delay } from "@/lib/utils";
-// import { LABEL, PATH } from "../content";
+import { Delay } from "@/lib/utils";
+import { LABEL, PATH } from "../content";
 
-// import { toast } from "sonner";
+import { toast } from "sonner";
 import { CustomLoader } from "./icon";
 import { Button, ButtonProps } from "../ui/button";
-// import { LogOut, RefreshCw } from "lucide-react";
+import { LogOut, RefreshCw } from "lucide-react";
 
 // #region // * Types
 type CustomType =
@@ -58,7 +58,7 @@ export function CustomButton({
   ...props
 }: CustomButtonProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  // const { logout, loading } = LABEL;
+  const { logout, loading } = LABEL;
 
   const ChildrenNode = (): ReactNode => {
     const loader = <CustomLoader customType="circle" />;
@@ -117,31 +117,31 @@ export function CustomButton({
       );
     }
 
-    // case "logout": {
-    //   loadText = loading.logout;
-    //   icon = <LogOut />;
+    case "logout": {
+      loadText = loading.logout;
+      icon = <LogOut />;
 
-    //   return (
-    //     <LoadingButtonNode
-    //       onClick={async () => {
-    //         setIsLoading(true);
-    //         toast.promise(SignOutHandler(), {
-    //           loading: loading.default,
-    //           success: () => {
-    //             ClientRedirect(PATH.login);
-    //             return logout;
-    //           },
-    //           error: (e: Error) => {
-    //             setIsLoading(false);
-    //             return e.message;
-    //           },
-    //         });
-    //       }}
-    //     >
-    //       <ChildrenNode />
-    //     </LoadingButtonNode>
-    //   );
-    // }
+      return (
+        <LoadingButtonNode
+          onClick={async () => {
+            setIsLoading(true);
+            toast.promise(SignOutHandler(), {
+              loading: loading.default,
+              success: () => {
+                ClientRedirect(PATH.login);
+                return logout;
+              },
+              error: (e: Error) => {
+                setIsLoading(false);
+                return e.message;
+              },
+            });
+          }}
+        >
+          <ChildrenNode />
+        </LoadingButtonNode>
+      );
+    }
 
     case "pulse": {
       const { className } = props;
@@ -182,30 +182,30 @@ export function CustomButton({
       );
     }
 
-    // case "revalidate": {
-    //   loadText = loading.revalidating;
-    //   icon = <RefreshCw className={isLoading ? "animate-spin" : ""} />;
-    //   const { path, type } = props as Extract<
-    //     CustomType,
-    //     { customType: "revalidate" }
-    //   >;
+    case "revalidate": {
+      loadText = loading.revalidating;
+      icon = <RefreshCw className={isLoading ? "animate-spin" : ""} />;
+      const { path, type } = props as Extract<
+        CustomType,
+        { customType: "revalidate" }
+      >;
 
-    //   return (
-    //     <Button
-    //       type="button"
-    //       onClick={async () => {
-    //         setIsLoading(true);
-    //         ClientRevalidatePath(path, type);
-    //         await Delay(0.6);
-    //         setIsLoading(false);
-    //       }}
-    //       disabled={isLoading}
-    //       {...props}
-    //     >
-    //       <ChildrenNode />
-    //     </Button>
-    //   );
-    // }
+      return (
+        <Button
+          type="button"
+          onClick={async () => {
+            setIsLoading(true);
+            ClientRevalidatePath(path, type);
+            await Delay(0.6);
+            setIsLoading(false);
+          }}
+          disabled={isLoading}
+          {...props}
+        >
+          <ChildrenNode />
+        </Button>
+      );
+    }
 
     case "scroll": {
       const { elementId, offset } = props as Extract<

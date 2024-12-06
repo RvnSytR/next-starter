@@ -1,6 +1,6 @@
-// import { CustomButton } from "@/components/global/custom-button";
+import { CustomButton } from "@/components/global/custom-button";
 import { ThemeToggle } from "@/components/global/theme-provider";
-// import { FlaskConical, LayoutDashboard } from "lucide-react";
+import { FlaskConical, LayoutDashboard } from "lucide-react";
 
 export default function Page() {
   return (
@@ -8,7 +8,8 @@ export default function Page() {
       <p>Hello World!</p>
 
       <ThemeToggle />
-      {/* <CustomButton
+
+      <CustomButton
         customType="nav"
         href="/dashboard"
         icon={<LayoutDashboard />}
@@ -24,7 +25,7 @@ export default function Page() {
         variant="outline"
       >
         Go to Testing Page
-      </CustomButton> */}
+      </CustomButton>
     </div>
   );
 }

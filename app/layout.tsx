@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "next-themes";
-// import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 
 const font = Inter({
   subsets: ["latin"],
@@ -25,7 +25,7 @@ export default function RootLayout({
       <body className={font.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
-          {/* <Toaster position="top-center" closeButton richColors /> */}
+          <Toaster position="top-center" closeButton richColors />
         </ThemeProvider>
       </body>
     </html>

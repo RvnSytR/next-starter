@@ -17,7 +17,7 @@ List the stack i used in this kit, including:
 
 Usually i clean up the initial NextJs files and update the file structure. Adding and Updating some credential files until the project feels clean and ready for my package installation.
 
-### Step 1 : Setup `/app` folder
+### Step 1 : Setup `@/app`
 
 - Delete Local Font
 - Add `@/public`, and Move `favicon.ico` to this folder
@@ -192,9 +192,10 @@ theme: {
 - Add `Content.tsx` in `@/components` - Disable Menu and Role
 - Add layout folder `@/components/layout`, and Add `section.tsx`
 - Add global folder `@/components/global`, and Add these:
-  - `custom-button.tsx` - Disable Revalidate and Logout
+  - `custom-button.tsx` - Disable Logout and Revalidate
   - `icon.tsx`
   - `theme.tsx` - Enable ThemeProvider and ThemeToggle on `layout.tsx` and `page.tsx`
+- Update `layout.tsx`, `page.tsx` and `not-found.tsx` in `@/app` - Enable Toaster and CustomButton
 
 ---
 
@@ -233,7 +234,7 @@ npm i @aws-sdk/s3-request-presigner
 
 ---
 
-### Step 4 : Auth
+### Step 4 : Authentication
 
 - Bcrypt
 - AuthJs
@@ -245,7 +246,19 @@ npm i --save-dev @types/bcrypt
 npm install next-auth@beta
 ```
 
+#### Next setup :
+
+- Add `auth.ts` in `@/lib`
+- Add `action-user.ts` in `@/server`
+- Add auth api folder `@/app/api/auth/[...nextauth]`, and Add `route.ts`
+- Add `auth.tsx` in `@/components/layout`
+- Add login route `@/app/login`, which include `page.tsx` and `sign.ts`
+- Update `@/server/action.ts` - Enable ValidateSession and ValidateRoute
+- Update `@/component/global/custom-button.tsx` - Enable Logout and Revalidate
+
 ## Coverage App (Testing)
+
+These files are for testing purposes only in `@/app/coverage` and should not be committed.
 
 ### Page Component
 
