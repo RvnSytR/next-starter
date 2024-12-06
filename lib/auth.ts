@@ -21,12 +21,7 @@ declare module "next-auth/jwt" {
 }
 
 // * Config
-export const {
-  auth,
-  handlers: { GET, POST },
-  signIn,
-  signOut,
-} = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.AUTH_SECRET,
   session: { strategy: "jwt", maxAge: 2592000 },
   providers: [
