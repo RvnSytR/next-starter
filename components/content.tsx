@@ -13,7 +13,7 @@ const LABEL = {
   logout: "Logout Berhasil!",
   loading: {
     default: "Mohon Tunggu Sebentar...",
-    revalidating: "Revalidating...",
+    refresh: "Refreshing...",
     login: "Logging in...",
     logout: "Logging out...",
   },

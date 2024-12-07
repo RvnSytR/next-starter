@@ -1,11 +1,11 @@
 "use client";
 
-import { Fragment, ReactNode } from "react";
-import Link, { LinkProps } from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Fragment, type ReactNode } from "react";
+import Link, { type LinkProps } from "next/link";
 
 import { SignOutHandler } from "@/app/login/sign";
-import { ClientRedirect, ClientRevalidatePath } from "@/server/action";
 
 import { cn } from "@/lib/utils";
 import { Delay } from "@/lib/utils";
@@ -19,7 +19,7 @@ import { LogOut, RefreshCw } from "lucide-react";
 // #region // * Types
 type CustomType =
   | {
-      customType: "loading" | "logout" | null | undefined;
+      customType: "loading" | "logout" | "refresh" | null | undefined;
     }
   | ({
       customType: "nav";
@@ -29,11 +29,6 @@ type CustomType =
       customType: "pulse";
       pulseColor?: string;
     } & (LinkProps | { href?: null | undefined }))
-  | {
-      customType: "revalidate";
-      path: string;
-      type?: "layout" | "page";
-    }
   | {
       customType: "scroll";
       elementId: string;
@@ -57,6 +52,7 @@ export function CustomButton({
   children,
   ...props
 }: CustomButtonProps) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { logout, loading } = LABEL;
 
@@ -102,18 +98,23 @@ export function CustomButton({
       );
     }
 
-    case "nav": {
-      const { ...linkProps } = props as Extract<
-        CustomType,
-        { customType: "nav" }
-      >;
-
+    case "refresh": {
+      loadText = loading.refresh;
+      icon = <RefreshCw className={isLoading ? "animate-spin" : ""} />;
       return (
-        <LoadingButtonNode asChild>
-          <Link {...linkProps}>
-            <ChildrenNode />
-          </Link>
-        </LoadingButtonNode>
+        <Button
+          type="button"
+          onClick={async () => {
+            setIsLoading(true);
+            router.refresh();
+            await Delay(0.6);
+            setIsLoading(false);
+          }}
+          disabled={isLoading}
+          {...props}
+        >
+          <ChildrenNode />
+        </Button>
       );
     }
 
@@ -128,7 +129,7 @@ export function CustomButton({
             toast.promise(SignOutHandler(), {
               loading: loading.default,
               success: () => {
-                ClientRedirect(PATH.login);
+                router.push(PATH.login);
                 return logout;
               },
               error: (e: Error) => {
@@ -139,6 +140,21 @@ export function CustomButton({
           }}
         >
           <ChildrenNode />
+        </LoadingButtonNode>
+      );
+    }
+
+    case "nav": {
+      const { ...linkProps } = props as Extract<
+        CustomType,
+        { customType: "nav" }
+      >;
+
+      return (
+        <LoadingButtonNode asChild>
+          <Link {...linkProps}>
+            <ChildrenNode />
+          </Link>
         </LoadingButtonNode>
       );
     }
@@ -179,31 +195,6 @@ export function CustomButton({
             <PulseFragment />
           )}
         </LoadingButtonNode>
-      );
-    }
-
-    case "revalidate": {
-      loadText = loading.revalidating;
-      icon = <RefreshCw className={isLoading ? "animate-spin" : ""} />;
-      const { path, type } = props as Extract<
-        CustomType,
-        { customType: "revalidate" }
-      >;
-
-      return (
-        <Button
-          type="button"
-          onClick={async () => {
-            setIsLoading(true);
-            ClientRevalidatePath(path, type);
-            await Delay(0.6);
-            setIsLoading(false);
-          }}
-          disabled={isLoading}
-          {...props}
-        >
-          <ChildrenNode />
-        </Button>
       );
     }
 

@@ -192,7 +192,7 @@ theme: {
 - Add `Content.tsx` in `@/components` - Disable Menu and Role
 - Add layout folder `@/components/layout`, and Add `section.tsx`
 - Add global folder `@/components/global`, and Add these:
-  - `custom-button.tsx` - Disable Logout and Revalidate
+  - `custom-button.tsx` - Disable Logout and Refresh
   - `icon.tsx`
   - `theme.tsx` - Enable ThemeProvider and ThemeToggle on `layout.tsx` and `page.tsx`
 - Update `layout.tsx`, `page.tsx` and `not-found.tsx` in `@/app` - Enable Toaster and CustomButton
@@ -227,9 +227,7 @@ npm i @aws-sdk/s3-request-presigner
   - `starter.sql`
   - `state.ts`
 - Add `zod.ts` in `@/lib`
-- Add server folder `@/server`, and Add these:
-  - `action.ts`
-  - `s3.ts`
+- Add server folder `@/server`, and Add `s3.ts`
 - Update `@/components/content.tsx` - Enable All
 
 ---
@@ -254,7 +252,7 @@ npm install next-auth@beta
 - Add `auth.tsx` in `@/components/layout`
 - Add login route `@/app/login`, which include `page.tsx` and `sign.ts`
 - Add `@/middleware.ts`
-- Update `@/component/global/custom-button.tsx` - Enable Logout and Revalidate
+- Update `@/component/global/custom-button.tsx` - Enable Logout and Refresh
 
 ## Coverage App (Testing)
 
@@ -268,7 +266,7 @@ These files are for testing purposes only in `@/app/coverage` and should not be 
 export default function CoveragePage() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4">
-      <p>CoveragePage</p>
+      <p>Coverage Page</p>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { ClientRedirect } from "@/server/action";
 import { Check } from "@/server/action-user";
 
 import { z } from "zod";
@@ -35,6 +35,7 @@ export function SignOutComponent(): React.ReactNode {
 }
 
 export function LoginForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginSchema = zodUserSchema.pick({ email: true, password: true });
   const { button, loading, login } = LABEL;
@@ -51,7 +52,7 @@ export function LoginForm() {
     toast.promise(Check(email, password), {
       loading: loading.default,
       success: () => {
-        ClientRedirect(PATH.dashboard);
+        router.push(PATH.dashboard);
         return login;
       },
       error: (e: Error) => {
