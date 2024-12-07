@@ -13,8 +13,16 @@ export default function NotFound() {
         </h1>
       </div>
 
-      <CustomButton customType="nav" href="/" variant="outline" prefetch>
-        Go to Dashboard
+      <CustomButton
+        customType="nav"
+        href="/"
+        variant="outline"
+        size="lg"
+        loadText="Going to Main Page..."
+        className="h-16 rounded-full border-4 px-8 text-xl font-bold hover:border-primary"
+        prefetch
+      >
+        Go to Main Page
       </CustomButton>
     </div>
   );

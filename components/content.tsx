@@ -5,7 +5,7 @@ import { type LucideIcon, LayoutDashboard } from "lucide-react";
 const currentYear = new Date().getFullYear();
 const PATH = {
   login: "/login",
-  protected: "/dashboard",
+  dashboard: "/dashboard",
 };
 const LABEL = {
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
@@ -22,7 +22,6 @@ const LABEL = {
   },
   error: {
     fileSize: "Ukuran Gambar Terlalu Besar!",
-    validateRoute: "Route Invalid!",
   },
   connection: {
     success: "Database connected!",

@@ -5,7 +5,6 @@ import { Home } from "lucide-react";
 
 export default async function Page() {
   const session = await auth();
-  // await ValidateRoute("/dashboard", session?.user.role);
 
   return (
     <div className="container flex min-h-dvh flex-col items-center justify-center gap-y-4 text-center">

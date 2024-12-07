@@ -228,7 +228,7 @@ npm i @aws-sdk/s3-request-presigner
   - `state.ts`
 - Add `zod.ts` in `@/lib`
 - Add server folder `@/server`, and Add these:
-  - `action.ts` - Disable ValidateSession and ValidateRoute
+  - `action.ts`
   - `s3.ts`
 - Update `@/components/content.tsx` - Enable All
 
@@ -249,11 +249,11 @@ npm install next-auth@beta
 #### Next setup :
 
 - Add `auth.ts` in `@/lib`
-- Add `action-user.ts` in `@/server`
 - Add auth api folder `@/app/api/auth/[...nextauth]`, and Add `route.ts`
+- Add `action-user.ts` in `@/server`
 - Add `auth.tsx` in `@/components/layout`
 - Add login route `@/app/login`, which include `page.tsx` and `sign.ts`
-- Update `@/server/action.ts` - Enable ValidateSession and ValidateRoute
+- Add `@/middleware.ts`
 - Update `@/component/global/custom-button.tsx` - Enable Logout and Revalidate
 
 ## Coverage App (Testing)

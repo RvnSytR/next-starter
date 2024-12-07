@@ -1,11 +1,9 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { Metadata } from "next";
 
-import { ValidateSession } from "@/server/action";
 import { LoginForm, SignOutComponent } from "@/components/layout/auth";
 
-import { LABEL, PATH } from "@/components/content";
+import { LABEL } from "@/components/content";
 
 import {
   Card,
@@ -22,8 +20,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  if (await ValidateSession()) redirect(PATH.protected);
-
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
