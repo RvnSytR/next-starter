@@ -19,6 +19,7 @@ const LABEL = {
   },
   button: {
     login: "Login",
+    logout: "Logout",
   },
   error: {
     fileSize: "Ukuran Gambar Terlalu Besar!",

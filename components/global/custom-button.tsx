@@ -40,7 +40,7 @@ type CustomButtonProps = ButtonProps &
     loadText?: string;
     iconPosition?: "left" | "right";
     icon?: ReactNode;
-    children: ReactNode;
+    children?: ReactNode;
   };
 // #endregion
 
@@ -54,7 +54,7 @@ export function CustomButton({
 }: CustomButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { logout, loading } = LABEL;
+  const { logout, loading, button } = LABEL;
 
   const ChildrenNode = (): ReactNode => {
     const loader = <CustomLoader customType="circle" />;
@@ -120,6 +120,7 @@ export function CustomButton({
 
     case "logout": {
       loadText = loading.logout;
+      children = button.logout;
       icon = <LogOut />;
 
       return (
