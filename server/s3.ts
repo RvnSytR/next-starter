@@ -25,8 +25,12 @@ export async function GetFilePreSignedUrl(key: string) {
   return await getSignedUrl(s3, command, { expiresIn: 60 });
 }
 
-export async function PutFile(formData: FormData, name?: string) {
-  // TODO const MAX_UPLOAD_SIZE_MB = 1 * 1024 * 1024;
+export async function UploadFile(
+  formData: FormData,
+  name?: string,
+  options?: { maxUploadSizeMb?: number; contentType?: string },
+) {
+  // const MAX_UPLOAD_SIZE_MB = (options?.maxUploadSizeMb ?? 1) * 1024 * 1024;
 
   const file = formData.get(name ?? "file") as File;
   const fileBuffer = Buffer.from(await file.arrayBuffer());
@@ -36,7 +40,7 @@ export async function PutFile(formData: FormData, name?: string) {
     Bucket: BUCKET,
     Key: key,
     Body: fileBuffer,
-    ContentType: "image/*",
+    ContentType: options?.contentType ?? "image/*",
   });
 
   const res = await s3.send(command);

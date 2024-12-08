@@ -9,20 +9,29 @@ const PATH = {
 };
 const LABEL = {
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
-  login: "Login Berhasil!",
-  logout: "Logout Berhasil!",
+  success: {
+    login: "Login Berhasil!",
+    logout: "Logout Berhasil!",
+  },
   loading: {
     default: "Mohon Tunggu Sebentar...",
     refresh: "Refreshing...",
     login: "Logging in...",
     logout: "Logging out...",
   },
+  error: {
+    login: {
+      notFound: "Akun tidak terdaftar!",
+      emailOrPassword: "Email atau Password Salah!",
+      pending:
+        "Akun Anda masih dalam antrian persetujuan. Harap tunggu konfirmasi dari admin.",
+    },
+    regis: "Email sudah terdaftar!",
+    fileSize: "Ukuran Gambar Terlalu Besar!",
+  },
   button: {
     login: "Login",
     logout: "Logout",
-  },
-  error: {
-    fileSize: "Ukuran Gambar Terlalu Besar!",
   },
   connection: {
     success: "Database connected!",

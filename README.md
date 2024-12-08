@@ -248,7 +248,7 @@ npm install next-auth@beta
 
 - Add `auth.ts` in `@/lib`
 - Add auth api folder `@/app/api/auth/[...nextauth]`, and Add `route.ts`
-- Add `action-user.ts` in `@/server`
+- Add `action.ts` in `@/server`
 - Add `auth.tsx` in `@/components/layout`
 - Add login route `@/app/login`, which include `page.tsx` and `sign.ts`
 - Add `@/middleware.ts`

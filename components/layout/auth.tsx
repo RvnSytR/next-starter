@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { Session } from "next-auth";
 
-import { Check } from "@/server/action-user";
+import { CheckUser } from "@/server/action";
 
 import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
@@ -44,7 +44,7 @@ export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const loginSchema = zodUserSchema.pick({ email: true, password: true });
-  const { button, loading, login } = LABEL;
+  const { success, loading, button } = LABEL;
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -55,11 +55,11 @@ export function LoginForm() {
     const { email, password } = data;
     setIsLoading(true);
 
-    toast.promise(Check(email, password), {
+    toast.promise(CheckUser(email, password), {
       loading: loading.default,
       success: () => {
         router.push(PATH.dashboard);
-        return login;
+        return success.login;
       },
       error: (e: Error) => {
         setIsLoading(false);

@@ -54,7 +54,7 @@ export function CustomButton({
 }: CustomButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { logout, loading, button } = LABEL;
+  const { success, loading, button } = LABEL;
 
   const ChildrenNode = (): ReactNode => {
     const loader = <CustomLoader customType="circle" />;
@@ -131,7 +131,7 @@ export function CustomButton({
               loading: loading.default,
               success: () => {
                 router.push(PATH.login);
-                return logout;
+                return success.logout;
               },
               error: (e: Error) => {
                 setIsLoading(false);
