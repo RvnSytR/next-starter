@@ -2,6 +2,10 @@ import { CustomButton } from "@/components/global/custom-button";
 import { ThemeToggle } from "@/components/global/theme-provider";
 import { FlaskConical, LayoutDashboard } from "lucide-react";
 
+// export const metadata: Metadata = {
+//   title: "Current Page",
+// };
+
 export default function Page() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4 text-center">

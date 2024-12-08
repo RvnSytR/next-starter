@@ -14,7 +14,7 @@ try {
   await poolConnection.query("SELECT 1");
   console.log(success);
 } catch (e) {
-  console.error(`${error} : ${(e as Error).message}`);
+  console.error(`${error} ${(e as Error).message}`);
 }
 
 export const db = drizzle(poolConnection);

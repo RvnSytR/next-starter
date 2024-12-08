@@ -1,26 +1,12 @@
-import { auth } from "@/lib/auth";
-import { ThemeToggle } from "@/components/global/theme-provider";
-import { CustomButton } from "@/components/global/custom-button";
-import { Home } from "lucide-react";
+import { GetMenu, PATH } from "@/components/content";
+import { Section, SectionHeader } from "@/components/layout/section";
 
-export default async function Page() {
-  const session = await auth();
-
+export default function Page() {
   return (
-    <div className="container flex min-h-dvh flex-col items-center justify-center gap-y-4 text-center">
-      <p>Hello from Dashboard!</p>
+    <Section>
+      <SectionHeader currentPage={GetMenu(PATH.dashboard)!.label} />
 
-      <ThemeToggle />
-
-      <p>{JSON.stringify(session)}</p>
-
-      <CustomButton customType="nav" href="/" icon={<Home />} variant="outline">
-        Go to Main Page
-      </CustomButton>
-
-      <CustomButton customType="logout" variant="outline_destructive">
-        Log Out
-      </CustomButton>
-    </div>
+      <p>Hello world</p>
+    </Section>
   );
 }

@@ -1,5 +1,5 @@
 import type { Role } from "@/lib/db/schema";
-import { type LucideIcon, LayoutDashboard } from "lucide-react";
+import { type LucideIcon, LayoutDashboard, User2 } from "lucide-react";
 
 // #region // * Content Management
 const currentYear = new Date().getFullYear();
@@ -28,6 +28,7 @@ const LABEL = {
     },
     regis: "Email sudah terdaftar!",
     fileSize: "Ukuran Gambar Terlalu Besar!",
+    breadcrumb: "Menu Path Invalid!",
   },
   button: {
     login: "Login",
@@ -64,6 +65,12 @@ const MENU: Menu[] = [
         // role: "admin",
         icon: LayoutDashboard,
       },
+      {
+        href: "/account",
+        label: "Pengguna",
+        // role: "admin",
+        icon: User2,
+      },
     ],
   },
 ];
@@ -73,7 +80,7 @@ const GetMenu = (path: string): MenuBody | null => {
   const result = allMenu
     .flatMap((item) => item.body)
     .filter((item) => item.href === path);
-  return result.length ? result[0] : null;
+  return result[0] ?? null;
 };
 
 // #endregion
