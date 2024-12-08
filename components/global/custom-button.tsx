@@ -35,7 +35,7 @@ type CustomType =
       offset?: number;
     };
 
-type CustomButtonProps = ButtonProps &
+export type CustomButtonProps = ButtonProps &
   CustomType & {
     loadText?: string;
     iconPosition?: "left" | "right";
@@ -64,7 +64,7 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        <span className="transition group-data-[collapsible=icon]:hidden">
+        <span className="sidebar-icon transition">
           {isLoading ? loadElement : children}
         </span>
         {iconPosition === "right" && iconElement}

@@ -79,7 +79,7 @@
 /* * HTML STYLES */
 @layer base {
   * {
-    @apply border-border scroll-smooth;
+    @apply scroll-smooth border-border;
   }
 
   body {
@@ -119,7 +119,7 @@
   }
 
   code {
-    @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
   }
 
   small {
@@ -130,18 +130,14 @@
 /* * CUSTOM CSS APPLY HERE */
 @layer base {
   .desc {
-    @apply text-muted-foreground text-sm leading-tight;
+    @apply text-sm leading-tight text-muted-foreground;
   }
 
   .link {
-    @apply text-muted-foreground w-fit cursor-pointer underline-offset-4 hover:text-foreground hover:underline;
+    @apply w-fit cursor-pointer text-muted-foreground underline-offset-4 hover:text-foreground hover:underline;
   }
-}
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
+
+  .sidebar-icon {
+    @apply group-data-[collapsible=icon]:hidden;
   }
 }

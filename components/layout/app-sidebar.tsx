@@ -4,7 +4,6 @@ import Link from "next/link";
 import { Fragment } from "react";
 import type { Session } from "next-auth";
 
-import { cn } from "@/lib/utils";
 import { type MenuRole, GetMenuByRole } from "../content";
 import { CustomButton } from "@/components/global/custom-button";
 
@@ -15,7 +14,6 @@ import {
   SidebarHeader,
   SidebarMenuButton,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
   SidebarGroupLabel,
@@ -46,13 +44,20 @@ export function AppSidebar({
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
-        {/* <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
         {role !== "pending" && <NavMenu role={role} />}
-        <NavSecondary />
       </SidebarContent>
       <SidebarFooter>
+        <CustomButton
+          customType="nav"
+          href="/"
+          size="sm"
+          variant="link"
+          className="justify-start"
+          icon={<MessageCircleQuestion />}
+        >
+          Something
+        </CustomButton>
+
         <CustomButton customType="logout" variant="outline_destructive" />
       </SidebarFooter>
     </Sidebar>
@@ -85,26 +90,4 @@ export function NavMenu({ role }: { role: MenuRole }) {
       </SidebarGroup>
     </Fragment>
   ));
-}
-
-export function NavSecondary({
-  className,
-  ...props
-}: React.ComponentPropsWithoutRef<typeof SidebarGroup>) {
-  return (
-    <SidebarGroup className={cn("mt-auto", className)} {...props}>
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm">
-              <Link href="/">
-                <MessageCircleQuestion />
-                Something
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
-  );
 }
