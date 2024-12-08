@@ -64,7 +64,9 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        {isLoading ? loadElement : children}
+        <span className="transition group-data-[collapsible=icon]:hidden">
+          {isLoading ? loadElement : children}
+        </span>
         {iconPosition === "right" && iconElement}
       </Fragment>
     );

@@ -1,5 +1,5 @@
 import type { Role } from "@/lib/db/schema";
-import { type LucideIcon, LayoutDashboard, User2 } from "lucide-react";
+import { type LucideIcon, LayoutDashboard } from "lucide-react";
 
 // #region // * Content Management
 const currentYear = new Date().getFullYear();
@@ -42,6 +42,8 @@ const LABEL = {
 // #endregion
 
 // #region // * Menu
+type MenuRole = Exclude<Role, "pending"> | "all";
+
 type Menu = {
   section: string;
   body: MenuBody[];
@@ -50,7 +52,7 @@ type Menu = {
 type MenuBody = {
   href: string;
   label: string;
-  role?: Exclude<Role, "pending">;
+  role: MenuRole;
   icon?: LucideIcon;
   isDisable?: boolean;
 };
@@ -62,14 +64,8 @@ const MENU: Menu[] = [
       {
         href: "/dashboard",
         label: "Dashboard",
-        // role: "admin",
+        role: "all",
         icon: LayoutDashboard,
-      },
-      {
-        href: "/account",
-        label: "Pengguna",
-        // role: "admin",
-        icon: User2,
       },
     ],
   },
@@ -83,7 +79,21 @@ const GetMenu = (path: string): MenuBody | null => {
   return result[0] ?? null;
 };
 
+function GetMenuByRole(role: MenuRole) {
+  return MENU.map((section) => {
+    const filteredBody = section.body.filter(
+      (item) => item.role === role || item.role === "all",
+    );
+    if (filteredBody.length) {
+      return {
+        section: section.section,
+        body: filteredBody,
+      } as Menu;
+    } else return null;
+  }).filter((section) => section !== null);
+}
+
 // #endregion
 
-export type { Menu };
-export { GetMenu, PATH, LABEL, MENU };
+export type { Menu, MenuRole };
+export { GetMenu, GetMenuByRole, PATH, LABEL, MENU };

@@ -17,7 +17,7 @@ export async function middleware(req: NextRequest) {
     if (token && pathname.startsWith(loginPath))
       return Response.redirect(new URL(dashboardPath, origin));
 
-    if (token && menu?.role && menu.role !== token.role)
+    if (token && menu && menu.role !== "all" && menu.role !== token.role)
       return NextResponse.rewrite(new URL("/404", origin));
 
     return NextResponse.next();
