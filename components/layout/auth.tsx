@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { Session } from "next-auth";
 
 import { Check } from "@/server/action-user";
 
@@ -27,9 +28,14 @@ import { Button } from "../ui/button";
 import { LogIn } from "lucide-react";
 import { SignOutHandler } from "@/app/login/sign";
 
-export function SignOutComponent(): React.ReactNode {
+export function SignOutComponent({
+  session,
+}: {
+  session: Session | null;
+}): React.ReactNode {
   useEffect(() => {
-    SignOutHandler();
+    if (session) SignOutHandler();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return null;
 }

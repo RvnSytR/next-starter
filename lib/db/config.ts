@@ -10,16 +10,11 @@ const poolConnection = mysql.createPool({
   database: process.env.MYSQL_DATABASE,
 });
 
-async function CheckConnection() {
-  try {
-    await poolConnection.query("SELECT 1");
-    console.log(success);
-    return true;
-  } catch (e) {
-    console.error(error + (e as Error).message);
-    return false;
-  }
+try {
+  await poolConnection.query("SELECT 1");
+  console.log(success);
+} catch (e) {
+  console.error(`${error} : ${(e as Error).message}`);
 }
 
-if (!(await CheckConnection())) throw new Error(error);
 export const db = drizzle(poolConnection);
