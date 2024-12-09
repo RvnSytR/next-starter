@@ -19,6 +19,12 @@ import {
   SidebarGroupLabel,
   SidebarSeparator,
 } from "@/components/ui/sidebar";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { MessageCircleQuestion } from "lucide-react";
 
@@ -31,17 +37,27 @@ export function AppSidebar({
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenuButton size="lg">
-          <Avatar className="size-8 rounded">
-            <AvatarFallback className="rounded">
-              {username.slice(0, 2)}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-1 flex-col justify-center truncate text-left text-sm leading-tight">
-            <span className="font-semibold">{username}</span>
-            <span className="text-xs">{email}</span>
-          </div>
-        </SidebarMenuButton>
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <SidebarMenuButton size="lg">
+                <Avatar className="size-8 rounded">
+                  <AvatarFallback className="rounded">
+                    {username.slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex flex-1 flex-col justify-center truncate text-left text-sm leading-tight">
+                  <span className="font-semibold">{username}</span>
+                  <span className="text-xs">{email}</span>
+                </div>
+              </SidebarMenuButton>
+            </TooltipTrigger>
+            <TooltipContent className="flex flex-col text-start">
+              <span className="font-semibold">{username}</span>
+              <span className="text-xs">{email}</span>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </SidebarHeader>
       <SidebarContent>
         {role !== "pending" && <NavMenu role={role} />}

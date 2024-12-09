@@ -11,18 +11,18 @@ import {
 } from "@/components/ui/breadcrumb";
 
 export type DynamicBreadcrumbProps = {
-  breadcrumb?: string[];
+  breadcrumbPath?: string[];
   currentPage: string;
 };
 
 export function DynamicBreadcrumb({
-  breadcrumb,
+  breadcrumbPath,
   currentPage,
 }: DynamicBreadcrumbProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {breadcrumb?.map((item, index) => {
+        {breadcrumbPath?.map((item, index) => {
           const menu = GetMenu(item);
           const content = menu ? (
             <BreadcrumbLink href={menu.href}>{menu.label}</BreadcrumbLink>
