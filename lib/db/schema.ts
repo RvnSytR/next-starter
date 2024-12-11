@@ -5,12 +5,12 @@ import {
   timestamp,
 } from "drizzle-orm/mysql-core";
 
-//#region // * Column Attribut + Types
+//#region // * Column Attributes
 const role = ["user", "admin", "pending"] as const;
 type Role = (typeof role)[number];
 //#endregion
 
-//#region // *Tables + Types
+//#region // * Tables
 const user = mysqlTable("user", {
   id_user: varchar("id_user", { length: 255 })
     .primaryKey()

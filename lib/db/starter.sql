@@ -41,9 +41,6 @@ CREATE TABLE `user` (
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id_user`, `email`, `password`, `username`, `role`, `lastSignInAt`, `createdAt`) VALUES
-('8f9563a0-c215-4359-901f-8309763f30f4', '2021110073@students.uigm.ac.id', '$2b$10$Y1fA/vC109t1MdkHq.987evi8lx4vCofY.bW1hiV/RK3.mwsiZcO2', 'RvnS', 'user', '2024-12-06 15:22:00', '2024-11-19 14:21:16');
-
 --
 -- Indexes for dumped tables
 --
