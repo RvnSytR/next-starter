@@ -1,5 +1,5 @@
 import { GetMenu, PATH } from "@/components/content";
-import { Section, SectionHeader } from "@/components/layout/section";
+import { Section, SectionHeader } from "@/components/layout/section-dashboard";
 
 export default function Page() {
   return (
