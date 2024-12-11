@@ -27,7 +27,7 @@ export async function CheckUser(email: string, password: string) {
   }
 }
 
-export async function Regis(data: typeof user.$inferInsert) {
+export async function RegisUser(data: typeof user.$inferInsert) {
   const { email, password, username } = data;
   const [check] = await state.user.getByEmail.execute({ email: email });
 
@@ -42,12 +42,12 @@ export async function Regis(data: typeof user.$inferInsert) {
   }
 }
 
-export async function Approve(role: Exclude<Role, "pending">, id: string) {
+export async function ApproveUser(role: Exclude<Role, "pending">, id: string) {
   await state.user.updateRole(role).execute({ id_user: id });
   revalidatePath("/account");
 }
 
-export async function Delete(id: string) {
+export async function DeleteUser(id: string) {
   await state.user.delete.execute({ id_user: id });
   revalidatePath("/account");
 }
