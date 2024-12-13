@@ -64,7 +64,7 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        <span className="sidebar-icon transition">
+        <span className="sidebar-icon">
           {isLoading ? loadElement : children}
         </span>
         {iconPosition === "right" && iconElement}
