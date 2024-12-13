@@ -27,7 +27,7 @@ export default async function Page() {
     <main className="container flex min-h-screen items-center justify-center">
       <Card className="max-w-md">
         <CardHeader>
-          <CardTitle className="mb-2 text-center">
+          <CardTitle className="mb-1 text-center">
             <Link href="/" prefetch>
               Project Title
             </Link>

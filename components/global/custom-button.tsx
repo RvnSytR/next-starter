@@ -21,10 +21,8 @@ type CustomType =
   | {
       customType: "loading" | "logout" | "refresh" | null | undefined;
     }
-  | ({
-      customType: "nav";
-      href: string | URL;
-    } & LinkProps)
+  | ({ customType: "nav" } & LinkProps &
+      React.AnchorHTMLAttributes<HTMLAnchorElement>)
   | ({
       customType: "pulse";
       pulseColor?: string;
