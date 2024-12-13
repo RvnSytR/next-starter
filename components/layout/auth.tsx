@@ -11,8 +11,8 @@ import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { CustomLoader } from "../global/icon";
 import { LABEL, PATH } from "../content";
+import { CustomButton } from "../global/custom-button";
 
 import {
   Form,
@@ -24,9 +24,10 @@ import {
 } from "@/components/ui/form";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
 import { LogIn } from "lucide-react";
 import { SignOutHandler } from "@/app/login/sign";
+
+const { success, loading, button } = LABEL;
 
 export function SignOutComponent({
   session,
@@ -43,8 +44,8 @@ export function SignOutComponent({
 export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const loginSchema = zodUserSchema.pick({ email: true, password: true });
-  const { success, loading, button } = LABEL;
 
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -106,10 +107,16 @@ export function LoginForm() {
           )}
         />
 
-        <Button type="submit" className="mt-2" disabled={isLoading}>
-          {isLoading ? <CustomLoader customType="circle" /> : <LogIn />}
-          {isLoading ? loading.login : button.login}
-        </Button>
+        <CustomButton
+          customType={null}
+          type="submit"
+          load={isLoading}
+          loadText={loading.login}
+          icon={<LogIn />}
+          className="mt-2"
+        >
+          {button.login}
+        </CustomButton>
       </form>
     </Form>
   );

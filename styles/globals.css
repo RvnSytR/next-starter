@@ -137,6 +137,10 @@
     @apply w-fit cursor-pointer text-muted-foreground underline-offset-4 hover:text-foreground hover:underline;
   }
 
+  .skeleton {
+    @apply animate-pulse rounded-md bg-muted;
+  }
+
   .sidebar-icon {
     @apply group-data-[collapsible=icon]:hidden;
   }

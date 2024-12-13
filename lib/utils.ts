@@ -2,7 +2,9 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { LABEL } from "@/components/content";
 
-export function cn(...inputs: ClassValue[]) {
+export type cv = ClassValue;
+
+export function cn(...inputs: cv[]) {
   return twMerge(clsx(inputs));
 }
 

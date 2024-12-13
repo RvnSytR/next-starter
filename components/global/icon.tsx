@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Loader, LoaderCircle, LucideProps } from "lucide-react";
+import { type LucideProps, Loader, LoaderCircle } from "lucide-react";
 
 type IconProps = Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>;
 type CustomLoaderProps = IconProps & {
@@ -16,29 +16,21 @@ const svgProps = {
   viewBox: "0 0 48 48",
 };
 
-const CustomLoader = ({
-  customType,
-  className,
-  ...props
-}: CustomLoaderProps) => {
-  switch (customType) {
-    case "circle":
-      return (
-        <LoaderCircle
-          className={cn("animate-spin animate-infinite", className)}
-          {...props}
-        />
-      );
+function CustomLoader({ customType, className, ...props }: CustomLoaderProps) {
+  const loaderClassName = "animate-spin animate-infinite";
 
-    default:
+  switch (customType) {
+    case "circle": {
       return (
-        <Loader
-          className={cn("animate-spin animate-infinite", className)}
-          {...props}
-        />
+        <LoaderCircle className={cn(loaderClassName, className)} {...props} />
       );
+    }
+
+    default: {
+      return <Loader className={cn(loaderClassName, className)} {...props} />;
+    }
   }
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const GoogleIcon = ({ ...props }: React.SVGAttributes<SVGSVGElement>) => {

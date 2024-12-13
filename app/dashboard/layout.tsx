@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
-import { CustomLoader } from "@/components/global/icon";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { SectionSkeleton } from "@/components/layout/section-dashboard";
 
 export default async function DashboardLayout({
   children,
@@ -9,13 +9,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  if (!session) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <CustomLoader />
-      </div>
-    );
-  }
+  if (!session) return <SectionSkeleton />;
 
   return (
     <SidebarProvider>

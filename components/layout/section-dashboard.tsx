@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { ICON_SIZE } from "../global/icon";
+import { CustomLoader, ICON_SIZE } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
 import {
   DynamicBreadcrumb,
@@ -11,11 +11,39 @@ import { Separator } from "../ui/separator";
 import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
 import { Hash } from "lucide-react";
 
-export function Section({ children }: { children: React.ReactNode }) {
+export function Section({
+  className,
+  children,
+}: {
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <SidebarInset className="flex flex-col gap-y-4 p-4">
+    <SidebarInset className={cn("flex flex-col gap-y-4 p-4", className)}>
       {children}
     </SidebarInset>
+  );
+}
+
+export function SectionSkeleton() {
+  return (
+    <Section className="skeleton">
+      <header className="flex flex-col gap-2">
+        <div className="flex items-center">
+          <div className="over flex grow items-center gap-x-2">
+            <SidebarTrigger disabled />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <span className="text-muted-foreground">...</span>
+          </div>
+          <ThemeToggle disabled />
+        </div>
+        <Separator />
+      </header>
+
+      <div className="m-auto">
+        <CustomLoader size={ICON_SIZE.lg} />
+      </div>
+    </Section>
   );
 }
 
