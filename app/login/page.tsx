@@ -24,7 +24,7 @@ export default async function Page() {
   const session = await auth();
 
   return (
-    <main className="container flex min-h-dvh items-center justify-center">
+    <main className="container flex min-h-screen items-center justify-center">
       <Card className="max-w-md">
         <CardHeader>
           <CardTitle className="mb-2 text-center">

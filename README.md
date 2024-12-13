@@ -265,7 +265,7 @@ These files are for testing purposes only in `@/app/coverage` and should not be 
 
 export default function CoveragePage() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4">
+    <div className="flex min-h-screen flex-col items-center justify-center gap-y-4">
       <p>Coverage Page</p>
     </div>
   );

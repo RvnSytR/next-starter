@@ -37,6 +37,7 @@ type CustomType =
 
 export type CustomButtonProps = ButtonProps &
   CustomType & {
+    load?: boolean;
     loadText?: string;
     iconPosition?: "left" | "right";
     icon?: ReactNode;
@@ -46,6 +47,7 @@ export type CustomButtonProps = ButtonProps &
 
 export function CustomButton({
   customType,
+  load = false,
   loadText,
   iconPosition = "left",
   icon,
@@ -57,15 +59,16 @@ export function CustomButton({
   const { success, loading, button } = LABEL;
 
   const ChildrenNode = (): ReactNode => {
+    const loadTrigger = load ?? isLoading;
     const loader = <CustomLoader customType="circle" />;
-    const iconElement = isLoading ? loader : icon;
+    const iconElement = loadTrigger ? loader : icon;
     const loadElement = loadText ?? children;
 
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
         <span className="sidebar-icon">
-          {isLoading ? loadElement : children}
+          {loadTrigger ? loadElement : children}
         </span>
         {iconPosition === "right" && iconElement}
       </Fragment>
@@ -82,7 +85,7 @@ export function CustomButton({
       <Button
         type="button"
         onClick={() => setIsLoading(true)}
-        disabled={isLoading}
+        disabled={load ?? isLoading}
         {...props}
         {...loadingButtonProps}
       >
@@ -224,8 +227,7 @@ export function CustomButton({
 
     case null: {
       return (
-        <Button {...props}>
-          {" "}
+        <Button {...props} disabled={load}>
           <ChildrenNode />
         </Button>
       );

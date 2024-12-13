@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const session = await auth();
   if (!session) {
     return (
-      <div className="flex min-h-dvh items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <CustomLoader />
       </div>
     );
