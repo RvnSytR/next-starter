@@ -6,6 +6,7 @@ import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "./dynamic-breadcrumb";
+import { label } from "../content";
 
 import { Separator } from "../ui/separator";
 import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
@@ -34,7 +35,13 @@ export function Section({
 
         <Separator />
       </header>
+
       {children}
+
+      <footer className="mt-auto flex flex-col items-center gap-4">
+        <Separator />
+        <small className="desc">{label.copyright}</small>
+      </footer>
     </SidebarInset>
   );
 }
