@@ -1,10 +1,15 @@
+import { Metadata } from "next";
+
+import { Section } from "@/components/layout/section-dashboard";
 import { GetCurrentPage } from "@/components/content";
-import { Section, SectionHeader } from "@/components/layout/section-dashboard";
+
+export const metadata: Metadata = {
+  title: GetCurrentPage("/", true),
+};
 
 export default function Page() {
   return (
-    <Section>
-      <SectionHeader currentPage={GetCurrentPage("/")} />
+    <Section currentPage={GetCurrentPage("/")}>
       <p>Hello world</p>
     </Section>
   );

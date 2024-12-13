@@ -14,12 +14,26 @@ import { Hash } from "lucide-react";
 export function Section({
   className,
   children,
+  ...props
 }: {
   className?: string;
   children: React.ReactNode;
-}) {
+} & DynamicBreadcrumbProps) {
   return (
     <SidebarInset className={cn("flex flex-col gap-y-4 p-4", className)}>
+      <header className="flex flex-col gap-2">
+        <div className="flex items-center">
+          <div className="over flex grow items-center gap-x-2">
+            <SidebarTrigger />
+            <Separator orientation="vertical" className="mr-2 h-4" />
+            <DynamicBreadcrumb {...props} />
+          </div>
+
+          <ThemeToggle />
+        </div>
+
+        <Separator />
+      </header>
       {children}
     </SidebarInset>
   );
@@ -27,41 +41,11 @@ export function Section({
 
 export function SectionSkeleton() {
   return (
-    <Section className="skeleton">
-      <header className="flex flex-col gap-2">
-        <div className="flex items-center">
-          <div className="over flex grow items-center gap-x-2">
-            <SidebarTrigger disabled />
-            <Separator orientation="vertical" className="mr-2 h-4" />
-            <span className="text-muted-foreground">...</span>
-          </div>
-          <ThemeToggle disabled />
-        </div>
-        <Separator />
-      </header>
-
+    <Section currentPage="..." className="skeleton">
       <div className="m-auto">
         <CustomLoader size={iconSize.lg} />
       </div>
     </Section>
-  );
-}
-
-export function SectionHeader({ ...props }: DynamicBreadcrumbProps) {
-  return (
-    <header className="flex flex-col gap-2">
-      <div className="flex items-center">
-        <div className="over flex grow items-center gap-x-2">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <DynamicBreadcrumb {...props} />
-        </div>
-
-        <ThemeToggle />
-      </div>
-
-      <Separator />
-    </header>
   );
 }
 

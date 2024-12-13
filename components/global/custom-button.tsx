@@ -1,9 +1,9 @@
 "use client";
 
-import Link, { type LinkProps } from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
+import Link, { type LinkProps } from "next/link";
 
 import { SignOutHandler } from "@/app/login/sign";
 
@@ -58,9 +58,13 @@ export function CustomButton({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { success, loading, button } = label;
 
-  const ChildrenNode = (): ReactNode => {
+  const ChildrenNode = ({
+    customLoader,
+  }: {
+    customLoader?: ReactNode;
+  }): ReactNode => {
     const loadTrigger = load ?? isLoading;
-    const loader = <CustomLoader customType="circle" />;
+    const loader = customLoader ?? <CustomLoader customType="circle" />;
     const iconElement = loadTrigger ? loader : icon;
     const loadElement = loadText ?? children;
 
@@ -105,20 +109,20 @@ export function CustomButton({
 
     case "refresh": {
       loadText = loading.refresh;
-      icon = <RefreshCw className={isLoading ? "animate-spin" : ""} />;
+      icon = <RefreshCw />;
       return (
         <Button
           type="button"
           onClick={async () => {
             setIsLoading(true);
+            await Delay(1);
             router.refresh();
-            await Delay(0.6);
             setIsLoading(false);
           }}
           disabled={isLoading}
           {...props}
         >
-          <ChildrenNode />
+          <ChildrenNode customLoader={<RefreshCw className="animate-spin" />} />
         </Button>
       );
     }

@@ -8,6 +8,7 @@ const path = {
   protected: "/dashboard",
 };
 const label = {
+  metadata: (currentPage: string) => `Project Title | ${currentPage}`,
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
   success: {
     login: "Login Berhasil!",
@@ -94,8 +95,10 @@ function GetMenuByRole(role: MenuRole) {
   }).filter((section) => section !== null);
 }
 
-function GetCurrentPage(path: string) {
-  return GetMenu(path)?.label ?? label.error.protectedPath;
+function GetCurrentPage(path: string, metadata?: boolean) {
+  const currentPage = GetMenu(path)?.label;
+  if (!currentPage) return label.error.protectedPath;
+  return metadata ? label.metadata(currentPage) : currentPage;
 }
 
 // #endregion
