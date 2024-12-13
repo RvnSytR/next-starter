@@ -58,7 +58,7 @@ export function LoginForm() {
     toast.promise(CheckUser(email, password), {
       loading: loading.default,
       success: () => {
-        router.push(PATH.dashboard);
+        router.push(PATH.protected);
         return success.login;
       },
       error: (e: Error) => {

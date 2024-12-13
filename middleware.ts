@@ -5,7 +5,7 @@ import { GetMenu, PATH } from "./components/content";
 
 export async function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;
-  const { login: loginPath, dashboard: dashboardPath } = PATH;
+  const { login: loginPath, protected: protectedPath } = PATH;
 
   try {
     const token = await getToken({ req, secret: process.env.AUTH_SECRET });
@@ -15,7 +15,7 @@ export async function middleware(req: NextRequest) {
       return Response.redirect(new URL(loginPath, origin));
 
     if (token && pathname.startsWith(loginPath))
-      return Response.redirect(new URL(dashboardPath, origin));
+      return Response.redirect(new URL(protectedPath, origin));
 
     if (token && menu && menu.role !== "all" && menu.role !== token.role)
       return NextResponse.rewrite(new URL("/404", origin));

@@ -5,7 +5,7 @@ import { type LucideIcon, LayoutDashboard } from "lucide-react";
 const currentYear = new Date().getFullYear();
 const PATH = {
   login: "/login",
-  dashboard: "/dashboard",
+  protected: "/dashboard",
 };
 const LABEL = {
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,

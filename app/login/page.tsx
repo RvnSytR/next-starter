@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 
+import { auth } from "@/lib/auth";
 import { LoginForm, SignOutComponent } from "@/components/layout/auth";
 
 import { LABEL } from "@/components/content";
@@ -14,7 +15,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { auth } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Login Page",
