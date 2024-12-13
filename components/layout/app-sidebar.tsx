@@ -38,7 +38,7 @@ export function AppSidebar({
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
         <TooltipProvider>
-          <Tooltip>
+          <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>
               <SidebarMenuButton size="lg">
                 <Avatar className="size-8 rounded">
@@ -52,7 +52,7 @@ export function AppSidebar({
                 </div>
               </SidebarMenuButton>
             </TooltipTrigger>
-            <TooltipContent className="flex flex-col text-start">
+            <TooltipContent side="right" className="flex flex-col text-start">
               <span className="font-semibold">{username}</span>
               <span className="text-xs">{email}</span>
             </TooltipContent>

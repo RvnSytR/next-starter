@@ -1,11 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
-import { GetMenu, PATH } from "./components/content";
+import { GetMenu, path } from "./components/content";
 
 export async function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;
-  const { login: loginPath, protected: protectedPath } = PATH;
+  const { login: loginPath, protected: protectedPath } = path;
 
   try {
     const token = await getToken({ req, secret: process.env.AUTH_SECRET });

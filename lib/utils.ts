@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { LABEL } from "@/components/content";
+import { label } from "@/components/content";
 
 export type cv = ClassValue;
 
@@ -90,7 +90,7 @@ async function GetFilesAsDataURL(files: File[] | null, maxFileSize?: number) {
   const results: string[] = [];
   for (const item of files) {
     if (maxFileSize && item.size > maxFileSize * 1024 * 1024)
-      throw new Error(LABEL.error.fileSize);
+      throw new Error(label.error.fileSize);
     results.push(await ReadFileAsDataURL(item));
   }
   return results;

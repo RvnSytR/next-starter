@@ -1,6 +1,6 @@
 import { cn } from "@/lib/utils";
 
-import { CustomLoader, ICON_SIZE } from "../global/icon";
+import { CustomLoader, iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
 import {
   DynamicBreadcrumb,
@@ -41,7 +41,7 @@ export function SectionSkeleton() {
       </header>
 
       <div className="m-auto">
-        <CustomLoader size={ICON_SIZE.lg} />
+        <CustomLoader size={iconSize.lg} />
       </div>
     </Section>
   );
@@ -83,7 +83,7 @@ export function SectionTitle({
     >
       {withHash && (
         <Hash
-          size={ICON_SIZE.base}
+          size={iconSize.base}
           className="flex-none text-muted-foreground"
         />
       )}

@@ -5,7 +5,7 @@ import { JWT } from "next-auth/jwt";
 
 import type { UserCredentials } from "./db/schema";
 import { state } from "./db/state";
-import { PATH } from "@/components/content";
+import { path } from "@/components/content";
 
 // * Module Augmentation
 declare module "next-auth" {
@@ -75,6 +75,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
   },
   pages: {
-    signIn: PATH.login,
+    signIn: path.login,
   },
 });

@@ -3,11 +3,11 @@ import { type LucideIcon, LayoutDashboard } from "lucide-react";
 
 // #region // * Content Management
 const currentYear = new Date().getFullYear();
-const PATH = {
+const path = {
   login: "/login",
   protected: "/dashboard",
 };
-const LABEL = {
+const label = {
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
   success: {
     login: "Login Berhasil!",
@@ -95,10 +95,10 @@ function GetMenuByRole(role: MenuRole) {
 }
 
 function GetCurrentPage(path: string) {
-  return GetMenu(path)?.label ?? LABEL.error.protectedPath;
+  return GetMenu(path)?.label ?? label.error.protectedPath;
 }
 
 // #endregion
 
 export type { Menu, MenuRole };
-export { GetMenu, GetMenuByRole, GetCurrentPage, PATH, LABEL, MENU };
+export { GetMenu, GetMenuByRole, GetCurrentPage, path, label, MENU };

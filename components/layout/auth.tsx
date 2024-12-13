@@ -11,7 +11,7 @@ import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { LABEL, PATH } from "../content";
+import { label, path } from "../content";
 import { CustomButton } from "../global/custom-button";
 
 import {
@@ -27,7 +27,7 @@ import { Input } from "../ui/input";
 import { LogIn } from "lucide-react";
 import { SignOutHandler } from "@/app/login/sign";
 
-const { success, loading, button } = LABEL;
+const { success, loading, button } = label;
 
 export function SignOutComponent({
   session,
@@ -59,7 +59,7 @@ export function LoginForm() {
     toast.promise(CheckUser(email, password), {
       loading: loading.default,
       success: () => {
-        router.push(PATH.protected);
+        router.push(path.protected);
         return success.login;
       },
       error: (e: Error) => {

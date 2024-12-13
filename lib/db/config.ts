@@ -1,8 +1,8 @@
 import mysql from "mysql2/promise";
 import { drizzle } from "drizzle-orm/mysql2";
-import { LABEL } from "@/components/content";
+import { label } from "@/components/content";
 
-const { success, error } = LABEL.connection;
+const { success, error } = label.connection;
 const poolConnection = mysql.createPool({
   host: process.env.MYSQL_HOST,
   user: process.env.MYSQL_USER,

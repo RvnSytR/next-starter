@@ -1,15 +1,15 @@
 "use client";
 
+import Link, { type LinkProps } from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
-import Link, { type LinkProps } from "next/link";
 
 import { SignOutHandler } from "@/app/login/sign";
 
 import { cn } from "@/lib/utils";
 import { Delay } from "@/lib/utils";
-import { LABEL, PATH } from "../content";
+import { label, path } from "../content";
 
 import { toast } from "sonner";
 import { CustomLoader } from "./icon";
@@ -56,7 +56,7 @@ export function CustomButton({
 }: CustomButtonProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { success, loading, button } = LABEL;
+  const { success, loading, button } = label;
 
   const ChildrenNode = (): ReactNode => {
     const loadTrigger = load ?? isLoading;
@@ -135,7 +135,7 @@ export function CustomButton({
             toast.promise(SignOutHandler(), {
               loading: loading.default,
               success: () => {
-                router.push(PATH.login);
+                router.push(path.login);
                 return success.logout;
               },
               error: (e: Error) => {

@@ -6,7 +6,7 @@ type CustomLoaderProps = IconProps & {
   customType?: "circle" | "default";
 };
 
-const ICON_SIZE = { sm: 15, base: 17, lg: 19 };
+const iconSize = { sm: 15, base: 17, lg: 19 };
 const svgProps = {
   xmlns: "http://www.w3.org/2000/svg",
   x: "0px",
@@ -56,4 +56,4 @@ const GoogleIcon = ({ ...props }: React.SVGAttributes<SVGSVGElement>) => {
   );
 };
 
-export { ICON_SIZE, CustomLoader };
+export { iconSize, CustomLoader };

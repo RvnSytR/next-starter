@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { GetMenu, LABEL } from "../content";
+import { GetMenu, label } from "../content";
 
 import {
   Breadcrumb,
@@ -28,7 +28,7 @@ export function DynamicBreadcrumb({
             <BreadcrumbLink href={menu.href}>{menu.label}</BreadcrumbLink>
           ) : (
             <BreadcrumbPage className="text-destructive">
-              {LABEL.error.breadcrumb}
+              {label.error.breadcrumb}
             </BreadcrumbPage>
           );
 

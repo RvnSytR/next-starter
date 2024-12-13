@@ -4,7 +4,7 @@ import { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { LoginForm, SignOutComponent } from "@/components/layout/auth";
 
-import { LABEL } from "@/components/content";
+import { label } from "@/components/content";
 
 import {
   Card,
@@ -49,7 +49,7 @@ export default async function Page() {
         </CardContent>
 
         <CardFooter>
-          <small className="mx-auto text-center">{LABEL.copyright}</small>
+          <small className="mx-auto text-center">{label.copyright}</small>
         </CardFooter>
       </Card>
     </main>
