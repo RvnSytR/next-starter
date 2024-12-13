@@ -26,7 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { MessageCircleQuestion } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export function AppSidebar({
   session,
@@ -59,17 +59,21 @@ export function AppSidebar({
           </Tooltip>
         </TooltipProvider>
       </SidebarHeader>
+
       <SidebarContent>
         {role !== "pending" && <NavMenu role={role} />}
       </SidebarContent>
+
       <SidebarFooter>
         <CustomButton
           customType="nav"
           href="/"
+          target="_blank"
           size="sm"
           variant="link"
           className="justify-start"
-          icon={<MessageCircleQuestion />}
+          load={false}
+          icon={<ExternalLink />}
         >
           Something
         </CustomButton>
