@@ -31,7 +31,7 @@ type CustomType =
     } & (LinkProps | { href?: null | undefined }))
   | {
       customType: "scroll";
-      elementId: string;
+      elementid: string;
       offset?: number;
     };
 
@@ -165,7 +165,7 @@ export function CustomButton({
     case "pulse": {
       const { className } = props;
       const {
-        pulseColor = "#FAFAFA",
+        pulseColor = "#FACC15",
         href,
         ...linkProps
       } = props as Extract<CustomType, { customType: "pulse" }>;
@@ -202,7 +202,7 @@ export function CustomButton({
     }
 
     case "scroll": {
-      const { elementId, offset } = props as Extract<
+      const { elementid, offset } = props as Extract<
         CustomType,
         { customType: "scroll" }
       >;
@@ -211,19 +211,24 @@ export function CustomButton({
         <Button
           type="button"
           onClick={() => {
-            const element = document.getElementById(elementId);
+            const element = document.getElementById(elementid);
             if (!element) return;
             window.scroll({ top: element.offsetTop - (offset ?? 0) });
           }}
           {...props}
         >
-          {children}
+          <ChildrenNode />
         </Button>
       );
     }
 
     case null: {
-      return <Button {...props}>{children}</Button>;
+      return (
+        <Button {...props}>
+          {" "}
+          <ChildrenNode />
+        </Button>
+      );
     }
 
     default: {
