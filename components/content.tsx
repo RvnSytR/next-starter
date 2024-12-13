@@ -28,6 +28,7 @@ const LABEL = {
     },
     regis: "Email sudah terdaftar!",
     fileSize: "Ukuran Gambar Terlalu Besar!",
+    protectedPath: "Protected Path Invalid!",
     breadcrumb: "Menu Path Invalid!",
   },
   button: {
@@ -71,13 +72,13 @@ const MENU: Menu[] = [
   },
 ];
 
-const GetMenu = (path: string): MenuBody | null => {
+function GetMenu(path: string): MenuBody | null {
   const allMenu = Object.values(MENU).flat();
   const result = allMenu
     .flatMap((item) => item.body)
     .filter((item) => item.href === path);
   return result[0] ?? null;
-};
+}
 
 function GetMenuByRole(role: MenuRole) {
   return MENU.map((section) => {
@@ -93,7 +94,11 @@ function GetMenuByRole(role: MenuRole) {
   }).filter((section) => section !== null);
 }
 
+function GetCurrentPage(path: string) {
+  return GetMenu(path)?.label ?? LABEL.error.protectedPath;
+}
+
 // #endregion
 
 export type { Menu, MenuRole };
-export { GetMenu, GetMenuByRole, PATH, LABEL, MENU };
+export { GetMenu, GetMenuByRole, GetCurrentPage, PATH, LABEL, MENU };

@@ -1,11 +1,10 @@
-import { GetMenu, PATH } from "@/components/content";
+import { GetCurrentPage } from "@/components/content";
 import { Section, SectionHeader } from "@/components/layout/section-dashboard";
 
 export default function Page() {
   return (
     <Section>
-      <SectionHeader currentPage={GetMenu(PATH.protected)!.label} />
-
+      <SectionHeader currentPage={GetCurrentPage("/")} />
       <p>Hello world</p>
     </Section>
   );

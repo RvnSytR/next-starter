@@ -47,7 +47,7 @@ export type CustomButtonProps = ButtonProps &
 
 export function CustomButton({
   customType,
-  load = false,
+  load,
   loadText,
   iconPosition = "left",
   icon,
