@@ -32,27 +32,7 @@ export function GetRandomColor(withHash?: boolean) {
   return color as string;
 }
 
-export function Capitalize(str: string) {
-  if (!str) return "";
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export function FormatDateToString(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-export function NumberWithDots(num: number) {
-  return num.toLocaleString("de-DE");
-}
-
-export function DotsToNumber(numWithDots: string) {
-  return parseFloat(numWithDots.replace(/\./g, ""));
-}
-
-export function CalculateAge(birthDate: Date): number | string {
+export function CalculateAge(birthDate: Date) {
   const today = new Date();
 
   if (isNaN(birthDate.getTime())) {
@@ -74,8 +54,25 @@ export function CalculateAge(birthDate: Date): number | string {
   return age;
 }
 
+// #region // * Formater
+export function FormatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function FormatNumber(num: string | number) {
+  return new Intl.NumberFormat("id-ID").format(Number(num) || 0);
+}
+
+export function SanitizeNumberInput(targetValue: string) {
+  return targetValue.replace(/[^\d]/g, "");
+}
+// #endregion
+
 // #region // * File Reader
-function ReadFileAsDataURL(file: File): Promise<string> {
+function ReadFileAsURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result as string);
@@ -84,14 +81,14 @@ function ReadFileAsDataURL(file: File): Promise<string> {
   });
 }
 
-async function GetFilesAsDataURL(files: File[] | null, maxFileSize?: number) {
+async function GetFilesAsURL(files: File[] | null, maxFileSize?: number) {
   if (!files || !files.every((file) => file.type.startsWith("image/")))
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
     if (maxFileSize && item.size > maxFileSize * 1024 * 1024)
       throw new Error(label.error.fileSize);
-    results.push(await ReadFileAsDataURL(item));
+    results.push(await ReadFileAsURL(item));
   }
   return results;
 }
@@ -101,9 +98,6 @@ export async function FileOnChangeAsURL(
   maxFileSizeInMb?: number,
 ) {
   if (!event.target.files) return [];
-  return await GetFilesAsDataURL(
-    Array.from(event.target.files),
-    maxFileSizeInMb,
-  );
+  return await GetFilesAsURL(Array.from(event.target.files), maxFileSizeInMb);
 }
 // #endregion

@@ -68,15 +68,12 @@ export function SectionTitle({
   return (
     <h5
       className={cn(
-        "line-clamp-2 flex items-center gap-x-3 leading-tight",
+        "line-clamp-2 flex items-center gap-x-2 leading-tight",
         className,
       )}
     >
       {withHash && (
-        <Hash
-          size={iconSize.base}
-          className="flex-none text-muted-foreground"
-        />
+        <Hash size={iconSize.sm} className="flex-none text-muted-foreground" />
       )}
       {children}
     </h5>

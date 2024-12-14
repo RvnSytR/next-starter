@@ -68,7 +68,6 @@ export function AppSidebar({
         <CustomButton
           customType="nav"
           href="/"
-          target="_blank"
           size="sm"
           variant="link"
           className="justify-start"
