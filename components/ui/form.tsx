@@ -167,6 +167,23 @@ const FormMessage = React.forwardRef<
 });
 FormMessage.displayName = "FormMessage";
 
+const FormFloating = ({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) => {
+  return (
+    <div className="relative block">
+      <small className="absolute inset-y-0 left-3 flex items-center font-normal text-muted-foreground">
+        {icon}
+      </small>
+      {children}
+    </div>
+  );
+};
+
 export {
   useFormField,
   Form,
@@ -176,4 +193,5 @@ export {
   FormDescription,
   FormMessage,
   FormField,
+  FormFloating,
 };
