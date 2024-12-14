@@ -32,7 +32,22 @@ export function GetRandomColor(withHash?: boolean) {
   return color as string;
 }
 
-export function CalculateAge(birthDate: Date) {
+export function FormatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
+export function FormatNumber(num: string | number) {
+  return new Intl.NumberFormat("id-ID").format(Number(num) || 0);
+}
+
+export function SanitizeNumberInput(targetValue: string) {
+  return targetValue.replace(/[^\d]/g, "");
+}
+
+export function CalculateAge(birthDate: Date): number | string {
   const today = new Date();
 
   if (isNaN(birthDate.getTime())) {
@@ -53,23 +68,6 @@ export function CalculateAge(birthDate: Date) {
 
   return age;
 }
-
-// #region // * Formater
-export function FormatDate(date: Date) {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-export function FormatNumber(num: string | number) {
-  return new Intl.NumberFormat("id-ID").format(Number(num) || 0);
-}
-
-export function SanitizeNumberInput(targetValue: string) {
-  return targetValue.replace(/[^\d]/g, "");
-}
-// #endregion
 
 // #region // * File Reader
 function ReadFileAsURL(file: File): Promise<string> {
