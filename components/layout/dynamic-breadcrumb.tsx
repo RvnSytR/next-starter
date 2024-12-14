@@ -9,23 +9,26 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import Link from "next/link";
 
 export type DynamicBreadcrumbProps = {
-  breadcrumbPath?: string[];
+  breadcrumbArr?: string[];
   currentPage: string;
 };
 
 export function DynamicBreadcrumb({
-  breadcrumbPath,
+  breadcrumbArr,
   currentPage,
 }: DynamicBreadcrumbProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {breadcrumbPath?.map((item, index) => {
+        {breadcrumbArr?.map((item, index) => {
           const menu = GetMenu(item);
           const content = menu ? (
-            <BreadcrumbLink href={menu.href}>{menu.label}</BreadcrumbLink>
+            <BreadcrumbLink asChild>
+              <Link href={menu.href}>{menu.label}</Link>
+            </BreadcrumbLink>
           ) : (
             <BreadcrumbPage className="text-destructive">
               {label.error.breadcrumb}
