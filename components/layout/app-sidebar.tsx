@@ -61,7 +61,7 @@ export function AppSidebar({
       </SidebarHeader>
 
       <SidebarContent>
-        {role !== "pending" && <NavMenu role={role} />}
+        {role !== "pending" && <SidebarNavMenu role={role} />}
       </SidebarContent>
 
       <SidebarFooter>
@@ -83,7 +83,7 @@ export function AppSidebar({
   );
 }
 
-export function NavMenu({ role }: { role: MenuRole }) {
+export function SidebarNavMenu({ role }: { role: MenuRole }) {
   const menu = GetMenuByRole(role);
   return menu.map((item, index) => (
     <Fragment key={index}>
