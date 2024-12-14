@@ -113,7 +113,7 @@ export function CustomButton({
           type="button"
           onClick={async () => {
             setIsLoading(true);
-            await Delay(1);
+            await Delay(0.5);
             router.refresh();
             setIsLoading(false);
           }}
