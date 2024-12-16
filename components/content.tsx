@@ -63,7 +63,7 @@ type MenuBody = {
 
 const MENU: Menu[] = [
   {
-    section: "Dashboard",
+    section: "General",
     body: [
       {
         href: "/dashboard",
@@ -75,15 +75,27 @@ const MENU: Menu[] = [
   },
 ];
 
-function GetMenu(path: string): MenuBody | null {
-  const allMenu = Object.values(MENU).flat();
+function GetMenu(
+  path: string,
+  withoutIcon?: boolean,
+): MenuBody | Omit<MenuBody, "icon"> | null {
+  const allMenu = Object.values(MENU).flatMap((item) => item.body);
+
   const result = allMenu
-    .flatMap((item) => item.body)
+    .map((item) => {
+      if (withoutIcon) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { icon, ...rest } = item;
+        return rest;
+      }
+      return item;
+    })
     .filter((item) => item.href === path);
+
   return result[0] ?? null;
 }
 
-function GetMenuByRole(role: MenuRole) {
+function GetMenuByRole(role: Exclude<MenuRole, "all">) {
   return MENU.map((section) => {
     const filteredBody = section.body.filter(
       (item) => item.role === role || item.role === "all",
@@ -102,8 +114,6 @@ function GetCurrentPage(path: string, metadata?: boolean) {
   if (!currentPage) return label.error.protectedPath;
   return metadata ? label.metadata(currentPage) : currentPage;
 }
-
 // #endregion
 
-export type { Menu, MenuRole };
-export { GetMenu, GetMenuByRole, GetCurrentPage, path, label, MENU };
+export { GetMenu, GetMenuByRole, GetCurrentPage, path, label };

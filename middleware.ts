@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
 
   try {
     const token = await getToken({ req, secret: process.env.AUTH_SECRET });
-    const menu = GetMenu(pathname);
+    const menu = GetMenu(pathname, true);
 
     if (!token && !pathname.startsWith(loginPath))
       return Response.redirect(new URL(loginPath, origin));

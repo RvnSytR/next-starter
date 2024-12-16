@@ -37,11 +37,16 @@ export function DynamicBreadcrumb({
 
           return (
             <Fragment key={index}>
-              <BreadcrumbItem>{content}</BreadcrumbItem>
-              <BreadcrumbSeparator>/</BreadcrumbSeparator>
+              <BreadcrumbItem className="hidden md:flex">
+                {content}
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:flex">
+                /
+              </BreadcrumbSeparator>
             </Fragment>
           );
         })}
+
         <BreadcrumbItem>
           <BreadcrumbPage>{currentPage}</BreadcrumbPage>
         </BreadcrumbItem>

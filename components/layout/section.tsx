@@ -1,54 +1,67 @@
+import { Fragment } from "react";
+
 import { cn } from "@/lib/utils";
 
+import { label } from "../content";
 import { CustomLoader, iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "./dynamic-breadcrumb";
-import { label } from "../content";
 
+import { SheetTrigger } from "../ui/sheet";
 import { Separator } from "../ui/separator";
-import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
-import { Hash } from "lucide-react";
+import { Button } from "../ui/button";
+import { Hash, Sidebar } from "lucide-react";
 
 export function Section({
-  className,
+  skeleton,
   children,
   ...props
 }: {
-  className?: string;
+  skeleton?: boolean;
   children: React.ReactNode;
 } & DynamicBreadcrumbProps) {
   return (
-    <SidebarInset className={cn("flex flex-col gap-y-4 p-4", className)}>
-      <header className="flex flex-col gap-2">
+    <Fragment>
+      <header className="space-y-2 lg:space-y-1.5">
         <div className="flex items-center">
-          <div className="over flex grow items-center gap-x-2">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+          <div className="flex grow items-center gap-x-2">
+            <SheetTrigger className="flex lg:hidden" asChild>
+              <Button size="iconsm" variant="ghost" disabled={skeleton}>
+                <Sidebar />
+              </Button>
+            </SheetTrigger>
+
+            <Separator
+              orientation="vertical"
+              className="mr-2 flex h-4 lg:hidden"
+            />
+
             <DynamicBreadcrumb {...props} />
           </div>
 
-          <ThemeToggle />
+          <ThemeToggle disabled={skeleton} />
         </div>
 
         <Separator />
       </header>
 
-      {children}
-
-      <footer className="mt-auto flex flex-col items-center gap-4">
-        <Separator />
-        <small className="desc">{label.copyright}</small>
-      </footer>
-    </SidebarInset>
+      <div className="flex flex-col gap-y-4">
+        {children}
+        <footer className="mt-auto flex flex-col items-center gap-4">
+          <Separator />
+          <small className="desc">{label.copyright}</small>
+        </footer>
+      </div>
+    </Fragment>
   );
 }
 
 export function SectionSkeleton() {
   return (
-    <Section currentPage="..." className="skeleton">
+    <Section currentPage="..." skeleton>
       <div className="m-auto">
         <CustomLoader size={iconSize.lg} />
       </div>
