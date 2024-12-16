@@ -29,6 +29,8 @@ const label = {
     },
     regis: "Email sudah terdaftar!",
     fileSize: "Ukuran Gambar Terlalu Besar!",
+    fileRequired: (f: string) => `Mohon upload ${f}!`,
+    fileUpload: "Terjadi kesalahan saat mengupload file!",
     protectedPath: "Protected Path Invalid!",
     breadcrumb: "Menu Path Invalid!",
   },

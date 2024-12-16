@@ -228,8 +228,9 @@ export function CustomButton({
     }
 
     case null: {
+      const { disabled, ...rest } = props;
       return (
-        <Button {...props} disabled={load}>
+        <Button {...rest} disabled={disabled || load}>
           <ChildrenNode />
         </Button>
       );
