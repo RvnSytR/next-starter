@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { Fragment } from "react";
 
 import { Role } from "@/lib/db/schema";
 import { GetMenuByRole } from "../content";
+import { ThemeToggle } from "../global/theme-provider";
 import { CustomButton } from "../global/custom-button";
 
 import {
@@ -15,8 +17,8 @@ import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ExternalLink } from "lucide-react";
-import { Fragment } from "react";
+import { ExternalLink, SidebarIcon } from "lucide-react";
+import { CustomLoader } from "../global/icon";
 
 type SiderbarHeaderData = {
   username: string;
@@ -143,7 +145,52 @@ function SidebarFooter() {
 }
 
 function SidebarSkeleton() {
-  return <p>Hello World</p>;
+  return (
+    <main className="flex min-h-screen">
+      <aside className="hidden basis-1/6 p-2 lg:flex">
+        <div className="flex size-full flex-col items-center justify-between p-4">
+          <div className="skeleton h-10 w-full" />
+          <CustomLoader />
+          <div className="skeleton h-10 w-full" />
+        </div>
+      </aside>
+
+      <div className="flex flex-1 flex-col justify-between rounded-md p-4 shadow lg:m-2 lg:border">
+        <header className="space-y-2 lg:space-y-1.5">
+          <div className="flex items-center">
+            <div className="flex grow items-center gap-x-2">
+              <Button
+                size="iconsm"
+                variant="ghost"
+                className="flex lg:hidden"
+                disabled
+              >
+                <SidebarIcon />
+              </Button>
+
+              <Separator
+                orientation="vertical"
+                className="mr-2 flex h-4 lg:hidden"
+              />
+
+              <div className="skeleton h-4 w-full md:w-24" />
+            </div>
+
+            <ThemeToggle disabled />
+          </div>
+
+          <Separator />
+        </header>
+
+        <CustomLoader className="m-auto" />
+
+        <footer className="space-y-4">
+          <Separator />
+          <div className="skeleton h-4 w-full" />
+        </footer>
+      </div>
+    </main>
+  );
 }
 
 export { Sidebar, SidebarSkeleton };

@@ -9,9 +9,6 @@ export default async function DashboardLayout({
   const session = await auth();
   if (!session || session.user.role === "pending") return <SidebarSkeleton />;
   const { username, email, role } = session.user;
-
-  return <SidebarSkeleton />;
-
   return (
     <Sidebar data={{ username: username, email: email, role: role }}>
       {children}

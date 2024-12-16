@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 
 import { label } from "../content";
-import { CustomLoader, iconSize } from "../global/icon";
+import { iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
 import {
   DynamicBreadcrumb,
@@ -16,11 +16,9 @@ import { Button } from "../ui/button";
 import { Hash, Sidebar } from "lucide-react";
 
 export function Section({
-  skeleton,
   children,
   ...props
 }: {
-  skeleton?: boolean;
   children: React.ReactNode;
 } & DynamicBreadcrumbProps) {
   return (
@@ -29,7 +27,7 @@ export function Section({
         <div className="flex items-center">
           <div className="flex grow items-center gap-x-2">
             <SheetTrigger className="flex lg:hidden" asChild>
-              <Button size="iconsm" variant="ghost" disabled={skeleton}>
+              <Button size="iconsm" variant="ghost">
                 <Sidebar />
               </Button>
             </SheetTrigger>
@@ -42,7 +40,7 @@ export function Section({
             <DynamicBreadcrumb {...props} />
           </div>
 
-          <ThemeToggle disabled={skeleton} />
+          <ThemeToggle />
         </div>
 
         <Separator />
@@ -50,22 +48,12 @@ export function Section({
 
       <div className="flex flex-col gap-y-4">
         {children}
-        <footer className="mt-auto flex flex-col items-center gap-4">
+        <footer className="mt-auto space-y-4">
           <Separator />
           <small className="desc">{label.copyright}</small>
         </footer>
       </div>
     </Fragment>
-  );
-}
-
-export function SectionSkeleton() {
-  return (
-    <Section currentPage="..." skeleton>
-      <div className="m-auto">
-        <CustomLoader size={iconSize.lg} />
-      </div>
-    </Section>
   );
 }
 
