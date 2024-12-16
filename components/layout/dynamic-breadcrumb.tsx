@@ -23,6 +23,8 @@ export function DynamicBreadcrumb({
   return (
     <Breadcrumb>
       <BreadcrumbList>
+        <BreadcrumbSeparator className="hidden md:flex">/</BreadcrumbSeparator>
+
         {breadcrumbArr?.map((item, index) => {
           const menu = GetMenu(item);
           const content = menu ? (
@@ -48,7 +50,9 @@ export function DynamicBreadcrumb({
         })}
 
         <BreadcrumbItem>
-          <BreadcrumbPage>{currentPage}</BreadcrumbPage>
+          <BreadcrumbPage className="cursor-default">
+            {currentPage}
+          </BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

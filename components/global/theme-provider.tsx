@@ -18,7 +18,7 @@ export function ThemeToggle({ className, ...props }: ButtonProps) {
   const { setTheme } = useTheme();
   return (
     <Button
-      size="icon"
+      size="iconsm"
       variant="ghost"
       className={cn("flex-none", className)}
       onClick={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))}

@@ -5,9 +5,11 @@ import { Role } from "@/lib/db/schema";
 import { GetMenuByRole } from "../content";
 import { ThemeToggle } from "../global/theme-provider";
 import { CustomButton } from "../global/custom-button";
+import { CustomLoader } from "../global/icon";
 
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetDescription,
   SheetHeader,
@@ -18,7 +20,6 @@ import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { ExternalLink, SidebarIcon } from "lucide-react";
-import { CustomLoader } from "../global/icon";
 
 type SiderbarHeaderData = {
   username: string;
@@ -33,24 +34,25 @@ function Sidebar({
   data: SiderbarHeaderData;
   children: React.ReactNode;
 }) {
+  const header = <SidebarHeader data={data} />;
+  const footer = <SidebarFooter />;
+
   return (
     <Sheet>
-      <SheetContent side="left">
-        <SheetHeader>
-          <SidebarHeader data={data} />
-        </SheetHeader>
+      <SheetContent side="left" className="flex flex-col gap-y-4">
+        <SheetHeader>{header}</SheetHeader>
+        <SidebarContent role={data.role} className="h-5/6" />
+        {footer}
       </SheetContent>
 
       <main className="flex min-h-screen">
-        <aside className="sticky left-0 top-0 hidden h-screen basis-1/6 p-2 lg:flex">
-          <div className="flex size-full flex-col gap-y-4 p-4">
-            <SidebarHeader data={data} />
-            <SidebarContent role={data.role} />
-            <SidebarFooter />
-          </div>
+        <aside className="sticky left-0 top-0 hidden flex-col gap-y-4 border border-transparent p-6 lg:flex">
+          {header}
+          <SidebarContent role={data.role} className="grow" />
+          {footer}
         </aside>
 
-        <div className="flex flex-1 flex-col gap-y-4 rounded-md p-4 shadow lg:m-2 lg:border">
+        <div className="flex grow flex-col gap-y-4 rounded-md border p-4 shadow-sm lg:m-2 lg:ml-0">
           {children}
         </div>
       </main>
@@ -60,7 +62,7 @@ function Sidebar({
 
 function SidebarHeader({ data }: { data: SiderbarHeaderData }) {
   return (
-    <div className="space-y-2">
+    <div className="cursor-default space-y-2">
       <div className="flex items-center gap-x-3">
         <Avatar className="rounded-md">
           <AvatarFallback className="rounded-md">
@@ -68,10 +70,10 @@ function SidebarHeader({ data }: { data: SiderbarHeaderData }) {
           </AvatarFallback>
         </Avatar>
         <div className="text-ellipsis">
-          <SheetTitle className="line-clamp-1 text-sm">
+          <SheetTitle className="line-clamp-1 text-left text-base">
             {data.username}
           </SheetTitle>
-          <SheetDescription className="line-clamp-1 text-xs">
+          <SheetDescription className="line-clamp-1 text-left text-xs">
             {data.email}
           </SheetDescription>
         </div>
@@ -82,10 +84,16 @@ function SidebarHeader({ data }: { data: SiderbarHeaderData }) {
   );
 }
 
-function SidebarContent({ role }: { role: Exclude<Role, "pending"> }) {
+function SidebarContent({
+  className,
+  role,
+}: {
+  className?: string;
+  role: Exclude<Role, "pending">;
+}) {
   const menu = GetMenuByRole(role);
   return (
-    <ScrollArea className="grow">
+    <ScrollArea className={className}>
       <div className="flex flex-col gap-y-4">
         {menu.map((item, index) => (
           <Fragment key={index}>
@@ -96,22 +104,23 @@ function SidebarContent({ role }: { role: Exclude<Role, "pending"> }) {
 
               <div className="flex flex-col gap-y-1">
                 {item.body.map((itm, ind) => (
-                  <Button
-                    key={ind}
-                    size="sm"
-                    variant="ghost"
-                    className="w-full justify-start gap-x-4"
-                    asChild
-                  >
-                    <Link href={itm.href}>
-                      {itm.icon && <itm.icon />} {itm.label}
-                    </Link>
-                  </Button>
+                  <SheetClose key={ind} asChild>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="w-full justify-start gap-x-4"
+                      asChild
+                    >
+                      <Link href={itm.href}>
+                        {itm.icon && <itm.icon />} {itm.label}
+                      </Link>
+                    </Button>
+                  </SheetClose>
                 ))}
               </div>
             </div>
 
-            <Separator />
+            {index !== menu.length - 1 && <Separator />}
           </Fragment>
         ))}
       </div>
@@ -124,6 +133,7 @@ function SidebarFooter() {
     <footer className="space-y-2">
       <CustomButton
         customType="nav"
+        load={false}
         href="/"
         size="sm"
         variant="link"
@@ -136,7 +146,6 @@ function SidebarFooter() {
 
       <CustomButton
         customType="logout"
-        size="lg"
         variant="outline_destructive"
         className="w-full"
       />
@@ -155,8 +164,8 @@ function SidebarSkeleton() {
         </div>
       </aside>
 
-      <div className="flex flex-1 flex-col justify-between rounded-md p-4 shadow lg:m-2 lg:border">
-        <header className="space-y-2 lg:space-y-1.5">
+      <div className="flex grow flex-col justify-between rounded-md p-4 shadow lg:m-2 lg:border">
+        <header className="space-y-2">
           <div className="flex items-center">
             <div className="flex grow items-center gap-x-2">
               <Button

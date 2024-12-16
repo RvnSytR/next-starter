@@ -23,8 +23,8 @@ export function Section({
 } & DynamicBreadcrumbProps) {
   return (
     <Fragment>
-      <header className="space-y-2 lg:space-y-1.5">
-        <div className="flex items-center">
+      <header className="space-y-2">
+        <div className="flex h-10 items-center">
           <div className="flex grow items-center gap-x-2">
             <SheetTrigger className="flex lg:hidden" asChild>
               <Button size="iconsm" variant="ghost">
@@ -46,9 +46,10 @@ export function Section({
         <Separator />
       </header>
 
-      <div className="flex flex-col gap-y-4">
+      <div className="flex grow flex-col gap-y-4">
         {children}
-        <footer className="mt-auto space-y-4">
+
+        <footer className="mt-auto flex flex-col items-center gap-y-4">
           <Separator />
           <small className="desc">{label.copyright}</small>
         </footer>

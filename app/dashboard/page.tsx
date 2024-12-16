@@ -10,10 +10,6 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <Section currentPage={GetCurrentPage("/dashboard")}>
-      <div className="min-h-screen">
-        <p>Hello world</p>
-      </div>
-
       <p>Hello world</p>
     </Section>
   );
