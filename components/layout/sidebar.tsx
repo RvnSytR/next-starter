@@ -46,7 +46,7 @@ function Sidebar({
       </SheetContent>
 
       <main className="flex min-h-screen">
-        <aside className="sticky left-0 top-0 hidden flex-col gap-y-4 border border-transparent p-6 lg:flex">
+        <aside className="sticky left-0 top-0 hidden w-[18rem] flex-col gap-y-4 border border-transparent p-6 lg:flex">
           {header}
           <SidebarContent role={data.role} className="grow" />
           {footer}
