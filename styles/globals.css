@@ -124,8 +124,4 @@
   .skeleton {
     @apply animate-pulse rounded-md bg-muted;
   }
-
-  .sidebar-icon {
-    @apply group-data-[collapsible=icon]:hidden;
-  }
 }
