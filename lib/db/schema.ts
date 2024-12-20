@@ -19,8 +19,8 @@ const user = mysqlTable("user", {
   password: varchar("password", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),
   role: mysqlEnum("role", role).notNull().default("pending"),
-  lastSignInAt: timestamp("lastSignInAt").notNull().defaultNow(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  last_signin_at: timestamp("last_signin_at").notNull().defaultNow(),
+  created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
 type UserCredentials = Omit<typeof user.$inferSelect, "password">;

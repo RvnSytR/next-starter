@@ -23,8 +23,6 @@ export function DynamicBreadcrumb({
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        <BreadcrumbSeparator className="hidden md:flex">/</BreadcrumbSeparator>
-
         {breadcrumbArr?.map((item, index) => {
           const menu = GetMenu(item);
           const content = menu ? (

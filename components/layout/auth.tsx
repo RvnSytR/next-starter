@@ -71,10 +71,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
-      >
+      <form onSubmit={form.handleSubmit(formHandler)} className="section-y">
         <FormField
           control={form.control}
           name="email"

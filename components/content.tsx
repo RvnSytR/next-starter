@@ -95,7 +95,7 @@ function GetMenu(
   return result[0] ?? null;
 }
 
-function GetMenuByRole(role: Exclude<MenuRole, "all">) {
+function GetMenuByRole(role: MenuRole) {
   return MENU.map((section) => {
     const filteredBody = section.body.filter(
       (item) => item.role === role || item.role === "all",
@@ -116,4 +116,5 @@ function GetCurrentPage(path: string, metadata?: boolean) {
 }
 // #endregion
 
+export type { MenuRole };
 export { GetMenu, GetMenuByRole, GetCurrentPage, path, label };

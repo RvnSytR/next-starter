@@ -1,5 +1,7 @@
 import { auth } from "@/lib/auth";
-import { Sidebar, SidebarSkeleton } from "@/components/layout/sidebar";
+import { AppSidebar } from "@/components/layout/app-sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarSkeleton } from "@/components/layout/section";
 
 export default async function DashboardLayout({
   children,
@@ -8,10 +10,11 @@ export default async function DashboardLayout({
 }>) {
   const session = await auth();
   if (!session || session.user.role === "pending") return <SidebarSkeleton />;
-  const { username, email, role } = session.user;
+
   return (
-    <Sidebar data={{ username: username, email: email, role: role }}>
+    <SidebarProvider>
+      <AppSidebar session={session} />
       {children}
-    </Sidebar>
+    </SidebarProvider>
   );
 }

@@ -69,7 +69,9 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        {loadTrigger ? loadElement : children}
+        <span className="sidebar-icon">
+          {loadTrigger ? loadElement : children}
+        </span>
         {iconPosition === "right" && iconElement}
       </Fragment>
     );

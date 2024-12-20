@@ -7,8 +7,8 @@ const getUserParam = {
   email: userSchema.email,
   username: userSchema.username,
   role: userSchema.role,
-  lastSignInAt: userSchema.lastSignInAt,
-  createdAt: userSchema.createdAt,
+  last_signin_at: userSchema.last_signin_at,
+  created_at: userSchema.created_at,
 };
 
 const user = {
@@ -47,7 +47,7 @@ const user = {
 
   updateLog: db
     .update(userSchema)
-    .set({ lastSignInAt: sql`NOW()` })
+    .set({ last_signin_at: sql`NOW()` })
     .where(eq(userSchema.id_user, sql.placeholder("id_user")))
     .prepare(),
 
