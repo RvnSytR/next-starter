@@ -69,7 +69,7 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        <span className="sidebar-icon">
+        <span className="group-data-[collapsible=icon]:hidden">
           {loadTrigger ? loadElement : children}
         </span>
         {iconPosition === "right" && iconElement}

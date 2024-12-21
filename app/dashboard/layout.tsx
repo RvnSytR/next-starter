@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { SidebarSkeleton } from "@/components/layout/section";
+import { SectionSkeleton } from "@/components/layout/section";
 
 export default async function DashboardLayout({
   children,
@@ -9,7 +9,7 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const session = await auth();
-  if (!session || session.user.role === "pending") return <SidebarSkeleton />;
+  if (!session || session.user.role === "pending") return <SectionSkeleton />;
 
   return (
     <SidebarProvider>

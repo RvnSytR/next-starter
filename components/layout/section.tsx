@@ -89,7 +89,7 @@ export function SectionLabel({
   );
 }
 
-export function SidebarSkeleton() {
+export function SectionSkeleton() {
   return (
     <main className="flex min-h-screen">
       <aside className="hidden basis-1/6 p-2 lg:flex">

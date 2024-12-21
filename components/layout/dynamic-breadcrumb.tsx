@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Fragment } from "react";
 import { GetMenu, label } from "../content";
 
@@ -9,7 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import Link from "next/link";
 
 export type DynamicBreadcrumbProps = {
   breadcrumbArr?: string[];

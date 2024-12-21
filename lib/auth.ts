@@ -48,28 +48,28 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
     jwt({ token, user }): JWT | null {
       if (user) {
-        const { id_user, username, email, role, lastSignInAt, createdAt } =
+        const { id_user, username, email, role, last_signin_at, created_at } =
           user;
         token.id_user = id_user;
         token.username = username;
         token.email = email;
         token.role = role;
-        token.lastSignInAt = lastSignInAt;
-        token.createdAt = createdAt;
+        token.last_signin_at = last_signin_at;
+        token.created_at = created_at;
       }
       return token;
     },
 
     session({ session, token }): Session | DefaultSession {
       if (token && token.email) {
-        const { id_user, username, email, role, lastSignInAt, createdAt } =
+        const { id_user, username, email, role, last_signin_at, created_at } =
           token;
         session.user.id_user = id_user;
         session.user.username = username;
         session.user.email = email;
         session.user.role = role;
-        session.user.lastSignInAt = lastSignInAt;
-        session.user.createdAt = createdAt;
+        session.user.last_signin_at = last_signin_at;
+        session.user.created_at = created_at;
       }
       return session;
     },
