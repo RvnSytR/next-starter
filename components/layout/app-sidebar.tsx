@@ -31,7 +31,10 @@ export function AppSidebar({
   return (
     <Sidebar variant="inset" collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenuButton size="lg">
+        <SidebarMenuButton
+          size="lg"
+          className="group-data-[collapsible=icon]:hover:bg-sidebar"
+        >
           <Avatar className="size-8 rounded">
             <AvatarFallback className="rounded">
               {username.slice(0, 2)}

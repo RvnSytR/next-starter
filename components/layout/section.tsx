@@ -9,9 +9,10 @@ import {
   DynamicBreadcrumbProps,
 } from "./dynamic-breadcrumb";
 
+import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
-import { Hash } from "lucide-react";
+import { Hash, SidebarIcon } from "lucide-react";
 
 export function Section({
   className,
@@ -22,7 +23,9 @@ export function Section({
   children: ReactNode;
 } & DynamicBreadcrumbProps) {
   return (
-    <SidebarInset className={cn("flex flex-col gap-y-4 p-4", className)}>
+    <SidebarInset
+      className={cn("flex w-screen flex-col gap-y-4 p-4", className)}
+    >
       <header className="flex flex-col gap-y-3">
         <div className="flex items-center">
           <div className="over flex grow items-center gap-x-2">
@@ -102,7 +105,7 @@ export function SectionLabel({
   );
 }
 
-export function SectionSkeleton() {
+export function LayoutSkeleton() {
   return (
     <main className="flex min-h-screen">
       <aside className="hidden basis-1/6 p-2 lg:flex">
@@ -113,33 +116,41 @@ export function SectionSkeleton() {
         </div>
       </aside>
 
-      <div className="flex grow flex-col justify-between rounded-md p-4 shadow lg:m-2 lg:border">
-        <header className="space-y-2">
-          <div className="flex items-center">
-            <div className="flex grow items-center gap-x-2">
-              <SidebarTrigger disabled />
+      <SectionSkeleton />
+    </main>
+  );
+}
 
-              <Separator
-                orientation="vertical"
-                className="mr-2 flex h-4 lg:hidden"
-              />
+export function SectionSkeleton() {
+  return (
+    <div className="flex grow flex-col justify-between rounded-md bg-background p-4 shadow lg:m-2">
+      <header className="space-y-2">
+        <div className="flex items-center">
+          <div className="flex grow items-center gap-x-2">
+            <Button size="iconsm" variant="ghost" disabled>
+              <SidebarIcon />
+            </Button>
 
-              <div className="skeleton h-4 w-full md:w-24" />
-            </div>
+            <Separator
+              orientation="vertical"
+              className="mr-2 flex h-4 lg:hidden"
+            />
 
-            <ThemeToggle disabled />
+            <div className="skeleton h-4 w-full md:w-24" />
           </div>
 
-          <Separator />
-        </header>
+          <ThemeToggle disabled />
+        </div>
 
-        <CustomLoader size={iconSize.lg} className="m-auto" />
+        <Separator />
+      </header>
 
-        <footer className="space-y-4">
-          <Separator />
-          <div className="skeleton h-4 w-full" />
-        </footer>
-      </div>
-    </main>
+      <CustomLoader size={iconSize.lg} className="m-auto" />
+
+      <footer className="space-y-4">
+        <Separator />
+        <div className="skeleton h-4 w-full" />
+      </footer>
+    </div>
   );
 }
