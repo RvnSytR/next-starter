@@ -39,6 +39,7 @@ export type CustomButtonProps = ButtonProps &
     loadText?: string;
     iconPosition?: "left" | "right";
     icon?: ReactNode;
+    hideTextOnMobile?: boolean;
     children?: ReactNode;
   };
 // #endregion
@@ -49,6 +50,7 @@ export function CustomButton({
   loadText,
   iconPosition = "left",
   icon,
+  hideTextOnMobile,
   children,
   ...props
 }: CustomButtonProps) {
@@ -69,7 +71,12 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconElement}
-        <span className="group-data-[collapsible=icon]:hidden">
+        <span
+          className={cn(
+            "group-data-[collapsible=icon]:hidden",
+            hideTextOnMobile ? "group-data-[collapsible=icon]:hidden" : "",
+          )}
+        >
           {loadTrigger ? loadElement : children}
         </span>
         {iconPosition === "right" && iconElement}
