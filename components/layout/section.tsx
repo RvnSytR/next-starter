@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils";
+import { ReactNode } from "react";
 
+import { cn } from "@/lib/utils";
 import { label } from "../content";
 import { CustomLoader, iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
@@ -18,7 +19,7 @@ export function Section({
   ...props
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 } & DynamicBreadcrumbProps) {
   return (
     <SidebarInset className={cn("flex flex-col gap-y-4 p-4", className)}>
@@ -46,6 +47,14 @@ export function Section({
   );
 }
 
+export function SectionGroup({ children }: { children: ReactNode }) {
+  return <div className="flex flex-col gap-y-2">{children}</div>;
+}
+
+export function SectionHeader({ children }: { children: ReactNode }) {
+  return <div className="space-y-1 md:space-y-0">{children}</div>;
+}
+
 export function SectionTitle({
   withHash,
   className,
@@ -53,7 +62,7 @@ export function SectionTitle({
 }: {
   withHash?: boolean;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <h5
@@ -70,12 +79,16 @@ export function SectionTitle({
   );
 }
 
+export function SectionDescription({ children }: { children: ReactNode }) {
+  return <p className="desc">{children}</p>;
+}
+
 export function SectionLabel({
   className,
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div
