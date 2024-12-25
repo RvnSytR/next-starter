@@ -33,10 +33,13 @@ const label = {
     fileUpload: "Terjadi kesalahan saat mengupload file!",
     protectedPath: "Protected Path Invalid!",
     breadcrumb: "Menu Path Invalid!",
+    parsedNumber: "Parsed Number Invalid!",
   },
   button: {
     login: "Login",
+    regis: "Logout",
     logout: "Logout",
+    refresh: "Refresh",
   },
   connection: {
     success: "Database connected!",

@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { Session } from "next-auth";
 
 import { CheckUser } from "@/server/action";
 
@@ -25,21 +24,8 @@ import {
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { LogIn } from "lucide-react";
-import { SignOutHandler } from "@/app/login/sign";
 
 const { success, loading, button } = label;
-
-export function SignOutComponent({
-  session,
-}: {
-  session: Session | null;
-}): React.ReactNode {
-  useEffect(() => {
-    if (session) SignOutHandler();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return null;
-}
 
 export function LoginForm() {
   const router = useRouter();

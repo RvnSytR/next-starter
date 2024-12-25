@@ -2,6 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { GetMenu, path } from "./components/content";
+import { cookies } from "next/headers";
 
 export async function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;
@@ -11,8 +12,12 @@ export async function middleware(req: NextRequest) {
     const token = await getToken({ req, secret: process.env.AUTH_SECRET });
     const menu = GetMenu(pathname, true);
 
-    if (!token && !pathname.startsWith(loginPath))
+    if (!token && !pathname.startsWith(loginPath)) {
+      const cookieStore = await cookies();
+      const authCookieName = "authjs.session-token";
+      if (cookieStore.get(authCookieName)) cookieStore.delete(authCookieName);
       return Response.redirect(new URL(loginPath, origin));
+    }
 
     if (token && pathname.startsWith(loginPath))
       return Response.redirect(new URL(protectedPath, origin));

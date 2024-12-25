@@ -105,22 +105,6 @@ export function SectionLabel({
   );
 }
 
-export function LayoutSkeleton() {
-  return (
-    <main className="flex min-h-screen">
-      <aside className="hidden basis-1/6 p-2 lg:flex">
-        <div className="flex size-full flex-col items-center justify-between p-4">
-          <div className="skeleton h-10 w-full" />
-          <CustomLoader size={iconSize.lg} />
-          <div className="skeleton h-10 w-full" />
-        </div>
-      </aside>
-
-      <SectionSkeleton />
-    </main>
-  );
-}
-
 export function SectionSkeleton() {
   return (
     <div className="flex grow flex-col justify-between rounded-md bg-background p-4 shadow lg:m-2">
@@ -152,5 +136,31 @@ export function SectionSkeleton() {
         <div className="skeleton h-4 w-full" />
       </footer>
     </div>
+  );
+}
+
+export function SectionNotFound({
+  ...props
+}: Omit<DynamicBreadcrumbProps, "currentPage">) {
+  return (
+    <Section currentPage="Not Found!" {...props}>
+      Hello world
+    </Section>
+  );
+}
+
+export function LayoutSkeleton() {
+  return (
+    <main className="flex min-h-screen">
+      <aside className="hidden basis-1/6 p-2 lg:flex">
+        <div className="flex size-full flex-col items-center justify-between p-4">
+          <div className="skeleton h-10 w-full" />
+          <CustomLoader size={iconSize.lg} />
+          <div className="skeleton h-10 w-full" />
+        </div>
+      </aside>
+
+      <SectionSkeleton />
+    </main>
   );
 }

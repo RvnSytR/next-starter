@@ -65,6 +65,9 @@ export function CustomButton({
   }): ReactNode => {
     const loadTrigger = load ?? isLoading;
     const loader = customLoader ?? <CustomLoader customType="circle" />;
+
+    if (!children) return loadTrigger ? loader : (icon ?? null);
+
     const iconElement = loadTrigger ? loader : icon;
     const loadElement = loadText ?? children;
 
@@ -74,7 +77,7 @@ export function CustomButton({
         <span
           className={cn(
             "group-data-[collapsible=icon]:hidden",
-            hideTextOnMobile ? "group-data-[collapsible=icon]:hidden" : "",
+            hideTextOnMobile ? "hidden md:flex" : "",
           )}
         >
           {loadTrigger ? loadElement : children}
@@ -114,7 +117,9 @@ export function CustomButton({
 
     case "refresh": {
       loadText = loading.refresh;
+      children = button.refresh;
       icon = <RefreshCw />;
+
       return (
         <Button
           type="button"

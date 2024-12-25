@@ -27,17 +27,20 @@ export async function CheckUser(email: string, password: string) {
   }
 }
 
-export async function RegisUser(data: typeof user.$inferInsert) {
-  const { email, password, username } = data;
-  const [check] = await state.user.getByEmail.execute({ email: email });
+export async function RegisUser(
+  data: Omit<typeof user.$inferInsert, "id_user">,
+) {
+  const { email, password, ...restData } = data;
+  const [check] = await state.user.selectByEmail.execute({ email: email });
 
   if (check) throw new Error(errorLabel.regis);
   else {
     const salt = bcrypt.genSaltSync();
     await state.user.insert.execute({
+      id_user: crypto.randomUUID(),
       email: email,
       password: bcrypt.hashSync(password, salt),
-      username: username,
+      ...restData,
     });
   }
 }

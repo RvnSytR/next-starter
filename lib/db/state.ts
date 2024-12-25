@@ -2,7 +2,7 @@ import { db } from "./config";
 import { user as userSchema, Role } from "./schema";
 import { eq, sql } from "drizzle-orm";
 
-const getUserParam = {
+const selectUserParam = {
   id_user: userSchema.id_user,
   email: userSchema.email,
   username: userSchema.username,
@@ -15,6 +15,7 @@ const user = {
   insert: db
     .insert(userSchema)
     .values({
+      id_user: sql.placeholder("id_user"),
       email: sql.placeholder("email"),
       password: sql.placeholder("password"),
       username: sql.placeholder("username"),
@@ -31,16 +32,16 @@ const user = {
     .where(eq(userSchema.email, sql.placeholder("email")))
     .prepare(),
 
-  getAll: db.select(getUserParam).from(userSchema).prepare(),
+  selectAll: db.select(selectUserParam).from(userSchema).prepare(),
 
-  getById: db
-    .select(getUserParam)
+  selectById: db
+    .select(selectUserParam)
     .from(userSchema)
     .where(eq(userSchema.id_user, sql.placeholder("id_user")))
     .prepare(),
 
-  getByEmail: db
-    .select(getUserParam)
+  selectByEmail: db
+    .select(selectUserParam)
     .from(userSchema)
     .where(eq(userSchema.email, sql.placeholder("email")))
     .prepare(),

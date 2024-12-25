@@ -12,9 +12,7 @@ type Role = (typeof role)[number];
 
 //#region // * Tables
 const user = mysqlTable("user", {
-  id_user: varchar("id_user", { length: 255 })
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
+  id_user: varchar("id_user", { length: 255 }).primaryKey(),
   email: varchar("email", { length: 255 }).notNull(),
   password: varchar("password", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),

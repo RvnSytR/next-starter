@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 
-import { auth } from "@/lib/auth";
-import { LoginForm, SignOutComponent } from "@/components/layout/auth";
+import { LoginForm } from "@/components/layout/auth";
 
 import { label } from "@/components/content";
 
@@ -20,9 +19,7 @@ export const metadata: Metadata = {
   title: "Login Page",
 };
 
-export default async function Page() {
-  const session = await auth();
-
+export default function Page() {
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
@@ -37,7 +34,6 @@ export default async function Page() {
             protected routes. So pop in your email and password below, and you
             good to go 🛤️
           </CardDescription>
-          <SignOutComponent session={session} />
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">

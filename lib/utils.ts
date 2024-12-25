@@ -40,6 +40,7 @@ export function FormatDate(date: Date) {
 }
 
 export function FormatNumber(num: string | number) {
+  if (!num) return "";
   return new Intl.NumberFormat("id-ID").format(Number(num) || 0);
 }
 

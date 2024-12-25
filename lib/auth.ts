@@ -32,7 +32,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       authorize: async (credentials): Promise<User | null> => {
         if (!credentials?.email) throw new Error("Email is required");
-        const [res] = await state.user.getByEmail.execute({
+        const [res] = await state.user.selectByEmail.execute({
           email: credentials.email as string,
         });
         if (!res) throw new Error("User does not exist!");
