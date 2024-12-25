@@ -41,10 +41,6 @@ const label = {
     logout: "Logout",
     refresh: "Refresh",
   },
-  connection: {
-    success: "Database connected!",
-    error: "Database connection failed!",
-  },
 };
 // #endregion
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 06, 2024 at 03:24 PM
+-- Generation Time: Dec 25, 2024 at 10:57 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.2
 
@@ -33,8 +33,8 @@ CREATE TABLE `user` (
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `username` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `role` enum('user','admin','pending') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'pending',
-  `lastSignInAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `createdAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `last_signin_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
