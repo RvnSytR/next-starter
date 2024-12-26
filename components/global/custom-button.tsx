@@ -213,7 +213,6 @@ export function CustomButton({
               "--pulse-color": pulseColor,
             } as React.CSSProperties
           }
-          {...props}
           className={cn("relative", className)}
           asChild={!!href}
           required

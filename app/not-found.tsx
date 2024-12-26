@@ -20,7 +20,7 @@ export default function NotFound() {
         size="lg"
         className="h-16 rounded-full border-4 px-8 text-xl font-bold hover:border-primary"
         text="Go To Main Page"
-        loadText="Going to Main Page"
+        loadText="Going to Main Page..."
       />
     </div>
   );
