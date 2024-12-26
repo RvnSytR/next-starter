@@ -130,7 +130,7 @@ npx prettier . --check
 
 - ShadCn Installation
 - Adding Component
-  - alert-dialog
+  - alert-dialog (custom)
   - badge
   - breadcrumb
   - button (custom)
@@ -143,12 +143,12 @@ npx prettier . --check
   - input
   - label
   - pagination
-  - radio-group
+  - radio-group (custom)
   - scroll-area
   - select
   - separator
   - sheet
-  - sidebar(custom)
+  - sidebar (custom)
   - skeleton
   - sooner
   - table
