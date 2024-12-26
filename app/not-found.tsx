@@ -18,12 +18,10 @@ export default function NotFound() {
         href="/"
         variant="outline"
         size="lg"
-        loadText="Going to Main Page..."
         className="h-16 rounded-full border-4 px-8 text-xl font-bold hover:border-primary"
-        prefetch
-      >
-        Go to Main Page
-      </CustomButton>
+        text="Go To Main Page"
+        loadText="Going to Main Page"
+      />
     </div>
   );
 }

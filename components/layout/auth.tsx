@@ -74,7 +74,6 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-
         <FormField
           control={form.control}
           name="password"
@@ -92,7 +91,6 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-
         <CustomButton
           customType={null}
           type="submit"
@@ -100,9 +98,8 @@ export function LoginForm() {
           loadText={loading.login}
           icon={<LogIn />}
           className="mt-2"
-        >
-          {button.login}
-        </CustomButton>
+          text={button.login}
+        />
       </form>
     </Form>
   );

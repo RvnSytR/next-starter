@@ -1,11 +1,10 @@
 "use client";
 
-import Link, { type LinkProps } from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
+import Link, { type LinkProps } from "next/link";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { SignOutHandler } from "@/app/login/sign";
 
 import { cn } from "@/lib/utils";
@@ -15,7 +14,7 @@ import { label, path } from "../content";
 import { toast } from "sonner";
 import { CustomLoader } from "./icon";
 import { Button, ButtonProps } from "../ui/button";
-import { LogOut, RefreshCw, Sparkle } from "lucide-react";
+import { LogOut, RefreshCw } from "lucide-react";
 
 // #region // * Types
 type CustomType =
@@ -23,7 +22,7 @@ type CustomType =
       customType: "loading" | "logout" | "refresh" | null | undefined;
     }
   | ({ customType: "nav" } & LinkProps &
-      Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children">)
+      React.AnchorHTMLAttributes<HTMLAnchorElement>)
   | ({
       customType: "pulse";
       pulseColor?: string;
@@ -34,126 +33,91 @@ type CustomType =
       offset?: number;
     };
 
-export type CustomButtonProps = Omit<ButtonProps, "children"> &
+export type CustomButtonProps = ButtonProps &
   CustomType & {
-    text?: string;
     load?: boolean;
     loadText?: string;
-    hideTextOnMobile?: boolean;
-    icon?: ReactNode;
     iconPosition?: "left" | "right";
+    icon?: ReactNode;
+    hideTextOnMobile?: boolean;
+    children?: ReactNode;
   };
 // #endregion
 
 export function CustomButton({
   customType,
-  text,
   load,
   loadText,
-  hideTextOnMobile = false,
   icon,
   iconPosition = "left",
+  hideTextOnMobile = false,
+  children,
   ...props
 }: CustomButtonProps) {
   const router = useRouter();
-  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { success, loading, button } = label;
 
-  //#region // * Nodes
-  type CustomButtonNode = { required?: boolean; children: ReactNode } & Pick<
-    ButtonProps,
-    "style" | "className" | "onClick" | "asChild"
-  >;
-
-  const ButtonNode = ({ children, ...nodeProps }: CustomButtonNode) => {
-    const { size, ...restProps } = props;
-    const { required, ...restNodeProps } = nodeProps;
-    if (required && !text && !icon) return <RequiredNode />;
-
-    return (
-      <Button
-        type="button"
-        size={
-          !text || (hideTextOnMobile && isMobile)
-            ? size === "lg" || size === "iconlg"
-              ? "iconlg"
-              : size === "sm" || size === "iconsm"
-                ? "iconsm"
-                : "icon"
-            : size
-        }
-        disabled={load ?? isLoading}
-        {...restProps}
-        {...restNodeProps}
-      >
-        {children}
-      </Button>
-    );
-  };
-
-  const LoadingButtonNode = ({ children, ...nodeProps }: CustomButtonNode) => {
-    return (
-      <ButtonNode onClick={() => setIsLoading(true)} {...nodeProps}>
-        {children}
-      </ButtonNode>
-    );
-  };
-
   const ChildrenNode = ({ customLoader }: { customLoader?: ReactNode }) => {
-    const isLoad = load ?? isLoading;
-    const iconNode = isLoad
-      ? (customLoader ?? <CustomLoader customType="circle" />)
-      : icon;
+    const loadTrigger = load ?? isLoading;
+    const loader = customLoader ?? <CustomLoader customType="circle" />;
 
-    if (!text) return iconNode;
+    if (!children) return loadTrigger ? loader : (icon ?? "");
+
+    const iconElement = loadTrigger ? loader : icon;
+    const loadElement = loadText ?? children;
 
     return (
       <Fragment>
-        {iconPosition === "left" && iconNode}
+        {iconPosition === "left" && iconElement}
         <span
           className={cn(
             "group-data-[collapsible=icon]:hidden",
             hideTextOnMobile ? "hidden md:flex" : "",
           )}
         >
-          {isLoad ? (loadText ?? text) : text}
+          {loadTrigger ? loadElement : children}
         </span>
-        {iconPosition === "right" && iconNode}
+        {iconPosition === "right" && iconElement}
       </Fragment>
     );
   };
 
-  const RequiredNode = ({ destructive = false }: { destructive?: boolean }) => {
+  const LoadingButtonNode = ({
+    children: nodeChildren,
+    ...nodeProps
+  }: ButtonProps & {
+    children: ReactNode;
+  }) => {
     return (
       <Button
-        variant={destructive ? "destructive" : "default"}
-        className="animate-wiggle animate-infinite"
-        disabled
+        type="button"
+        onClick={() => setIsLoading(true)}
+        disabled={load ?? isLoading}
+        {...props}
+        {...nodeProps}
       >
-        <Sparkle /> Custom Button {destructive && "Undefined!"}
+        {nodeChildren}
       </Button>
     );
   };
-  //#endregion
 
   switch (customType) {
     case "loading": {
       return (
-        <LoadingButtonNode required>
+        <LoadingButtonNode>
           <ChildrenNode />
         </LoadingButtonNode>
       );
     }
 
     case "logout": {
-      text = button.logout;
       loadText = loading.logout;
+      children = button.logout;
       icon = <LogOut />;
 
       return (
         <LoadingButtonNode
-          required
           onClick={async () => {
             setIsLoading(true);
             toast.promise(SignOutHandler(), {
@@ -181,7 +145,7 @@ export function CustomButton({
       >;
 
       return (
-        <LoadingButtonNode required asChild>
+        <LoadingButtonNode asChild>
           <Link {...linkProps}>
             <ChildrenNode />
           </Link>
@@ -216,7 +180,6 @@ export function CustomButton({
           {...props}
           className={cn("relative", className)}
           asChild={!!href}
-          required
         >
           {href ? (
             <Link href={href} {...linkProps}>
@@ -230,21 +193,24 @@ export function CustomButton({
     }
 
     case "refresh": {
-      text = button.refresh;
       loadText = loading.refresh;
+      children = button.refresh;
       icon = <RefreshCw />;
 
       return (
-        <ButtonNode
+        <Button
+          type="button"
           onClick={async () => {
             setIsLoading(true);
             await Delay(0.5);
             router.refresh();
             setIsLoading(false);
           }}
+          disabled={isLoading}
+          {...props}
         >
           <ChildrenNode customLoader={<RefreshCw className="animate-spin" />} />
-        </ButtonNode>
+        </Button>
       );
     }
 
@@ -255,29 +221,35 @@ export function CustomButton({
       >;
 
       return (
-        <ButtonNode
+        <Button
+          type="button"
           onClick={() => {
             const element = document.getElementById(elementid);
             if (!element) return;
             window.scroll({ top: element.offsetTop - (offset ?? 0) });
           }}
-          required
+          {...props}
         >
           <ChildrenNode />
-        </ButtonNode>
+        </Button>
       );
     }
 
     case null: {
+      const { disabled, ...rest } = props;
       return (
-        <ButtonNode>
+        <Button {...rest} disabled={disabled || load}>
           <ChildrenNode />
-        </ButtonNode>
+        </Button>
       );
     }
 
     default: {
-      return <RequiredNode destructive />;
+      return (
+        <Button variant="destructive" disabled>
+          Custom Button Undefined
+        </Button>
+      );
     }
   }
 }

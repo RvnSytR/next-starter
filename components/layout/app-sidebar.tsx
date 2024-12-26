@@ -60,10 +60,8 @@ export function AppSidebar({
           className="justify-start"
           load={false}
           icon={<ExternalLink />}
-        >
-          Something
-        </CustomButton>
-
+          text="Something"
+        />
         <CustomButton customType="logout" variant="outline_destructive" />
       </SidebarFooter>
     </Sidebar>
@@ -82,18 +80,23 @@ export function SidebarNavMenu({ role }: { role: MenuRole }) {
         <SidebarMenu>
           {item.body.map((itm, ind) => (
             <SidebarMenuItem key={ind}>
-              <SidebarMenuButton
-                tooltip={itm.label}
-                disabled={itm.isDisable}
-                asChild
-              >
-                <Link href={itm.href}>
+              {itm.isDisable ? (
+                <SidebarMenuButton tooltip={itm.label} disabled>
                   {itm.icon && <itm.icon />}
                   <span className="transition group-data-[collapsible=icon]:hidden">
                     {itm.label}
                   </span>
-                </Link>
-              </SidebarMenuButton>
+                </SidebarMenuButton>
+              ) : (
+                <SidebarMenuButton tooltip={itm.label} asChild>
+                  <Link href={itm.href}>
+                    {itm.icon && <itm.icon />}
+                    <span className="transition group-data-[collapsible=icon]:hidden">
+                      {itm.label}
+                    </span>
+                  </Link>
+                </SidebarMenuButton>
+              )}
             </SidebarMenuItem>
           ))}
         </SidebarMenu>

@@ -24,7 +24,7 @@ export function Section({
 } & DynamicBreadcrumbProps) {
   return (
     <SidebarInset
-      className={cn("flex w-screen flex-col gap-y-4 p-4", className)}
+      className={cn("flex w-screen flex-col gap-y-4 p-4 lg:w-full", className)}
     >
       <header className="flex flex-col gap-y-3">
         <div className="flex items-center">
@@ -42,7 +42,7 @@ export function Section({
 
       {children}
 
-      <footer className="mt-auto flex flex-col items-center gap-4">
+      <footer className="mt-auto flex flex-col items-center gap-4 text-center">
         <Separator />
         <small className="desc">{label.copyright}</small>
       </footer>

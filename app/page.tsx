@@ -18,18 +18,16 @@ export default function Page() {
         href="/dashboard"
         icon={<LayoutDashboard />}
         variant="outline"
-      >
-        Go to Dashboard
-      </CustomButton>
+        text="Go To Dashboard"
+      />
 
       <CustomButton
         customType="nav"
         href="/coverage"
         icon={<FlaskConical />}
         variant="outline"
-      >
-        Go to Testing Page (Coverage)
-      </CustomButton>
+        text="Go to Testing Page (Coverage)"
+      />
     </div>
   );
 }
