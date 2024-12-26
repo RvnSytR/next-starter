@@ -10,6 +10,12 @@ const path = {
 const label = {
   metadata: (currentPage: string) => `Project Title | ${currentPage}`,
   copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
+  page: {
+    login: {
+      title: "Project Title",
+      desc: "Hold up! 🔒 Who goes there? 🕵️‍♂️ Only logged-in members can enter the protected routes. So pop in your email and password below, and you good to go 🛤️",
+    },
+  },
   success: {
     login: "Login Berhasil!",
     logout: "Logout Berhasil!",

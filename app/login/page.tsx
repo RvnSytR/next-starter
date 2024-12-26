@@ -20,20 +20,17 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
+  const { title, desc } = label.page.login;
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
         <CardHeader>
           <CardTitle className="mb-1 text-center">
             <Link href="/" prefetch>
-              Project Title
+              {title}
             </Link>
           </CardTitle>
-          <CardDescription className="text-center">
-            Hold up! 🔒 Who goes there? 🕵️‍♂️ Only logged-in members can enter the
-            protected routes. So pop in your email and password below, and you
-            good to go 🛤️
-          </CardDescription>
+          <CardDescription className="text-center">{desc}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
