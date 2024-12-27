@@ -25,8 +25,8 @@ export function ChartCard({
   children: React.ReactNode;
 }) {
   return (
-    <div className={cn("rounded-md border p-4 lg:relative", className)}>
-      <SectionTitle className="lg:absolute">{label}</SectionTitle>
+    <div className={cn("rounded-md border p-4", className)}>
+      <SectionTitle>{label}</SectionTitle>
       {children}
     </div>
   );
