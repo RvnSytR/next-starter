@@ -79,7 +79,7 @@ export default nextConfig;
 
 ```
 
-## Manual Package Install Guide (NPM)
+## Manual Package Install Guide (NPM) ( OUTDATED )
 
 This guide provides step-by-step instructions how i manually installing this package using NPM. Primarily intended for personal reference, it may also be helpful for setting up the package manually.
 
@@ -148,7 +148,6 @@ npx prettier . --check
   - select
   - separator
   - sheet
-  - sidebar (custom)
   - skeleton
   - sooner
   - table

@@ -22,7 +22,7 @@ export default async function Page() {
           <SectionDescription>Section Description</SectionDescription>
         </SectionHeader>
 
-        <p>Hello World</p>
+        <div className="h-screen">Hello world</div>
       </SectionGroup>
     </Section>
   );

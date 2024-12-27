@@ -1,9 +1,10 @@
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import { label } from "../content";
 import { CustomLoader, iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
+
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
@@ -11,30 +12,40 @@ import {
 
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { SidebarInset, SidebarTrigger } from "../ui/sidebar";
 import { Hash, SidebarIcon } from "lucide-react";
+import { SheetTrigger } from "../ui/sheet";
 
 export function Section({
-  className,
+  skeleton,
   children,
   ...props
 }: {
-  className?: string;
+  skeleton?: boolean;
   children: ReactNode;
 } & DynamicBreadcrumbProps) {
   return (
-    <SidebarInset
-      className={cn("flex w-screen flex-col gap-y-4 p-4 lg:w-full", className)}
-    >
+    <Fragment>
       <header className="flex flex-col gap-y-3">
         <div className="flex items-center">
           <div className="over flex grow items-center gap-x-2">
-            <SidebarTrigger />
-            <Separator orientation="vertical" className="mr-2 h-4" />
+            <span className="hidden text-sm text-muted-foreground lg:flex">
+              /
+            </span>
+
+            <SheetTrigger className="flex lg:hidden" asChild>
+              <Button size="iconsm" variant="ghost" disabled={skeleton}>
+                <SidebarIcon />
+              </Button>
+            </SheetTrigger>
+            <Separator
+              orientation="vertical"
+              className="mr-2 flex h-4 lg:hidden"
+            />
+
             <DynamicBreadcrumb {...props} />
           </div>
 
-          <ThemeToggle />
+          <ThemeToggle disabled={skeleton} />
         </div>
 
         <Separator />
@@ -46,7 +57,7 @@ export function Section({
         <Separator />
         <small className="desc">{label.copyright}</small>
       </footer>
-    </SidebarInset>
+    </Fragment>
   );
 }
 
@@ -105,40 +116,6 @@ export function SectionLabel({
   );
 }
 
-export function SectionSkeleton() {
-  return (
-    <div className="flex grow flex-col justify-between rounded-md bg-background p-4 shadow lg:m-2">
-      <header className="space-y-2">
-        <div className="flex items-center">
-          <div className="flex grow items-center gap-x-2">
-            <Button size="iconsm" variant="ghost" disabled>
-              <SidebarIcon />
-            </Button>
-
-            <Separator
-              orientation="vertical"
-              className="mr-2 flex h-4 lg:hidden"
-            />
-
-            <div className="skeleton h-4 w-full md:w-24" />
-          </div>
-
-          <ThemeToggle disabled />
-        </div>
-
-        <Separator />
-      </header>
-
-      <CustomLoader size={iconSize.lg} className="m-auto" />
-
-      <footer className="space-y-4">
-        <Separator />
-        <div className="skeleton h-4 w-full" />
-      </footer>
-    </div>
-  );
-}
-
 export function SectionNotFound({
   ...props
 }: Omit<DynamicBreadcrumbProps, "currentPage">) {
@@ -160,7 +137,9 @@ export function LayoutSkeleton() {
         </div>
       </aside>
 
-      <SectionSkeleton />
+      <Section currentPage="..." skeleton>
+        <CustomLoader className="m-auto" />
+      </Section>
     </main>
   );
 }

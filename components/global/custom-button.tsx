@@ -112,12 +112,7 @@ export function CustomButton({
     return (
       <Fragment>
         {iconPosition === "left" && iconNode}
-        <span
-          className={cn(
-            "group-data-[collapsible=icon]:hidden",
-            hideTextOnMobile ? "hidden md:flex" : "",
-          )}
-        >
+        <span className={hideTextOnMobile ? "hidden md:flex" : ""}>
           {isLoad ? (loadText ?? text) : text}
         </span>
         {iconPosition === "right" && iconNode}
