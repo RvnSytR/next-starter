@@ -67,7 +67,7 @@ export function CustomButton({
   >;
 
   const ButtonNode = ({ children, ...nodeProps }: CustomButtonNode) => {
-    const { size, ...restProps } = props;
+    const { size, className, ...restProps } = props;
     const { required, ...restNodeProps } = nodeProps;
     if (required && !text && !icon) return <RequiredNode />;
 
@@ -83,6 +83,7 @@ export function CustomButton({
                 : "icon"
             : size
         }
+        className={cn("shrink-0", className)}
         disabled={load ?? isLoading}
         {...restProps}
         {...restNodeProps}
