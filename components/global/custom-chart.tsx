@@ -13,6 +13,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Separator } from "../ui/separator";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 // #region // * Side Component
 export function ChartCard({
@@ -75,17 +76,21 @@ export function CustomChart({ customType, data }: CustomChartType) {
 }
 
 function ChartPie({ config, data }: PieType) {
+  const isMobile = useIsMobile();
   return (
     <ChartContainer
       config={config}
-      className="mx-auto size-[14rem] lg:size-[18rem] [&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000"
+      className={cn(
+        "mx-auto size-[12rem] lg:size-[18rem]",
+        "[&_.recharts-pie-label-text]:hidden [&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 md:[&_.recharts-pie-label-text]:flex",
+      )}
     >
       <PieChart>
         <Pie
           data={data}
           nameKey="nameKey"
           dataKey="dataKey"
-          innerRadius={50}
+          innerRadius={isMobile ? 40 : 50}
           label
           labelLine={false}
         />

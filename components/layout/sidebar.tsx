@@ -36,13 +36,16 @@ export function Sidebar({
 
   return (
     <Sheet>
-      <SheetContent side="left" className="flex flex-col gap-y-4">
+      <SheetContent
+        side="left"
+        className="flex flex-col gap-y-4 bg-sidebar text-sidebar-foreground"
+      >
         <SheetHeader>{header}</SheetHeader>
         <SidebarContent role={data.role} className="h-5/6" />
         {footer}
       </SheetContent>
 
-      <main className="flex min-h-dvh">
+      <main className="flex min-h-dvh bg-sidebar text-sidebar-foreground">
         <aside className="sticky left-0 top-0 hidden h-screen basis-1/6 flex-col gap-y-4 p-6 lg:flex">
           {header}
           <SidebarContent role={data.role} className="grow" />
@@ -50,7 +53,7 @@ export function Sidebar({
           {footer}
         </aside>
 
-        <div className="flex basis-full flex-col gap-y-4 overflow-hidden p-4 shadow lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md lg:border">
+        <div className="flex basis-full flex-col gap-y-4 overflow-hidden bg-background p-4 text-foreground shadow lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
           {children}
         </div>
       </main>
@@ -97,7 +100,7 @@ function SidebarContent({
           <Fragment key={index}>
             {index !== 0 && <Separator />}
 
-            <div key={index} className="space-y-1">
+            <div key={index} className="flex flex-col gap-y-1">
               <small className="font-medium text-muted-foreground">
                 {item.section}
               </small>
@@ -108,7 +111,7 @@ function SidebarContent({
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="w-full justify-start gap-x-4"
+                      className="w-full justify-start"
                       disabled
                     >
                       {itm.icon && <itm.icon />} {itm.label}
@@ -117,7 +120,7 @@ function SidebarContent({
                     <Button
                       size="sm"
                       variant="ghost"
-                      className="w-full justify-start gap-x-4"
+                      className="w-full justify-start"
                       asChild
                     >
                       <Link href={itm.href}>
