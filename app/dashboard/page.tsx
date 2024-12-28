@@ -2,9 +2,7 @@ import { Metadata } from "next";
 
 import {
   Section,
-  SectionDescription,
   SectionGroup,
-  SectionHeader,
   SectionTitle,
 } from "@/components/layout/section";
 import { GetCurrentPage } from "@/components/content";
@@ -17,10 +15,10 @@ export default async function Page() {
   return (
     <Section currentPage={GetCurrentPage("/dashboard")}>
       <SectionGroup>
-        <SectionHeader>
+        <div className="space-y-1">
           <SectionTitle withHash>Section Title</SectionTitle>
-          <SectionDescription>Section Description</SectionDescription>
-        </SectionHeader>
+          <p className="desc">Section Description</p>
+        </div>
 
         <div className="h-screen">Hello world</div>
       </SectionGroup>
