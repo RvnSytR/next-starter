@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { CheckUser } from "@/server/action";
+import { CheckUser, CreateUser } from "@/server/action";
 
 import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
@@ -21,9 +21,21 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
-import { LogIn } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { LogIn, Plus } from "lucide-react";
+import { Separator } from "../ui/separator";
 
 const { success, loading, button } = label;
 
@@ -95,12 +107,144 @@ export function LoginForm() {
           customType={null}
           type="submit"
           load={isLoading}
-          loadText={loading.login}
+          loadText={loading.button}
           icon={<LogIn />}
           className="mt-2"
           text={button.login}
         />
       </form>
     </Form>
+  );
+}
+
+export function CreateUserDialog() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const regisSchema = zodUserSchema.pick({
+    email: true,
+    username: true,
+    password: true,
+  });
+
+  const form = useForm<z.infer<typeof regisSchema>>({
+    resolver: zodResolver(regisSchema),
+    defaultValues: { email: "", username: "", password: "" },
+  });
+
+  const formHandler = async (data: z.infer<typeof regisSchema>) => {
+    setIsLoading(true);
+    toast.promise(CreateUser(data), {
+      loading: loading.default,
+      success: () => {
+        setIsOpen(false);
+        setIsLoading(true);
+        return success.createAccountDialog;
+      },
+      error: (e: Error) => {
+        setIsLoading(false);
+        return e.message;
+      },
+    });
+  };
+
+  return (
+    <Dialog onOpenChange={setIsOpen} open={isOpen}>
+      <DialogTrigger asChild>
+        <Button variant="outline">
+          <Plus /> {button.createAccountDialog}
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Tambah Admin</DialogTitle>
+          <DialogDescription>
+            Masukkan informasi yang diperlukan untuk menambah akun pengguna
+            baru.
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(formHandler)}
+            className="flex flex-col gap-y-2"
+          >
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Masukkan Email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="username"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Masukkan Username"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Masukkan Password"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Separator className="my-2" />
+
+            <DialogFooter>
+              <DialogClose asChild>
+                <Button type="button" size="sm" variant="outline">
+                  Kembali
+                </Button>
+              </DialogClose>
+
+              <CustomButton
+                customType={null}
+                type="submit"
+                size="sm"
+                load={isLoading}
+                loadText={loading.button}
+                text="Konfirmasi"
+              />
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

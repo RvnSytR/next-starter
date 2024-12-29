@@ -144,7 +144,7 @@ export function CustomButton({
 
     case "logout": {
       text = button.logout;
-      loadText = loading.logout;
+      loadText = loading.button;
       icon = <LogOut />;
 
       return (

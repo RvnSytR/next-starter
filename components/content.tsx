@@ -1,15 +1,17 @@
 import type { Role } from "@/lib/db/schema";
-import { type LucideIcon, LayoutDashboard } from "lucide-react";
+import { type LucideIcon, LayoutDashboard, UserRound } from "lucide-react";
 
 // #region // * Content Management
 const currentYear = new Date().getFullYear();
 const path = {
   login: "/login",
   protected: "/dashboard",
+  createAccount: "/dashboard/account",
 };
+
 const label = {
   metadata: (currentPage: string) => `Project Title | ${currentPage}`,
-  copyright: `Copyright © ${currentYear}. Project Title. All rights reserved.`,
+  copyright: `Copyright © ${currentYear}. Copyright Title. All rights reserved.`,
   page: {
     login: {
       title: "Project Title",
@@ -17,14 +19,15 @@ const label = {
     },
   },
   success: {
-    login: "Login Berhasil!",
-    logout: "Logout Berhasil!",
+    login: "Login berhasil!",
+    logout: "Logout berhasil!",
+    createAccountDialog: "Pengguna berhasil ditambah!",
+    deleteAccountDialog: (name: string) => `${name} berhasil dihapus!`,
   },
   loading: {
-    default: "Mohon Tunggu Sebentar...",
+    default: "Mohon tunggu sebentar...",
+    button: "Memproses...",
     refresh: "Refreshing...",
-    login: "Logging in...",
-    logout: "Logging out...",
   },
   error: {
     login: {
@@ -43,9 +46,9 @@ const label = {
   },
   button: {
     login: "Login",
-    regis: "Logout",
     logout: "Logout",
     refresh: "Refresh",
+    createAccountDialog: "Tambah Pengguna",
   },
 };
 // #endregion
@@ -75,6 +78,12 @@ const MENU: Menu[] = [
         label: "Dashboard",
         role: "all",
         icon: LayoutDashboard,
+      },
+      {
+        href: "/dashboard/account",
+        label: "Pengguna",
+        role: "all",
+        icon: UserRound,
       },
     ],
   },

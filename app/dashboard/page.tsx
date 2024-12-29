@@ -1,15 +1,9 @@
-import { Metadata } from "next";
-
 import {
   Section,
   SectionGroup,
   SectionTitle,
 } from "@/components/layout/section";
 import { GetCurrentPage } from "@/components/content";
-
-export const metadata: Metadata = {
-  title: GetCurrentPage("/dashboard", true),
-};
 
 export default async function Page() {
   return (
@@ -20,7 +14,7 @@ export default async function Page() {
           <p className="desc">Section Description</p>
         </div>
 
-        <div className="h-screen">Hello world</div>
+        <div className="h-screen">Hello From Dashboard!</div>
       </SectionGroup>
     </Section>
   );

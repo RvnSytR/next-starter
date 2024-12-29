@@ -7,7 +7,7 @@ import bcrypt from "bcrypt";
 import { state } from "@/lib/db/state";
 import { Role, user } from "@/lib/db/schema";
 
-import { label } from "@/components/content";
+import { label, path } from "@/components/content";
 const { error: errorLabel } = label;
 
 export async function CheckUser(email: string, password: string) {
@@ -27,7 +27,7 @@ export async function CheckUser(email: string, password: string) {
   }
 }
 
-export async function RegisUser(
+export async function CreateUser(
   data: Omit<typeof user.$inferInsert, "id_user">,
 ) {
   const { email, password, ...restData } = data;
@@ -42,6 +42,7 @@ export async function RegisUser(
       password: bcrypt.hashSync(password, salt),
       ...restData,
     });
+    revalidatePath(path.createAccount);
   }
 }
 

@@ -87,27 +87,27 @@
   }
 
   h1 {
-    @apply scroll-m-8 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl lg:text-5xl;
+    @apply scroll-m-8 text-3xl font-extrabold leading-tight md:text-4xl lg:text-5xl;
   }
 
   h2 {
-    @apply scroll-m-8 text-2xl font-bold leading-tight tracking-tight lg:text-3xl;
+    @apply scroll-m-8 text-2xl font-bold leading-tight lg:text-3xl;
   }
 
   h3 {
-    @apply scroll-m-8 text-xl font-bold leading-tight tracking-tight lg:text-2xl;
+    @apply scroll-m-8 text-xl font-bold leading-tight lg:text-2xl;
   }
 
   h4 {
-    @apply scroll-m-8 text-lg font-bold leading-tight tracking-tight lg:text-xl;
+    @apply scroll-m-8 text-lg font-bold leading-tight lg:text-xl;
   }
 
   h5 {
-    @apply scroll-m-8 text-base font-semibold leading-tight tracking-tight lg:text-lg;
+    @apply scroll-m-8 text-base font-semibold leading-tight lg:text-lg;
   }
 
   h6 {
-    @apply font-semibold leading-tight tracking-tight;
+    @apply font-semibold leading-tight;
   }
 
   p {

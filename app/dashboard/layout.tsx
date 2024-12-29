@@ -1,6 +1,13 @@
+import { Metadata } from "next";
+
 import { auth } from "@/lib/auth";
-import { LayoutSkeleton } from "@/components/layout/section";
 import { Sidebar } from "@/components/layout/sidebar";
+import { LayoutSkeleton } from "@/components/layout/section";
+import { GetCurrentPage } from "@/components/content";
+
+export const metadata: Metadata = {
+  title: GetCurrentPage("/dashboard", true),
+};
 
 export default async function DashboardLayout({
   children,
