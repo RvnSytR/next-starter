@@ -21,6 +21,7 @@ const label = {
   success: {
     login: "Login berhasil!",
     logout: "Logout berhasil!",
+    copy: "Berhasil disalin ke clipboard",
     createAccountDialog: "Pengguna berhasil ditambah!",
     deleteAccountDialog: (name: string) => `${name} berhasil dihapus!`,
   },

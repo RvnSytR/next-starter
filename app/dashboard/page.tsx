@@ -14,7 +14,7 @@ export default async function Page() {
           <p className="desc">Section Description</p>
         </div>
 
-        <div className="h-screen">Hello From Dashboard!</div>
+        <div>Hello From Dashboard!</div>
       </SectionGroup>
     </Section>
   );

@@ -15,7 +15,7 @@ import { label, path } from "../content";
 import { toast } from "sonner";
 import { CustomLoader } from "./icon";
 import { Button, ButtonProps } from "../ui/button";
-import { LogOut, RefreshCw, Sparkle } from "lucide-react";
+import { Check, Copy, LogOut, RefreshCw, Sparkle } from "lucide-react";
 
 // #region // * Types
 type CustomType =
@@ -26,8 +26,12 @@ type CustomType =
       Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children">)
   | ({
       customType: "pulse";
-      pulseColor?: string;
+      pulsecolor?: string;
     } & (LinkProps | { href?: null | undefined }))
+  | {
+      customType: "copy";
+      copyvalue: string;
+    }
   | {
       customType: "scroll";
       elementid: string;
@@ -188,7 +192,7 @@ export function CustomButton({
     case "pulse": {
       const { className } = props;
       const {
-        pulseColor = "#FACC15",
+        pulsecolor = "#FACC15",
         href,
         ...linkProps
       } = props as Extract<CustomType, { customType: "pulse" }>;
@@ -206,7 +210,7 @@ export function CustomButton({
         <LoadingButtonNode
           style={
             {
-              "--pulse-color": pulseColor,
+              "--pulse-color": pulsecolor,
             } as React.CSSProperties
           }
           className={cn("relative", className)}
@@ -239,6 +243,28 @@ export function CustomButton({
           }}
         >
           <ChildrenNode customLoader={<RefreshCw className="animate-spin" />} />
+        </ButtonNode>
+      );
+    }
+
+    case "copy": {
+      icon = <Copy />;
+      const { copyvalue } = props as Extract<
+        CustomType,
+        { customType: "copy" }
+      >;
+
+      return (
+        <ButtonNode
+          onClick={async () => {
+            setIsLoading(true);
+            navigator.clipboard.writeText(copyvalue);
+            toast.info(success.copy);
+            await Delay(2);
+            setIsLoading(false);
+          }}
+        >
+          <ChildrenNode customLoader={<Check />} />
         </ButtonNode>
       );
     }
