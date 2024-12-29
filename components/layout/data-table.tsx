@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import {
   ColumnDef,
-  ColumnFiltersState,
+  // ColumnFiltersState,
   SortingState,
   flexRender,
   getCoreRowModel,
@@ -145,7 +145,8 @@ export function AccountDataTable({
   data: UserCredentials[];
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  // const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
 
   const columns: ColumnDef<UserCredentials>[] = [
     {
@@ -247,12 +248,15 @@ export function AccountDataTable({
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
+    // onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
-      columnFilters,
+      // columnFilters,
+      globalFilter,
     },
+    globalFilterFn: "includesString",
+    onGlobalFilterChange: setGlobalFilter,
   });
 
   return (
@@ -270,13 +274,16 @@ export function AccountDataTable({
           <CreateUserDialog />
 
           <Input
+            type="search"
             placeholder="Cari Pengguna"
-            value={
-              (table.getColumn("id_user")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(e) =>
-              table.getColumn("id_user")?.setFilterValue(e.target.value)
-            }
+            // value={
+            //   (table.getColumn("id_user")?.getFilterValue() as string) ?? ""
+            // }
+            // onChange={(e) =>
+            //   table.getColumn("id_user")?.setFilterValue(e.target.value)
+            // }
+            value={globalFilter}
+            onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="w-full md:w-fit"
           />
         </div>
