@@ -19,6 +19,7 @@ const user = {
       email: sql.placeholder("email"),
       password: sql.placeholder("password"),
       username: sql.placeholder("username"),
+      role: sql.placeholder("role"),
     })
     .prepare(),
 

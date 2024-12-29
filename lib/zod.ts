@@ -1,10 +1,11 @@
-import { user } from "./db/schema";
+import { z } from "zod";
+import { role, user } from "./db/schema";
 import { createSelectSchema } from "drizzle-zod";
 
 export const zodUserSchema = createSelectSchema(user, {
   email: (sc) =>
     sc.email
-      .email("Invalid email")
+      .email("Mohon masukkan Email yang valid")
       .trim()
       .min(1, "Email tidak boleh kosong")
       .max(255, "Email terlalu panjang"),
@@ -19,4 +20,5 @@ export const zodUserSchema = createSelectSchema(user, {
       .trim()
       .min(1, "Username tidak boleh kosong")
       .max(255, "Username terlalu panjang"),
+  role: z.enum(role, { required_error: "Harap pilih Status Pengguna" }),
 });

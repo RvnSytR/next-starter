@@ -138,6 +138,7 @@ export function DataTable<TData, TValue>({
 export function AccountDataTable<TData, TValue>({
   columns,
   data,
+  label,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -172,7 +173,7 @@ export function AccountDataTable<TData, TValue>({
           <CreateUserDialog />
 
           <Input
-            placeholder="Cari Peserta"
+            placeholder="Cari Pengguna"
             value={
               (table.getColumn("id_user")?.getFilterValue() as string) ?? ""
             }
@@ -221,9 +222,9 @@ export function AccountDataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="text-center text-muted-foreground"
+                className="whitespace-pre-line text-center text-muted-foreground"
               >
-                Tidak ada peserta
+                {label ? label.map((item) => item + "\n") : "No results."}
               </TableCell>
             </TableRow>
           )}

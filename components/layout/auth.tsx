@@ -4,11 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-import { CheckUser, CreateUser } from "@/server/action";
-
 import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+
+import { role } from "@/lib/db/schema";
+import { CheckUser, CreateUser } from "@/server/action";
 
 import { label, path } from "../content";
 import { CustomButton } from "../global/custom-button";
@@ -20,7 +21,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "../ui/form";
 import {
   Dialog,
   DialogClose,
@@ -30,10 +31,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "../ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
-import { Button } from "@/components/ui/button";
+import { Button } from "../ui/button";
 import { LogIn, Plus } from "lucide-react";
 import { Separator } from "../ui/separator";
 
@@ -78,7 +86,7 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Email *</FormLabel>
               <FormControl>
                 <Input type="text" placeholder="Masukkan Email" {...field} />
               </FormControl>
@@ -91,7 +99,7 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Password *</FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -125,20 +133,22 @@ export function CreateUserDialog() {
     email: true,
     username: true,
     password: true,
+    role: true,
   });
 
   const form = useForm<z.infer<typeof regisSchema>>({
     resolver: zodResolver(regisSchema),
-    defaultValues: { email: "", username: "", password: "" },
+    defaultValues: { email: "", username: "", password: "", role: "user" },
   });
 
   const formHandler = async (data: z.infer<typeof regisSchema>) => {
     setIsLoading(true);
+
     toast.promise(CreateUser(data), {
       loading: loading.default,
       success: () => {
         setIsOpen(false);
-        setIsLoading(true);
+        setIsLoading(false);
         return success.createAccountDialog;
       },
       error: (e: Error) => {
@@ -151,9 +161,13 @@ export function CreateUserDialog() {
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
-          <Plus /> {button.createAccountDialog}
-        </Button>
+        <CustomButton
+          customType={null}
+          variant="outline"
+          icon={<Plus />}
+          text={button.createAccountDialog}
+          hideTextOnMobile
+        />
       </DialogTrigger>
 
       <DialogContent>
@@ -175,7 +189,7 @@ export function CreateUserDialog() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
@@ -193,7 +207,7 @@ export function CreateUserDialog() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username *</FormLabel>
                   <FormControl>
                     <Input
                       type="text"
@@ -211,7 +225,7 @@ export function CreateUserDialog() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Password *</FormLabel>
                   <FormControl>
                     <Input
                       type="password"
@@ -224,9 +238,47 @@ export function CreateUserDialog() {
               )}
             />
 
+            {/* Status Pengguna */}
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel>Status Pengguna *</FormLabel>
+
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Pilih Status Pengguna" />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {role
+                        .filter((item) => item !== "pending")
+                        .map((item, index) => (
+                          <SelectItem
+                            key={index}
+                            value={item}
+                            className="capitalize"
+                          >
+                            {item}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <Separator className="my-2" />
 
-            <DialogFooter>
+            <DialogFooter className="gap-y-2">
               <DialogClose asChild>
                 <Button type="button" size="sm" variant="outline">
                   Kembali
