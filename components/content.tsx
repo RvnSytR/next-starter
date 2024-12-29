@@ -38,6 +38,7 @@ const label = {
         "Akun Anda masih dalam antrian persetujuan. Harap tunggu konfirmasi dari admin.",
     },
     regis: "Email sudah terdaftar!",
+    deleteUser: "Tidak dapat menghapus Pengguna yang sedang digunakan",
     fileSize: "Ukuran Gambar Terlalu Besar!",
     fileRequired: (f: string) => `Mohon upload ${f}!`,
     fileUpload: "Terjadi kesalahan saat mengupload file!",

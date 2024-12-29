@@ -1,8 +1,8 @@
 import { Metadata } from "next";
 import { state } from "@/lib/db/state";
+import { auth } from "@/lib/auth";
 
 import { Section } from "@/components/layout/section";
-import { colUser } from "@/components/layout/column";
 import { GetCurrentPage, path } from "@/components/content";
 import { AccountDataTable } from "@/components/layout/data-table";
 
@@ -11,10 +11,14 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  const session = await auth();
+  if (!session) return <Section currentPage="..." skeleton />;
+
   const data = await state.user.selectAll.execute();
+
   return (
     <Section currentPage={GetCurrentPage(path.createAccount)}>
-      <AccountDataTable data={data} columns={colUser} />
+      <AccountDataTable data={data} currentIdUser={session.user.id_user} />
     </Section>
   );
 }

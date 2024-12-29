@@ -9,19 +9,22 @@ import { zodUserSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { role } from "@/lib/db/schema";
-import { CheckUser, CreateUser } from "@/server/action";
+import { CheckUser, CreateUser, DeleteUser } from "@/server/action";
 
 import { label, path } from "../content";
 import { CustomButton } from "../global/custom-button";
 
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import {
   Dialog,
   DialogClose,
@@ -33,6 +36,14 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -42,8 +53,9 @@ import {
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { LogIn, Plus } from "lucide-react";
+import { LogIn, Plus, Trash } from "lucide-react";
 import { Separator } from "../ui/separator";
+import { Badge } from "../ui/badge";
 
 const { success, loading, button } = label;
 
@@ -298,5 +310,72 @@ export function CreateUserDialog() {
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function DeleteUserDialog({
+  username,
+  id_user,
+  currentIdUser,
+}: {
+  username: string;
+  id_user: string;
+  currentIdUser: string;
+}) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const isCurrentUser = id_user === currentIdUser;
+  if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
+
+  return (
+    <AlertDialog>
+      <div className="flex justify-center">
+        <AlertDialogTrigger asChild>
+          <Button
+            size="icon"
+            variant="outline_destructive"
+            disabled={isLoading}
+          >
+            <Trash />
+          </Button>
+        </AlertDialogTrigger>
+      </div>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Hapus {username} ?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Tindakan ini akan menghapus akun secara permanen dan tidak dapat
+            dipulihkan. Pastikan Anda benar-benar yakin sebelum melanjutkan.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Kembali</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              const { loading, success } = label;
+              setIsLoading(true);
+              if (isCurrentUser) {
+                toast.info(label.error.deleteUser);
+              } else {
+                toast.promise(DeleteUser(id_user), {
+                  loading: loading.default,
+                  success: () => {
+                    setIsLoading(false);
+                    return success.deleteAccountDialog(username);
+                  },
+                  error: (e: Error) => {
+                    setIsLoading(false);
+                    return e.message;
+                  },
+                });
+              }
+            }}
+          >
+            Hapus Akun
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

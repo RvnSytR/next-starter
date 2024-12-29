@@ -14,9 +14,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { CreateUserDialog } from "./auth";
+import type { UserCredentials } from "@/lib/db/schema";
+import { CreateUserDialog, DeleteUserDialog } from "./auth";
 import { SectionGroup, SectionTitle } from "./section";
 import { CustomButton } from "../global/custom-button";
+import { HeaderButton } from "./column";
 
 import {
   Table,
@@ -135,13 +137,108 @@ export function DataTable<TData, TValue>({
   );
 }
 
-export function AccountDataTable<TData, TValue>({
-  columns,
+export function AccountDataTable({
   data,
-  label,
-}: DataTableProps<TData, TValue>) {
+  currentIdUser,
+}: {
+  currentIdUser: string;
+  data: UserCredentials[];
+}) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+  const columns: ColumnDef<UserCredentials>[] = [
+    {
+      accessorKey: "num",
+      header: () => <div className="text-center">No</div>,
+      cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    },
+    {
+      accessorKey: "id_user",
+      header: ({ column }) => (
+        <HeaderButton
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          ID Pengguna
+        </HeaderButton>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center">
+          {row.original.id_user.slice(0, 5) + "..."}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "email",
+      header: ({ column }) => (
+        <HeaderButton
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+        </HeaderButton>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.email}</div>
+      ),
+    },
+    {
+      accessorKey: "username",
+      header: ({ column }) => (
+        <HeaderButton
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Username
+        </HeaderButton>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center">{row.original.username}</div>
+      ),
+    },
+    {
+      accessorKey: "last_signin_at",
+      header: ({ column }) => (
+        <HeaderButton
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Terakhir Login
+        </HeaderButton>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center">
+          {row.original.last_signin_at.toUTCString()}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "role",
+      header: ({ column }) => (
+        <HeaderButton
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+        </HeaderButton>
+      ),
+      cell: ({ row }) => (
+        <div className="text-center capitalize">{row.original.role}</div>
+      ),
+    },
+    {
+      accessorKey: "action",
+      header: () => <div className="text-center">Action</div>,
+      cell: ({ row }) => {
+        const { id_user, username } = row.original;
+        return (
+          <div className="flex justify-center">
+            <DeleteUserDialog
+              id_user={id_user}
+              username={username}
+              currentIdUser={currentIdUser}
+            />
+          </div>
+        );
+      },
+    },
+  ];
 
   const table = useReactTable({
     data,
@@ -224,7 +321,7 @@ export function AccountDataTable<TData, TValue>({
                 colSpan={columns.length}
                 className="whitespace-pre-line text-center text-muted-foreground"
               >
-                {label ? label.map((item) => item + "\n") : "No results."}
+                No results
               </TableCell>
             </TableRow>
           )}
