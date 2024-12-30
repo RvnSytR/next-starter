@@ -372,7 +372,7 @@ export function DeleteUserDialog({
               }
             }}
           >
-            Hapus Akun
+            Konfirmasi
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

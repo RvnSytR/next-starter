@@ -69,8 +69,21 @@ export const colUser: ColumnDef<UserCredentials>[] = [
     ),
     cell: ({ row }) => (
       <div className="text-center">
-        {row.original.last_signin_at.toUTCString()}
+        {row.original.last_signin_at?.toUTCString()}
       </div>
+    ),
+  },
+  {
+    accessorKey: "created_at",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Dibuat Pada
+      </HeaderButton>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center">{row.original.created_at.toUTCString()}</div>
     ),
   },
   {

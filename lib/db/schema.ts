@@ -17,7 +17,7 @@ const user = mysqlTable("user", {
   password: varchar("password", { length: 255 }).notNull(),
   username: varchar("username", { length: 255 }).notNull(),
   role: mysqlEnum("role", role).notNull().default("pending"),
-  last_signin_at: timestamp("last_signin_at").notNull().defaultNow(),
+  last_signin_at: timestamp("last_signin_at"),
   created_at: timestamp("created_at").notNull().defaultNow(),
 });
 
