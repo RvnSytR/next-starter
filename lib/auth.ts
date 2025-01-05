@@ -5,7 +5,7 @@ import { JWT } from "next-auth/jwt";
 
 import type { UserCredentials } from "./db/schema";
 import { state } from "./db/state";
-import { path } from "@/components/content";
+import { path } from "@/components/menu";
 
 // * Module Augmentation
 declare module "next-auth" {

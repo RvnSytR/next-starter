@@ -11,8 +11,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { role } from "@/lib/db/schema";
 import { CheckUser, CreateUser, DeleteUser } from "@/server/action";
 
-import { label, path } from "../content";
 import { CustomButton } from "../global/custom-button";
+import { label } from "../content";
+import { path } from "../menu";
 
 import {
   AlertDialog,

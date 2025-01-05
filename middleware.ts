@@ -2,8 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 
-import { path } from "./components/content";
-import { GetMenu } from "./components/menu";
+import { path, GetMenu } from "./components/menu";
 
 export async function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;

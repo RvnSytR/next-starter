@@ -4,8 +4,7 @@ import { auth } from "@/lib/auth";
 import { Sidebar } from "@/components/layout/sidebar";
 import { LayoutSkeleton } from "@/components/layout/section";
 
-import { path } from "@/components/content";
-import { GetCurrentPage } from "@/components/menu";
+import { path, GetCurrentPage } from "@/components/menu";
 
 export const metadata: Metadata = {
   title: GetCurrentPage(path.protected, true),

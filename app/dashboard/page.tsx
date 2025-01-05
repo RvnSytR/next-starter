@@ -3,8 +3,7 @@ import {
   SectionGroup,
   SectionTitle,
 } from "@/components/layout/section";
-import { path } from "@/components/content";
-import { GetCurrentPage } from "@/components/menu";
+import { path, GetCurrentPage } from "@/components/menu";
 
 export default async function Page() {
   return (

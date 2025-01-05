@@ -7,7 +7,9 @@ import bcrypt from "bcrypt";
 import { state } from "@/lib/db/state";
 import { Role, user } from "@/lib/db/schema";
 
-import { label, path } from "@/components/content";
+import { label } from "@/components/content";
+import { path } from "@/components/menu";
+
 const { error: errorLabel } = label.toast;
 
 export async function CheckUser(email: string, password: string) {

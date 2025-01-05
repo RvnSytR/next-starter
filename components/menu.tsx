@@ -1,6 +1,12 @@
 import type { Role } from "@/lib/db/schema";
 import { type LucideIcon, LayoutDashboard, UserRound } from "lucide-react";
-import { path, page, label } from "./content";
+import { page, label } from "./content";
+
+const path = {
+  login: "/login",
+  protected: "/dashboard",
+  createAccount: "/dashboard/account",
+};
 
 type MenuRole = Exclude<Role, "pending"> | "all";
 
@@ -78,4 +84,5 @@ function GetCurrentPage(path: string, metadata?: boolean) {
 }
 
 export type { MenuRole };
+export { path };
 export { GetMenu, GetMenuByRole, GetCurrentPage };

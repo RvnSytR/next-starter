@@ -10,7 +10,8 @@ import { SignOutHandler } from "@/app/login/sign";
 
 import { cn } from "@/lib/utils";
 import { Delay } from "@/lib/utils";
-import { label, path } from "../content";
+import { label } from "../content";
+import { path } from "../menu";
 
 import { toast } from "sonner";
 import { CustomLoader } from "./icon";
