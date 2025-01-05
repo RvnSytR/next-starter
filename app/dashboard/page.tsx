@@ -3,14 +3,15 @@ import {
   SectionGroup,
   SectionTitle,
 } from "@/components/layout/section";
-import { GetCurrentPage } from "@/components/content";
+import { path } from "@/components/content";
+import { GetCurrentPage } from "@/components/menu";
 
 export default async function Page() {
   return (
-    <Section currentPage={GetCurrentPage("/dashboard")}>
+    <Section currentPage={GetCurrentPage(path.protected)}>
       <SectionGroup>
         <div className="space-y-1">
-          <SectionTitle withHash>Section Title</SectionTitle>
+          <SectionTitle>Section Title</SectionTitle>
           <p className="desc">Section Description</p>
         </div>
 

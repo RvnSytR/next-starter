@@ -57,7 +57,8 @@ import { LogIn, Plus, Trash } from "lucide-react";
 import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
 
-const { success, loading, button } = label;
+const { loading, success, error } = label.toast;
+const { button } = label;
 
 export function LoginForm() {
   const router = useRouter();
@@ -127,7 +128,7 @@ export function LoginForm() {
           customType={null}
           type="submit"
           load={isLoading}
-          loadText={loading.button}
+          loadText={button.loading}
           icon={<LogIn />}
           className="mt-2"
           text={button.login}
@@ -161,7 +162,7 @@ export function CreateUserDialog() {
       success: () => {
         setIsOpen(false);
         setIsLoading(false);
-        return success.createAccountDialog;
+        return success.user.create;
       },
       error: (e: Error) => {
         setIsLoading(false);
@@ -177,7 +178,7 @@ export function CreateUserDialog() {
           customType={null}
           variant="outline"
           icon={<Plus />}
-          text={button.createAccountDialog}
+          text="Tambah Pengguna"
           hideTextOnMobile
         />
       </DialogTrigger>
@@ -302,7 +303,7 @@ export function CreateUserDialog() {
                 type="submit"
                 size="sm"
                 load={isLoading}
-                loadText={loading.button}
+                loadText={button.loading}
                 text="Konfirmasi"
               />
             </DialogFooter>
@@ -353,16 +354,15 @@ export function DeleteUserDialog({
           <AlertDialogCancel>Kembali</AlertDialogCancel>
           <AlertDialogAction
             onClick={async () => {
-              const { loading, success } = label;
               setIsLoading(true);
               if (isCurrentUser) {
-                toast.info(label.error.deleteUser);
+                toast.info(error.user.delete);
               } else {
                 toast.promise(DeleteUser(id_user), {
                   loading: loading.default,
                   success: () => {
                     setIsLoading(false);
-                    return success.deleteAccountDialog(username);
+                    return success.user.delete(username);
                   },
                   error: (e: Error) => {
                     setIsLoading(false);

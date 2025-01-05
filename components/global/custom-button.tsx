@@ -62,7 +62,9 @@ export function CustomButton({
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { success, loading, button } = label;
+
+  const { loading, success } = label.toast;
+  const { button } = label;
 
   //#region // * Nodes
   type CustomButtonNode = { required?: boolean; children: ReactNode } & Pick<
@@ -148,7 +150,7 @@ export function CustomButton({
 
     case "logout": {
       text = button.logout;
-      loadText = loading.button;
+      loadText = button.loading;
       icon = <LogOut />;
 
       return (

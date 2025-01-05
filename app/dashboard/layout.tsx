@@ -3,10 +3,12 @@ import { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { Sidebar } from "@/components/layout/sidebar";
 import { LayoutSkeleton } from "@/components/layout/section";
-import { GetCurrentPage } from "@/components/content";
+
+import { path } from "@/components/content";
+import { GetCurrentPage } from "@/components/menu";
 
 export const metadata: Metadata = {
-  title: GetCurrentPage("/dashboard", true),
+  title: GetCurrentPage(path.protected, true),
 };
 
 export default async function DashboardLayout({

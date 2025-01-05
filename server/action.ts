@@ -8,7 +8,7 @@ import { state } from "@/lib/db/state";
 import { Role, user } from "@/lib/db/schema";
 
 import { label, path } from "@/components/content";
-const { error: errorLabel } = label;
+const { error: errorLabel } = label.toast;
 
 export async function CheckUser(email: string, password: string) {
   const { login: checkLabel } = errorLabel;
@@ -33,7 +33,7 @@ export async function CreateUser(
   const { email, password, ...restData } = data;
   const [check] = await state.user.selectByEmail.execute({ email: email });
 
-  if (check) throw new Error(errorLabel.regis);
+  if (check) throw new Error(errorLabel.user.email);
   else {
     const salt = bcrypt.genSaltSync();
     await state.user.insert.execute({
@@ -48,7 +48,7 @@ export async function CreateUser(
 
 export async function ApproveUser(role: Exclude<Role, "pending">, id: string) {
   await state.user.updateRole(role).execute({ id_user: id });
-  revalidatePath("/account");
+  revalidatePath(path.createAccount);
 }
 
 export async function DeleteUser(id: string) {

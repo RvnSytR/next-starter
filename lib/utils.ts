@@ -86,7 +86,7 @@ async function GetFilesAsURL(files: File[] | null, maxFileSize?: number) {
   const results: string[] = [];
   for (const item of files) {
     if (maxFileSize && item.size > maxFileSize * 1024 * 1024)
-      throw new Error(label.error.fileSize);
+      throw new Error(label.toast.error.file.size);
     results.push(await ReadFileAsURL(item));
   }
   return results;

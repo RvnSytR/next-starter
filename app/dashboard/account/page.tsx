@@ -2,8 +2,9 @@ import { Metadata } from "next";
 import { state } from "@/lib/db/state";
 import { auth } from "@/lib/auth";
 
+import { path } from "@/components/content";
+import { GetCurrentPage } from "@/components/menu";
 import { Section } from "@/components/layout/section";
-import { GetCurrentPage, path } from "@/components/content";
 import { AccountDataTable } from "@/components/layout/data-table";
 
 export const metadata: Metadata = {

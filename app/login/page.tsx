@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Metadata } from "next";
 
+import { GetCurrentPage } from "@/components/menu";
+import { page, path } from "@/components/content";
 import { LoginForm } from "@/components/layout/auth";
-
-import { label } from "@/components/content";
 
 import {
   Card,
@@ -16,11 +16,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 
 export const metadata: Metadata = {
-  title: "Login Page",
+  title: GetCurrentPage(path.login, true),
 };
 
 export default function Page() {
-  const { title, desc } = label.page.login;
+  const { title, subtitle } = page.login;
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
@@ -30,7 +30,7 @@ export default function Page() {
               {title}
             </Link>
           </CardTitle>
-          <CardDescription className="text-center">{desc}</CardDescription>
+          <CardDescription className="text-center">{subtitle}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
@@ -42,7 +42,7 @@ export default function Page() {
         </CardContent>
 
         <CardFooter>
-          <small className="mx-auto text-center">{label.copyright}</small>
+          <small className="mx-auto text-center">{page.copyright}</small>
         </CardFooter>
       </Card>
     </main>

@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { Fragment } from "react";
-import { GetMenu, label } from "../content";
+
+import { label } from "../content";
+import { GetMenu } from "../menu";
 
 import {
   Breadcrumb,

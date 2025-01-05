@@ -1,7 +1,7 @@
 import { Fragment, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
-import { label } from "../content";
+import { page } from "../content";
 import { CustomLoader, iconSize } from "../global/icon";
 import { ThemeToggle } from "../global/theme-provider";
 
@@ -67,7 +67,7 @@ export function Section({
 
       <footer className="mt-auto flex flex-col items-center gap-4 text-center">
         <Separator />
-        <small className="desc">{label.copyright}</small>
+        <small className="desc">{page.copyright}</small>
       </footer>
     </Fragment>
   );

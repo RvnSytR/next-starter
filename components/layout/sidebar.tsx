@@ -2,7 +2,8 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 import { Role } from "@/lib/db/schema";
-import { GetMenuByRole } from "../content";
+import { title } from "../content";
+import { GetMenuByRole } from "../menu";
 import { CustomButton } from "../global/custom-button";
 
 import {
@@ -143,14 +144,12 @@ function SidebarFooter() {
     <footer className="space-y-2">
       <CustomButton
         customType="nav"
-        load={false}
         href="/"
         size="sm"
         variant="link"
-        target="_blank"
         icon={<ExternalLink />}
         className="w-full justify-start"
-        text="Something"
+        text={`Beranda ${title.primary}`}
       />
 
       <CustomButton
