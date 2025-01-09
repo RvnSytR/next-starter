@@ -129,7 +129,6 @@ export function LoginForm() {
           customType={null}
           type="submit"
           load={isLoading}
-          loadText={button.loading}
           icon={<LogIn />}
           className="mt-2"
           text={button.login}
@@ -304,7 +303,6 @@ export function CreateUserDialog() {
                 type="submit"
                 size="sm"
                 load={isLoading}
-                loadText={button.loading}
                 text="Konfirmasi"
               />
             </DialogFooter>

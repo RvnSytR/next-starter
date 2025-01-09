@@ -61,7 +61,6 @@ const label = {
   },
 
   button: {
-    loading: "Memproses...",
     login: `Masuk ke ${title.primary} Admin`,
     logout: "Keluar",
     refresh: "Refresh",

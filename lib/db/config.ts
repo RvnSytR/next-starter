@@ -8,11 +8,4 @@ const poolConnection = mysql.createPool({
   database: process.env.MYSQL_DATABASE,
 });
 
-try {
-  await poolConnection.query("SELECT 1");
-  console.log("Database Connected!");
-} catch (e) {
-  console.error(`Database connection failed: ${(e as Error).message}`);
-}
-
 export const db = drizzle(poolConnection);
