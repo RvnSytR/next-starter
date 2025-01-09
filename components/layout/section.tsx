@@ -111,7 +111,7 @@ export function SectionLabel({
   return (
     <div
       className={cn(
-        "flex size-full flex-col items-center justify-center text-muted-foreground",
+        "flex size-full flex-col items-center justify-center text-center text-muted-foreground",
         className,
       )}
     >

@@ -293,7 +293,7 @@ export function CreateUserDialog() {
 
             <DialogFooter className="gap-y-2">
               <DialogClose asChild>
-                <Button type="button" size="sm" variant="outline">
+                <Button type="button" variant="outline">
                   Kembali
                 </Button>
               </DialogClose>
@@ -301,7 +301,6 @@ export function CreateUserDialog() {
               <CustomButton
                 customType={null}
                 type="submit"
-                size="sm"
                 load={isLoading}
                 text="Konfirmasi"
               />
