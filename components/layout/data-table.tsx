@@ -262,6 +262,7 @@ export function AccountDataTable({
         </TableBody>
       </Table>
 
+      {/* Pagination */}
       <div className="flex justify-center gap-x-2">
         <Button
           size="sm"
