@@ -1,4 +1,6 @@
 import type { NextConfig } from "next";
+import { maxFileSize } from "./lib/utils";
+
 const bucketName = process.env.NEVA_BUCKET_NAME;
 
 if (!bucketName) {
@@ -15,6 +17,11 @@ const nextConfig: NextConfig = {
         pathname: "/*",
       },
     ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: `${maxFileSize.mb}mb`,
+    },
   },
 };
 

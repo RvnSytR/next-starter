@@ -1,8 +1,11 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { label } from "@/components/content";
 
 export type cv = ClassValue;
+export const maxFileSize = {
+  mb: 1,
+  byte: 1 * 1000 * 1000,
+};
 
 export function cn(...inputs: cv[]) {
   return twMerge(clsx(inputs));
@@ -80,13 +83,13 @@ function ReadFileAsURL(file: File): Promise<string> {
   });
 }
 
-async function GetFilesAsURL(files: File[] | null, maxFileSize?: number) {
+async function GetFilesAsURL(files: File[] | null) {
   if (!files || !files.every((file) => file.type.startsWith("image/")))
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
-    if (maxFileSize && item.size > maxFileSize * 1024 * 1024)
-      throw new Error(label.toast.error.file.size);
+    if (item.size > maxFileSize.byte)
+      throw new Error("Ukuran File Terlalu Besar!");
     results.push(await ReadFileAsURL(item));
   }
   return results;
@@ -94,9 +97,8 @@ async function GetFilesAsURL(files: File[] | null, maxFileSize?: number) {
 
 export async function FileOnChangeAsURL(
   event: React.ChangeEvent<HTMLInputElement>,
-  maxFileSizeInMb?: number,
 ) {
   if (!event.target.files) return [];
-  return await GetFilesAsURL(Array.from(event.target.files), maxFileSizeInMb);
+  return await GetFilesAsURL(Array.from(event.target.files));
 }
 // #endregion

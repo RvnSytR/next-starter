@@ -41,7 +41,6 @@ const label = {
 
     error: {
       file: {
-        size: "Ukuran Gambar Terlalu Besar!",
         required: (name: string) => `Mohon upload ${name}!`,
         upload: "Terjadi kesalahan saat mengupload file!",
       },
