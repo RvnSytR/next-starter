@@ -17,7 +17,7 @@ export default async function Page() {
   const session = await auth();
   if (!session) return <Section currentPage="..." skeleton />;
 
-  const data = await state.user.selectAll.execute();
+  const data = await state.user.select.all.execute();
   const columnFacetedFilter: ColumnFacetedFilter[] = [
     { id: "role", arr: Array.from(role) as string[] },
   ];

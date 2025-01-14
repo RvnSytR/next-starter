@@ -14,7 +14,7 @@ const { login: loginError, user: userError } = label.toast.error;
 
 // #region // * User Action
 export async function CheckUser(email: string, password: string) {
-  const [res] = await state.user.check.execute({ email: email });
+  const [res] = await state.user.select.check.execute({ email: email });
   if (!res) throw new Error(loginError.notFound);
 
   if (!bcrypt.compareSync(password, res.password)) {
@@ -32,7 +32,7 @@ export async function CreateUser(
   data: Omit<typeof user.$inferInsert, "id_user">,
 ) {
   const { email, password, ...restData } = data;
-  const [check] = await state.user.selectByEmail.execute({ email: email });
+  const [check] = await state.user.select.byEmail.execute({ email: email });
 
   if (check) throw new Error(userError.email);
   else {
@@ -47,17 +47,19 @@ export async function CreateUser(
 }
 
 export async function ApproveUser(role: Exclude<Role, "pending">, id: string) {
-  await state.user.updateRole(role).execute({ id_user: id });
+  await state.user.update.role(role).execute({ id_user: id });
   revalidatePath(path.account);
 }
 
 export async function UpdateUserProfile(id: string, username: string) {
-  await state.user.updateProfile(id, username).execute();
+  await state.user.update.profile(id, username).execute();
 }
 
 export async function UpdateUserPassword(id: string, newPass: string) {
   const salt = bcrypt.genSaltSync();
-  await state.user.updatePassword(id, bcrypt.hashSync(newPass, salt)).execute();
+  await state.user.update
+    .password(id, bcrypt.hashSync(newPass, salt))
+    .execute();
 }
 
 export async function DeleteUser(id: string) {
