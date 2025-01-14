@@ -167,15 +167,19 @@ function ToolBox<TData>({
   placeholder,
   isMobile,
   withRefresh,
+  children,
 }: TableProps<TData> & {
   columnFacetedFilter?: ColumnFacetedFilter[];
   placeholder: string;
   isMobile: boolean;
   withRefresh?: boolean;
+  children?: React.ReactNode;
 }) {
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
     <div className="flex flex-col gap-2 lg:flex-row">
+      {children}
+
       {filterCol && isFiltered && (
         <Button
           size="sm"
@@ -316,12 +320,14 @@ export function DataTable<TData, TValue>({
   placeholder,
   label,
   withRefresh,
+  children,
 }: DataTableProps<TData, TValue> & {
   columnFacetedFilter?: ColumnFacetedFilter[];
   title: string;
   placeholder: string;
   label?: string[];
   withRefresh?: boolean;
+  children?: React.ReactNode;
 }) {
   const isMobile = useIsMobile();
 
@@ -370,7 +376,9 @@ export function DataTable<TData, TValue>({
           placeholder={placeholder}
           isMobile={isMobile}
           withRefresh={withRefresh}
-        />
+        >
+          {children}
+        </ToolBox>
       </div>
 
       <Table>

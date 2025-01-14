@@ -73,8 +73,16 @@ export function Section({
   );
 }
 
-export function SectionGroup({ children }: { children: ReactNode }) {
-  return <div className="flex flex-col gap-y-2">{children}</div>;
+export function SectionGroup({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className={cn("flex flex-col gap-y-2", className)}>{children}</div>
+  );
 }
 
 export function SectionTitle({
@@ -111,7 +119,7 @@ export function SectionLabel({
   return (
     <div
       className={cn(
-        "flex size-full flex-col items-center justify-center text-center text-muted-foreground",
+        "flex size-full animate-pulse flex-col items-center justify-center text-center text-muted-foreground",
         className,
       )}
     >

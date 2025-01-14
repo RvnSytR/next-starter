@@ -1,9 +1,12 @@
 import { Metadata } from "next";
-import { state } from "@/lib/db/state";
+
 import { auth } from "@/lib/auth";
+import { role } from "@/lib/db/schema";
+import { state } from "@/lib/db/state";
 
 import { Section } from "@/components/layout/section";
 import { AccountDataTable } from "@/components/layout/auth";
+import { ColumnFacetedFilter } from "@/components/layout/data-table";
 import { path, GetCurrentPage } from "@/components/menu";
 
 export const metadata: Metadata = {
@@ -15,10 +18,17 @@ export default async function Page() {
   if (!session) return <Section currentPage="..." skeleton />;
 
   const data = await state.user.selectAll.execute();
+  const columnFacetedFilter: ColumnFacetedFilter[] = [
+    { id: "role", arr: Array.from(role) as string[] },
+  ];
 
   return (
     <Section currentPage={GetCurrentPage(path.account)}>
-      <AccountDataTable data={data} currentIdUser={session.user.id_user} />
+      <AccountDataTable
+        data={data}
+        currentIdUser={session.user.id_user}
+        columnFacetedFilter={columnFacetedFilter}
+      />
     </Section>
   );
 }

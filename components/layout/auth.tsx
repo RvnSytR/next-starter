@@ -18,7 +18,7 @@ import {
   UpdateUserProfile,
 } from "@/server/action";
 import { SignOutHandler } from "@/app/login/sign";
-import { Role, role, type UserCredentials } from "@/lib/db/schema";
+import type { Role, UserCredentials } from "@/lib/db/schema";
 
 import { type ColumnFacetedFilter, DataTable } from "./data-table";
 import { CustomButton } from "../global/custom-button";
@@ -55,13 +55,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
@@ -334,6 +327,7 @@ export function UpdatePasswordForm({ id }: { id: string }) {
 }
 
 export function CreateUserDialog() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -341,12 +335,11 @@ export function CreateUserDialog() {
     email: true,
     username: true,
     password: true,
-    role: true,
   });
 
   const form = useForm<z.infer<typeof regisSchema>>({
     resolver: zodResolver(regisSchema),
-    defaultValues: { email: "", username: "", password: "", role: "user" },
+    defaultValues: { email: "", username: "", password: "" },
   });
 
   const formHandler = async (data: z.infer<typeof regisSchema>) => {
@@ -356,6 +349,7 @@ export function CreateUserDialog() {
       success: () => {
         setIsOpen(false);
         setIsLoading(false);
+        router.refresh();
         return success.user.create;
       },
       error: (e: Error) => {
@@ -370,10 +364,10 @@ export function CreateUserDialog() {
       <DialogTrigger asChild>
         <CustomButton
           customType={null}
+          size="sm"
           variant="outline"
           icon={<Plus />}
           text="Tambah Pengguna"
-          hideTextOnMobile
         />
       </DialogTrigger>
 
@@ -445,44 +439,6 @@ export function CreateUserDialog() {
               )}
             />
 
-            {/* Status Pengguna */}
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel>Status Pengguna *</FormLabel>
-
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih Status Pengguna" />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {role
-                        .filter((item) => item !== "pending")
-                        .map((item, index) => (
-                          <SelectItem
-                            key={index}
-                            value={item}
-                            className="capitalize"
-                          >
-                            {item}
-                          </SelectItem>
-                        ))}
-                    </SelectContent>
-                  </Select>
-
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <Separator className="my-2" />
 
             <DialogFooter className="gap-y-2">
@@ -503,72 +459,6 @@ export function CreateUserDialog() {
         </Form>
       </DialogContent>
     </Dialog>
-  );
-}
-
-export function DeleteUserDialog({
-  username,
-  id_user,
-  currentIdUser,
-}: {
-  username: string;
-  id_user: string;
-  currentIdUser: string;
-}) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const isCurrentUser = id_user === currentIdUser;
-  if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
-
-  return (
-    <AlertDialog>
-      <div className="flex justify-center">
-        <AlertDialogTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline_destructive"
-            disabled={isLoading}
-          >
-            <Trash />
-          </Button>
-        </AlertDialogTrigger>
-      </div>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Hapus {username} ?</AlertDialogTitle>
-          <AlertDialogDescription>
-            Tindakan ini akan menghapus akun secara permanen dan tidak dapat
-            dipulihkan. Pastikan Anda benar-benar yakin sebelum melanjutkan.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>Kembali</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={async () => {
-              setIsLoading(true);
-              if (isCurrentUser) {
-                toast.info(error.user.delete);
-              } else {
-                toast.promise(DeleteUser(id_user), {
-                  loading: loading.default,
-                  success: () => {
-                    setIsLoading(false);
-                    return success.user.delete(username);
-                  },
-                  error: (e: Error) => {
-                    setIsLoading(false);
-                    return e.message;
-                  },
-                });
-              }
-            }}
-          >
-            Konfirmasi
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
   );
 }
 
@@ -604,9 +494,9 @@ export function ApproveUserDialog({
             <DialogTitle>Setujui Registrasi {username}?</DialogTitle>
             <DialogDescription>
               Apakah Anda yakin ingin menyetujui registrasi {username}? Setelah
-              disetujui, akun ini akan memiliki akses masuk ke Omar Archives dan
-              tindakan ini tidak dapat dibatalkan. Harap pastikan keputusan Anda
-              sebelum melanjutkan.
+              disetujui, akun ini akan memiliki akses masuk dan tindakan ini
+              tidak dapat dibatalkan. Harap pastikan keputusan Anda sebelum
+              melanjutkan.
             </DialogDescription>
           </DialogHeader>
 
@@ -692,6 +582,72 @@ export function ApproveUserDialog({
   );
 }
 
+export function DeleteUserDialog({
+  username,
+  id_user,
+  currentIdUser,
+}: {
+  username: string;
+  id_user: string;
+  currentIdUser: string;
+}) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const isCurrentUser = id_user === currentIdUser;
+  if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
+
+  return (
+    <AlertDialog>
+      <div className="flex justify-center">
+        <AlertDialogTrigger asChild>
+          <Button
+            size="icon"
+            variant="outline_destructive"
+            disabled={isLoading}
+          >
+            <Trash />
+          </Button>
+        </AlertDialogTrigger>
+      </div>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>Hapus {username} ?</AlertDialogTitle>
+          <AlertDialogDescription>
+            Tindakan ini akan menghapus akun secara permanen dan tidak dapat
+            dipulihkan. Pastikan Anda benar-benar yakin sebelum melanjutkan.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Kembali</AlertDialogCancel>
+          <AlertDialogAction
+            onClick={async () => {
+              setIsLoading(true);
+              if (isCurrentUser) {
+                toast.info(error.user.delete);
+              } else {
+                toast.promise(DeleteUser(id_user), {
+                  loading: loading.default,
+                  success: () => {
+                    setIsLoading(false);
+                    return success.user.delete(username);
+                  },
+                  error: (e: Error) => {
+                    setIsLoading(false);
+                    return e.message;
+                  },
+                });
+              }
+            }}
+          >
+            Konfirmasi
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 export function AccountDataTable({
   data,
   currentIdUser,
@@ -737,6 +693,8 @@ export function AccountDataTable({
       title="Data Pengguna"
       placeholder="Cari Pengguna"
       withRefresh
-    />
+    >
+      <CreateUserDialog />
+    </DataTable>
   );
 }

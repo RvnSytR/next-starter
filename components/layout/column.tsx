@@ -22,7 +22,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "ID Pengguna",
+    accessorKey: "ID pengguna",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -96,14 +96,14 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Status
+        Role
       </HeaderButton>
     ),
     cell: ({ row }) => (
       <div className="text-center capitalize">
         <Badge
           variant={
-            row.original.role === "pending"
+            row.original.role !== "pending"
               ? "outline_success"
               : "outline_warning"
           }
