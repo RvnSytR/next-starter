@@ -1,24 +1,25 @@
 import { db } from "./config";
 import { user as userSchema, Role } from "./schema";
-import { eq, sql } from "drizzle-orm";
+import { eq, sql, getTableColumns } from "drizzle-orm";
 
-const selectUserParam = {
-  id_user: userSchema.id_user,
-  email: userSchema.email,
-  username: userSchema.username,
-  role: userSchema.role,
-  last_signin_at: userSchema.last_signin_at,
-  created_at: userSchema.created_at,
+const { placeholder } = sql;
+
+const param = {
+  user: () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...restProps } = getTableColumns(userSchema);
+    return restProps;
+  },
 };
 
 const user = {
   insert: db
     .insert(userSchema)
     .values({
-      id_user: sql.placeholder("id_user"),
-      email: sql.placeholder("email"),
-      password: sql.placeholder("password"),
-      username: sql.placeholder("username"),
+      id_user: placeholder("id_user"),
+      email: placeholder("email"),
+      password: placeholder("password"),
+      username: placeholder("username"),
     })
     .prepare(),
 
@@ -30,21 +31,21 @@ const user = {
         role: userSchema.role,
       })
       .from(userSchema)
-      .where(eq(userSchema.email, sql.placeholder("email")))
+      .where(eq(userSchema.email, placeholder("email")))
       .prepare(),
 
-    all: db.select(selectUserParam).from(userSchema).prepare(),
+    all: db.select(param.user()).from(userSchema).prepare(),
 
     byId: db
-      .select(selectUserParam)
+      .select(param.user())
       .from(userSchema)
-      .where(eq(userSchema.id_user, sql.placeholder("id_user")))
+      .where(eq(userSchema.id_user, placeholder("id_user")))
       .prepare(),
 
     byEmail: db
-      .select(selectUserParam)
+      .select(param.user())
       .from(userSchema)
-      .where(eq(userSchema.email, sql.placeholder("email")))
+      .where(eq(userSchema.email, placeholder("email")))
       .prepare(),
   },
 
@@ -52,7 +53,7 @@ const user = {
     log: db
       .update(userSchema)
       .set({ last_signin_at: sql`NOW()` })
-      .where(eq(userSchema.id_user, sql.placeholder("id_user")))
+      .where(eq(userSchema.id_user, placeholder("id_user")))
       .prepare(),
 
     password: (id_user: string, newPass: string) =>
@@ -73,13 +74,13 @@ const user = {
       db
         .update(userSchema)
         .set({ role: role })
-        .where(eq(userSchema.id_user, sql.placeholder("id_user")))
+        .where(eq(userSchema.id_user, placeholder("id_user")))
         .prepare(),
   },
 
   delete: db
     .delete(userSchema)
-    .where(eq(userSchema.id_user, sql.placeholder("id_user")))
+    .where(eq(userSchema.id_user, placeholder("id_user")))
     .prepare(),
 };
 
