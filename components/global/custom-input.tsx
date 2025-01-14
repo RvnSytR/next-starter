@@ -1,15 +1,24 @@
 "use client";
 
 import Image from "next/image";
+import { Dispatch, RefObject, SetStateAction } from "react";
 
+import { format } from "date-fns";
 import { cn, FileOnChangeAsURL, maxFileSize } from "@/lib/utils";
 import { iconSize } from "./icon";
 
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { FormDescription } from "../ui/form";
-import { ImageIcon } from "lucide-react";
+import { ImageIcon, Calendar as CalendarIcon } from "lucide-react";
 
 export function FormFloating({
   icon,
@@ -30,7 +39,7 @@ export function FormFloating({
   );
 }
 
-export function FormFileInput({
+export function InputFile({
   label,
   state,
   setState,
@@ -39,8 +48,8 @@ export function FormFileInput({
 }: {
   label: string;
   state: string | null;
-  setState: React.Dispatch<React.SetStateAction<string | null>>;
-  ref: React.RefObject<HTMLInputElement>;
+  setState: Dispatch<SetStateAction<string | null>>;
+  ref: RefObject<HTMLInputElement>;
   disabled?: boolean;
 }) {
   return (
@@ -103,5 +112,38 @@ export function FormFileInput({
         * Maksimal file berukuran {maxFileSize.mb}MB
       </FormDescription>
     </div>
+  );
+}
+
+export function InputDatePicker({
+  state,
+  setState,
+  label,
+}: {
+  state: Date | undefined;
+  setState: Dispatch<SetStateAction<Date | undefined>>;
+  label?: string;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("flex w-full", !state && "text-muted-foreground")}
+        >
+          <CalendarIcon size={iconSize.sm} />
+          {state ? format(state, "PPP") : <span>{label ?? "Pick a date"}</span>}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-fit p-0">
+        <Calendar
+          mode="single"
+          selected={state}
+          onSelect={setState}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
   );
 }

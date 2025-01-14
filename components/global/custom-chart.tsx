@@ -15,6 +15,18 @@ import {
 import { Separator } from "../ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 
+// #region // * Types
+type PieType = {
+  config: ChartConfig;
+  data: { nameKey: string; dataKey: number; fill?: string }[];
+};
+
+export type CustomChartType = {
+  customType: "pie";
+  data: { label: string; chart: PieType }[];
+};
+// #endregion
+
 // #region // * Side Component
 export function ChartCard({
   label,
@@ -44,16 +56,6 @@ export function CustomChartSeparator() {
   );
 }
 // #endregion
-
-export type CustomChartType = {
-  customType: "pie";
-  data: { label: string; chart: PieType }[];
-};
-
-type PieType = {
-  config: ChartConfig;
-  data: { nameKey: string; dataKey: number; fill?: string }[];
-};
 
 export function CustomChart({ customType, data }: CustomChartType) {
   switch (customType) {

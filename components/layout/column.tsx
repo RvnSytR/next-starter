@@ -1,8 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
+import { UserCredentials } from "@/lib/db/schema";
 
+import { Badge } from "../ui/badge";
 import { type ButtonProps, Button } from "../ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { UserCredentials } from "@/lib/db/schema";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
   return (
@@ -13,14 +14,15 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-export const colUser: ColumnDef<UserCredentials>[] = [
+export const userColumn: ColumnDef<UserCredentials>[] = [
   {
-    accessorKey: "num",
+    accessorKey: "nomor",
     header: () => <div className="text-center">No</div>,
     cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    enableHiding: false,
   },
   {
-    accessorKey: "id_user",
+    accessorKey: "ID Pengguna",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -29,7 +31,7 @@ export const colUser: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <div className="text-center">
+      <div className="text-center normal-case">
         {row.original.id_user.slice(0, 5) + "..."}
       </div>
     ),
@@ -43,7 +45,9 @@ export const colUser: ColumnDef<UserCredentials>[] = [
         Email
       </HeaderButton>
     ),
-    cell: ({ row }) => <div className="text-center">{row.original.email}</div>,
+    cell: ({ row }) => (
+      <div className="text-center normal-case">{row.original.email}</div>
+    ),
   },
   {
     accessorKey: "username",
@@ -55,11 +59,11 @@ export const colUser: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <div className="text-center">{row.original.username}</div>
+      <div className="text-center normal-case">{row.original.username}</div>
     ),
   },
   {
-    accessorKey: "last_signin_at",
+    accessorKey: "terakhir login",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -74,12 +78,12 @@ export const colUser: ColumnDef<UserCredentials>[] = [
     ),
   },
   {
-    accessorKey: "created_at",
+    accessorKey: "registrasi pada",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Dibuat Pada
+        Registrasi Pada
       </HeaderButton>
     ),
     cell: ({ row }) => (
@@ -96,7 +100,18 @@ export const colUser: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <div className="text-center capitalize">{row.original.role}</div>
+      <div className="text-center capitalize">
+        <Badge
+          variant={
+            row.original.role === "pending"
+              ? "outline_success"
+              : "outline_warning"
+          }
+        >
+          {row.original.role}
+        </Badge>
+      </div>
     ),
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
 ];

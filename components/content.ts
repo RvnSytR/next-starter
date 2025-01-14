@@ -1,5 +1,9 @@
 const currentYear = new Date().getFullYear();
 
+const color = { primary: "#81F5FF" };
+
+const image = {};
+
 const title = {
   primary: "Project Title",
   description: "Project Description",
@@ -35,6 +39,15 @@ const label = {
 
       user: {
         create: "Pengguna berhasil ditambah!",
+
+        approve: (name: string, role: string) =>
+          `${name} berhasil disetujui sebagai ${role.toWellFormed()}.`,
+
+        update: {
+          profile: "Profile Berhasil Diperbarui! Mohon Login Kembali",
+          password: "Password Berhasil Diperbarui! Mohon Login Kembali",
+        },
+
         delete: (name: string) => `${name} berhasil dihapus!`,
       },
     },
@@ -63,7 +76,13 @@ const label = {
     login: `Masuk ke ${title.primary} Admin`,
     logout: "Keluar",
     refresh: "Refresh",
+    settings: {
+      user: {
+        updateProfile: "Perbarui Profile",
+        updatePassword: "Perbarui Password",
+      },
+    },
   },
 };
 
-export { title, page, label };
+export { title, page, label, color, image };

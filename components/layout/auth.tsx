@@ -7,11 +7,22 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { ColumnDef } from "@tanstack/react-table";
 
-import { role } from "@/lib/db/schema";
-import { CheckUser, CreateUser, DeleteUser } from "@/server/action";
+import {
+  ApproveUser,
+  CheckUser,
+  CreateUser,
+  DeleteUser,
+  UpdateUserPassword,
+  UpdateUserProfile,
+} from "@/server/action";
+import { SignOutHandler } from "@/app/login/sign";
+import { Role, role, type UserCredentials } from "@/lib/db/schema";
 
+import { type ColumnFacetedFilter, DataTable } from "./data-table";
 import { CustomButton } from "../global/custom-button";
+import { userColumn } from "./column";
 import { label } from "../content";
 import { path } from "../menu";
 
@@ -53,10 +64,12 @@ import {
 } from "../ui/select";
 import { toast } from "sonner";
 import { Input } from "../ui/input";
-import { Button } from "../ui/button";
-import { LogIn, Plus, Trash } from "lucide-react";
-import { Separator } from "../ui/separator";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { CircleCheckBig, LogIn, Plus, Trash } from "lucide-react";
+import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 
 const { loading, success, error } = label.toast;
 const { button } = label;
@@ -138,6 +151,188 @@ export function LoginForm() {
   );
 }
 
+export function UpdateProfileForm({ data }: { data: UserCredentials }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = zodUserSchema.pick({
+    email: true,
+    role: true,
+    username: true,
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: data.email,
+      role: data.role,
+      username: data.username,
+    },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    setIsLoading(true);
+    const { username } = formData;
+
+    toast.promise(UpdateUserProfile(data.id_user, username), {
+      loading: loading.default,
+      success: async () => {
+        await SignOutHandler();
+        router.push("/login");
+        return success.user.update.profile;
+      },
+      error: (e: Error) => {
+        setIsLoading(false);
+        return e.message;
+      },
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(formHandler)}
+        className="flex flex-col gap-y-2"
+      >
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Email" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Status" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Username" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <CustomButton
+          customType={null}
+          type="submit"
+          load={isLoading}
+          size="sm"
+          text={button.settings.user.updateProfile}
+          className="md:w-fit"
+        />
+      </form>
+    </Form>
+  );
+}
+
+export function UpdatePasswordForm({ id }: { id: string }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [confirmPass, setConfirmPass] = useState<string>("");
+  const schema = zodUserSchema.pick({ password: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { password: "" },
+  });
+
+  const formHandler = async (data: z.infer<typeof schema>) => {
+    const { password } = data;
+
+    if (password !== confirmPass) toast.error("Password Tidak Sama!");
+    else {
+      setIsLoading(true);
+      toast.promise(UpdateUserPassword(id, password), {
+        loading: loading.default,
+        success: async () => {
+          await SignOutHandler();
+          router.push("/login");
+          return success.user.update.password;
+        },
+        error: (e: Error) => {
+          setIsLoading(false);
+          return e.message;
+        },
+      });
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(formHandler)}
+        className="flex flex-col gap-y-2"
+      >
+        <div className="flex flex-col gap-x-2 gap-y-2 lg:flex-row">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Password Baru</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Masukkan Password Baru"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="basis-1/2 space-y-1">
+            <Label htmlFor="confirmPass">Konfirmasi Password Baru</Label>
+            <Input
+              id="confirmPass"
+              name="confirmPass"
+              type="password"
+              placeholder="Konfirmasi Password Baru"
+              onChange={(e) => setConfirmPass(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <CustomButton
+          customType={null}
+          type="submit"
+          load={isLoading}
+          size="sm"
+          text={button.settings.user.updatePassword}
+          className="md:w-fit"
+        />
+      </form>
+    </Form>
+  );
+}
+
 export function CreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -156,7 +351,6 @@ export function CreateUserDialog() {
 
   const formHandler = async (data: z.infer<typeof regisSchema>) => {
     setIsLoading(true);
-
     toast.promise(CreateUser(data), {
       loading: loading.default,
       success: () => {
@@ -375,5 +569,174 @@ export function DeleteUserDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+export function ApproveUserDialog({
+  id_user,
+  username,
+  currentIdUser,
+}: {
+  id_user: string;
+  username: string;
+  currentIdUser: string;
+}) {
+  type UpdateRoles = Exclude<Role, "pending">;
+  const [isDisable, setIsDisable] = useState<boolean>(false);
+  const [role, setRole] = useState<UpdateRoles>("user");
+
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button
+            size="icon"
+            variant="outline"
+            className="border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-sky-50 dark:border-sky-700 dark:text-sky-700 dark:hover:bg-sky-700 dark:hover:text-sky-50"
+            disabled={isDisable}
+          >
+            <CircleCheckBig />
+          </Button>
+        </DialogTrigger>
+
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Setujui Registrasi {username}?</DialogTitle>
+            <DialogDescription>
+              Apakah Anda yakin ingin menyetujui registrasi {username}? Setelah
+              disetujui, akun ini akan memiliki akses masuk ke Omar Archives dan
+              tindakan ini tidak dapat dibatalkan. Harap pastikan keputusan Anda
+              sebelum melanjutkan.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex w-full flex-col gap-y-2">
+            <span>Setujui Sebagai :</span>
+
+            <RadioGroup
+              defaultValue="user"
+              className="flex gap-x-2"
+              onValueChange={(value) => setRole(value as UpdateRoles)}
+            >
+              <Label
+                htmlFor="user"
+                data-role={role}
+                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=user]:border-foreground"
+              >
+                <RadioGroupItem
+                  id="user"
+                  value="user"
+                  className="border-foreground/50 group-data-[role=user]:border-foreground"
+                />
+                <p className="font-semibold text-foreground/50 group-data-[role=user]:text-foreground">
+                  User
+                </p>
+              </Label>
+
+              <Label
+                htmlFor="admin"
+                data-role={role}
+                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=admin]:border-foreground"
+              >
+                <RadioGroupItem
+                  id="admin"
+                  value="admin"
+                  className="border-foreground/50 group-data-[role=admin]:border-foreground"
+                />
+                <p className="font-semibold text-foreground/50 group-data-[role=admin]:text-foreground">
+                  Admin
+                </p>
+              </Label>
+            </RadioGroup>
+          </div>
+
+          <Separator />
+
+          <DialogFooter className="gap-y-2">
+            <DialogClose asChild>
+              <Button type="button" variant="outline">
+                Kembali
+              </Button>
+            </DialogClose>
+
+            <DialogClose asChild>
+              <Button
+                onClick={async () => {
+                  setIsDisable(true);
+                  toast.promise(ApproveUser(role, id_user), {
+                    loading: loading.default,
+                    success: () => {
+                      setIsDisable(false);
+                      return success.user.approve(username, role);
+                    },
+                    error: (e: Error) => {
+                      setIsDisable(false);
+                      return e.message;
+                    },
+                  });
+                }}
+              >
+                Setujui Akun
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <DeleteUserDialog
+        id_user={id_user}
+        username={username}
+        currentIdUser={currentIdUser}
+      />
+    </div>
+  );
+}
+
+export function AccountDataTable({
+  data,
+  currentIdUser,
+  columnFacetedFilter,
+}: {
+  data: UserCredentials[];
+  currentIdUser: string;
+  columnFacetedFilter?: ColumnFacetedFilter[];
+}) {
+  const columns: ColumnDef<UserCredentials>[] = [
+    ...userColumn,
+    {
+      accessorKey: "action",
+      header: () => <div className="text-center">Action</div>,
+      cell: ({ row }) => {
+        const { id_user, username, role } = row.original;
+        return (
+          <div className="flex justify-center">
+            {role === "pending" ? (
+              <ApproveUserDialog
+                id_user={id_user}
+                username={username}
+                currentIdUser={currentIdUser}
+              />
+            ) : (
+              <DeleteUserDialog
+                id_user={id_user}
+                username={username}
+                currentIdUser={currentIdUser}
+              />
+            )}
+          </div>
+        );
+      },
+    },
+  ];
+
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      columnFacetedFilter={columnFacetedFilter}
+      title="Data Pengguna"
+      placeholder="Cari Pengguna"
+      withRefresh
+    />
   );
 }

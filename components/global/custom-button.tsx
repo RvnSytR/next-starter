@@ -10,7 +10,7 @@ import { SignOutHandler } from "@/app/login/sign";
 
 import { cn } from "@/lib/utils";
 import { Delay } from "@/lib/utils";
-import { label } from "../content";
+import { color, label } from "../content";
 import { path } from "../menu";
 
 import { toast } from "sonner";
@@ -87,7 +87,9 @@ export function CustomButton({
               ? "iconlg"
               : size === "sm" || size === "iconsm"
                 ? "iconsm"
-                : "icon"
+                : size === "xs" || size === "iconxs"
+                  ? "iconxs"
+                  : "icon"
             : size
         }
         className={cn("shrink-0", className)}
@@ -194,7 +196,7 @@ export function CustomButton({
     case "pulse": {
       const { className } = props;
       const {
-        pulsecolor = "#FACC15",
+        pulsecolor = color.primary,
         href,
         ...linkProps
       } = props as Extract<CustomType, { customType: "pulse" }>;
@@ -261,8 +263,7 @@ export function CustomButton({
           onClick={async () => {
             setIsLoading(true);
             navigator.clipboard.writeText(copyvalue);
-            toast.info(success.copy);
-            await Delay(2);
+            await Delay(1);
             setIsLoading(false);
           }}
         >

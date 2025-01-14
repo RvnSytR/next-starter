@@ -5,7 +5,7 @@ import { page, label } from "./content";
 const path = {
   login: "/login",
   protected: "/dashboard",
-  createAccount: "/dashboard/account",
+  account: "/dashboard/account",
 };
 
 type MenuRole = Exclude<Role, "pending"> | "all";

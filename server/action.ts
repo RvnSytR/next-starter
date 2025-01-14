@@ -10,19 +10,18 @@ import { Role, user } from "@/lib/db/schema";
 import { label } from "@/components/content";
 import { path } from "@/components/menu";
 
-const { error: errorLabel } = label.toast;
+const { login: loginError, user: userError } = label.toast.error;
 
+// #region // * User Action
 export async function CheckUser(email: string, password: string) {
-  const { login: checkLabel } = errorLabel;
-
   const [res] = await state.user.check.execute({ email: email });
-  if (!res) throw new Error(checkLabel.notFound);
+  if (!res) throw new Error(loginError.notFound);
 
   if (!bcrypt.compareSync(password, res.password)) {
-    throw new Error(checkLabel.emailOrPassword);
+    throw new Error(loginError.emailOrPassword);
   }
 
-  if (res.role == "pending") throw new Error(checkLabel.pending);
+  if (res.role == "pending") throw new Error(loginError.pending);
   else {
     await SignInHandler(email, password);
     return res.username;
@@ -35,7 +34,7 @@ export async function CreateUser(
   const { email, password, ...restData } = data;
   const [check] = await state.user.selectByEmail.execute({ email: email });
 
-  if (check) throw new Error(errorLabel.user.email);
+  if (check) throw new Error(userError.email);
   else {
     const salt = bcrypt.genSaltSync();
     await state.user.insert.execute({
@@ -44,16 +43,25 @@ export async function CreateUser(
       password: bcrypt.hashSync(password, salt),
       ...restData,
     });
-    revalidatePath(path.createAccount);
   }
 }
 
 export async function ApproveUser(role: Exclude<Role, "pending">, id: string) {
   await state.user.updateRole(role).execute({ id_user: id });
-  revalidatePath(path.createAccount);
+  revalidatePath(path.account);
+}
+
+export async function UpdateUserProfile(id: string, username: string) {
+  await state.user.updateProfile(id, username).execute();
+}
+
+export async function UpdateUserPassword(id: string, newPass: string) {
+  const salt = bcrypt.genSaltSync();
+  await state.user.updatePassword(id, bcrypt.hashSync(newPass, salt)).execute();
 }
 
 export async function DeleteUser(id: string) {
   await state.user.delete.execute({ id_user: id });
   revalidatePath("/account");
 }
+// #endregion
