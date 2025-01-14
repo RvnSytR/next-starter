@@ -35,6 +35,7 @@
     "drizzle-orm": "^0.37.0",
     "drizzle-zod": "^0.5.1",
     "lucide-react": "^0.468.0",
+    "motion": "^11.18.0",
     "mysql2": "^3.11.5",
     "next": "^15.1.4",
     "next-auth": "^5.0.0-beta.25",
