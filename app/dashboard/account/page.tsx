@@ -19,7 +19,15 @@ export default async function Page() {
 
   const data = await state.user.select.all.execute();
   const columnFacetedFilter: ColumnFacetedFilter[] = [
-    { id: "role", arr: Array.from(role) as string[] },
+    {
+      id: "role",
+      arr: role.map((r) => {
+        return {
+          value: r,
+          length: data.filter((item) => item.role === r).length,
+        };
+      }),
+    },
   ];
 
   return (

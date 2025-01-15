@@ -63,7 +63,7 @@ type DataTableProps<TData, TValue> = {
 
 export type ColumnFacetedFilter = {
   id: string;
-  arr: string[];
+  arr: { value: string; length: number }[];
   iconArr?: React.ReactNode[];
 };
 // #endregion
@@ -122,37 +122,42 @@ function FacetedFilter<TData>({
 
       <PopoverContent className="flex w-fit flex-col gap-y-1 p-2">
         {arr.map((item, index) => {
-          const cbId = `cb${item}`;
-          const isSelected = selectedFilterValue.has(item);
+          const { value, length } = item;
+          const cbId = `cb${value}`;
+          const isSelected = selectedFilterValue.has(value);
           return (
             <Label
               htmlFor={cbId}
               key={index}
               className={cn(
                 buttonVariants({ variant: "ghost", size: "sm" }),
-                "justify-start gap-x-3 p-2 capitalize",
+                "justify-start gap-x-6 capitalize",
               )}
             >
-              <Checkbox
-                id={cbId}
-                checked={isSelected}
-                onCheckedChange={() =>
-                  table.getColumn(id)?.setFilterValue(() => {
-                    if (isSelected) selectedFilterValue.delete(item);
-                    else selectedFilterValue.add(item);
+              <div className="flex gap-x-3">
+                <Checkbox
+                  id={cbId}
+                  checked={isSelected}
+                  onCheckedChange={() =>
+                    table.getColumn(id)?.setFilterValue(() => {
+                      if (isSelected) selectedFilterValue.delete(value);
+                      else selectedFilterValue.add(value);
 
-                    const filterValues = Array.from(selectedFilterValue);
+                      const filterValues = Array.from(selectedFilterValue);
 
-                    if (filterValues.length) return filterValues;
-                    else {
-                      table.resetColumnFilters();
-                      return [];
-                    }
-                  })
-                }
-              />
-              {iconArr && iconArr[index]}
-              <small className="font-medium">{item}</small>
+                      if (filterValues.length) return filterValues;
+                      else {
+                        table.resetColumnFilters();
+                        return [];
+                      }
+                    })
+                  }
+                />
+                {iconArr && iconArr[index]}
+                <small className="font-medium">{value}</small>
+              </div>
+
+              <small className="ml-auto font-medium">{length}</small>
             </Label>
           );
         })}
