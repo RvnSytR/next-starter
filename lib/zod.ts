@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { role, user } from "./db/schema";
+import { role, user } from "@/server/db/schema";
 import { createSelectSchema } from "drizzle-zod";
 
 export const zodUserSchema = createSelectSchema(user, {

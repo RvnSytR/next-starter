@@ -18,11 +18,11 @@ import {
   UpdateUserProfile,
 } from "@/server/action";
 import { SignOutHandler } from "@/app/login/sign";
-import type { Role, UserCredentials } from "@/lib/db/schema";
+import type { Role, UserCredentials } from "@/server/db/schema";
 
-import { type ColumnFacetedFilter, DataTable } from "./data-table";
-import { CustomButton } from "../global/custom-button";
-import { userColumn } from "./column";
+import { type ColumnFacetedFilter, DataTable } from "../widgets/data-table";
+import { CustomButton } from "../custom/custom-button";
+import { userColumn } from "../widgets/column";
 import { label } from "../content";
 import { path } from "../menu";
 

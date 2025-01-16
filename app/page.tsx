@@ -1,5 +1,5 @@
-import { CustomButton } from "@/components/global/custom-button";
-import { ThemeToggle } from "@/components/global/theme-provider";
+import { CustomButton } from "@/components/custom/custom-button";
+import { ThemeToggle } from "@/components/widgets/theme";
 import { FlaskConical, LayoutDashboard } from "lucide-react";
 
 // export const metadata: Metadata = {

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-import { Role } from "@/lib/db/schema";
+import { Role } from "@/server/db/schema";
 import { title } from "../content";
 import { GetMenuByRole } from "../menu";
-import { CustomButton } from "../global/custom-button";
+import { CustomButton } from "../custom/custom-button";
 
 import {
   Sheet,

@@ -3,8 +3,8 @@ import Credentials from "next-auth/providers/credentials";
 import NextAuth, { DefaultSession, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
 
-import type { UserCredentials } from "./db/schema";
-import { state } from "./db/state";
+import type { UserCredentials } from "@/server/db/schema";
+import { state } from "../server/db/state";
 import { path } from "@/components/menu";
 
 // * Module Augmentation

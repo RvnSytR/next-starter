@@ -5,8 +5,8 @@ import {
   ThemeProvider as NextThemesProvider,
 } from "next-themes";
 import { useTheme } from "next-themes";
-import { cn } from "@/lib/utils";
 
+import { cn } from "@/lib/utils";
 import { Button, type ButtonProps } from "@/components/ui/button";
 import { Moon, Sun } from "lucide-react";
 

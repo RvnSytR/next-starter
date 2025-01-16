@@ -1,4 +1,4 @@
-import type { Role } from "@/lib/db/schema";
+import type { Role } from "@/server/db/schema";
 import { type LucideIcon, LayoutDashboard, UserRound } from "lucide-react";
 import { page, label } from "./content";
 

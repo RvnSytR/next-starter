@@ -2,14 +2,14 @@ import { Fragment, ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
 import { page } from "../content";
-import { CustomLoader, iconSize } from "../global/icon";
-import { ThemeToggle } from "../global/theme-provider";
+import { CustomLoader, iconSize } from "../icon";
+import { ThemeToggle } from "../widgets/theme";
 
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
-} from "./dynamic-breadcrumb";
-import { CustomButton } from "../global/custom-button";
+} from "../widgets/dynamic-breadcrumb";
+import { CustomButton } from "../custom/custom-button";
 
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";

@@ -1,4 +1,4 @@
-import { CustomButton } from "@/components/global/custom-button";
+import { CustomButton } from "@/components/custom/custom-button";
 import { HyperText } from "@/components/ui/hyper-text";
 
 export default function NotFound() {

@@ -20,10 +20,10 @@ import {
 } from "@tanstack/react-table";
 
 import { cn } from "@/lib/utils";
-import { FormFloating } from "../global/custom-input";
-import { SectionGroup, SectionTitle } from "./section";
-import { CustomButton } from "../global/custom-button";
-import { iconSize } from "../global/icon";
+import { FormFloating } from "../custom/custom-input";
+import { CustomButton } from "../custom/custom-button";
+import { SectionGroup, SectionTitle } from "../layout/section";
+import { iconSize } from "../icon";
 
 import {
   Table,

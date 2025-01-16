@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Metadata } from "next";
 
-import { LoginForm } from "@/components/layout/auth";
+import { LoginForm } from "@/components/modules/auth";
 import { page } from "@/components/content";
 import { path, GetCurrentPage } from "@/components/menu";
 

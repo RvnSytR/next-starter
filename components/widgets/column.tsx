@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import { UserCredentials } from "@/lib/db/schema";
+import { UserCredentials } from "@/server/db/schema";
 
 import { Badge } from "../ui/badge";
 import { type ButtonProps, Button } from "../ui/button";

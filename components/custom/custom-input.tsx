@@ -6,7 +6,7 @@ import { Dispatch, RefObject, SetStateAction } from "react";
 import type { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { cn, FileOnChangeAsURL, maxFileSize } from "@/lib/utils";
-import { iconSize } from "./icon";
+import { iconSize } from "../icon";
 
 import { toast } from "sonner";
 import { Label } from "../ui/label";

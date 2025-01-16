@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { SignInHandler } from "@/app/login/sign";
 
 import bcrypt from "bcrypt";
-import { state } from "@/lib/db/state";
-import { Role, user } from "@/lib/db/schema";
+import { state } from "@/server/db/state";
+import { Role, user } from "@/server/db/schema";
 
 import { label } from "@/components/content";
 import { path } from "@/components/menu";

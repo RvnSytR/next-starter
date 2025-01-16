@@ -14,7 +14,7 @@ import { color, label } from "../content";
 import { path } from "../menu";
 
 import { toast } from "sonner";
-import { CustomLoader } from "./icon";
+import { CustomLoader } from "../icon";
 import { Button, ButtonProps } from "../ui/button";
 import { Check, Copy, LogOut, RefreshCw, Sparkle } from "lucide-react";
 

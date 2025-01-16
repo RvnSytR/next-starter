@@ -2,9 +2,7 @@ import { cn } from "@/lib/utils";
 import { type LucideProps, Loader, LoaderCircle } from "lucide-react";
 
 type IconProps = Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>;
-type CustomLoaderProps = IconProps & {
-  customType?: "circle" | "default";
-};
+type CustomLoaderProps = IconProps & { customType?: "circle" | "default" };
 
 const iconSize = { sm: 15, base: 17, lg: 19 };
 const svgProps = {

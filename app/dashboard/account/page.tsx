@@ -1,12 +1,12 @@
 import { Metadata } from "next";
 
 import { auth } from "@/lib/auth";
-import { role } from "@/lib/db/schema";
-import { state } from "@/lib/db/state";
+import { role } from "@/server/db/schema";
+import { state } from "@/server/db/state";
 
 import { Section } from "@/components/layout/section";
-import { AccountDataTable } from "@/components/layout/auth";
-import { ColumnFacetedFilter } from "@/components/layout/data-table";
+import { AccountDataTable } from "@/components/modules/auth";
+import { ColumnFacetedFilter } from "@/components/widgets/data-table";
 import { path, GetCurrentPage } from "@/components/menu";
 
 export const metadata: Metadata = {
