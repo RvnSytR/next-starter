@@ -143,13 +143,9 @@ function FacetedFilter<TData>({
                       if (isSelected) selectedFilterValue.delete(value);
                       else selectedFilterValue.add(value);
 
-                      const filterValues = Array.from(selectedFilterValue);
-
-                      if (filterValues.length) return filterValues;
-                      else {
-                        table.resetColumnFilters();
-                        return [];
-                      }
+                      const filteredValues = Array.from(selectedFilterValue);
+                      if (filteredValues.length) table.resetColumnFilters();
+                      return filteredValues;
                     })
                   }
                 />

@@ -3,21 +3,18 @@
 import Image from "next/image";
 import { Dispatch, RefObject, SetStateAction } from "react";
 
+import type { DateRange } from "react-day-picker";
 import { format } from "date-fns";
 import { cn, FileOnChangeAsURL, maxFileSize } from "@/lib/utils";
 import { iconSize } from "./icon";
 
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { FormDescription } from "../ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { ImageIcon, Calendar as CalendarIcon } from "lucide-react";
 
 export function FormFloating({
@@ -119,17 +116,23 @@ export function InputDatePicker({
   state,
   setState,
   label,
+  className,
 }: {
   state: Date | undefined;
   setState: Dispatch<SetStateAction<Date | undefined>>;
   label?: string;
+  className?: string;
 }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("flex w-full", !state && "text-muted-foreground")}
+          className={cn(
+            "flex w-full",
+            !state && "text-muted-foreground",
+            className,
+          )}
         >
           <CalendarIcon size={iconSize.sm} />
           {state ? format(state, "PPP") : <span>{label ?? "Pick a date"}</span>}
@@ -141,6 +144,55 @@ export function InputDatePicker({
           mode="single"
           selected={state}
           onSelect={setState}
+          initialFocus
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function InputDateRangePicker({
+  state,
+  setState,
+  label,
+  align = "center",
+  className,
+}: {
+  state: DateRange | undefined;
+  setState: Dispatch<SetStateAction<DateRange | undefined>>;
+  label?: string;
+  align?: "center" | "end" | "start";
+  className?: string;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn("w-full", !state && "text-muted-foreground", className)}
+        >
+          <CalendarIcon size={iconSize.sm} />
+          {state?.from ? (
+            state.to ? (
+              <>
+                {format(state.from, "PPP")} - {format(state.to, "PPP")}
+              </>
+            ) : (
+              format(state.from, "PPP")
+            )
+          ) : (
+            <span>{label ?? "Pick a date"}</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="w-fit p-0" align={align}>
+        <Calendar
+          mode="range"
+          defaultMonth={state?.from}
+          selected={state}
+          onSelect={setState}
+          numberOfMonths={2}
           initialFocus
         />
       </PopoverContent>
