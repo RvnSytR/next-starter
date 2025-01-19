@@ -23,7 +23,7 @@ type MenuBody = {
   isDisable?: boolean;
 };
 
-const MENU: Menu[] = [
+const menu: Menu[] = [
   {
     section: "General",
     body: [
@@ -47,7 +47,7 @@ function GetMenu(
   path: string,
   withoutIcon?: boolean,
 ): MenuBody | Omit<MenuBody, "icon"> | null {
-  const allMenu = Object.values(MENU).flatMap((item) => item.body);
+  const allMenu = Object.values(menu).flatMap((item) => item.body);
 
   const result = allMenu
     .map((item) => {
@@ -64,17 +64,19 @@ function GetMenu(
 }
 
 function GetMenuByRole(role: MenuRole) {
-  return MENU.map((section) => {
-    const filteredBody = section.body.filter(
-      (item) => item.role === role || item.role === "all",
-    );
-    if (filteredBody.length) {
-      return {
-        section: section.section,
-        body: filteredBody,
-      } as Menu;
-    } else return null;
-  }).filter((section) => section !== null);
+  return menu
+    .map((section) => {
+      const filteredBody = section.body.filter(
+        (item) => item.role === role || item.role === "all",
+      );
+      if (filteredBody.length) {
+        return {
+          section: section.section,
+          body: filteredBody,
+        } as Menu;
+      } else return null;
+    })
+    .filter((section) => section !== null);
 }
 
 function GetCurrentPage(path: string, metadata?: boolean) {

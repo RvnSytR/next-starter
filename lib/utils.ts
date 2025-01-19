@@ -59,7 +59,7 @@ export function IsDateInRange(
   return isBefore(fromDate, date) && isAfter(toDate, date);
 }
 
-export function CalculateAge(birthDate: Date): number | string {
+export function CalculateAge(birthDate: Date) {
   const today = new Date();
 
   if (isNaN(birthDate.getTime())) {

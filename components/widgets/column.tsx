@@ -1,3 +1,5 @@
+"use client";
+
 import { ColumnDef } from "@tanstack/react-table";
 import { UserCredentials } from "@/server/db/schema";
 import { format } from "date-fns";

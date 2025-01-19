@@ -16,14 +16,14 @@ import { Separator } from "../ui/separator";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 // #region // * Types
-type PieType = {
-  config: ChartConfig;
-  data: { nameKey: string; dataKey: number; fill?: string }[];
-};
-
 export type CustomChartProps = {
   customType: "pie";
-  data: { label: string; chart: PieType }[];
+  data: { label: string; chart: ChartPieProps }[];
+};
+
+type ChartPieProps = {
+  config: ChartConfig;
+  data: { nameKey: string; dataKey: number; fill?: string }[];
 };
 // #endregion
 
@@ -77,7 +77,7 @@ export function CustomChart({ customType, data }: CustomChartProps) {
   }
 }
 
-function ChartPie({ config, data }: PieType) {
+function ChartPie({ config, data }: ChartPieProps) {
   const isMobile = useIsMobile();
   return (
     <ChartContainer

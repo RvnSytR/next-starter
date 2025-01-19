@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import { ThemeProvider } from "next-themes";
+import { title } from "@/components/content";
 import { Toaster } from "@/components/ui/sonner";
 
 const font = Inter({
@@ -11,8 +12,8 @@ const font = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Project Title",
-  description: "Project Description",
+  title: title.primary,
+  description: title.description,
 };
 
 export default function RootLayout({

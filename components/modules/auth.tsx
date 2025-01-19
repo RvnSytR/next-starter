@@ -337,18 +337,18 @@ export function CreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const regisSchema = zodUserSchema.pick({
+  const createSchema = zodUserSchema.pick({
     email: true,
     username: true,
     password: true,
   });
 
-  const form = useForm<z.infer<typeof regisSchema>>({
-    resolver: zodResolver(regisSchema),
+  const form = useForm<z.infer<typeof createSchema>>({
+    resolver: zodResolver(createSchema),
     defaultValues: { email: "", username: "", password: "" },
   });
 
-  const formHandler = async (data: z.infer<typeof regisSchema>) => {
+  const formHandler = async (data: z.infer<typeof createSchema>) => {
     setIsLoading(true);
     toast.promise(CreateUser(data), {
       loading: loading.default,
