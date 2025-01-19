@@ -21,7 +21,7 @@ type PieType = {
   data: { nameKey: string; dataKey: number; fill?: string }[];
 };
 
-export type CustomChartType = {
+export type CustomChartProps = {
   customType: "pie";
   data: { label: string; chart: PieType }[];
 };
@@ -57,7 +57,7 @@ export function CustomChartSeparator() {
 }
 // #endregion
 
-export function CustomChart({ customType, data }: CustomChartType) {
+export function CustomChart({ customType, data }: CustomChartProps) {
   switch (customType) {
     case "pie": {
       return (

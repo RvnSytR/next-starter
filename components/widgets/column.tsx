@@ -1,5 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { UserCredentials } from "@/server/db/schema";
+import { format } from "date-fns";
 
 import { Badge } from "../ui/badge";
 import { type ButtonProps, Button } from "../ui/button";
@@ -71,11 +72,14 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Terakhir Login
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <div className="text-center">
-        {row.original.last_signin_at?.toUTCString()}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const { last_signin_at } = row.original;
+      return (
+        <div className="text-center">
+          {last_signin_at ? format(last_signin_at, "PPPp") : null}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "registrasi pada",
@@ -87,7 +91,9 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <div className="text-center">{row.original.created_at.toUTCString()}</div>
+      <div className="text-center">
+        {format(row.original.created_at, "PPPp")}
+      </div>
     ),
   },
   {

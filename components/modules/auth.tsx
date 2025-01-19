@@ -20,7 +20,7 @@ import {
 import { SignOutHandler } from "@/app/login/sign";
 import type { Role, UserCredentials } from "@/server/db/schema";
 
-import { type ColumnFacetedFilter, DataTable } from "../widgets/data-table";
+import { type FacetedFilter, DataTable } from "../widgets/data-table";
 import { CustomButton } from "../custom/custom-button";
 import { userColumn } from "../widgets/column";
 import { label } from "../content";
@@ -136,8 +136,8 @@ export function LoginForm() {
           type="submit"
           load={isLoading}
           icon={<LogIn />}
-          className="mt-2"
           text={button.login}
+          className="mt-2"
         />
       </form>
     </Form>
@@ -209,7 +209,13 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
               <FormItem>
                 <FormLabel>Status</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="Status" {...field} disabled />
+                  <Input
+                    type="text"
+                    placeholder="Status"
+                    className="capitalize"
+                    disabled
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -651,11 +657,11 @@ export function DeleteUserDialog({
 export function AccountDataTable({
   data,
   currentIdUser,
-  columnFacetedFilter,
+  facetedFilter,
 }: {
   data: UserCredentials[];
   currentIdUser: string;
-  columnFacetedFilter?: ColumnFacetedFilter[];
+  facetedFilter?: FacetedFilter[];
 }) {
   const columns: ColumnDef<UserCredentials>[] = [
     ...userColumn,
@@ -689,12 +695,10 @@ export function AccountDataTable({
     <DataTable
       data={data}
       columns={columns}
-      columnFacetedFilter={columnFacetedFilter}
+      facetedFilter={facetedFilter}
       title="Data Pengguna"
       placeholder="Cari Pengguna"
       withRefresh
-    >
-      <CreateUserDialog />
-    </DataTable>
+    />
   );
 }

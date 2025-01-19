@@ -22,7 +22,7 @@ export default function NotFound() {
           href="/"
           variant="outline"
           size="lg"
-          className="h-16 rounded-full border-4 px-8 text-xl font-bold hover:border-primary"
+          className="h-16 gap-4 rounded-full border-4 px-8 text-xl font-bold hover:border-primary [&_svg]:size-5"
           text="Go To Main Page"
           loadText="Going to Main Page..."
         />

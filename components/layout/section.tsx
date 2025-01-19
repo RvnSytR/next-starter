@@ -10,11 +10,14 @@ import {
   DynamicBreadcrumbProps,
 } from "../widgets/dynamic-breadcrumb";
 import { CustomButton } from "../custom/custom-button";
+import { path } from "../menu";
 
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { Hash, LayoutDashboard, SidebarIcon } from "lucide-react";
 import { SheetTrigger } from "../ui/sheet";
+
+const { base, lg } = iconSize;
 
 export function Section({
   skeleton,
@@ -59,11 +62,7 @@ export function Section({
         <Separator />
       </header>
 
-      {skeleton ? (
-        <CustomLoader size={iconSize.lg} className="m-auto" />
-      ) : (
-        children
-      )}
+      {skeleton ? <CustomLoader size={lg} className="m-auto" /> : children}
 
       <footer className="mt-auto flex flex-col items-center gap-4 text-center">
         <Separator />
@@ -102,7 +101,7 @@ export function SectionTitle({
       )}
     >
       {withHash && (
-        <Hash size={iconSize.sm} className="flex-none text-muted-foreground" />
+        <Hash size={base} className="flex-none text-muted-foreground" />
       )}
       {children}
     </h4>
@@ -119,7 +118,7 @@ export function SectionLabel({
   return (
     <div
       className={cn(
-        "flex size-full animate-pulse flex-col items-center justify-center text-center text-muted-foreground",
+        "flex size-full flex-col items-center justify-center text-center text-muted-foreground",
         className,
       )}
     >
@@ -138,7 +137,7 @@ export function SectionNotFound({
         <p>Page Not Found</p>
         <CustomButton
           customType="nav"
-          href="/"
+          href={path.protected}
           variant="outline"
           className="mt-4 rounded-full"
           icon={<LayoutDashboard />}
@@ -155,7 +154,7 @@ export function LayoutSkeleton() {
       <aside className="hidden basis-1/6 p-2 lg:flex">
         <div className="flex size-full flex-col items-center justify-between p-4">
           <div className="skeleton h-10 w-full" />
-          <CustomLoader size={iconSize.lg} />
+          <CustomLoader size={lg} />
           <div className="skeleton h-10 w-full" />
         </div>
       </aside>

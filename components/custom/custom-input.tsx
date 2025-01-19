@@ -1,7 +1,5 @@
-"use client";
-
 import Image from "next/image";
-import { Dispatch, RefObject, SetStateAction } from "react";
+import { Dispatch, ReactNode, RefObject, SetStateAction } from "react";
 
 import type { DateRange } from "react-day-picker";
 import { format } from "date-fns";
@@ -11,11 +9,24 @@ import { iconSize } from "../icon";
 import { toast } from "sonner";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Button } from "@/components/ui/button";
+import { Badge } from "../ui/badge";
 import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "../ui/checkbox";
+import { Separator } from "../ui/separator";
 import { FormDescription } from "../ui/form";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { ImageIcon, Calendar as CalendarIcon } from "lucide-react";
+import { ImageIcon, Calendar as CalendarIcon, Filter } from "lucide-react";
+
+export type CheckboxPopoverProps = {
+  id: string;
+  state: string[];
+  setState: Dispatch<SetStateAction<string[]>>;
+  arr: { value: string; length: number; icon?: ReactNode }[];
+  icon?: ReactNode;
+  isMobile?: boolean;
+  disabled?: boolean;
+};
 
 export function FormFloating({
   icon,
@@ -134,7 +145,7 @@ export function InputDatePicker({
             className,
           )}
         >
-          <CalendarIcon size={iconSize.sm} />
+          <CalendarIcon />
           {state ? format(state, "PPP") : <span>{label ?? "Pick a date"}</span>}
         </Button>
       </PopoverTrigger>
@@ -171,7 +182,7 @@ export function InputDateRangePicker({
           variant="outline"
           className={cn("w-full", !state && "text-muted-foreground", className)}
         >
-          <CalendarIcon size={iconSize.sm} />
+          <CalendarIcon />
           {state?.from ? (
             state.to ? (
               <>
@@ -195,6 +206,95 @@ export function InputDateRangePicker({
           numberOfMonths={2}
           initialFocus
         />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function CheckboxPopover({
+  id,
+  icon,
+  state,
+  setState,
+  arr,
+  isMobile = false,
+  disabled = false,
+  className,
+}: CheckboxPopoverProps & { className?: string }) {
+  const breakpoint = isMobile ? 1 : 2;
+  const selectedState = new Set(state);
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          size="sm"
+          variant="outline"
+          className={cn("shrink-0 grow select-none capitalize", className)}
+          disabled={disabled}
+        >
+          {icon ?? <Filter />}
+          {id}
+          {selectedState.size > 0 && (
+            <>
+              <Separator orientation="vertical" className="h-4" />
+
+              <div className="space-x-1">
+                {selectedState.size > breakpoint ? (
+                  <Badge variant="secondary" className="rounded-sm px-1">
+                    {selectedState.size} selected
+                  </Badge>
+                ) : (
+                  Array.from(selectedState).map((item, index) => (
+                    <Badge
+                      key={index}
+                      variant="secondary"
+                      className="rounded px-1"
+                    >
+                      {item}
+                    </Badge>
+                  ))
+                )}
+              </div>
+            </>
+          )}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="flex w-fit flex-col gap-y-1 p-1">
+        {arr.map((item, index) => {
+          const { value, length: itemLength, icon } = item;
+          const cbId = `cb${value}`;
+          const isSelected = selectedState.has(value);
+
+          return (
+            <Label
+              htmlFor={cbId}
+              key={index}
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "xs" }),
+                "justify-start gap-x-4 capitalize",
+              )}
+            >
+              <div className="flex gap-x-3">
+                <Checkbox
+                  id={cbId}
+                  checked={isSelected}
+                  onCheckedChange={() =>
+                    setState(() => {
+                      if (isSelected) selectedState.delete(value);
+                      else selectedState.add(value);
+                      return Array.from(selectedState);
+                    })
+                  }
+                />
+                {icon}
+                <small className="font-medium">{value}</small>
+              </div>
+
+              <small className="ml-auto font-medium">{itemLength}</small>
+            </Label>
+          );
+        })}
       </PopoverContent>
     </Popover>
   );

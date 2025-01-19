@@ -19,10 +19,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import {
+  type CheckboxPopoverProps,
+  FormFloating,
+  CheckboxPopover,
+} from "../custom/custom-input";
 import { cn } from "@/lib/utils";
-import { FormFloating } from "../custom/custom-input";
-import { CustomButton } from "../custom/custom-button";
 import { SectionGroup, SectionTitle } from "../layout/section";
+import { CustomButton } from "../custom/custom-button";
 import { iconSize } from "../icon";
 
 import {
@@ -34,10 +38,8 @@ import {
   TableRow,
 } from "../ui/table";
 import { Input } from "../ui/input";
-import { Badge } from "../ui/badge";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
-import { Separator } from "../ui/separator";
 import { Button, buttonVariants } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -45,7 +47,6 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Filter,
   Search,
   Settings2,
   X,
@@ -61,11 +62,7 @@ type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
 };
 
-export type ColumnFacetedFilter = {
-  id: string;
-  arr: { value: string; length: number }[];
-  iconArr?: React.ReactNode[];
-};
+export type FacetedFilter = Pick<CheckboxPopoverProps, "id" | "arr" | "icon">;
 // #endregion
 
 // #region // * Side Component
@@ -73,109 +70,36 @@ function FacetedFilter<TData>({
   table,
   id,
   arr,
-  iconArr,
+  icon,
   isMobile,
-}: TableProps<TData> & ColumnFacetedFilter & { isMobile: boolean }) {
-  const breakpoint = isMobile ? 1 : 2;
-  const selectedFilterValue = new Set(
-    table.getColumn(id)?.getFilterValue() as string[],
-  );
-
+}: TableProps<TData> & FacetedFilter & { isMobile?: boolean }) {
+  const column = table.getColumn(id);
+  if (!column) throw new Error(`Column ${id} not found`);
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          size="sm"
-          variant="outline"
-          className="shrink-0 grow select-none capitalize"
-        >
-          <Filter />
-          {id}
-          {selectedFilterValue.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="h-4" />
-
-              <div className="space-x-1">
-                {selectedFilterValue.size > breakpoint ? (
-                  <Badge
-                    className="rounded-sm px-1 font-normal"
-                    variant="secondary"
-                  >
-                    {selectedFilterValue.size} selected
-                  </Badge>
-                ) : (
-                  Array.from(selectedFilterValue).map((item, index) => (
-                    <Badge
-                      key={index}
-                      className="rounded px-1 font-normal"
-                      variant="secondary"
-                    >
-                      {item}
-                    </Badge>
-                  ))
-                )}
-              </div>
-            </>
-          )}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="flex w-fit flex-col gap-y-1 p-2">
-        {arr.map((item, index) => {
-          const { value, length } = item;
-          const cbId = `cb${value}`;
-          const isSelected = selectedFilterValue.has(value);
-          return (
-            <Label
-              htmlFor={cbId}
-              key={index}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "justify-start gap-x-6 capitalize",
-              )}
-            >
-              <div className="flex gap-x-3">
-                <Checkbox
-                  id={cbId}
-                  checked={isSelected}
-                  onCheckedChange={() =>
-                    table.getColumn(id)?.setFilterValue(() => {
-                      if (isSelected) selectedFilterValue.delete(value);
-                      else selectedFilterValue.add(value);
-
-                      const filteredValues = Array.from(selectedFilterValue);
-                      if (filteredValues.length) table.resetColumnFilters();
-                      return filteredValues;
-                    })
-                  }
-                />
-                {iconArr && iconArr[index]}
-                <small className="font-medium">{value}</small>
-              </div>
-
-              <small className="ml-auto font-medium">{length}</small>
-            </Label>
-          );
-        })}
-      </PopoverContent>
-    </Popover>
+    <CheckboxPopover
+      id={id}
+      state={column.getFilterValue() as string[]}
+      setState={column.setFilterValue}
+      arr={arr}
+      icon={icon}
+      isMobile={isMobile}
+    />
   );
 }
 
 function ToolBox<TData>({
   table,
-  columnFacetedFilter: filterCol,
+  facetedFilter: filterCol,
   placeholder,
-  isMobile,
   withRefresh,
   children,
 }: TableProps<TData> & {
-  columnFacetedFilter?: ColumnFacetedFilter[];
+  facetedFilter?: FacetedFilter[];
   placeholder: string;
-  isMobile: boolean;
   withRefresh?: boolean;
   children?: React.ReactNode;
 }) {
+  const isMobile = useIsMobile();
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
     <div className="flex flex-col gap-2 lg:flex-row">
@@ -206,7 +130,7 @@ function ToolBox<TData>({
         </div>
       )}
 
-      <div className="order-4 flex gap-2">
+      <div className="order-4 flex grow gap-2">
         <Popover>
           <PopoverTrigger asChild>
             <Button size="sm" variant="outline" className="shrink-0">
@@ -258,7 +182,7 @@ function ToolBox<TData>({
             placeholder={placeholder}
             value={table.getState().globalFilter}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-            className="h-9 w-full pl-10 md:w-fit"
+            className="h-9 pl-10"
           />
         </FormFloating>
       </div>
@@ -316,22 +240,20 @@ function Pagination<TData>({ table }: TableProps<TData>) {
 export function DataTable<TData, TValue>({
   data,
   columns,
-  columnFacetedFilter,
   title,
   placeholder,
+  facetedFilter,
   label,
   withRefresh,
   children,
 }: DataTableProps<TData, TValue> & {
-  columnFacetedFilter?: ColumnFacetedFilter[];
   title: string;
   placeholder: string;
+  facetedFilter?: FacetedFilter[];
   label?: string[];
   withRefresh?: boolean;
   children?: React.ReactNode;
 }) {
-  const isMobile = useIsMobile();
-
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
@@ -368,14 +290,13 @@ export function DataTable<TData, TValue>({
 
   return (
     <SectionGroup>
-      <div className="flex flex-col justify-between gap-y-2 md:flex-row">
+      <div className="flex flex-col justify-between gap-y-2 lg:flex-row">
         <SectionTitle>{title}</SectionTitle>
 
         <ToolBox
           table={table}
-          columnFacetedFilter={columnFacetedFilter}
+          facetedFilter={facetedFilter}
           placeholder={placeholder}
-          isMobile={isMobile}
           withRefresh={withRefresh}
         >
           {children}

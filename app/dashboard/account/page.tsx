@@ -6,7 +6,6 @@ import { state } from "@/server/db/state";
 
 import { Section } from "@/components/layout/section";
 import { AccountDataTable } from "@/components/modules/auth";
-import { ColumnFacetedFilter } from "@/components/widgets/data-table";
 import { path, GetCurrentPage } from "@/components/menu";
 
 export const metadata: Metadata = {
@@ -18,7 +17,7 @@ export default async function Page() {
   if (!session) return <Section currentPage="..." skeleton />;
 
   const data = await state.user.select.all.execute();
-  const columnFacetedFilter: ColumnFacetedFilter[] = [
+  const facetedFilter = [
     {
       id: "role",
       arr: role.map((r) => {
@@ -35,7 +34,7 @@ export default async function Page() {
       <AccountDataTable
         data={data}
         currentIdUser={session.user.id_user}
-        columnFacetedFilter={columnFacetedFilter}
+        facetedFilter={facetedFilter}
       />
     </Section>
   );

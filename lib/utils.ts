@@ -1,13 +1,12 @@
-import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+import { addHours, isAfter, isBefore } from "date-fns";
 
 export type cv = ClassValue;
-export const maxFileSize = {
-  mb: 1,
-  byte: 1 * 1000 * 1000,
-};
+export const maxFileSize = { mb: 1, byte: 1 * 1000 * 1000 };
+export const time = { zone: "Asia/Singapore", offset: 7 };
 
-export function cn(...inputs: cv[]) {
+export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
@@ -44,6 +43,22 @@ export function SanitizeNumberInput(targetValue: string) {
   return targetValue.replace(/[^\d]/g, "");
 }
 
+// #region // * Date
+export function GetOffsetDate() {
+  return addHours(new Date(), time.offset);
+}
+
+export function IsDateInRange(
+  from: Date,
+  to: Date,
+  date: Date,
+  withOffset?: boolean,
+) {
+  const fromDate = withOffset ? addHours(from, time.offset) : from;
+  const toDate = withOffset ? addHours(to, time.offset) : to;
+  return isBefore(fromDate, date) && isAfter(toDate, date);
+}
+
 export function CalculateAge(birthDate: Date): number | string {
   const today = new Date();
 
@@ -65,6 +80,7 @@ export function CalculateAge(birthDate: Date): number | string {
 
   return age;
 }
+// #endregion
 
 // #region // * File Reader
 function ReadFileAsURL(file: File): Promise<string> {
