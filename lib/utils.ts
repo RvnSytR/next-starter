@@ -34,9 +34,10 @@ export function GetRandomColor(withHash?: boolean) {
   return color as string;
 }
 
-export function FormatNumber(num: string | number) {
-  if (!num) return "";
-  return new Intl.NumberFormat("id-ID").format(Number(num) || 0);
+export function FormatNumber(num: string | number, withRp?: boolean): string {
+  if (!num) return withRp ? "Rp. 0" : "0";
+  const value = new Intl.NumberFormat("id-ID").format(Number(num) || 0);
+  return withRp ? `Rp. ${value}` : value;
 }
 
 export function SanitizeNumberInput(targetValue: string) {
@@ -59,7 +60,7 @@ export function IsDateInRange(
   return isBefore(fromDate, date) && isAfter(toDate, date);
 }
 
-export function CalculateAge(birthDate: Date) {
+export function CalculateAge(birthDate: Date): number | string {
   const today = new Date();
 
   if (isNaN(birthDate.getTime())) {

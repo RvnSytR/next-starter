@@ -16,7 +16,7 @@ import { Separator } from "../ui/separator";
 import { FormDescription } from "../ui/form";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { ImageIcon, Calendar as CalendarIcon, Filter } from "lucide-react";
+import { Calendar as CalendarIcon, Filter, CloudUpload } from "lucide-react";
 
 export type CheckboxPopoverProps = {
   id: string;
@@ -88,14 +88,15 @@ export function InputFile({
         ) : (
           <div
             className={cn(
-              "flex h-[10rem] w-[15rem] items-center justify-center rounded border opacity-25 outline-dashed outline-2 transition",
+              "flex h-[10rem] w-[15rem] flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-dashed outline-1 transition",
               !disabled ? "hover:cursor-pointer hover:opacity-100" : "",
             )}
             onClick={() => {
               if (!disabled) ref.current?.click();
             }}
           >
-            <ImageIcon size={iconSize.lg} />
+            <CloudUpload size={iconSize.lg} />
+            <small className="text-xs font-medium">Upload File</small>
           </div>
         )}
       </div>
@@ -146,7 +147,11 @@ export function InputDatePicker({
           )}
         >
           <CalendarIcon />
-          {state ? format(state, "PPP") : <span>{label ?? "Pick a date"}</span>}
+          {state ? (
+            format(state, "PPPP")
+          ) : (
+            <span>{label ?? "Pick a date"}</span>
+          )}
         </Button>
       </PopoverTrigger>
 
@@ -168,12 +173,14 @@ export function InputDateRangePicker({
   label,
   align = "center",
   className,
+  disabled = false,
 }: {
   state: DateRange | undefined;
   setState: Dispatch<SetStateAction<DateRange | undefined>>;
   label?: string;
   align?: "center" | "end" | "start";
   className?: string;
+  disabled?: boolean;
 }) {
   return (
     <Popover>
@@ -181,6 +188,7 @@ export function InputDateRangePicker({
         <Button
           variant="outline"
           className={cn("w-full", !state && "text-muted-foreground", className)}
+          disabled={disabled}
         >
           <CalendarIcon />
           {state?.from ? (
@@ -229,7 +237,7 @@ export function CheckboxPopover({
         <Button
           size="sm"
           variant="outline"
-          className={cn("shrink-0 grow select-none capitalize", className)}
+          className={cn("w-full select-none capitalize lg:w-auto", className)}
           disabled={disabled}
         >
           {icon ?? <Filter />}

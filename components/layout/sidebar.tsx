@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Fragment } from "react";
 
-import { Role } from "@/server/db/schema";
-import { title } from "../content";
+import type { Role } from "@/server/db/schema";
+
+import { cn } from "@/lib/utils";
 import { GetMenuByRole } from "../menu";
 import { CustomButton } from "../custom/custom-button";
 
@@ -13,11 +14,11 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
+} from "../ui/sheet";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { ScrollArea } from "../ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "../ui/avatar";
 import { ExternalLink } from "lucide-react";
 
 type SiderbarHeaderData = {
@@ -32,26 +33,24 @@ export function Sidebar({
 }: {
   children: React.ReactNode;
 } & SiderbarHeaderData) {
-  const header = <SidebarHeader data={data} />;
-  const footer = <SidebarFooter />;
-
   return (
     <Sheet>
       <SheetContent
         side="left"
         className="flex flex-col gap-y-4 bg-sidebar text-sidebar-foreground"
       >
-        <SheetHeader>{header}</SheetHeader>
+        <SheetHeader>
+          <SidebarHeader data={data} />
+        </SheetHeader>
         <SidebarContent role={data.role} className="h-5/6" />
-        {footer}
+        <SidebarFooter />
       </SheetContent>
 
       <main className="flex min-h-dvh bg-sidebar text-sidebar-foreground">
-        <aside className="sticky left-0 top-0 hidden h-screen basis-1/6 flex-col gap-y-4 p-6 lg:flex">
-          {header}
-          <SidebarContent role={data.role} className="grow" />
-          <Separator />
-          {footer}
+        <aside className="sticky left-0 top-0 hidden h-screen basis-1/6 flex-col gap-y-4 py-6 lg:flex">
+          <SidebarHeader data={data} className="px-6" />
+          <SidebarContent role={data.role} className="grow px-4" />
+          <SidebarFooter className="px-6" />
         </aside>
 
         <div className="flex basis-full flex-col gap-y-4 overflow-hidden bg-background p-4 text-foreground shadow lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
@@ -62,9 +61,15 @@ export function Sidebar({
   );
 }
 
-function SidebarHeader({ data }: { data: SiderbarHeaderData }) {
+function SidebarHeader({
+  data,
+  className,
+}: {
+  data: SiderbarHeaderData;
+  className?: string;
+}) {
   return (
-    <div className="space-y-2">
+    <div className={cn("space-y-2", className)}>
       <div className="flex items-center gap-x-3">
         <Avatar className="rounded-md">
           <AvatarFallback className="rounded-md">
@@ -96,7 +101,7 @@ function SidebarContent({
   const menu = GetMenuByRole(role);
   return (
     <ScrollArea className={className}>
-      <div className="flex flex-col gap-y-4">
+      <div className="flex flex-col gap-y-4 px-2">
         {menu.map((item, index) => (
           <Fragment key={index}>
             {index !== 0 && <Separator />}
@@ -139,17 +144,21 @@ function SidebarContent({
   );
 }
 
-function SidebarFooter() {
+function SidebarFooter({ className }: { className?: string }) {
   return (
-    <footer className="space-y-2">
+    <footer className={cn("space-y-2", className)}>
+      <Separator />
+
       <CustomButton
         customType="nav"
-        href="/"
+        load={false}
+        href="https://omargroup.id/"
         size="sm"
         variant="link"
+        target="_blank"
         icon={<ExternalLink />}
         className="w-full justify-start"
-        text={`Beranda ${title.primary}`}
+        text="Omar Group"
       />
 
       <CustomButton

@@ -28,10 +28,8 @@ export async function GetFilePreSignedUrl(key: string) {
 export async function UploadFile(
   formData: FormData,
   name?: string,
-  options?: { maxUploadSizeMb?: number; contentType?: string },
+  options?: { contentType?: string },
 ) {
-  // const MAX_UPLOAD_SIZE_MB = (options?.maxUploadSizeMb ?? 1) * 1024 * 1024;
-
   const file = formData.get(name ?? "file") as File;
   const fileBuffer = Buffer.from(await file.arrayBuffer());
 

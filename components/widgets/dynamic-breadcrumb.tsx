@@ -24,7 +24,7 @@ export function DynamicBreadcrumb({
 }: DynamicBreadcrumbProps) {
   return (
     <Breadcrumb>
-      <BreadcrumbList>
+      <BreadcrumbList className="flex-nowrap">
         {breadcrumbArr?.map((item, index) => {
           const menu = typeof item === "string" ? GetMenu(item, true) : item;
           const content = menu ? (
@@ -39,7 +39,7 @@ export function DynamicBreadcrumb({
 
           return (
             <Fragment key={index}>
-              <BreadcrumbItem className="hidden md:flex">
+              <BreadcrumbItem className="hidden shrink-0 md:flex">
                 {content}
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:flex">
@@ -50,7 +50,7 @@ export function DynamicBreadcrumb({
         })}
 
         <BreadcrumbItem>
-          <BreadcrumbPage className="cursor-default">
+          <BreadcrumbPage className="line-clamp-1 cursor-default text-ellipsis">
             {currentPage}
           </BreadcrumbPage>
         </BreadcrumbItem>

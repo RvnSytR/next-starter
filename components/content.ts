@@ -1,13 +1,15 @@
 const currentYear = new Date().getFullYear();
 
-const color = { primary: "#81F5FF" };
+const color = {
+  primary: "#81F5FF",
+  success: "#B5E655",
+  warning: "#FFEE58",
+  danger: "hsl(var(--destructive))",
+};
 
 const image = {};
 
-const title = {
-  primary: "Project Title",
-  description: "Project Description",
-};
+const title = { primary: "Project Title", description: "Project Description" };
 
 const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,

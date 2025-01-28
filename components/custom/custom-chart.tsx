@@ -1,7 +1,7 @@
 "use client";
 
-import { Fragment } from "react";
-import { Pie, PieChart } from "recharts";
+import { Pie, PieChart, Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+
 import { cn } from "@/lib/utils";
 
 import {
@@ -12,78 +12,25 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Separator } from "../ui/separator";
-import { useIsMobile } from "@/hooks/use-mobile";
 
-// #region // * Types
-export type CustomChartProps = {
-  customType: "pie";
-  data: { label: string; chart: ChartPieProps }[];
+export type ChartPieData = {
+  nameKey: string;
+  dataKey: number;
+  fill?: string;
 };
 
-type ChartPieProps = {
-  config: ChartConfig;
-  data: { nameKey: string; dataKey: number; fill?: string }[];
-};
-// #endregion
-
-// #region // * Side Component
-export function ChartCard({
-  label,
-  className,
-  children,
+export function ChartPie({
+  config,
+  data,
 }: {
-  label?: string;
-  className?: string;
-  children: React.ReactNode;
+  config: ChartConfig;
+  data: ChartPieData[];
 }) {
-  return (
-    <div
-      className={cn("flex items-center gap-4 rounded-md border p-4", className)}
-    >
-      {label && <h5 className="mr-auto">{label}</h5>}
-      {children}
-    </div>
-  );
-}
-
-export function CustomChartSeparator() {
-  return (
-    <Separator
-      orientation="vertical"
-      className="max-h-[8rem] lg:max-h-[12rem]"
-    />
-  );
-}
-// #endregion
-
-export function CustomChart({ customType, data }: CustomChartProps) {
-  switch (customType) {
-    case "pie": {
-      return (
-        <ChartCard>
-          {data.map((item, index) => (
-            <Fragment key={index}>
-              {index !== 0 && <CustomChartSeparator />}
-              <div>
-                <h5>{item.label}</h5>
-                <ChartPie {...item.chart} />
-              </div>
-            </Fragment>
-          ))}
-        </ChartCard>
-      );
-    }
-  }
-}
-
-function ChartPie({ config, data }: ChartPieProps) {
-  const isMobile = useIsMobile();
   return (
     <ChartContainer
       config={config}
       className={cn(
-        "mx-auto size-[12rem] lg:size-[18rem]",
+        "aspect-square",
         "[&_.recharts-pie-label-text]:hidden [&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 md:[&_.recharts-pie-label-text]:flex",
       )}
     >
@@ -92,7 +39,7 @@ function ChartPie({ config, data }: ChartPieProps) {
           data={data}
           nameKey="nameKey"
           dataKey="dataKey"
-          innerRadius={isMobile ? 40 : 50}
+          innerRadius={40}
           label
           labelLine={false}
         />
@@ -106,6 +53,82 @@ function ChartPie({ config, data }: ChartPieProps) {
           }
         />
       </PieChart>
+    </ChartContainer>
+  );
+}
+
+export function ChartArea() {
+  // {
+  //   config,
+  //   data,
+  // }: {
+  //   config: ChartConfig;
+  //   data: { nameKey: string; dataKey: number; fill?: string }[];
+  // }
+  const data = [
+    { label: "January", key1: 100, key2: 50 },
+    { label: "February", key1: 305, key2: 200 },
+    { label: "March", key1: 237, key2: 120 },
+    { label: "April", key1: 73, key2: 190 },
+    { label: "May", key1: 209, key2: 130 },
+    { label: "June", key1: 214, key2: 140 },
+  ];
+
+  const config = {
+    key1: { label: "Pengajuan", color: "hsl(var(--chart-1))" },
+    key2: { label: "Pemasukan", color: "hsl(var(--chart-2))" },
+  } satisfies ChartConfig;
+
+  return (
+    <ChartContainer config={config}>
+      <AreaChart accessibilityLayer data={data}>
+        <CartesianGrid vertical={false} />
+
+        <XAxis
+          dataKey="label"
+          tickLine={false}
+          axisLine={false}
+          tickMargin={8}
+          tickFormatter={(value) => value.slice(0, 3)}
+        />
+
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+
+        <defs>
+          <linearGradient id="fill1" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-key1)" stopOpacity={0.8} />
+            <stop
+              offset="95%"
+              stopColor="var(--color-key1)"
+              stopOpacity={0.1}
+            />
+          </linearGradient>
+          <linearGradient id="fill2" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-key2)" stopOpacity={0.8} />
+            <stop
+              offset="95%"
+              stopColor="var(--color-key2)"
+              stopOpacity={0.1}
+            />
+          </linearGradient>
+        </defs>
+
+        <Area
+          dataKey="key1"
+          type="natural"
+          fill="url(#fill1)"
+          fillOpacity={0.4}
+          stroke="var(--color-key1)"
+        />
+
+        <Area
+          dataKey="key2"
+          type="natural"
+          fill="url(#fill2)"
+          fillOpacity={0.4}
+          stroke="var(--color-key2)"
+        />
+      </AreaChart>
     </ChartContainer>
   );
 }

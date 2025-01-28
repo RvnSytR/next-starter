@@ -11,7 +11,7 @@ export default async function Page() {
     <Section currentPage={GetCurrentPage(path.protected)}>
       <SectionGroup className="grow">
         <div className="space-y-1">
-          <SectionTitle>Section Title</SectionTitle>
+          <SectionTitle text="Section Title" />
           <p className="desc">Section Description</p>
         </div>
 

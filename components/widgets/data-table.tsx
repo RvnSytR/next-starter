@@ -47,9 +47,9 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  FilterX,
   Search,
   Settings2,
-  X,
 } from "lucide-react";
 
 // #region // * Types
@@ -89,13 +89,13 @@ function FacetedFilter<TData>({
 
 function ToolBox<TData>({
   table,
+  placeholder = "Search Something",
   facetedFilter: filterCol,
-  placeholder,
   withRefresh,
   children,
 }: TableProps<TData> & {
+  placeholder?: string;
   facetedFilter?: FacetedFilter[];
-  placeholder: string;
   withRefresh?: boolean;
   children?: React.ReactNode;
 }) {
@@ -112,13 +112,13 @@ function ToolBox<TData>({
           onClick={() => table.resetColumnFilters()}
           className="order-2 border-dashed lg:order-1"
         >
-          <X />
+          <FilterX />
           Reset
         </Button>
       )}
 
       {filterCol && (
-        <div className="order-1 flex flex-wrap gap-2 lg:order-2">
+        <div className="order-1 flex gap-2 lg:order-2">
           {filterCol.map((item, index) => (
             <FacetedFilter
               key={index}
@@ -200,7 +200,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         disabled={!table.getCanPreviousPage()}
       >
         <ChevronsLeft />
-        First
+        <span className="hidden md:flex">First</span>
       </Button>
 
       <Button
@@ -229,7 +229,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         onClick={() => table.lastPage()}
         disabled={!table.getCanNextPage()}
       >
-        Last
+        <span className="hidden md:flex">Last</span>
         <ChevronsRight />
       </Button>
     </div>
@@ -240,18 +240,20 @@ function Pagination<TData>({ table }: TableProps<TData>) {
 export function DataTable<TData, TValue>({
   data,
   columns,
-  title,
-  placeholder,
-  facetedFilter,
+  title = "Data Table",
+  caption,
   label,
+  placeholder,
   withRefresh,
+  facetedFilter,
   children,
 }: DataTableProps<TData, TValue> & {
-  title: string;
-  placeholder: string;
-  facetedFilter?: FacetedFilter[];
+  title?: string;
+  caption?: string;
   label?: string[];
+  placeholder?: string;
   withRefresh?: boolean;
+  facetedFilter?: FacetedFilter[];
   children?: React.ReactNode;
 }) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -291,7 +293,7 @@ export function DataTable<TData, TValue>({
   return (
     <SectionGroup>
       <div className="flex flex-col justify-between gap-y-2 lg:flex-row">
-        <SectionTitle>{title}</SectionTitle>
+        <SectionTitle text={title} />
 
         <ToolBox
           table={table}
@@ -322,6 +324,7 @@ export function DataTable<TData, TValue>({
             </TableRow>
           ))}
         </TableHeader>
+
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
@@ -349,7 +352,17 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
 
-      <Pagination table={table} />
+      <div
+        className={cn(
+          "mt-4 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-center",
+          caption ? "justify-between" : "justify-center",
+        )}
+      >
+        <small className="text-left font-medium text-muted-foreground lg:text-center">
+          {caption}
+        </small>
+        <Pagination table={table} />
+      </div>
     </SectionGroup>
   );
 }

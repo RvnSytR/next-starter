@@ -82,6 +82,14 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         </div>
       );
     },
+    sortingFn: (a, b) => {
+      const { last_signin_at: aLog } = a.original;
+      const { last_signin_at: bLog } = b.original;
+      if (aLog && bLog) return aLog.getTime() - bLog.getTime();
+
+      if (!aLog) return 1;
+      else return -1;
+    },
   },
   {
     accessorKey: "registrasi pada",
@@ -97,6 +105,8 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         {format(row.original.created_at, "PPPp")}
       </div>
     ),
+    sortingFn: (a, b) =>
+      a.original.created_at.getTime() - b.original.created_at.getTime(),
   },
   {
     accessorKey: "role",

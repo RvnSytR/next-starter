@@ -14,10 +14,8 @@ import { path } from "../menu";
 
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { Hash, LayoutDashboard, SidebarIcon } from "lucide-react";
+import { LayoutDashboard, SidebarIcon } from "lucide-react";
 import { SheetTrigger } from "../ui/sheet";
-
-const { base, lg } = iconSize;
 
 export function Section({
   skeleton,
@@ -37,17 +35,23 @@ export function Section({
   return (
     <Fragment>
       <header className="flex flex-col gap-y-3">
-        <div className="flex items-center">
+        <div className="flex items-center gap-x-2">
           <div className="over flex grow items-center gap-x-2">
             <span className="hidden text-sm text-muted-foreground lg:flex">
               /
             </span>
 
             <SheetTrigger className="flex lg:hidden" asChild>
-              <Button size="iconsm" variant="ghost" disabled={skeleton}>
+              <Button
+                size="iconsm"
+                variant="ghost"
+                className="shrink-0"
+                disabled={skeleton}
+              >
                 <SidebarIcon />
               </Button>
             </SheetTrigger>
+
             <Separator
               orientation="vertical"
               className="mr-2 flex h-4 lg:hidden"
@@ -62,11 +66,17 @@ export function Section({
         <Separator />
       </header>
 
-      {skeleton ? <CustomLoader size={lg} className="m-auto" /> : children}
+      {skeleton ? (
+        <CustomLoader size={iconSize.lg} className="m-auto" />
+      ) : (
+        children
+      )}
 
       <footer className="mt-auto flex flex-col items-center gap-4 text-center">
         <Separator />
-        <small className="desc">{page.copyright}</small>
+        <small className="leading-tight text-muted-foreground">
+          {page.copyright}
+        </small>
       </footer>
     </Fragment>
   );
@@ -85,25 +95,17 @@ export function SectionGroup({
 }
 
 export function SectionTitle({
-  withHash,
+  text,
   className,
-  children,
 }: {
-  withHash?: boolean;
+  text: string;
   className?: string;
-  children: ReactNode;
 }) {
   return (
     <h4
-      className={cn(
-        "line-clamp-2 flex items-center gap-x-2 leading-tight",
-        className,
-      )}
+      className={cn("line-clamp-2 flex items-center leading-tight", className)}
     >
-      {withHash && (
-        <Hash size={base} className="flex-none text-muted-foreground" />
-      )}
-      {children}
+      {text}
     </h4>
   );
 }
@@ -154,7 +156,7 @@ export function LayoutSkeleton() {
       <aside className="hidden basis-1/6 p-2 lg:flex">
         <div className="flex size-full flex-col items-center justify-between p-4">
           <div className="skeleton h-10 w-full" />
-          <CustomLoader size={lg} />
+          <CustomLoader size={iconSize.lg} />
           <div className="skeleton h-10 w-full" />
         </div>
       </aside>

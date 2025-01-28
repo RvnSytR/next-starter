@@ -1,13 +1,10 @@
 import { CustomButton } from "@/components/custom/custom-button";
-import { HyperText } from "@/components/ui/hyper-text";
 
 export default function NotFound() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-y-8">
       <div className="flex flex-col items-center gap-x-8 gap-y-4 font-extrabold lg:flex-row">
-        <div className="animate-fade-right">
-          <HyperText className="text-9xl">404</HyperText>
-        </div>
+        <h1 className="animate-fade-right text-9xl">404</h1>
 
         <h1 className="animate-fade-left text-center text-4xl md:text-6xl lg:text-start">
           Oops, looks like
