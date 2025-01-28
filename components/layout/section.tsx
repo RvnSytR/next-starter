@@ -3,12 +3,12 @@ import { Fragment, ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { page } from "../content";
 import { CustomLoader, iconSize } from "../icon";
-import { ThemeToggle } from "../widgets/theme";
+import { ThemeToggle } from "../custom/theme";
 
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
-} from "../widgets/dynamic-breadcrumb";
+} from "../custom/dynamic-breadcrumb";
 import { CustomButton } from "../custom/custom-button";
 import { path } from "../menu";
 

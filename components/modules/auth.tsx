@@ -20,9 +20,9 @@ import {
 import { SignOutHandler } from "@/app/login/sign";
 import type { Role, UserCredentials } from "@/server/db/schema";
 
-import { type FacetedFilter, DataTable } from "../widgets/data-table";
+import { type FacetedFilter, DataTable } from "../custom/data-table";
 import { CustomButton } from "../custom/custom-button";
-import { userColumn } from "../widgets/column";
+import { userColumn } from "../custom/column";
 import { label } from "../content";
 import { path } from "../menu";
 
