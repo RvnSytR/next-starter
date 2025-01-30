@@ -19,9 +19,7 @@ const nextConfig: NextConfig = {
     ],
   },
   experimental: {
-    serverActions: {
-      bodySizeLimit: `${maxFileSize.mb}mb`,
-    },
+    serverActions: { bodySizeLimit: `${maxFileSize.mb}mb` },
   },
 };
 
