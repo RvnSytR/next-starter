@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: title.primary,
   description: title.description,
   manifest: "/manifest.json",
-  keywords: ["json viewer", "technology", "web application"],
+  keywords: ["web application", "next starter"],
 };
 
 export const viewport: Viewport = {
