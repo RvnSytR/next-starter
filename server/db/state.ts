@@ -20,6 +20,7 @@ const user = {
       email: placeholder("email"),
       password: placeholder("password"),
       username: placeholder("username"),
+      created_at: new Date(),
     })
     .prepare(),
 

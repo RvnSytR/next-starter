@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 import {
   type Table as DataTableType,
@@ -19,12 +18,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { cn } from "@/lib/utils";
+
 import {
   type CheckboxPopoverProps,
-  FormFloating,
   CheckboxPopover,
-} from "../custom/custom-input";
-import { cn } from "@/lib/utils";
+} from "../custom/custom-input-client";
+import { FormFloating } from "../custom/custom-input";
 import { SectionGroup, SectionTitle } from "../layout/section";
 import { CustomButton } from "../custom/custom-button";
 import { iconSize } from "../icon";
@@ -71,8 +71,7 @@ function FacetedFilter<TData>({
   id,
   arr,
   icon,
-  isMobile,
-}: TableProps<TData> & FacetedFilter & { isMobile?: boolean }) {
+}: TableProps<TData> & FacetedFilter) {
   const column = table.getColumn(id);
   if (!column) throw new Error(`Column ${id} not found`);
   return (
@@ -82,7 +81,6 @@ function FacetedFilter<TData>({
       setState={column.setFilterValue}
       arr={arr}
       icon={icon}
-      isMobile={isMobile}
     />
   );
 }
@@ -99,7 +97,6 @@ function ToolBox<TData>({
   withRefresh?: boolean;
   children?: React.ReactNode;
 }) {
-  const isMobile = useIsMobile();
   const isFiltered = table.getState().columnFilters.length > 0;
   return (
     <div className="flex flex-col gap-2 lg:flex-row">
@@ -120,12 +117,7 @@ function ToolBox<TData>({
       {filterCol && (
         <div className="order-1 flex gap-2 lg:order-2">
           {filterCol.map((item, index) => (
-            <FacetedFilter
-              key={index}
-              table={table}
-              {...item}
-              isMobile={isMobile}
-            />
+            <FacetedFilter key={index} table={table} {...item} />
           ))}
         </div>
       )}

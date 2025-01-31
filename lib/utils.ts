@@ -1,6 +1,7 @@
 import { twMerge } from "tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
-import { addHours, isAfter, isBefore } from "date-fns";
+import { addHours, format, isAfter, isBefore } from "date-fns";
+import { id } from "date-fns/locale";
 
 export type cv = ClassValue;
 export const maxFileSize = { mb: 1, byte: 1 * 1000 * 1000 };
@@ -45,8 +46,8 @@ export function SanitizeNumberInput(targetValue: string) {
 }
 
 // #region // * Date
-export function GetOffsetDate() {
-  return addHours(new Date(), time.offset);
+export function FormatDate(date: Date, formatStr?: string) {
+  return format(date, formatStr ?? "PPP", { locale: id });
 }
 
 export function IsDateInRange(

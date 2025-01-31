@@ -29,7 +29,7 @@ export async function CheckUser(email: string, password: string) {
 }
 
 export async function CreateUser(
-  data: Omit<typeof user.$inferInsert, "id_user">,
+  data: Omit<typeof user.$inferInsert, "id_user" | "created_at">,
 ) {
   const { email, password, ...restData } = data;
   const [check] = await state.user.select.byEmail.execute({ email: email });

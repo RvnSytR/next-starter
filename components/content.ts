@@ -1,11 +1,6 @@
 const currentYear = new Date().getFullYear();
 
-const color = {
-  primary: "#81F5FF",
-  success: "#B5E655",
-  warning: "#FFEE58",
-  danger: "hsl(var(--destructive))",
-};
+const color = { primary: "#81F5FF" };
 
 const image = {};
 
