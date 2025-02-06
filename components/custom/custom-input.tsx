@@ -56,7 +56,7 @@ export function InputFile({
         {state ? (
           <div
             className={cn(
-              "max-h-[32rem] w-auto max-w-[32rem] overflow-hidden rounded-md border-muted-foreground",
+              "group flex size-fit max-h-[36rem] grow justify-center overflow-hidden rounded-md border-dashed border-muted-foreground",
               !disabled ? "hover:cursor-pointer hover:border" : "",
             )}
           >
@@ -65,7 +65,7 @@ export function InputFile({
               width={960}
               height={960}
               alt="Bukti Approval"
-              className="rounded-md object-center transition hover:scale-125"
+              className="rounded-md object-contain object-center transition group-hover:scale-105"
               onClick={() => {
                 if (!disabled) ref.current?.click();
               }}
@@ -74,7 +74,7 @@ export function InputFile({
         ) : (
           <div
             className={cn(
-              "flex h-[10rem] w-[15rem] flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-dashed outline-1 transition",
+              "flex h-[12rem] w-full flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-dashed outline-1 transition md:w-[18rem]",
               !disabled ? "hover:cursor-pointer hover:opacity-100" : "",
             )}
             onClick={() => {

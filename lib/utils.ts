@@ -1,6 +1,6 @@
 import { twMerge } from "tailwind-merge";
 import { clsx, type ClassValue } from "clsx";
-import { addHours, format, isAfter, isBefore } from "date-fns";
+import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 
 export type cv = ClassValue;
@@ -46,19 +46,12 @@ export function SanitizeNumberInput(targetValue: string) {
 }
 
 // #region // * Date
-export function FormatDate(date: Date, formatStr?: string) {
-  return format(date, formatStr ?? "PPP", { locale: id });
+export function FormatDate(date: Date, formatStr: string) {
+  return format(date, formatStr, { locale: id });
 }
 
-export function IsDateInRange(
-  from: Date,
-  to: Date,
-  date: Date,
-  withOffset?: boolean,
-) {
-  const fromDate = withOffset ? addHours(from, time.offset) : from;
-  const toDate = withOffset ? addHours(to, time.offset) : to;
-  return isBefore(fromDate, date) && isAfter(toDate, date);
+export function IsDateInRange(from: Date, to: Date, date: Date) {
+  return isBefore(from, date) && isAfter(to, date);
 }
 
 export function CalculateAge(birthDate: Date): number | string {

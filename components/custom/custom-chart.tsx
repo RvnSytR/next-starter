@@ -1,6 +1,16 @@
 "use client";
 
-import { Pie, PieChart, Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import {
+  Pie,
+  PieChart,
+  Area,
+  AreaChart,
+  CartesianGrid,
+  XAxis,
+  BarChart,
+  Bar,
+  LabelList,
+} from "recharts";
 
 import { cn } from "@/lib/utils";
 
@@ -18,6 +28,10 @@ export type ChartPieData = {
   dataKey: number;
   fill?: string;
 };
+
+const radius = 8;
+const tickMargin = 10;
+const tickFormater = (str: string) => str.slice(0, 3);
 
 export function ChartPie({
   config,
@@ -57,40 +71,24 @@ export function ChartPie({
   );
 }
 
-// TODO
-export function ChartArea() {
-  // {
-  //   config,
-  //   data,
-  // }: {
-  //   config: ChartConfig;
-  //   data: { nameKey: string; dataKey: number; fill?: string }[];
-  // }
-  const data = [
-    { label: "January", key1: 100, key2: 50 },
-    { label: "February", key1: 305, key2: 200 },
-    { label: "March", key1: 237, key2: 120 },
-    { label: "April", key1: 73, key2: 190 },
-    { label: "May", key1: 209, key2: 130 },
-    { label: "June", key1: 214, key2: 140 },
-  ];
-
-  const config = {
-    key1: { label: "Pengajuan", color: "hsl(var(--chart-1))" },
-    key2: { label: "Pemasukan", color: "hsl(var(--chart-2))" },
-  } satisfies ChartConfig;
-
+export function ChartArea({
+  config,
+  data,
+}: {
+  config: ChartConfig;
+  data: { label: string; key1: number; key2: number }[];
+}) {
+  // TODO : Dynamic Keys
   return (
     <ChartContainer config={config}>
-      <AreaChart accessibilityLayer data={data}>
+      <AreaChart accessibilityLayer data={data} margin={{ left: 10 }}>
         <CartesianGrid vertical={false} />
 
         <XAxis
           dataKey="label"
-          tickLine={false}
           axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickMargin={tickMargin}
+          tickFormatter={tickFormater}
         />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -104,6 +102,7 @@ export function ChartArea() {
               stopOpacity={0.1}
             />
           </linearGradient>
+
           <linearGradient id="fill2" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="var(--color-key2)" stopOpacity={0.8} />
             <stop
@@ -116,7 +115,6 @@ export function ChartArea() {
 
         <Area
           dataKey="key1"
-          type="natural"
           fill="url(#fill1)"
           fillOpacity={0.4}
           stroke="var(--color-key1)"
@@ -124,12 +122,43 @@ export function ChartArea() {
 
         <Area
           dataKey="key2"
-          type="natural"
           fill="url(#fill2)"
           fillOpacity={0.4}
           stroke="var(--color-key2)"
         />
       </AreaChart>
+    </ChartContainer>
+  );
+}
+
+export function ChartBar({
+  config,
+  data,
+}: {
+  config: ChartConfig;
+  data: { label: string; key: number }[];
+}) {
+  return (
+    <ChartContainer config={config}>
+      <BarChart accessibilityLayer data={data} margin={{ top: 30 }}>
+        <CartesianGrid vertical={false} />
+
+        <XAxis
+          dataKey="label"
+          axisLine={false}
+          tickMargin={tickMargin}
+          tickFormatter={tickFormater}
+        />
+
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent hideLabel />}
+        />
+
+        <Bar dataKey="key" fill="var(--color-key)" radius={radius}>
+          <LabelList className="fill-foreground" />
+        </Bar>
+      </BarChart>
     </ChartContainer>
   );
 }
