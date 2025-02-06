@@ -15,9 +15,7 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export const metadata: Metadata = {
-  title: GetCurrentPage(path.login, true),
-};
+export const metadata: Metadata = { title: GetCurrentPage(path.login, true) };
 
 export default function Page() {
   const { title, subtitle } = page.login;

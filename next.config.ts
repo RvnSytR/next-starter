@@ -1,10 +1,10 @@
 import type { NextConfig } from "next";
 import { maxFileSize } from "./lib/utils";
 
-const bucketName = process.env.NEVA_BUCKET_NAME;
+const bucketName = process.env.S3_BUCKET_NAME;
 
 if (!bucketName) {
-  throw new Error("Environment variable NEVA_BUCKET_NAME is not set");
+  throw new Error("Environment variable S3_BUCKET_NAME is not set");
 }
 
 const nextConfig: NextConfig = {
@@ -18,9 +18,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  experimental: {
-    serverActions: { bodySizeLimit: `${maxFileSize.mb}mb` },
-  },
+  experimental: { serverActions: { bodySizeLimit: `${maxFileSize.mb}mb` } },
 };
 
 export default nextConfig;

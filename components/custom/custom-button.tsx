@@ -10,7 +10,7 @@ import { SignOutHandler } from "@/app/login/sign";
 
 import { cn } from "@/lib/utils";
 import { Delay } from "@/lib/utils";
-import { color, label } from "../content";
+import { label } from "../content";
 import { path } from "../menu";
 
 import { toast } from "sonner";
@@ -25,10 +25,6 @@ type CustomType =
     }
   | ({ customType: "nav" } & LinkProps &
       Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children">)
-  | ({
-      customType: "pulse";
-      pulsecolor?: string;
-    } & (LinkProps | { href?: null | undefined }))
   | {
       customType: "copy";
       copyvalue: string;
@@ -189,45 +185,6 @@ export function CustomButton({
           <Link {...linkProps}>
             <ChildrenNode />
           </Link>
-        </LoadingButtonNode>
-      );
-    }
-
-    case "pulse": {
-      const { className } = props;
-      const {
-        pulsecolor = color.primary,
-        href,
-        ...linkProps
-      } = props as Extract<CustomType, { customType: "pulse" }>;
-
-      const PulseFragment = () => {
-        return (
-          <Fragment>
-            <ChildrenNode />
-            <div className="absolute size-full animate-pulse rounded-md" />
-          </Fragment>
-        );
-      };
-
-      return (
-        <LoadingButtonNode
-          style={
-            {
-              "--pulse-color": pulsecolor,
-            } as React.CSSProperties
-          }
-          className={cn("relative", className)}
-          asChild={!!href}
-          required
-        >
-          {href ? (
-            <Link href={href} {...linkProps}>
-              <PulseFragment />
-            </Link>
-          ) : (
-            <PulseFragment />
-          )}
         </LoadingButtonNode>
       );
     }

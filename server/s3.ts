@@ -8,15 +8,15 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const BUCKET = process.env.NEVA_BUCKET_NAME!;
+const BUCKET = process.env.S3_BUCKET_NAME!;
 const REGION = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
 
 const s3 = new S3Client({
   region: REGION.jakarta,
-  endpoint: process.env.NEVA_S3_ENDPOINT!,
+  endpoint: process.env.S3_ENDPOINT!,
   credentials: {
-    accessKeyId: process.env.NEVA_ACCESS_KEY!,
-    secretAccessKey: process.env.NEVA_SECRET_KEY!,
+    accessKeyId: process.env.S3_ACCESS_KEY!,
+    secretAccessKey: process.env.S3_SECRET_KEY!,
   },
 });
 

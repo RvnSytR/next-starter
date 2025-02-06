@@ -517,14 +517,14 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="user"
                 data-role={role}
-                className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
+                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=user]:border-foreground"
               >
                 <RadioGroupItem
                   id="user"
                   value="user"
                   className="border-foreground/50 group-data-[role=user]:border-foreground"
                 />
-                <p className="text-foreground/50 group-data-[role=user]:text-foreground font-semibold">
+                <p className="font-semibold text-foreground/50 group-data-[role=user]:text-foreground">
                   User
                 </p>
               </Label>
@@ -532,14 +532,14 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="admin"
                 data-role={role}
-                className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
+                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=admin]:border-foreground"
               >
                 <RadioGroupItem
                   id="admin"
                   value="admin"
                   className="border-foreground/50 group-data-[role=admin]:border-foreground"
                 />
-                <p className="text-foreground/50 group-data-[role=admin]:text-foreground font-semibold">
+                <p className="font-semibold text-foreground/50 group-data-[role=admin]:text-foreground">
                   Admin
                 </p>
               </Label>

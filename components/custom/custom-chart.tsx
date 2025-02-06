@@ -23,11 +23,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-export type ChartPieData = {
-  nameKey: string;
-  dataKey: number;
-  fill?: string;
-};
+export type ChartPieData = { nameKey: string; dataKey: number; fill?: string };
 
 const radius = 8;
 const tickMargin = 10;
@@ -45,7 +41,7 @@ export function ChartPie({
       config={config}
       className={cn(
         "aspect-square",
-        "[&_.recharts-pie-label-text]:hidden [&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 md:[&_.recharts-pie-label-text]:flex",
+        "[&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 [&_.recharts-pie-label-text]:hidden md:[&_.recharts-pie-label-text]:flex",
       )}
     >
       <PieChart>
@@ -62,7 +58,7 @@ export function ChartPie({
           content={
             <ChartLegendContent
               nameKey="nameKey"
-              className="animate-fade flex-wrap gap-y-2 animate-delay-1000"
+              className="animate-fade animate-delay-1000 flex-wrap gap-y-2"
             />
           }
         />
