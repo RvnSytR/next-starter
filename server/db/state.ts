@@ -53,7 +53,7 @@ const user = {
   update: {
     log: db
       .update(userSchema)
-      .set({ last_signin_at: sql`NOW()` })
+      .set({ last_signin_at: new Date() })
       .where(eq(userSchema.id_user, placeholder("id_user")))
       .prepare(),
 
