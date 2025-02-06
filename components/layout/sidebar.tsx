@@ -37,7 +37,7 @@ export function Sidebar({
     <Sheet>
       <SheetContent
         side="left"
-        className="flex flex-col gap-y-4 bg-sidebar text-sidebar-foreground"
+        className="bg-sidebar text-sidebar-foreground flex flex-col gap-y-4"
       >
         <SheetHeader>
           <SidebarHeader data={data} />
@@ -46,14 +46,14 @@ export function Sidebar({
         <SidebarFooter />
       </SheetContent>
 
-      <main className="flex min-h-dvh bg-sidebar text-sidebar-foreground">
-        <aside className="sticky left-0 top-0 hidden h-screen basis-1/6 flex-col gap-y-4 py-6 lg:flex">
+      <main className="bg-sidebar text-sidebar-foreground flex min-h-dvh">
+        <aside className="sticky top-0 left-0 hidden h-screen basis-1/6 flex-col gap-y-4 py-6 lg:flex">
           <SidebarHeader data={data} className="px-6" />
           <SidebarContent role={data.role} className="grow px-4" />
           <SidebarFooter className="px-6" />
         </aside>
 
-        <div className="flex basis-full flex-col gap-y-4 overflow-hidden bg-background p-4 text-foreground shadow lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
+        <div className="bg-background text-foreground flex basis-full flex-col gap-y-4 overflow-hidden p-4 shadow-sm lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
           {children}
         </div>
       </main>
@@ -107,7 +107,7 @@ function SidebarContent({
             {index !== 0 && <Separator />}
 
             <div key={index} className="flex flex-col gap-y-1">
-              <small className="font-medium text-muted-foreground">
+              <small className="text-muted-foreground font-medium">
                 {item.section}
               </small>
 
@@ -151,14 +151,12 @@ function SidebarFooter({ className }: { className?: string }) {
 
       <CustomButton
         customType="nav"
-        load={false}
-        href="https://omargroup.id/"
+        href="/"
         size="sm"
         variant="link"
-        target="_blank"
         icon={<ExternalLink />}
         className="w-full justify-start"
-        text="Omar Group"
+        text="Homepage"
       />
 
       <CustomButton
