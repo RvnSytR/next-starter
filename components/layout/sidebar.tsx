@@ -53,7 +53,7 @@ export function Sidebar({
           <SidebarFooter className="px-6" />
         </aside>
 
-        <div className="bg-background text-foreground flex basis-full flex-col gap-y-4 overflow-hidden p-4 shadow-sm lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
+        <div className="bg-background text-foreground flex basis-full flex-col gap-y-4 overflow-hidden p-4 shadow-xs lg:m-2 lg:ml-0 lg:basis-5/6 lg:rounded-md">
           {children}
         </div>
       </main>
