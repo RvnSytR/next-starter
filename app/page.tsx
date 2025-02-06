@@ -9,8 +9,6 @@ import { FlaskConical, LayoutDashboard } from "lucide-react";
 export default function Page() {
   return (
     <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4 text-center">
-      <p>Hello World!</p>
-
       <ThemeToggle />
 
       <CustomButton
