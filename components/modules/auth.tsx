@@ -22,6 +22,7 @@ import type { Role, UserCredentials } from "@/server/db/schema";
 
 import { type FacetedFilter, DataTable } from "../custom/data-table";
 import { CustomButton } from "../custom/custom-button";
+import { ToastAction } from "../custom/toast-action";
 import { userColumn } from "../custom/column";
 import { label } from "../content";
 import { path } from "../menu";
@@ -58,13 +59,13 @@ import {
 import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
+import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Separator } from "../ui/separator";
-import { CircleCheckBig, LogIn, Plus, Trash } from "lucide-react";
-import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { CircleCheckBig, LogIn, Plus, Trash } from "lucide-react";
 
-const { loading, success, error } = label.toast;
+const { success, error } = label.toast;
 const { button } = label;
 
 export function LoginForm() {
@@ -82,16 +83,12 @@ export function LoginForm() {
     const { email, password } = data;
     setIsLoading(true);
 
-    toast.promise(CheckUser(email, password), {
-      loading: loading.default,
+    ToastAction(CheckUser(email, password), {
       success: () => {
         router.push(path.protected);
         return success.login;
       },
-      error: (e: Error) => {
-        setIsLoading(false);
-        return e.message;
-      },
+      error: () => setIsLoading(false),
     });
   };
 
@@ -144,194 +141,6 @@ export function LoginForm() {
   );
 }
 
-export function UpdateProfileForm({ data }: { data: UserCredentials }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const schema = zodUserSchema.pick({
-    email: true,
-    role: true,
-    username: true,
-  });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      email: data.email,
-      role: data.role,
-      username: data.username,
-    },
-  });
-
-  const formHandler = async (formData: z.infer<typeof schema>) => {
-    setIsLoading(true);
-    const { username } = formData;
-
-    toast.promise(UpdateUserProfile(data.id_user, username), {
-      loading: loading.default,
-      success: async () => {
-        await SignOutHandler();
-        router.push("/login");
-        return success.user.update.profile;
-      },
-      error: (e: Error) => {
-        setIsLoading(false);
-        return e.message;
-      },
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
-      >
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="Email" {...field} disabled />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="role"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Status</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="Status"
-                    className="capitalize"
-                    disabled
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="username"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="Username" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <CustomButton
-          customType={null}
-          type="submit"
-          load={isLoading}
-          size="sm"
-          text={button.settings.user.updateProfile}
-          className="md:w-fit"
-        />
-      </form>
-    </Form>
-  );
-}
-
-export function UpdatePasswordForm({ id }: { id: string }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [confirmPass, setConfirmPass] = useState<string>("");
-  const schema = zodUserSchema.pick({ password: true });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: { password: "" },
-  });
-
-  const formHandler = async (data: z.infer<typeof schema>) => {
-    const { password } = data;
-
-    if (password !== confirmPass) toast.error("Password Tidak Sama!");
-    else {
-      setIsLoading(true);
-      toast.promise(UpdateUserPassword(id, password), {
-        loading: loading.default,
-        success: async () => {
-          await SignOutHandler();
-          router.push("/login");
-          return success.user.update.password;
-        },
-        error: (e: Error) => {
-          setIsLoading(false);
-          return e.message;
-        },
-      });
-    }
-  };
-
-  return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
-      >
-        <div className="flex flex-col gap-x-2 gap-y-2 lg:flex-row">
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem className="basis-1/2">
-                <FormLabel>Password Baru</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Masukkan Password Baru"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="basis-1/2 space-y-1">
-            <Label htmlFor="confirmPass">Konfirmasi Password Baru</Label>
-            <Input
-              id="confirmPass"
-              name="confirmPass"
-              type="password"
-              placeholder="Konfirmasi Password Baru"
-              onChange={(e) => setConfirmPass(e.target.value)}
-            />
-          </div>
-        </div>
-
-        <CustomButton
-          customType={null}
-          type="submit"
-          load={isLoading}
-          size="sm"
-          text={button.settings.user.updatePassword}
-          className="md:w-fit"
-        />
-      </form>
-    </Form>
-  );
-}
-
 export function CreateUserDialog() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -350,18 +159,15 @@ export function CreateUserDialog() {
 
   const formHandler = async (data: z.infer<typeof createSchema>) => {
     setIsLoading(true);
-    toast.promise(CreateUser(data), {
-      loading: loading.default,
+
+    ToastAction(CreateUser(data), {
       success: () => {
         setIsOpen(false);
         setIsLoading(false);
         router.refresh();
         return success.user.create;
       },
-      error: (e: Error) => {
-        setIsLoading(false);
-        return e.message;
-      },
+      error: () => setIsLoading(false),
     });
   };
 
@@ -481,6 +287,17 @@ export function ApproveUserDialog({
   const [isDisable, setIsDisable] = useState<boolean>(false);
   const [role, setRole] = useState<UpdateRoles>("user");
 
+  const handler = async () => {
+    setIsDisable(true);
+    ToastAction(ApproveUser(role, id_user), {
+      success: () => {
+        setIsDisable(false);
+        return success.user.approve(username, role);
+      },
+      error: () => setIsDisable(false),
+    });
+  };
+
   return (
     <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
       <Dialog>
@@ -517,14 +334,14 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="user"
                 data-role={role}
-                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=user]:border-foreground"
+                className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
               >
                 <RadioGroupItem
                   id="user"
                   value="user"
                   className="border-foreground/50 group-data-[role=user]:border-foreground"
                 />
-                <p className="font-semibold text-foreground/50 group-data-[role=user]:text-foreground">
+                <p className="text-foreground/50 group-data-[role=user]:text-foreground font-semibold">
                   User
                 </p>
               </Label>
@@ -532,14 +349,14 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="admin"
                 data-role={role}
-                className="group flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer data-[role=admin]:border-foreground"
+                className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
               >
                 <RadioGroupItem
                   id="admin"
                   value="admin"
                   className="border-foreground/50 group-data-[role=admin]:border-foreground"
                 />
-                <p className="font-semibold text-foreground/50 group-data-[role=admin]:text-foreground">
+                <p className="text-foreground/50 group-data-[role=admin]:text-foreground font-semibold">
                   Admin
                 </p>
               </Label>
@@ -556,24 +373,7 @@ export function ApproveUserDialog({
             </DialogClose>
 
             <DialogClose asChild>
-              <Button
-                onClick={async () => {
-                  setIsDisable(true);
-                  toast.promise(ApproveUser(role, id_user), {
-                    loading: loading.default,
-                    success: () => {
-                      setIsDisable(false);
-                      return success.user.approve(username, role);
-                    },
-                    error: (e: Error) => {
-                      setIsDisable(false);
-                      return e.message;
-                    },
-                  });
-                }}
-              >
-                Setujui Akun
-              </Button>
+              <Button onClick={handler}>Setujui Akun</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -588,7 +388,7 @@ export function ApproveUserDialog({
   );
 }
 
-export function DeleteUserDialog({
+function DeleteUserDialog({
   username,
   id_user,
   currentIdUser,
@@ -601,6 +401,21 @@ export function DeleteUserDialog({
 
   const isCurrentUser = id_user === currentIdUser;
   if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
+
+  const handler = async () => {
+    setIsLoading(true);
+
+    if (isCurrentUser) toast.info(error.user.delete);
+    else {
+      ToastAction(DeleteUser(id_user), {
+        success: () => {
+          setIsLoading(false);
+          return success.user.delete(username);
+        },
+        error: () => setIsLoading(false),
+      });
+    }
+  };
 
   return (
     <AlertDialog>
@@ -626,31 +441,191 @@ export function DeleteUserDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Kembali</AlertDialogCancel>
-          <AlertDialogAction
-            onClick={async () => {
-              setIsLoading(true);
-              if (isCurrentUser) {
-                toast.info(error.user.delete);
-              } else {
-                toast.promise(DeleteUser(id_user), {
-                  loading: loading.default,
-                  success: () => {
-                    setIsLoading(false);
-                    return success.user.delete(username);
-                  },
-                  error: (e: Error) => {
-                    setIsLoading(false);
-                    return e.message;
-                  },
-                });
-              }
-            }}
-          >
-            Konfirmasi
-          </AlertDialogAction>
+          <AlertDialogAction onClick={handler}>Konfirmasi</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+export function UpdateProfileForm({ data }: { data: UserCredentials }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = zodUserSchema.pick({
+    email: true,
+    role: true,
+    username: true,
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      email: data.email,
+      role: data.role,
+      username: data.username,
+    },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    setIsLoading(true);
+    const { username } = formData;
+
+    ToastAction(UpdateUserProfile(data.id_user, username), {
+      success: async () => {
+        await SignOutHandler();
+        router.push(path.login);
+        return success.user.update.profile;
+      },
+      error: () => setIsLoading(false),
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(formHandler)}
+        className="flex flex-col gap-y-2"
+      >
+        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Email" {...field} disabled />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Status</FormLabel>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Status"
+                    className="capitalize"
+                    disabled
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="Username" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <CustomButton
+          customType={null}
+          type="submit"
+          load={isLoading}
+          size="sm"
+          text={button.settings.user.updateProfile}
+          className="md:w-fit"
+        />
+      </form>
+    </Form>
+  );
+}
+
+export function UpdatePasswordForm({ id }: { id: string }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [confirmPass, setConfirmPass] = useState<string>("");
+  const schema = zodUserSchema.pick({ password: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { password: "" },
+  });
+
+  const formHandler = async (data: z.infer<typeof schema>) => {
+    const { password } = data;
+
+    if (password !== confirmPass) toast.error("Password Tidak Sama!");
+    else {
+      setIsLoading(true);
+
+      ToastAction(UpdateUserPassword(id, password), {
+        success: async () => {
+          await SignOutHandler();
+          router.push(path.login);
+          return success.user.update.password;
+        },
+        error: () => setIsLoading(false),
+      });
+    }
+  };
+
+  return (
+    <Form {...form}>
+      <form
+        onSubmit={form.handleSubmit(formHandler)}
+        className="flex flex-col gap-y-2"
+      >
+        <div className="flex flex-col gap-x-2 gap-y-2 lg:flex-row">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Password Baru</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Masukkan Password Baru"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <div className="basis-1/2 space-y-1">
+            <Label htmlFor="confirmPass">Konfirmasi Password Baru</Label>
+            <Input
+              id="confirmPass"
+              name="confirmPass"
+              type="password"
+              placeholder="Konfirmasi Password Baru"
+              onChange={(e) => setConfirmPass(e.target.value)}
+            />
+          </div>
+        </div>
+
+        <CustomButton
+          customType={null}
+          type="submit"
+          load={isLoading}
+          size="sm"
+          text={button.settings.user.updatePassword}
+          className="md:w-fit"
+        />
+      </form>
+    </Form>
   );
 }
 
