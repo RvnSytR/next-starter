@@ -24,15 +24,11 @@ const label = {
   },
 
   toast: {
-    loading: {
-      default: "Mohon Tunggu Sebentar...",
-      refresh: "Refreshing...",
-    },
+    loading: { default: "Mohon Tunggu Sebentar..." },
 
     success: {
       login: "Login Berhasil!",
       logout: "Logout Berhasil!",
-      copy: "Berhasil disalin ke clipboard",
 
       user: {
         create: "Pengguna berhasil ditambah!",
@@ -73,12 +69,6 @@ const label = {
     login: `Masuk ke ${title.primary} Admin`,
     logout: "Keluar",
     refresh: "Refresh",
-    settings: {
-      user: {
-        updateProfile: "Perbarui Profile",
-        updatePassword: "Perbarui Password",
-      },
-    },
   },
 };
 

@@ -22,13 +22,13 @@ export default function Page() {
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
-        <CardHeader>
-          <CardTitle className="mb-1 text-center">
+        <CardHeader className="text-center">
+          <CardTitle>
             <Link href="/" prefetch>
-              {title}
+              <h4>{title}</h4>
             </Link>
           </CardTitle>
-          <CardDescription className="text-center">{subtitle}</CardDescription>
+          <CardDescription>{subtitle}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
@@ -36,7 +36,7 @@ export default function Page() {
 
           <LoginForm />
 
-          <Separator className="mt-2" />
+          <Separator />
         </CardContent>
 
         <CardFooter>

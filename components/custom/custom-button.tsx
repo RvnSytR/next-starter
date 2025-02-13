@@ -189,7 +189,6 @@ export function CustomButton({
 
     case "refresh": {
       text = button.refresh;
-      loadText = loading.refresh;
       icon = <RefreshCw />;
 
       return (

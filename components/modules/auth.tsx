@@ -60,7 +60,7 @@ import { toast } from "sonner";
 import { Input } from "../ui/input";
 import { Badge } from "../ui/badge";
 import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { CircleCheckBig, LogIn, Plus, Trash } from "lucide-react";
@@ -94,10 +94,7 @@ export function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
-      >
+      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
         <FormField
           control={form.control}
           name="email"
@@ -111,6 +108,7 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="password"
@@ -128,13 +126,14 @@ export function LoginForm() {
             </FormItem>
           )}
         />
+
         <CustomButton
           customType={null}
           type="submit"
           load={isLoading}
           icon={<LogIn />}
           text={button.login}
-          className="mt-2"
+          className="w-full"
         />
       </form>
     </Form>
@@ -185,7 +184,7 @@ export function CreateUserDialog() {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Admin</DialogTitle>
+          <DialogTitle>Tambah Pengguna</DialogTitle>
           <DialogDescription>
             Masukkan informasi yang diperlukan untuk menambah akun pengguna
             baru.
@@ -193,10 +192,7 @@ export function CreateUserDialog() {
         </DialogHeader>
 
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(formHandler)}
-            className="flex flex-col gap-y-2"
-          >
+          <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
             <FormField
               control={form.control}
               name="email"
@@ -251,7 +247,7 @@ export function CreateUserDialog() {
               )}
             />
 
-            <Separator className="my-2" />
+            <Separator />
 
             <DialogFooter className="gap-y-2">
               <DialogClose asChild>
@@ -274,7 +270,7 @@ export function CreateUserDialog() {
   );
 }
 
-export function ApproveUserDialog({
+function ApproveUserDialog({
   id_user,
   username,
   currentIdUser,
@@ -302,12 +298,7 @@ export function ApproveUserDialog({
     <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
       <Dialog>
         <DialogTrigger asChild>
-          <Button
-            size="icon"
-            variant="outline"
-            className="border-sky-500 text-sky-500 hover:bg-sky-500 hover:text-sky-50 dark:border-sky-700 dark:text-sky-700 dark:hover:bg-sky-700 dark:hover:text-sky-50"
-            disabled={isDisable}
-          >
+          <Button size="icon" variant="outline_success" disabled={isDisable}>
             <CircleCheckBig />
           </Button>
         </DialogTrigger>
@@ -324,7 +315,7 @@ export function ApproveUserDialog({
           </DialogHeader>
 
           <div className="flex w-full flex-col gap-y-2">
-            <span>Setujui Sebagai :</span>
+            <Label>Setujui Sebagai :</Label>
 
             <RadioGroup
               defaultValue="user"
@@ -334,7 +325,7 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="user"
                 data-role={role}
-                className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
+                className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
               >
                 <RadioGroupItem
                   id="user"
@@ -349,7 +340,7 @@ export function ApproveUserDialog({
               <Label
                 htmlFor="admin"
                 data-role={role}
-                className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-4 hover:cursor-pointer"
+                className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
               >
                 <RadioGroupItem
                   id="admin"
@@ -373,7 +364,7 @@ export function ApproveUserDialog({
             </DialogClose>
 
             <DialogClose asChild>
-              <Button onClick={handler}>Setujui Akun</Button>
+              <Button onClick={handler}>Konfirmasi</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -441,7 +432,12 @@ function DeleteUserDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Kembali</AlertDialogCancel>
-          <AlertDialogAction onClick={handler}>Konfirmasi</AlertDialogAction>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={handler}
+          >
+            Konfirmasi
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
@@ -542,8 +538,8 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
           type="submit"
           load={isLoading}
           size="sm"
-          text={button.settings.user.updateProfile}
           className="md:w-fit"
+          text="Simpan"
         />
       </form>
     </Form>
@@ -621,8 +617,8 @@ export function UpdatePasswordForm({ id }: { id: string }) {
           type="submit"
           load={isLoading}
           size="sm"
-          text={button.settings.user.updatePassword}
           className="md:w-fit"
+          text="Simpan"
         />
       </form>
     </Form>
