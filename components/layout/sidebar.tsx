@@ -69,7 +69,7 @@ function SidebarHeader({
   className?: string;
 }) {
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("space-y-4", className)}>
       <div className="flex items-center gap-x-3">
         <Avatar className="rounded-md">
           <AvatarFallback className="rounded-md">
@@ -115,7 +115,6 @@ function SidebarContent({
                 <SheetClose key={ind} asChild>
                   {itm.isDisable ? (
                     <Button
-                      size="sm"
                       variant="ghost"
                       className="w-full justify-start"
                       disabled
@@ -124,7 +123,6 @@ function SidebarContent({
                     </Button>
                   ) : (
                     <Button
-                      size="sm"
                       variant="ghost"
                       className="w-full justify-start"
                       asChild
@@ -152,7 +150,6 @@ function SidebarFooter({ className }: { className?: string }) {
       <CustomButton
         customType="nav"
         href="/"
-        size="sm"
         variant="link"
         icon={<ExternalLink />}
         className="w-full justify-start"

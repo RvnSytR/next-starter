@@ -101,13 +101,7 @@ export function SectionTitle({
   text: string;
   className?: string;
 }) {
-  return (
-    <h4
-      className={cn("line-clamp-2 flex items-center leading-tight", className)}
-    >
-      {text}
-    </h4>
-  );
+  return <h4 className={cn("line-clamp-2", className)}>{text}</h4>;
 }
 
 export function SectionLabel({

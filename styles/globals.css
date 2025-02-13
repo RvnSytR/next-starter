@@ -253,6 +253,10 @@
 }
 
 @layer base {
+  .desc {
+    @apply text-sm;
+  }
+
   .link {
     @apply text-muted-foreground hover:text-foreground w-fit cursor-pointer underline-offset-4 hover:underline;
   }
