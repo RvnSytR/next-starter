@@ -210,7 +210,6 @@
   }
 }
 
-/* * HTML STYLES */
 @layer base {
   * {
     @apply scroll-smooth border-border outline-ring/50;
@@ -253,7 +252,6 @@
   }
 }
 
-/* * CUSTOM CSS APPLY HERE */
 @layer base {
   .link {
     @apply text-muted-foreground hover:text-foreground w-fit cursor-pointer underline-offset-4 hover:underline;

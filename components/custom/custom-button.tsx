@@ -83,9 +83,7 @@ export function CustomButton({
               ? "iconlg"
               : size === "sm" || size === "iconsm"
                 ? "iconsm"
-                : size === "xs" || size === "iconxs"
-                  ? "iconxs"
-                  : "icon"
+                : "icon"
             : size
         }
         className={cn("shrink-0", className)}
