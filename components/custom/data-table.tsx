@@ -152,7 +152,7 @@ function ToolBox<TData>({
                       onCheckedChange={(value) =>
                         column.toggleVisibility(!!value)
                       }
-                      className="border-none data-[state=checked]:border-none data-[state=checked]:bg-transparent data-[state=checked]:text-primary"
+                      className="data-[state=checked]:text-primary border-none shadow-none data-[state=checked]:border-none data-[state=checked]:bg-transparent"
                     />
                     <small className="font-medium">{column.id}</small>
                   </Label>
@@ -167,14 +167,14 @@ function ToolBox<TData>({
 
         <FormFloating
           icon={<Search size={iconSize.base} />}
-          className="h-9 grow"
+          className="h-8 grow"
         >
           <Input
             type="search"
             placeholder={placeholder}
             value={table.getState().globalFilter}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-            className="h-9 pl-10"
+            className="h-8 pl-10"
           />
         </FormFloating>
       </div>
@@ -335,7 +335,7 @@ export function DataTable<TData, TValue>({
             <TableRow>
               <TableCell
                 colSpan={columns.length}
-                className="whitespace-pre-line text-center text-muted-foreground"
+                className="text-muted-foreground text-center whitespace-pre-line"
               >
                 {label ? label.map((item) => item + "\n") : "No results."}
               </TableCell>
@@ -350,7 +350,7 @@ export function DataTable<TData, TValue>({
           caption ? "justify-between" : "justify-center",
         )}
       >
-        <small className="text-left font-medium text-muted-foreground lg:text-center">
+        <small className="text-muted-foreground text-left font-medium lg:text-center">
           {caption}
         </small>
         <Pagination table={table} />

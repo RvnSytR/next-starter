@@ -38,7 +38,7 @@ export function CheckboxPopover({
         <Button
           size="sm"
           variant="outline"
-          className={cn("w-full select-none capitalize lg:w-auto", className)}
+          className={cn("w-full capitalize select-none lg:w-auto", className)}
           disabled={disabled}
         >
           {icon ?? <Filter />}
@@ -80,7 +80,7 @@ export function CheckboxPopover({
               htmlFor={cbId}
               key={index}
               className={cn(
-                buttonVariants({ variant: "ghost", size: "xs" }),
+                buttonVariants({ variant: "ghost", size: "sm" }),
                 "justify-start gap-x-4 capitalize",
               )}
             >

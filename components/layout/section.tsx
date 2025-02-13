@@ -37,7 +37,7 @@ export function Section({
       <header className="flex flex-col gap-y-3">
         <div className="flex items-center gap-x-2">
           <div className="over flex grow items-center gap-x-2">
-            <span className="hidden text-sm text-muted-foreground lg:flex">
+            <span className="text-muted-foreground hidden text-sm lg:flex">
               /
             </span>
 
@@ -74,7 +74,7 @@ export function Section({
 
       <footer className="mt-auto flex flex-col items-center gap-4 text-center">
         <Separator />
-        <small className="leading-tight text-muted-foreground">
+        <small className="text-muted-foreground leading-tight">
           {page.copyright}
         </small>
       </footer>
@@ -90,7 +90,7 @@ export function SectionGroup({
   children: ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-col gap-y-2", className)}>{children}</div>
+    <div className={cn("flex flex-col gap-y-4", className)}>{children}</div>
   );
 }
 
@@ -120,7 +120,7 @@ export function SectionLabel({
   return (
     <div
       className={cn(
-        "flex size-full flex-col items-center justify-center text-center text-muted-foreground",
+        "text-muted-foreground flex size-full flex-col items-center justify-center text-center",
         className,
       )}
     >
