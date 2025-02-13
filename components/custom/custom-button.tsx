@@ -40,11 +40,14 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     text?: string;
     load?: boolean;
     loadText?: string;
-    hideTextOnMobile?: boolean;
     icon?: ReactNode;
     iconPosition?: "left" | "right";
+    hideTextOnMobile?: boolean;
   };
 // #endregion
+
+const { loading, success } = label.toast;
+const { button } = label;
 
 export function CustomButton({
   customType,
@@ -59,9 +62,6 @@ export function CustomButton({
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { loading, success } = label.toast;
-  const { button } = label;
 
   //#region // * Nodes
   type CustomButtonNode = { required?: boolean; children: ReactNode } & Pick<

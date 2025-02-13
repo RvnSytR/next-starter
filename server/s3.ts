@@ -46,9 +46,6 @@ export async function UploadFile(
 }
 
 export async function DeleteFile(key: string) {
-  const command = new DeleteObjectCommand({
-    Bucket: BUCKET,
-    Key: key,
-  });
+  const command = new DeleteObjectCommand({ Bucket: BUCKET, Key: key });
   return await s3.send(command);
 }
