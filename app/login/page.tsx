@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { SectionTitle } from "@/components/layout/section";
 
 export const metadata: Metadata = { title: GetCurrentPage(path.login, true) };
 
@@ -25,7 +26,7 @@ export default function Page() {
         <CardHeader className="text-center">
           <CardTitle>
             <Link href="/" prefetch>
-              <h4>{title}</h4>
+              <SectionTitle text={title} />
             </Link>
           </CardTitle>
           <CardDescription>{subtitle}</CardDescription>

@@ -298,7 +298,7 @@ function ApproveUserDialog({
     <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
       <Dialog>
         <DialogTrigger asChild>
-          <Button size="icon" variant="outline_success" disabled={isDisable}>
+          <Button size="iconsm" variant="outline_success" disabled={isDisable}>
             <CircleCheckBig />
           </Button>
         </DialogTrigger>
@@ -413,7 +413,7 @@ function DeleteUserDialog({
       <div className="flex justify-center">
         <AlertDialogTrigger asChild>
           <Button
-            size="icon"
+            size="iconsm"
             variant="outline_destructive"
             disabled={isLoading}
           >
