@@ -49,6 +49,7 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
 const { loading, success } = label.toast;
 const { button } = label;
 
+// TODO : Rework
 export function CustomButton({
   customType,
   text,

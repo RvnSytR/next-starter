@@ -18,14 +18,11 @@ export function FormFloating({
   icon,
   className,
   children,
-}: {
-  icon: React.ReactNode;
-  className?: string;
-  children: React.ReactNode;
-}) {
+  ...props
+}: React.ComponentProps<"div"> & { icon: React.ReactNode }) {
   return (
-    <div className={cn("relative block", className)}>
-      <small className="absolute inset-y-0 left-3.5 flex items-center font-normal text-muted-foreground">
+    <div className={cn("relative block", className)} {...props}>
+      <small className="text-muted-foreground absolute inset-y-0 left-3.5 flex items-center font-normal">
         {icon}
       </small>
       {children}
@@ -56,7 +53,7 @@ export function InputFile({
         {state ? (
           <div
             className={cn(
-              "group flex size-fit max-h-[36rem] grow justify-center overflow-hidden rounded-md border-dashed border-muted-foreground",
+              "group border-muted-foreground flex size-fit max-h-[36rem] grow justify-center overflow-hidden rounded-md border-dashed",
               !disabled ? "hover:cursor-pointer hover:border" : "",
             )}
           >
@@ -74,7 +71,7 @@ export function InputFile({
         ) : (
           <div
             className={cn(
-              "flex h-[12rem] w-full flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-dashed outline-1 transition md:w-[18rem]",
+              "flex h-[12rem] w-full flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-1 transition outline-dashed md:w-[18rem]",
               !disabled ? "hover:cursor-pointer hover:opacity-100" : "",
             )}
             onClick={() => {

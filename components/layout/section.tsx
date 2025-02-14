@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 import { cn } from "@/lib/utils";
 import { page } from "../content";
 import { path } from "../menu";
@@ -20,7 +18,7 @@ import { LayoutDashboard } from "lucide-react";
 export function Section({
   children,
   ...props
-}: DynamicBreadcrumbProps & { children?: ReactNode }) {
+}: DynamicBreadcrumbProps & { children?: React.ReactNode }) {
   return (
     <SidebarInset className="gap-y-4 p-4">
       <header className="flex flex-col gap-y-2">
@@ -54,12 +52,12 @@ export function Section({
 export function SectionGroup({
   className,
   children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+  ...props
+}: React.ComponentProps<"div">) {
   return (
-    <div className={cn("flex flex-col gap-y-4", className)}>{children}</div>
+    <div className={cn("flex flex-col gap-y-4", className)} {...props}>
+      {children}
+    </div>
   );
 }
 
@@ -76,16 +74,15 @@ export function SectionTitle({
 export function SectionLabel({
   className,
   children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+  ...props
+}: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
         "text-muted-foreground flex size-full flex-col items-center justify-center text-center",
         className,
       )}
+      {...props}
     >
       {children}
     </div>
