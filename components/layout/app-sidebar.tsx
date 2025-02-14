@@ -1,3 +1,7 @@
+import type { Role } from "@/server/db/schema";
+
+import { CustomButton } from "../custom/custom-button";
+
 import {
   SidebarProvider,
   Sidebar,
@@ -6,9 +10,14 @@ import {
   SidebarFooter,
   SidebarRail,
   SidebarMenuButton,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenuItem,
+  SidebarMenu,
 } from "../ui/sidebar";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { Role } from "@/server/db/schema";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 type SidebarData = {
   username: string;
@@ -31,10 +40,16 @@ export function AppSidebar({
 
         <SidebarContent>
           <Content role={role} />
+
+          <Secondary />
         </SidebarContent>
 
         <SidebarFooter>
-          <Footer />
+          <CustomButton
+            customType="logout"
+            variant="outline_destructive"
+            className="w-full"
+          />
         </SidebarFooter>
 
         <SidebarRail />
@@ -63,9 +78,28 @@ function Head({ username, email }: { username: string; email: string }) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  return <div>{role}</div>;
+  return (
+    <SidebarGroup>
+      <SidebarGroupContent>{role}</SidebarGroupContent>
+    </SidebarGroup>
+  );
 }
 
-function Footer() {
-  return <div>Footer</div>;
+function Secondary() {
+  return (
+    <SidebarGroup className="mt-auto">
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="sm" asChild>
+              <Link href="/">
+                <ExternalLink />
+                Home
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 }
