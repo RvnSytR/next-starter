@@ -235,6 +235,11 @@
     @apply text-xl font-semibold leading-tight;
   }
 
+  h5,
+  h6 {
+    @apply font-semibold leading-tight;
+  }
+
   p {
     @apply whitespace-pre-wrap text-pretty font-light;
   }

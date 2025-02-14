@@ -20,9 +20,7 @@ import { LayoutDashboard } from "lucide-react";
 export function Section({
   children,
   ...props
-}: {
-  children?: ReactNode;
-} & DynamicBreadcrumbProps) {
+}: DynamicBreadcrumbProps & { children?: ReactNode }) {
   return (
     <SidebarInset className="gap-y-4 p-4">
       <header className="flex flex-col gap-y-2">
