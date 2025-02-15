@@ -83,6 +83,11 @@ const label = {
     login: `Masuk ke ${title.primary} Admin`,
     logout: "Keluar",
     refresh: "Refresh",
+
+    save: "Simpan",
+    confirm: "Konfirmasi",
+    reset: "Reset",
+    back: "Kembali",
   },
 };
 

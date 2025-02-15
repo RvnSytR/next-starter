@@ -253,7 +253,7 @@ export function CreateUserDialog() {
             <DialogFooter className="gap-y-2">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  Kembali
+                  {button.back}
                 </Button>
               </DialogClose>
 
@@ -261,7 +261,7 @@ export function CreateUserDialog() {
                 customType={null}
                 type="submit"
                 load={isLoading}
-                text="Konfirmasi"
+                text={button.confirm}
               />
             </DialogFooter>
           </form>
@@ -360,12 +360,12 @@ function ApproveUserDialog({
           <DialogFooter className="gap-y-2">
             <DialogClose asChild>
               <Button type="button" variant="outline">
-                Kembali
+                {button.back}
               </Button>
             </DialogClose>
 
             <DialogClose asChild>
-              <Button onClick={handler}>Konfirmasi</Button>
+              <Button onClick={handler}>{button.confirm}</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -432,12 +432,12 @@ function DeleteUserDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Kembali</AlertDialogCancel>
+          <AlertDialogCancel>{button.back}</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={handler}
           >
-            Konfirmasi
+            {button.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -541,7 +541,7 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
             type="submit"
             load={isLoading}
             size={isMobile ? "default" : "sm"}
-            text="Simpan"
+            text={button.save}
           />
 
           <Button
@@ -550,7 +550,8 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
             variant="outline"
             onClick={() => form.reset()}
           >
-            <RotateCw /> Reset
+            <RotateCw />
+            {button.reset}
           </Button>
         </div>
       </form>
@@ -633,7 +634,7 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             type="submit"
             load={isLoading}
             size={isMobile ? "default" : "sm"}
-            text="Simpan"
+            text={button.save}
           />
 
           <Button
@@ -645,7 +646,8 @@ export function UpdatePasswordForm({ id }: { id: string }) {
               setConfirmPass("");
             }}
           >
-            <RotateCw /> Reset
+            <RotateCw />
+            {button.reset}
           </Button>
         </div>
       </form>
