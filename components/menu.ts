@@ -15,7 +15,7 @@ type MenuBody = {
   role: MenuRole;
   icon?: LucideIcon;
   isDisable?: boolean;
-  subMenu?: { elementId?: string; subLabel: string }[];
+  subMenu?: { elementId: string; subLabel: string }[];
 };
 
 const path = {
@@ -40,16 +40,16 @@ const menu: MenuProps[] = [
         role: "all",
         icon: UserRound,
       },
-      {
-        href: `${path.protected}/account`,
-        label: "Pengguna",
-        role: "all",
-        icon: UserRound,
-        subMenu: [
-          { elementId: "well", subLabel: "Meh" },
-          { elementId: "well", subLabel: "Meh" },
-        ],
-      },
+      // {
+      //   href: `${path.protected}/account`,
+      //   label: "Pengguna",
+      //   role: "all",
+      //   icon: UserRound,
+      //   subMenu: [
+      //     { elementId: "well", subLabel: "Meh" },
+      //     { elementId: "well", subLabel: "Meh" },
+      //   ],
+      // },
     ],
   },
 ];

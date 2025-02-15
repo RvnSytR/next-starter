@@ -19,6 +19,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
+  SidebarMenuAction,
 } from "../ui/sidebar";
 import {
   Collapsible,
@@ -93,50 +94,47 @@ function Head({ username, email }: { username: string; email: string }) {
 
 function Content({ role }: Pick<SidebarData, "role">) {
   const menu = GetMenuByRole(role);
+
   return menu.map((item, index) => (
     <SidebarGroup key={index}>
-      <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
+      <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {item.body.map((bodyItem, bodyIndex) =>
-          bodyItem.subMenu ? (
-            <Collapsible key={bodyIndex} className="group/collapsible" asChild>
-              <SidebarMenuItem>
-                <CollapsibleTrigger asChild>
-                  <SidebarMenuButton tooltip={bodyItem.label}>
-                    {bodyItem.icon && <bodyItem.icon />}
-                    {bodyItem.label}
-                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                  </SidebarMenuButton>
-                </CollapsibleTrigger>
-
-                <CollapsibleContent>
-                  <SidebarMenuSub>
-                    {bodyItem.subMenu.map((subItem, subIndex) => (
-                      <SidebarMenuSubItem key={subIndex}>
-                        <SidebarMenuSubButton>
-                          {subItem.subLabel}
-                        </SidebarMenuSubButton>
-                      </SidebarMenuSubItem>
-                    ))}
-                  </SidebarMenuSub>
-                </CollapsibleContent>
-              </SidebarMenuItem>
-            </Collapsible>
-          ) : (
-            <SidebarMenuItem key={bodyIndex}>
-              <SidebarMenuButton
-                tooltip={bodyItem.label}
-                disabled={bodyItem.isDisable}
-                asChild
-              >
+        {item.body.map((bodyItem, bodyIndex) => (
+          <Collapsible key={bodyIndex} disabled={bodyItem.isDisable} asChild>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={bodyItem.label} asChild>
                 <Link href={bodyItem.href}>
                   {bodyItem.icon && <bodyItem.icon />}
                   {bodyItem.label}
                 </Link>
               </SidebarMenuButton>
+
+              {bodyItem.subMenu && (
+                <>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuAction className="data-[state=open]:rotate-90">
+                      <ChevronRight />
+                    </SidebarMenuAction>
+                  </CollapsibleTrigger>
+
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {bodyItem.subMenu.map((subItem, subIndex) => (
+                        <SidebarMenuSubItem key={subIndex}>
+                          <SidebarMenuSubButton asChild>
+                            <Link href={subItem.elementId}>
+                              {subItem.subLabel}
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
+                </>
+              )}
             </SidebarMenuItem>
-          ),
-        )}
+          </Collapsible>
+        ))}
       </SidebarMenu>
     </SidebarGroup>
   ));
