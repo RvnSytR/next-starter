@@ -9,7 +9,7 @@ import {
   UpdateProfileForm,
   UpdatePasswordForm,
 } from "@/components/modules/auth";
-import { LayoutSkeleton, Section } from "@/components/layout/section";
+import { Section, SectionNotFound } from "@/components/layout/section";
 
 import {
   Card,
@@ -23,7 +23,7 @@ export const metadata: Metadata = { title: GetCurrentPage("/settings", true) };
 
 export default async function Page() {
   const session = await auth();
-  if (!session) return <LayoutSkeleton />;
+  if (!session) return <SectionNotFound />;
 
   const { id_user } = session.user;
   const { profile, password } = page.settings;
@@ -35,6 +35,7 @@ export default async function Page() {
           <CardTitle>{profile.title} </CardTitle>
           <CardDescription>{profile.subtitle}</CardDescription>
         </CardHeader>
+
         <CardContent>
           <UpdateProfileForm data={session.user} />
         </CardContent>
@@ -45,6 +46,7 @@ export default async function Page() {
           <CardTitle>{password.title} </CardTitle>
           <CardDescription>{password.subtitle}</CardDescription>
         </CardHeader>
+
         <CardContent>
           <UpdatePasswordForm id={id_user} />
         </CardContent>

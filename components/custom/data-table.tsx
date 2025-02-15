@@ -25,10 +25,11 @@ import {
   CheckboxPopover,
 } from "../custom/custom-input-client";
 import { FormFloating } from "../custom/custom-input";
-import { SectionGroup, SectionTitle } from "../layout/section";
+import { SectionTitle } from "../layout/section";
 import { CustomButton } from "../custom/custom-button";
 import { iconSize } from "../icon";
 
+import { Card, CardContent, CardHeader } from "../ui/card";
 import {
   Table,
   TableBody,
@@ -235,10 +236,8 @@ export function DataTable<TData, TValue>({
   title = "Data Table",
   caption,
   label,
-  placeholder,
-  withRefresh,
-  facetedFilter,
   children,
+  ...props
 }: DataTableProps<TData, TValue> & {
   title?: string;
   caption?: string;
@@ -283,78 +282,78 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <SectionGroup>
-      <div className="flex flex-col justify-between gap-y-2 lg:flex-row">
+    <Card>
+      <CardHeader className="flex-row items-center justify-between">
         <SectionTitle text={title} />
 
-        <ToolBox
-          table={table}
-          facetedFilter={facetedFilter}
-          placeholder={placeholder}
-          withRefresh={withRefresh}
-        >
+        <ToolBox table={table} {...props}>
           {children}
         </ToolBox>
-      </div>
+      </CardHeader>
 
-      <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+      <CardContent className="space-y-4">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
               </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="text-muted-foreground text-center whitespace-pre-line"
-              >
-                {label ? label.map((item) => item + "\n") : "No results."}
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
+            ))}
+          </TableHeader>
 
-      <div
-        className={cn(
-          "mt-4 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-center",
-          caption ? "justify-between" : "justify-center",
-        )}
-      >
-        <small className="text-muted-foreground text-left font-medium lg:text-center">
-          {caption}
-        </small>
-        <Pagination table={table} />
-      </div>
-    </SectionGroup>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-muted-foreground text-center whitespace-pre-line"
+                >
+                  {label ? label.map((item) => item + "\n") : "No results."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        <div
+          className={cn(
+            "mt-4 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-center",
+            caption ? "justify-between" : "justify-center",
+          )}
+        >
+          <small className="text-muted-foreground text-left font-medium lg:text-center">
+            {caption}
+          </small>
+          <Pagination table={table} />
+        </div>
+      </CardContent>
+    </Card>
   );
 }

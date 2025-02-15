@@ -621,6 +621,7 @@ export function UpdatePasswordForm({ id }: { id: string }) {
               name="confirmPass"
               type="password"
               placeholder="Konfirmasi Password Baru"
+              value={confirmPass}
               onChange={(e) => setConfirmPass(e.target.value)}
             />
           </div>
@@ -639,7 +640,10 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             type="button"
             size={isMobile ? "default" : "sm"}
             variant="outline"
-            onClick={() => form.reset()}
+            onClick={() => {
+              form.reset();
+              setConfirmPass("");
+            }}
           >
             <RotateCw /> Reset
           </Button>

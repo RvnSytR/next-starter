@@ -47,18 +47,6 @@ export function Section({
   );
 }
 
-export function SectionGroup({
-  className,
-  children,
-  ...props
-}: React.ComponentProps<"div">) {
-  return (
-    <div className={cn("flex flex-col gap-y-4", className)} {...props}>
-      {children}
-    </div>
-  );
-}
-
 export function SectionTitle({
   text,
   className,
@@ -95,6 +83,7 @@ export function SectionNotFound({
       <SectionLabel>
         <h1>404</h1>
         <p>Page Not Found</p>
+
         <CustomButton
           customType="nav"
           href={path.protected}
@@ -110,8 +99,12 @@ export function SectionNotFound({
 
 export function LayoutSkeleton() {
   return (
-    <main className="flex min-h-screen items-center justify-center">
-      <CustomLoader size={iconSize.lg} />
-    </main>
+    <SidebarInset>
+      <ThemeToggle className="m-4" />
+
+      <SectionLabel>
+        <CustomLoader size={iconSize.lg} />
+      </SectionLabel>
+    </SidebarInset>
   );
 }
