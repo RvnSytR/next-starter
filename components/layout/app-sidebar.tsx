@@ -89,7 +89,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
   return menu.map((item, index) => (
     <SidebarGroup key={index}>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
       <SidebarMenu>
         {item.body.map((bodyItem, bodyIndex) => (
           <Collapsible key={bodyIndex} disabled={bodyItem.isDisable} asChild>
