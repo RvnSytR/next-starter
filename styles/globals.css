@@ -176,6 +176,8 @@
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
+  --animate-sidebar-label-hidden: sidebar-label-hidden 0.2s forwards;
+
   @keyframes accordion-down {
     from {
       height: 0;
@@ -193,6 +195,19 @@
 
     to {
       height: 0;
+    }
+  }
+
+
+  @keyframes sidebar-label-hidden {
+    from {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    to {
+      opacity: 0;
+      visibility: hidden;
     }
   }
 }
