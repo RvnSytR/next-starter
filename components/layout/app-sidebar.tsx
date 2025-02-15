@@ -2,7 +2,10 @@ import Link from "next/link";
 
 import type { Role } from "@/server/db/schema";
 import { secondaryMenu, GetMenuByRole } from "../menu";
-import { ClientSidebarMenuButton } from "./client-sidebar";
+import {
+  ClientSidebarCollapsible,
+  ClientSidebarMenuButton,
+} from "./client-sidebar";
 import { CustomButton } from "../custom/custom-button";
 
 import {
@@ -17,16 +20,12 @@ import {
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
+  SidebarMenuAction,
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
-  SidebarMenuAction,
 } from "../ui/sidebar";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "../ui/collapsible";
+import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { ChevronRight } from "lucide-react";
@@ -92,48 +91,54 @@ function Content({ role }: Pick<SidebarData, "role">) {
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
       <SidebarMenu>
-        {item.body.map((bodyItem, bodyIndex) => (
-          <Collapsible key={bodyIndex} disabled={bodyItem.isDisable} asChild>
-            <SidebarMenuItem>
-              <ClientSidebarMenuButton
-                pathname={bodyItem.href}
-                tooltip={bodyItem.label}
-                asChild
-              >
-                <Link href={bodyItem.href}>
-                  {bodyItem.icon && <bodyItem.icon />}
-                  {bodyItem.label}
-                </Link>
-              </ClientSidebarMenuButton>
+        {item.body.map((bodyItem, bodyIndex) => {
+          const { href, label, isDisable, subMenu } = bodyItem;
+          return (
+            <ClientSidebarCollapsible
+              key={bodyIndex}
+              pathname={href}
+              disabled={isDisable}
+              asChild
+            >
+              <SidebarMenuItem>
+                <ClientSidebarMenuButton
+                  pathname={href}
+                  tooltip={label}
+                  asChild
+                >
+                  <Link href={href}>
+                    {bodyItem.icon && <bodyItem.icon />}
+                    {label}
+                  </Link>
+                </ClientSidebarMenuButton>
 
-              {bodyItem.subMenu && (
-                <>
-                  <CollapsibleTrigger asChild>
-                    <SidebarMenuAction className="data-[state=open]:rotate-90">
-                      <ChevronRight />
-                    </SidebarMenuAction>
-                  </CollapsibleTrigger>
+                {subMenu && (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
 
-                  <CollapsibleContent>
-                    <SidebarMenuSub>
-                      {bodyItem.subMenu.map((subItem, subIndex) => (
-                        <SidebarMenuSubItem key={subIndex}>
-                          <SidebarMenuSubButton asChild>
-                            <Link
-                              href={`${bodyItem.href}/#${subItem.elementId}`}
-                            >
-                              {subItem.subLabel}
-                            </Link>
-                          </SidebarMenuSubButton>
-                        </SidebarMenuSubItem>
-                      ))}
-                    </SidebarMenuSub>
-                  </CollapsibleContent>
-                </>
-              )}
-            </SidebarMenuItem>
-          </Collapsible>
-        ))}
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {subMenu.map((subItem, subIndex) => (
+                          <SidebarMenuSubItem key={subIndex}>
+                            <SidebarMenuSubButton asChild>
+                              <Link href={`${href}/#${subItem.elementId}`}>
+                                {subItem.subLabel}
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                )}
+              </SidebarMenuItem>
+            </ClientSidebarCollapsible>
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   ));

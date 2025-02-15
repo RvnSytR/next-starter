@@ -11,11 +11,8 @@ import {
 } from "lucide-react";
 
 type MenuRole = Exclude<Role, "pending"> | "all";
-
-type MenuProps = {
-  section: string;
-  body: MenuBody[];
-};
+type MenuProps = { section: string; body: MenuBody[] };
+type SubMenuProps = { subLabel: string; elementId: string }[];
 
 type MenuBody = {
   href: string;
@@ -23,7 +20,7 @@ type MenuBody = {
   role: MenuRole;
   icon?: LucideIcon;
   isDisable?: boolean;
-  subMenu?: { subLabel: string; elementId: string }[];
+  subMenu?: SubMenuProps;
 };
 
 const path = {
