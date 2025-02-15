@@ -1,6 +1,14 @@
 import type { Role } from "@/server/db/schema";
-import { type LucideIcon, LayoutDashboard, UserRound } from "lucide-react";
-import { page, label } from "./content";
+import { label, page } from "./content";
+
+import {
+  type LucideIcon,
+  CircleHelp,
+  Component,
+  ExternalLink,
+  LayoutDashboard,
+  UserRound,
+} from "lucide-react";
 
 type MenuRole = Exclude<Role, "pending"> | "all";
 
@@ -35,23 +43,28 @@ const menu: MenuProps[] = [
         icon: LayoutDashboard,
       },
       {
-        href: `${path.protected}/account`,
+        href: path.account,
         label: "Pengguna",
         role: "all",
         icon: UserRound,
       },
-      // {
-      //   href: `${path.protected}/account`,
-      //   label: "Pengguna",
-      //   role: "all",
-      //   icon: UserRound,
-      //   subMenu: [
-      //     { elementId: "well", subLabel: "Meh" },
-      //     { elementId: "well", subLabel: "Meh" },
-      //   ],
-      // },
+      {
+        href: "/example",
+        label: "Komponen",
+        role: "all",
+        icon: Component,
+        subMenu: [
+          { elementId: "well", subLabel: "Meh" },
+          { elementId: "well", subLabel: "Meh" },
+        ],
+      },
     ],
   },
+];
+
+const secondaryMenu: MenuBody[] = [
+  { href: "/", label: "Beranda", role: "all", icon: ExternalLink },
+  { href: "/somewhere", label: "Help", role: "all", icon: CircleHelp },
 ];
 
 function GetMenu(
@@ -94,5 +107,5 @@ function GetCurrentPage(path: string, metadata?: boolean) {
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 
-export { path };
+export { path, secondaryMenu };
 export { GetMenu, GetMenuByRole, GetCurrentPage };

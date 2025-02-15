@@ -39,7 +39,7 @@ export function Section({
 
       {children}
 
-      <footer className="mt-auto flex flex-col items-center gap-y-2 text-center">
+      <footer className="mt-auto flex h-12 flex-col items-center gap-y-4 text-center">
         <Separator />
         <small className="text-muted-foreground leading-tight">
           {page.copyright}

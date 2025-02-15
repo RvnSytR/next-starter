@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 import type { Role } from "@/server/db/schema";
-import { GetMenuByRole } from "../menu";
+import { secondaryMenu, GetMenuByRole } from "../menu";
 import { CustomButton } from "../custom/custom-button";
 
 import {
@@ -11,11 +11,11 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarRail,
-  SidebarMenuButton,
   SidebarGroup,
-  SidebarMenuItem,
-  SidebarMenu,
   SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
   SidebarMenuSub,
   SidebarMenuSubItem,
   SidebarMenuSubButton,
@@ -28,7 +28,7 @@ import {
 } from "../ui/collapsible";
 import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import { ChevronRight, ExternalLink } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 type SidebarData = {
   username: string;
@@ -47,7 +47,6 @@ export function AppSidebar({
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <Head username={username} email={email} />
-
           <Separator />
         </SidebarHeader>
 
@@ -56,15 +55,8 @@ export function AppSidebar({
         </SidebarContent>
 
         <SidebarFooter>
-          <Separator />
-
           <Secondary />
-
-          <CustomButton
-            customType="logout"
-            variant="outline_destructive"
-            className="w-full"
-          />
+          <Footer />
         </SidebarFooter>
 
         <SidebarRail />
@@ -143,13 +135,31 @@ function Content({ role }: Pick<SidebarData, "role">) {
 function Secondary() {
   return (
     <SidebarMenu>
-      <SidebarMenuItem>
-        <SidebarMenuButton size="sm" asChild>
-          <Link href="/">
-            <ExternalLink />
-            Home
-          </Link>
-        </SidebarMenuButton>
+      {secondaryMenu.map((item, index) => (
+        <SidebarMenuItem key={index}>
+          <SidebarMenuButton size="sm" tooltip={item.label} asChild>
+            <Link href={item.href}>
+              {item.icon && <item.icon />}
+              {item.label}
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </SidebarMenu>
+  );
+}
+
+function Footer() {
+  return (
+    <SidebarMenu>
+      <SidebarMenuItem className="flex h-12 flex-col justify-between">
+        <Separator />
+
+        <CustomButton
+          customType="logout"
+          variant="outline_destructive"
+          className="w-full"
+        />
       </SidebarMenuItem>
     </SidebarMenu>
   );

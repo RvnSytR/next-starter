@@ -393,7 +393,7 @@ function SidebarContent({
     <ScrollArea
       data-slot="sidebar-content"
       data-sidebar="content"
-      className={cn("flex grow flex-col gap-2", className)}
+      className={cn("flex grow flex-col gap-2 overflow-auto", className)}
       {...props}
     >
       {children}
@@ -507,10 +507,7 @@ const sidebarMenuButtonVariants = cva(
         lg: "h-12 text-sm group-data-[collapsible=icon]:p-0!",
       },
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
+    defaultVariants: { variant: "default", size: "default" },
   },
 );
 
