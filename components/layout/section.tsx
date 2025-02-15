@@ -20,9 +20,9 @@ export function Section({
   ...props
 }: DynamicBreadcrumbProps & { children?: React.ReactNode }) {
   return (
-    <SidebarInset className="gap-y-4 p-4">
+    <SidebarInset className="gap-y-4 p-2 px-4">
       <header className="flex flex-col gap-y-2">
-        <div className="flex shrink-0 items-center justify-between">
+        <div className="flex h-12 shrink-0 items-center justify-between">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
 
@@ -39,7 +39,7 @@ export function Section({
 
       {children}
 
-      <footer className="mt-auto flex flex-col items-center gap-y-3 text-center">
+      <footer className="mt-auto flex flex-col items-center gap-y-2 text-center">
         <Separator />
         <small className="text-muted-foreground leading-tight">
           {page.copyright}

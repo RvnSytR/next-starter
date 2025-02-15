@@ -1,5 +1,7 @@
-import type { Role } from "@/server/db/schema";
+import Link from "next/link";
 
+import type { Role } from "@/server/db/schema";
+import { GetMenuByRole } from "../menu";
 import { CustomButton } from "../custom/custom-button";
 
 import {
@@ -11,13 +13,21 @@ import {
   SidebarRail,
   SidebarMenuButton,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarMenuItem,
   SidebarMenu,
+  SidebarGroupLabel,
+  SidebarMenuSub,
+  SidebarMenuSubItem,
+  SidebarMenuSubButton,
 } from "../ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "../ui/collapsible";
+import { Separator } from "../ui/separator";
 import { Avatar, AvatarFallback } from "../ui/avatar";
-import Link from "next/link";
-import { ExternalLink } from "lucide-react";
+import { ChevronRight, ExternalLink } from "lucide-react";
 
 type SidebarData = {
   username: string;
@@ -36,15 +46,19 @@ export function AppSidebar({
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <Head username={username} email={email} />
+
+          <Separator />
         </SidebarHeader>
 
         <SidebarContent>
           <Content role={role} />
-
-          <Secondary />
         </SidebarContent>
 
         <SidebarFooter>
+          <Separator />
+
+          <Secondary />
+
           <CustomButton
             customType="logout"
             variant="outline_destructive"
@@ -78,28 +92,67 @@ function Head({ username, email }: { username: string; email: string }) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  return (
-    <SidebarGroup>
-      <SidebarGroupContent>{role}</SidebarGroupContent>
+  const menu = GetMenuByRole(role);
+  return menu.map((item, index) => (
+    <SidebarGroup key={index}>
+      <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
+      <SidebarMenu>
+        {item.body.map((bodyItem, bodyIndex) =>
+          bodyItem.subMenu ? (
+            <Collapsible key={bodyIndex} className="group/collapsible" asChild>
+              <SidebarMenuItem>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton tooltip={bodyItem.label}>
+                    {bodyItem.icon && <bodyItem.icon />}
+                    {bodyItem.label}
+                    <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+
+                <CollapsibleContent>
+                  <SidebarMenuSub>
+                    {bodyItem.subMenu.map((subItem, subIndex) => (
+                      <SidebarMenuSubItem key={subIndex}>
+                        <SidebarMenuSubButton>
+                          {subItem.subLabel}
+                        </SidebarMenuSubButton>
+                      </SidebarMenuSubItem>
+                    ))}
+                  </SidebarMenuSub>
+                </CollapsibleContent>
+              </SidebarMenuItem>
+            </Collapsible>
+          ) : (
+            <SidebarMenuItem key={bodyIndex}>
+              <SidebarMenuButton
+                tooltip={bodyItem.label}
+                disabled={bodyItem.isDisable}
+                asChild
+              >
+                <Link href={bodyItem.href}>
+                  {bodyItem.icon && <bodyItem.icon />}
+                  {bodyItem.label}
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ),
+        )}
+      </SidebarMenu>
     </SidebarGroup>
-  );
+  ));
 }
 
 function Secondary() {
   return (
-    <SidebarGroup className="mt-auto">
-      <SidebarGroupContent>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="sm" asChild>
-              <Link href="/">
-                <ExternalLink />
-                Home
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarGroupContent>
-    </SidebarGroup>
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton size="sm" asChild>
+          <Link href="/">
+            <ExternalLink />
+            Home
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }

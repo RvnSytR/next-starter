@@ -1,15 +1,17 @@
 "use client";
 
 import * as React from "react";
+import * as ScrollAreaPrimitive from "@radix-ui/react-scroll-area";
 import { Slot } from "@radix-ui/react-slot";
 import { VariantProps, cva } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "./scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -382,17 +384,20 @@ function SidebarSeparator({
   );
 }
 
-function SidebarContent({ className, ...props }: React.ComponentProps<"div">) {
+function SidebarContent({
+  children,
+  className,
+  ...props
+}: React.ComponentProps<typeof ScrollAreaPrimitive.Root>) {
   return (
-    <div
+    <ScrollArea
       data-slot="sidebar-content"
       data-sidebar="content"
-      className={cn(
-        "flex min-h-0 flex-1 flex-col gap-2 overflow-auto group-data-[collapsible=icon]:overflow-hidden",
-        className,
-      )}
+      className={cn("flex grow flex-col gap-2", className)}
       {...props}
-    />
+    >
+      {children}
+    </ScrollArea>
   );
 }
 
@@ -676,9 +681,9 @@ function SidebarMenuSubItem({
 }
 
 function SidebarMenuSubButton({
-  asChild = false,
   size = "md",
   isActive = false,
+  asChild = false,
   className,
   ...props
 }: React.ComponentProps<"a"> & {

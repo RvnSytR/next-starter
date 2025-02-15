@@ -2,15 +2,9 @@ import type { Role } from "@/server/db/schema";
 import { type LucideIcon, LayoutDashboard, UserRound } from "lucide-react";
 import { page, label } from "./content";
 
-const path = {
-  login: "/login",
-  protected: "/dashboard",
-  account: "/dashboard/account",
-};
-
 type MenuRole = Exclude<Role, "pending"> | "all";
 
-type Menu = {
+type MenuProps = {
   section: string;
   body: MenuBody[];
 };
@@ -21,9 +15,16 @@ type MenuBody = {
   role: MenuRole;
   icon?: LucideIcon;
   isDisable?: boolean;
+  subMenu?: { elementId?: string; subLabel: string }[];
 };
 
-const menu: Menu[] = [
+const path = {
+  login: "/login",
+  protected: "/dashboard",
+  account: "/dashboard/account",
+};
+
+const menu: MenuProps[] = [
   {
     section: "General",
     body: [
@@ -38,6 +39,16 @@ const menu: Menu[] = [
         label: "Pengguna",
         role: "all",
         icon: UserRound,
+      },
+      {
+        href: `${path.protected}/account`,
+        label: "Pengguna",
+        role: "all",
+        icon: UserRound,
+        subMenu: [
+          { elementId: "well", subLabel: "Meh" },
+          { elementId: "well", subLabel: "Meh" },
+        ],
       },
     ],
   },
@@ -69,11 +80,9 @@ function GetMenuByRole(role: MenuRole) {
       const filteredBody = section.body.filter(
         (item) => item.role === role || item.role === "all",
       );
+
       if (filteredBody.length) {
-        return {
-          section: section.section,
-          body: filteredBody,
-        } as Menu;
+        return { section: section.section, body: filteredBody } as MenuProps;
       } else return null;
     })
     .filter((section) => section !== null);
@@ -85,6 +94,5 @@ function GetCurrentPage(path: string, metadata?: boolean) {
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 
-export type { MenuRole };
 export { path };
 export { GetMenu, GetMenuByRole, GetCurrentPage };
