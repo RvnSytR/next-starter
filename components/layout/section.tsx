@@ -25,9 +25,7 @@ export function Section({
         <div className="flex h-12 shrink-0 items-center justify-between">
           <div className="flex items-center gap-2">
             <SidebarTrigger />
-
             <Separator orientation="vertical" className="mr-2 h-4" />
-
             <DynamicBreadcrumb {...props} />
           </div>
 
