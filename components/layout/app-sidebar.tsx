@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { Role } from "@/server/db/schema";
 import { secondaryMenu, GetMenuByRole } from "../menu";
+import { ClientSidebarMenuButton } from "./client-sidebar";
 import { CustomButton } from "../custom/custom-button";
 
 import {
@@ -94,12 +95,16 @@ function Content({ role }: Pick<SidebarData, "role">) {
         {item.body.map((bodyItem, bodyIndex) => (
           <Collapsible key={bodyIndex} disabled={bodyItem.isDisable} asChild>
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={bodyItem.label} asChild>
+              <ClientSidebarMenuButton
+                pathname={bodyItem.href}
+                tooltip={bodyItem.label}
+                asChild
+              >
                 <Link href={bodyItem.href}>
                   {bodyItem.icon && <bodyItem.icon />}
                   {bodyItem.label}
                 </Link>
-              </SidebarMenuButton>
+              </ClientSidebarMenuButton>
 
               {bodyItem.subMenu && (
                 <>

@@ -28,7 +28,7 @@ function CollapsibleContent({
     <CollapsiblePrimitive.CollapsibleContent
       data-slot="collapsible-content"
       className={cn(
-        "data-[state=open]:animate-fade data-[state=open]:animate-duration-500",
+        "data-[state=open]:animate-fade data-[state=open]:animate-duration-250",
         className,
       )}
       {...props}
