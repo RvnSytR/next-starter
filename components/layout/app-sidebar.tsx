@@ -119,7 +119,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
                       {bodyItem.subMenu.map((subItem, subIndex) => (
                         <SidebarMenuSubItem key={subIndex}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subItem.elementId}>
+                            <Link
+                              href={`${bodyItem.href}/#${subItem.elementId}`}
+                            >
                               {subItem.subLabel}
                             </Link>
                           </SidebarMenuSubButton>

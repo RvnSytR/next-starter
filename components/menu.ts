@@ -23,7 +23,7 @@ type MenuBody = {
   role: MenuRole;
   icon?: LucideIcon;
   isDisable?: boolean;
-  subMenu?: { elementId: string; subLabel: string }[];
+  subMenu?: { subLabel: string; elementId: string }[];
 };
 
 const path = {
@@ -59,8 +59,8 @@ const menu: MenuProps[] = [
         role: "all",
         icon: Settings,
         subMenu: [
-          { elementId: "well", subLabel: "Ubah Profile" },
-          { elementId: "well", subLabel: "Ubah Password" },
+          { subLabel: "Ubah Profile", elementId: "profile" },
+          { subLabel: "Ubah Password", elementId: "password" },
         ],
       },
     ],
