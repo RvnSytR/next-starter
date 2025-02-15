@@ -14,6 +14,20 @@ const page = {
     title: `${title.primary} Admin`,
     subtitle: `Silakan masukkan email dan password akun Admin Anda dibawah ini untuk mengakses ${title.primary} Dashboard.`,
   },
+
+  settings: {
+    profile: {
+      title: "Ubah Profile",
+      subtitle:
+        "Setelah melakukan perubahan pada profil, sistem akan meminta Anda untuk login kembali. Pastikan informasi sudah benar sebelum melanjutkan.",
+    },
+
+    password: {
+      title: "Ubah Password",
+      subtitle:
+        "Setelah melakukan perubahan password, sistem akan meminta Anda untuk login kembali. Pastikan informasi sudah benar sebelum melanjutkan.",
+    },
+  },
 };
 
 const label = {

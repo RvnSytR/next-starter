@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 import { z } from "zod";
 import { zodUserSchema } from "@/lib/zod";
@@ -63,7 +64,7 @@ import { Label } from "../ui/label";
 import { Button, buttonVariants } from "../ui/button";
 import { Separator } from "../ui/separator";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import { CircleCheckBig, LogIn, Plus, Trash } from "lucide-react";
+import { CircleCheckBig, LogIn, Plus, RotateCw, Trash } from "lucide-react";
 
 const { success, error } = label.toast;
 const { button } = label;
@@ -446,6 +447,7 @@ function DeleteUserDialog({
 
 export function UpdateProfileForm({ data }: { data: UserCredentials }) {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodUserSchema.pick({
@@ -481,15 +483,15 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
+        className="flex flex-col gap-y-4"
       >
-        <div className="grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="Email" {...field} disabled />
                 </FormControl>
@@ -533,14 +535,24 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
           />
         </div>
 
-        <CustomButton
-          customType={null}
-          type="submit"
-          load={isLoading}
-          size="sm"
-          className="md:w-fit"
-          text="Simpan"
-        />
+        <div className="flex gap-2">
+          <CustomButton
+            customType={null}
+            type="submit"
+            load={isLoading}
+            size={isMobile ? "default" : "sm"}
+            text="Simpan"
+          />
+
+          <Button
+            type="button"
+            size={isMobile ? "default" : "sm"}
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            <RotateCw /> Reset
+          </Button>
+        </div>
       </form>
     </Form>
   );
@@ -548,8 +560,10 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
 
 export function UpdatePasswordForm({ id }: { id: string }) {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [confirmPass, setConfirmPass] = useState<string>("");
+
   const schema = zodUserSchema.pick({ password: true });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -579,9 +593,9 @@ export function UpdatePasswordForm({ id }: { id: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-2"
+        className="flex flex-col gap-y-4"
       >
-        <div className="flex flex-col gap-x-2 gap-y-2 lg:flex-row">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}
             name="password"
@@ -612,14 +626,24 @@ export function UpdatePasswordForm({ id }: { id: string }) {
           </div>
         </div>
 
-        <CustomButton
-          customType={null}
-          type="submit"
-          load={isLoading}
-          size="sm"
-          className="md:w-fit"
-          text="Simpan"
-        />
+        <div className="flex gap-2">
+          <CustomButton
+            customType={null}
+            type="submit"
+            load={isLoading}
+            size={isMobile ? "default" : "sm"}
+            text="Simpan"
+          />
+
+          <Button
+            type="button"
+            size={isMobile ? "default" : "sm"}
+            variant="outline"
+            onClick={() => form.reset()}
+          >
+            <RotateCw /> Reset
+          </Button>
+        </div>
       </form>
     </Form>
   );

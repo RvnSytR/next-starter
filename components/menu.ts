@@ -4,9 +4,9 @@ import { label, page } from "./content";
 import {
   type LucideIcon,
   CircleHelp,
-  Component,
   ExternalLink,
   LayoutDashboard,
+  Settings,
   UserRound,
 } from "lucide-react";
 
@@ -48,14 +48,19 @@ const menu: MenuProps[] = [
         role: "all",
         icon: UserRound,
       },
+    ],
+  },
+  {
+    section: "Lainnya",
+    body: [
       {
-        href: "/example",
-        label: "Komponen",
+        href: `${path.protected}/settings`,
+        label: "Pengaturan",
         role: "all",
-        icon: Component,
+        icon: Settings,
         subMenu: [
-          { elementId: "well", subLabel: "Meh" },
-          { elementId: "well", subLabel: "Meh" },
+          { elementId: "well", subLabel: "Ubah Profile" },
+          { elementId: "well", subLabel: "Ubah Password" },
         ],
       },
     ],

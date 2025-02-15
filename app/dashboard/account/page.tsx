@@ -4,9 +4,10 @@ import { auth } from "@/lib/auth";
 import { role } from "@/server/db/schema";
 import { state } from "@/server/db/state";
 
-import { Section } from "@/components/layout/section";
-import { AccountDataTable } from "@/components/modules/auth";
 import { path, GetCurrentPage } from "@/components/menu";
+
+import { Section, LayoutSkeleton } from "@/components/layout/section";
+import { AccountDataTable } from "@/components/modules/auth";
 
 export const metadata: Metadata = {
   title: GetCurrentPage(path.account, true),
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const session = await auth();
-  if (!session) return <Section currentPage="..." skeleton />;
+  if (!session) return <LayoutSkeleton />;
 
   const data = await state.user.select.all.execute();
   const facetedFilter = [
