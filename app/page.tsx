@@ -19,6 +19,7 @@ export default function Page() {
         icon={<LayoutDashboard />}
         variant="outline"
         text="Go To Dashboard"
+        withLoading
       />
 
       <CustomButton
@@ -27,6 +28,7 @@ export default function Page() {
         icon={<FlaskConical />}
         variant="outline"
         text="Go to Testing Page (Coverage)"
+        withLoading
       />
 
       <Separator />

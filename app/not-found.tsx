@@ -17,11 +17,11 @@ export default function NotFound() {
         <CustomButton
           customType="link"
           href="/"
-          variant="outline"
           size="lg"
+          variant="outline"
           className="hover:border-primary h-16 gap-4 rounded-full border-4 px-8 text-xl font-bold [&_svg]:size-5"
           text="Go To Main Page"
-          loadText="Going to Main Page..."
+          withLoading
         />
       </div>
     </main>

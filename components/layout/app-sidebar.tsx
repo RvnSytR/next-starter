@@ -170,7 +170,8 @@ function Footer() {
         <CustomButton
           customType="logout"
           variant="outline_destructive"
-          className="w-full"
+          inSidebar
+          withLoading
         />
       </SidebarMenuItem>
     </SidebarMenu>

@@ -2,7 +2,7 @@
 
 import Link, { type LinkProps } from "next/link";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -15,7 +15,7 @@ import { path } from "../menu";
 
 import { toast } from "sonner";
 import { CustomLoader } from "../icon";
-import { Button, ButtonProps } from "../ui/button";
+import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 import { Check, Copy, LogOut } from "lucide-react";
 
@@ -26,11 +26,19 @@ type RequiredChildrenProps =
   | { text?: string; icon: ReactNode };
 
 type CustomTypeProps =
-  | ({ customType: "logout" | "refresh" } & OptionalChildrenProps)
+  | ((
+      | { customType: "logout" | "refresh" }
+      | { customType: "copy"; copyValue: string }
+    ) &
+      OptionalChildrenProps)
   | ((
       | { customType?: never }
-      | { customType: "copy"; copyValue: string }
       | { customType: "scroll"; elementId: string; offset?: number }
+      | ({ customType: "link" } & LinkProps &
+          Omit<
+            React.AnchorHTMLAttributes<HTMLAnchorElement>,
+            keyof LinkProps & "children"
+          >)
     ) &
       RequiredChildrenProps);
 
@@ -63,6 +71,7 @@ export function CustomButton({
   size,
   variant,
   className,
+  asChild = false,
   onClick,
   ...props
 }: CustomButtonProps) {
@@ -96,8 +105,8 @@ export function CustomButton({
     }
 
     case "refresh": {
-      icon = <CustomLoader customType="refresh" animate={false} />;
-      text = label.button.refresh;
+      icon = icon ?? <CustomLoader customType="refresh" animate={false} />;
+      text = text ?? label.button.refresh;
 
       action = async () => {
         setIsLoading(true);
@@ -110,7 +119,7 @@ export function CustomButton({
     }
 
     case "copy": {
-      icon = <Copy />;
+      icon = icon ?? <Copy />;
       customLoader = <Check />;
       const { copyValue, ...rest } = props as Extract<
         CustomButtonProps,
@@ -144,6 +153,12 @@ export function CustomButton({
 
       break;
     }
+
+    case "link": {
+      asChild = true;
+
+      break;
+    }
   }
 
   const ButtonNode = ({ children }: { children: ReactNode }) => {
@@ -164,17 +179,19 @@ export function CustomButton({
         className={cn(
           "shrink-0 group-data-[collapsible=icon]:justify-start",
           inSidebar &&
-            sidebarMenuButtonVariants({
+            (sidebarMenuButtonVariants({
               size:
                 size === "iconlg" ? "lg" : size === "iconsm" ? "sm" : "default",
             }),
+            buttonVariants({ variant: variant })),
           className,
         )}
         onClick={async (e) => {
-          if (withLoading) setIsLoading(true);
+          if (withLoading) setTimeout(() => setIsLoading(true), 0);
           if (onClick) onClick(e);
           await action();
         }}
+        asChild={asChild}
         {...buttonProps}
       >
         {children}
@@ -197,9 +214,19 @@ export function CustomButton({
     return node;
   };
 
-  return (
-    <ButtonNode>
-      <ChildrenNode />
-    </ButtonNode>
-  );
+  if (customType === "link") {
+    return (
+      <ButtonNode>
+        <Link {...(props as LinkProps)}>
+          <ChildrenNode />
+        </Link>
+      </ButtonNode>
+    );
+  } else {
+    return (
+      <ButtonNode>
+        <ChildrenNode />
+      </ButtonNode>
+    );
+  }
 }

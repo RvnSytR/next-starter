@@ -129,12 +129,12 @@ export function LoginForm() {
         />
 
         <CustomButton
-          customType={null}
           type="submit"
-          load={isLoading}
+          loading={isLoading}
           icon={<LogIn />}
           text={button.login}
           className="w-full"
+          withLoading
         />
       </form>
     </Form>
@@ -174,13 +174,10 @@ export function CreateUserDialog() {
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild>
-        <CustomButton
-          customType={null}
-          size="sm"
-          variant="outline"
-          icon={<Plus />}
-          text="Tambah Pengguna"
-        />
+        <Button size="sm" variant="outline">
+          <Plus />
+          Tambah Pengguna
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
@@ -258,10 +255,10 @@ export function CreateUserDialog() {
               </DialogClose>
 
               <CustomButton
-                customType={null}
                 type="submit"
-                load={isLoading}
+                loading={isLoading}
                 text={button.confirm}
+                withLoading
               />
             </DialogFooter>
           </form>
@@ -537,11 +534,11 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
 
         <div className="flex gap-2">
           <CustomButton
-            customType={null}
             type="submit"
-            load={isLoading}
+            loading={isLoading}
             size={isMobile ? "default" : "sm"}
             text={button.save}
+            withLoading
           />
 
           <Button
@@ -630,11 +627,11 @@ export function UpdatePasswordForm({ id }: { id: string }) {
 
         <div className="flex gap-2">
           <CustomButton
-            customType={null}
             type="submit"
-            load={isLoading}
+            loading={isLoading}
             size={isMobile ? "default" : "sm"}
             text={button.save}
+            withLoading
           />
 
           <Button
