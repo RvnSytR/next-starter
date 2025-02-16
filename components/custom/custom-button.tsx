@@ -213,19 +213,15 @@ export function CustomButton({
     return node;
   };
 
-  if (customType === "link") {
-    return (
-      <ButtonNode>
+  return (
+    <ButtonNode>
+      {customType === "link" ? (
         <Link {...(props as LinkProps)}>
           <ChildrenNode />
         </Link>
-      </ButtonNode>
-    );
-  } else {
-    return (
-      <ButtonNode>
+      ) : (
         <ChildrenNode />
-      </ButtonNode>
-    );
-  }
+      )}
+    </ButtonNode>
+  );
 }
