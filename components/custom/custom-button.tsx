@@ -156,7 +156,6 @@ export function CustomButton({
 
     case "link": {
       asChild = true;
-
       break;
     }
   }
