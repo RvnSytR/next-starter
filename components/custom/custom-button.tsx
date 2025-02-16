@@ -2,7 +2,7 @@
 
 import Link, { type LinkProps } from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Fragment, type ReactNode } from "react";
 
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -16,252 +16,190 @@ import { path } from "../menu";
 import { toast } from "sonner";
 import { CustomLoader } from "../icon";
 import { Button, ButtonProps } from "../ui/button";
-import { Check, Copy, LogOut, RefreshCw, Sparkle } from "lucide-react";
+import { sidebarMenuButtonVariants } from "../ui/sidebar";
+import { Check, Copy, LogOut } from "lucide-react";
 
 // #region // * Types
-type CustomType =
-  | {
-      customType: "loading" | "logout" | "refresh" | null | undefined;
-    }
-  | ({ customType: "nav" } & LinkProps &
-      Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, "children">)
-  | {
-      customType: "copy";
-      copyvalue: string;
-    }
-  | {
-      customType: "scroll";
-      elementid: string;
-      offset?: number;
-    };
+type OptionalChildrenProps = { text?: string; icon?: string };
+type RequiredChildrenProps =
+  | { text: string; icon?: ReactNode }
+  | { text?: string; icon: ReactNode };
+
+type CustomTypeProps =
+  | ({ customType: "logout" | "refresh" } & OptionalChildrenProps)
+  | ((
+      | { customType?: never }
+      | { customType: "copy"; copyValue: string }
+      | { customType: "scroll"; elementId: string; offset?: number }
+    ) &
+      RequiredChildrenProps);
 
 export type CustomButtonProps = Omit<ButtonProps, "children"> &
-  CustomType & {
-    text?: string;
-    load?: boolean;
-    loadText?: string;
-    icon?: ReactNode;
+  CustomTypeProps & {
     iconPosition?: "left" | "right";
+    loading?: boolean;
+    withLoading?: boolean;
+    inSidebar?: boolean;
     hideTextOnMobile?: boolean;
+    customLoader?: ReactNode;
   };
 // #endregion
 
-const { loading, success } = label.toast;
-const { button } = label;
-
-// TODO : Rework
 export function CustomButton({
   customType,
   text,
-  load,
-  loadText,
-  hideTextOnMobile = false,
   icon,
   iconPosition = "left",
+  loading = false,
+  withLoading = false,
+  inSidebar = false,
+  hideTextOnMobile = false,
+  customLoader = (
+    <CustomLoader
+      customType={customType === "refresh" ? "refresh" : "circle"}
+    />
+  ),
+  type = "button",
+  size,
+  variant,
+  className,
+  onClick,
   ...props
 }: CustomButtonProps) {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(loading);
 
-  //#region // * Nodes
-  type CustomButtonNode = { required?: boolean; children: ReactNode } & Pick<
-    ButtonProps,
-    "style" | "className" | "onClick" | "asChild"
-  >;
-
-  const ButtonNode = ({ children, ...nodeProps }: CustomButtonNode) => {
-    const { size, className, ...restProps } = props;
-    const { required, ...restNodeProps } = nodeProps;
-    if (required && !text && !icon) return <RequiredNode />;
-
-    return (
-      <Button
-        type="button"
-        size={
-          !text || (hideTextOnMobile && isMobile)
-            ? size === "lg" || size === "iconlg"
-              ? "iconlg"
-              : size === "sm" || size === "iconsm"
-                ? "iconsm"
-                : "icon"
-            : size
-        }
-        className={cn("shrink-0", className)}
-        disabled={load ?? isLoading}
-        {...restProps}
-        {...restNodeProps}
-      >
-        {children}
-      </Button>
-    );
-  };
-
-  const LoadingButtonNode = ({ children, ...nodeProps }: CustomButtonNode) => {
-    return (
-      <ButtonNode onClick={() => setIsLoading(true)} {...nodeProps}>
-        {children}
-      </ButtonNode>
-    );
-  };
-
-  const ChildrenNode = ({ customLoader }: { customLoader?: ReactNode }) => {
-    const isLoad = load ?? isLoading;
-    const iconNode = isLoad
-      ? (customLoader ?? <CustomLoader customType="circle" />)
-      : icon;
-
-    if (!text) return iconNode;
-
-    return (
-      <Fragment>
-        {iconPosition === "left" && iconNode}
-        <span
-          className={cn(
-            "group-data-[collapsible=icon]:hidden data-[state=open]:hidden",
-            hideTextOnMobile && "hidden md:flex",
-          )}
-        >
-          {isLoad ? (loadText ?? text) : text}
-        </span>
-        {iconPosition === "right" && iconNode}
-      </Fragment>
-    );
-  };
-
-  const RequiredNode = ({ destructive = false }: { destructive?: boolean }) => {
-    return (
-      <Button
-        variant={destructive ? "destructive" : "default"}
-        className="animate-wiggle animate-infinite"
-        disabled
-      >
-        <Sparkle /> Custom Button {destructive && "Undefined!"}
-      </Button>
-    );
-  };
-  //#endregion
+  let buttonProps: typeof props = props;
+  let action: () => Promise<void> | void = () => {};
 
   switch (customType) {
-    case "loading": {
-      return (
-        <LoadingButtonNode required>
-          <ChildrenNode />
-        </LoadingButtonNode>
-      );
-    }
-
     case "logout": {
-      text = button.logout;
       icon = <LogOut />;
+      text = label.button.logout;
+      variant = "outline_destructive";
 
-      return (
-        <LoadingButtonNode
-          required
-          onClick={async () => {
-            setIsLoading(true);
-            toast.promise(SignOutHandler(), {
-              loading: loading.default,
-              success: () => {
-                router.push(path.login);
-                return success.logout;
-              },
-              error: (e: Error) => {
-                setIsLoading(false);
-                return e.message;
-              },
-            });
-          }}
-        >
-          <ChildrenNode />
-        </LoadingButtonNode>
-      );
-    }
-
-    case "nav": {
-      const { ...linkProps } = props as Extract<
-        CustomType,
-        { customType: "nav" }
-      >;
-
-      return (
-        <LoadingButtonNode required asChild>
-          <Link {...linkProps}>
-            <ChildrenNode />
-          </Link>
-        </LoadingButtonNode>
-      );
+      action = () => {
+        toast.promise(SignOutHandler(), {
+          loading: label.toast.loading.default,
+          success: () => {
+            router.push(path.login);
+            return label.toast.success.logout;
+          },
+          error: (e: Error) => {
+            setIsLoading(false);
+            return e.message;
+          },
+        });
+      };
+      break;
     }
 
     case "refresh": {
-      text = button.refresh;
-      icon = <RefreshCw />;
+      icon = <CustomLoader customType="refresh" animate={false} />;
+      text = label.button.refresh;
 
-      return (
-        <ButtonNode
-          onClick={async () => {
-            setIsLoading(true);
-            await Delay(0.5);
-            router.refresh();
-            setIsLoading(false);
-          }}
-        >
-          <ChildrenNode customLoader={<RefreshCw className="animate-spin" />} />
-        </ButtonNode>
-      );
+      action = async () => {
+        setIsLoading(true);
+        await Delay(0.5);
+        router.refresh();
+        setIsLoading(false);
+      };
+
+      break;
     }
 
     case "copy": {
       icon = <Copy />;
-      const { copyvalue } = props as Extract<
-        CustomType,
+      customLoader = <Check />;
+      const { copyValue, ...rest } = props as Extract<
+        CustomButtonProps,
         { customType: "copy" }
       >;
 
-      return (
-        <ButtonNode
-          onClick={async () => {
-            setIsLoading(true);
-            navigator.clipboard.writeText(copyvalue);
-            await Delay(1);
-            setIsLoading(false);
-          }}
-        >
-          <ChildrenNode customLoader={<Check />} />
-        </ButtonNode>
-      );
+      buttonProps = rest;
+      action = async () => {
+        setIsLoading(true);
+        navigator.clipboard.writeText(copyValue);
+        await Delay(1);
+        setIsLoading(false);
+      };
+
+      break;
     }
 
     case "scroll": {
-      const { elementid, offset } = props as Extract<
-        CustomType,
-        { customType: "scroll" }
-      >;
+      const {
+        elementId,
+        offset = 80,
+        ...rest
+      } = props as Extract<CustomButtonProps, { customType: "scroll" }>;
 
-      return (
-        <ButtonNode
-          onClick={() => {
-            const element = document.getElementById(elementid);
-            if (!element) return;
-            window.scroll({ top: element.offsetTop - (offset ?? 0) });
-          }}
-          required
-        >
-          <ChildrenNode />
-        </ButtonNode>
-      );
-    }
+      buttonProps = rest;
+      action = async () => {
+        const element = document.getElementById(elementId);
+        if (!element) return;
+        window.scroll({ top: element.offsetTop - offset });
+      };
 
-    case null: {
-      return (
-        <ButtonNode>
-          <ChildrenNode />
-        </ButtonNode>
-      );
-    }
-
-    default: {
-      return <RequiredNode destructive />;
+      break;
     }
   }
+
+  const ButtonNode = ({ children }: { children: ReactNode }) => {
+    return (
+      <Button
+        type={type}
+        variant={variant}
+        disabled={isLoading}
+        size={
+          !text || (hideTextOnMobile && isMobile)
+            ? size === "lg"
+              ? "iconlg"
+              : size === "sm"
+                ? "iconsm"
+                : "icon"
+            : size
+        }
+        className={cn(
+          "shrink-0 group-data-[collapsible=icon]:justify-start",
+          inSidebar &&
+            sidebarMenuButtonVariants({
+              size:
+                size === "iconlg" ? "lg" : size === "iconsm" ? "sm" : "default",
+            }),
+          className,
+        )}
+        onClick={async (e) => {
+          if (withLoading) setIsLoading(true);
+          if (onClick) onClick(e);
+          await action();
+        }}
+        {...buttonProps}
+      >
+        {children}
+      </Button>
+    );
+  };
+
+  const ChildrenNode = () => {
+    const iconNode = isLoading ? customLoader : icon;
+    if (!text) return iconNode;
+
+    const node = (
+      <Fragment>
+        {iconPosition === "left" && iconNode}
+        <span className={cn(hideTextOnMobile && "hidden md:flex")}>{text}</span>
+        {iconPosition === "right" && iconNode}
+      </Fragment>
+    );
+
+    return node;
+  };
+
+  return (
+    <ButtonNode>
+      <ChildrenNode />
+    </ButtonNode>
+  );
 }

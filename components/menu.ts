@@ -10,8 +10,8 @@ import {
   UserRound,
 } from "lucide-react";
 
-type MenuRole = Exclude<Role, "pending"> | "all";
 type MenuProps = { section: string; body: MenuBody[] };
+type MenuRole = Exclude<Role, "pending"> | "all";
 type SubMenuProps = { subLabel: string; elementId: string }[];
 
 type MenuBody = {

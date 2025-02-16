@@ -15,7 +15,7 @@ export default function NotFound() {
 
       <div className="animate-fade-up">
         <CustomButton
-          customType="nav"
+          customType="link"
           href="/"
           variant="outline"
           size="lg"

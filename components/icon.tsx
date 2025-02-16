@@ -1,9 +1,16 @@
 import { cn } from "@/lib/utils";
-import { type LucideProps, Loader, LoaderCircle } from "lucide-react";
+import {
+  type LucideProps,
+  type LucideIcon,
+  Loader,
+  LoaderCircle,
+  RefreshCw,
+} from "lucide-react";
 
 type IconProps = Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>;
 type CustomLoaderProps = IconProps & {
-  customType?: "circle" | "default";
+  customType?: "circle" | "refresh" | "default";
+  animate?: boolean;
 };
 
 const iconSize = { sm: 12, base: 16, lg: 20 };
@@ -16,20 +23,26 @@ const svgProps = {
   viewBox: "0 0 48 48",
 };
 
-function CustomLoader({ customType, className, ...props }: CustomLoaderProps) {
-  const loaderClassName = "animate-spin animate-infinite";
+function CustomLoader({
+  customType = "default",
+  animate = true,
+  className,
+  ...props
+}: CustomLoaderProps) {
+  const LoaderComponent = (
+    {
+      circle: LoaderCircle,
+      refresh: RefreshCw,
+      default: Loader,
+    } satisfies Record<Extract<CustomLoaderProps, "customType">, LucideIcon>
+  )[customType];
 
-  switch (customType) {
-    case "circle": {
-      return (
-        <LoaderCircle className={cn(loaderClassName, className)} {...props} />
-      );
-    }
-
-    default: {
-      return <Loader className={cn(loaderClassName, className)} {...props} />;
-    }
-  }
+  return (
+    <LoaderComponent
+      className={cn(animate && "animate-infinite animate-spin", className)}
+      {...props}
+    />
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

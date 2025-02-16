@@ -14,7 +14,7 @@ export default function Page() {
       <ThemeToggle />
 
       <CustomButton
-        customType="nav"
+        customType="link"
         href="/dashboard"
         icon={<LayoutDashboard />}
         variant="outline"
@@ -22,12 +22,14 @@ export default function Page() {
       />
 
       <CustomButton
-        customType="nav"
+        customType="link"
         href="/coverage"
         icon={<FlaskConical />}
         variant="outline"
         text="Go to Testing Page (Coverage)"
       />
+
+      <Separator />
 
       <Separator />
 
@@ -46,7 +48,7 @@ export default function Page() {
 
       <div className="flex gap-x-2">
         <Badge>Default</Badge>
-        <Badge variant="secondary">Success</Badge>
+        <Badge variant="secondary">Secondary</Badge>
         <Badge variant="outline">Outline</Badge>
       </div>
 

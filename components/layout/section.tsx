@@ -85,7 +85,7 @@ export function SectionNotFound({
         <p>Page Not Found</p>
 
         <CustomButton
-          customType="nav"
+          customType="link"
           href={path.protected}
           variant="outline"
           className="mt-4 rounded-full"
