@@ -3,9 +3,10 @@ import { clsx, type ClassValue } from "clsx";
 import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 
+import { path } from "@/components/menu";
+
 export type cv = ClassValue;
 export const maxFileSize = { mb: 1, byte: 1 * 1000 * 1000 };
-export const time = { zone: "Asia/Singapore", offset: 7 };
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -13,6 +14,23 @@ export function cn(...inputs: ClassValue[]) {
 
 export function Delay(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
+}
+
+export function IsActivePath(
+  pathname: string,
+  currentPathname: string,
+): boolean {
+  const trimProtectedPath = (p: string) => p.replace(path.protected, "").trim();
+
+  const trimmedCurrentPath = trimProtectedPath(currentPathname);
+  const trimmedPath = trimProtectedPath(pathname);
+
+  const isRootPath =
+    currentPathname === path.protected && currentPathname === pathname;
+  const isTrimmedPath =
+    !!trimmedPath && trimmedCurrentPath.startsWith(trimmedPath);
+
+  return isRootPath || isTrimmedPath;
 }
 
 export function GetRandomString(length: number) {
