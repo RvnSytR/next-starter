@@ -29,7 +29,6 @@ import { SectionTitle } from "../layout/section";
 import { CustomButton } from "../custom/custom-button";
 import { iconSize } from "../icon";
 
-import { Card, CardContent, CardHeader } from "../ui/card";
 import {
   Table,
   TableBody,
@@ -42,6 +41,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { Button, buttonVariants } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   ChevronLeft,
@@ -203,7 +203,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         disabled={!table.getCanPreviousPage()}
       >
         <ChevronLeft />
-        Prev
+        Previous
       </Button>
 
       <Button
