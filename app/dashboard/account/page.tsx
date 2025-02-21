@@ -1,13 +1,10 @@
-import { Metadata } from "next";
-
+import { LayoutSkeleton, Section } from "@/components/layout/section";
+import { GetCurrentPage, path } from "@/components/menu";
+import { AccountDataTable } from "@/components/modules/auth";
 import { auth } from "@/lib/auth";
 import { role } from "@/server/db/schema";
 import { state } from "@/server/db/state";
-
-import { path, GetCurrentPage } from "@/components/menu";
-
-import { Section, LayoutSkeleton } from "@/components/layout/section";
-import { AccountDataTable } from "@/components/modules/auth";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: GetCurrentPage(path.account, true),

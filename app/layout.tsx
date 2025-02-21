@@ -1,10 +1,9 @@
-import "@/styles/globals.css";
-import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
-
-import { ThemeProvider } from "next-themes";
 import { title } from "@/components/content";
 import { Toaster } from "@/components/ui/sonner";
+import "@/styles/globals.css";
+import type { Metadata, Viewport } from "next";
+import { ThemeProvider } from "next-themes";
+import { Inter } from "next/font/google";
 
 const font = Inter({ subsets: ["latin"], display: "swap" });
 

@@ -1,19 +1,17 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import {
-  Pie,
-  PieChart,
   Area,
   AreaChart,
-  CartesianGrid,
-  XAxis,
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
   LabelList,
+  Pie,
+  PieChart,
+  XAxis,
 } from "recharts";
-
-import { cn } from "@/lib/utils";
-
 import {
   type ChartConfig,
   ChartContainer,
@@ -21,7 +19,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "../ui/chart";
 
 export type ChartPieData = { nameKey: string; dataKey: number; fill?: string };
 

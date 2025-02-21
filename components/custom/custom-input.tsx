@@ -1,18 +1,16 @@
+import { cn, FileOnChangeAsURL, FormatDate, maxFileSize } from "@/lib/utils";
+import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, RefObject, SetStateAction } from "react";
-
 import type { DateRange } from "react-day-picker";
-import { cn, FileOnChangeAsURL, FormatDate, maxFileSize } from "@/lib/utils";
-import { iconSize } from "../icon";
-
 import { toast } from "sonner";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { iconSize } from "../icon";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
 import { FormDescription } from "../ui/form";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 
 export function FormFloating({
   icon,

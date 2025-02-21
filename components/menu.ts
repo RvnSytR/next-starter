@@ -109,5 +109,4 @@ function GetCurrentPage(path: string, metadata?: boolean) {
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 
-export { path, secondaryMenu };
-export { GetMenu, GetMenuByRole, GetCurrentPage };
+export { GetCurrentPage, GetMenu, GetMenuByRole, path, secondaryMenu };

@@ -198,7 +198,6 @@
     }
   }
 
-
   @keyframes sidebar-label-hidden {
     from {
       opacity: 1;
@@ -227,39 +226,39 @@
 
 @layer base {
   * {
-    @apply scroll-smooth border-border outline-ring/50;
+    @apply border-border outline-ring/50 scroll-smooth;
   }
 
   body {
-    @apply overflow-x-hidden bg-background text-foreground antialiased;
+    @apply bg-background text-foreground overflow-x-hidden antialiased;
   }
 
   h1 {
-    @apply text-4xl font-extrabold leading-tight lg:text-5xl;
+    @apply text-4xl leading-tight font-extrabold lg:text-5xl;
   }
 
   h2 {
-    @apply text-3xl font-semibold leading-tight;
+    @apply text-3xl leading-tight font-semibold;
   }
 
   h3 {
-    @apply text-2xl font-semibold leading-tight;
+    @apply text-2xl leading-tight font-semibold;
   }
 
   h4 {
-    @apply text-xl font-semibold leading-tight;
+    @apply text-xl leading-tight font-semibold;
   }
 
   h5 h6 {
-    @apply font-semibold leading-tight;
+    @apply leading-tight font-semibold;
   }
 
   p {
-    @apply whitespace-pre-wrap text-pretty font-light;
+    @apply font-light text-pretty whitespace-pre-wrap;
   }
 
   small {
-    @apply text-sm font-light leading-tight;
+    @apply text-sm leading-tight font-light;
   }
 
   blockquote {

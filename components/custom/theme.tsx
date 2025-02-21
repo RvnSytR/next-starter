@@ -1,14 +1,13 @@
 "use client";
 
-import {
-  type ThemeProviderProps,
-  ThemeProvider as NextThemesProvider,
-} from "next-themes";
-import { useTheme } from "next-themes";
-
-import { cn } from "@/lib/utils";
 import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Moon, Sun } from "lucide-react";
+import {
+  ThemeProvider as NextThemesProvider,
+  useTheme,
+  type ThemeProviderProps,
+} from "next-themes";
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;

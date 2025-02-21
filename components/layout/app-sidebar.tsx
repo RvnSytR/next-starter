@@ -1,34 +1,32 @@
-import Link from "next/link";
-
 import type { Role } from "@/server/db/schema";
-import { secondaryMenu, GetMenuByRole } from "../menu";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { CustomButton } from "../custom/custom-button";
+import { GetMenuByRole, secondaryMenu } from "../menu";
+import { Avatar, AvatarFallback } from "../ui/avatar";
+import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { Separator } from "../ui/separator";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuAction,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarProvider,
+  SidebarRail,
+} from "../ui/sidebar";
 import {
   ClientSidebarCollapsible,
   ClientSidebarMenuButton,
 } from "./client-sidebar";
-import { CustomButton } from "../custom/custom-button";
-
-import {
-  SidebarProvider,
-  Sidebar,
-  SidebarHeader,
-  SidebarContent,
-  SidebarFooter,
-  SidebarRail,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarMenuAction,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
-} from "../ui/sidebar";
-import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-import { Separator } from "../ui/separator";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { ChevronRight } from "lucide-react";
 
 type SidebarData = {
   username: string;

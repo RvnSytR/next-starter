@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import {
-  type LucideProps,
   type LucideIcon,
+  type LucideProps,
   Loader,
   LoaderCircle,
   RefreshCw,
@@ -69,4 +69,4 @@ const GoogleIcon = ({ ...props }: React.SVGAttributes<SVGSVGElement>) => {
   );
 };
 
-export { iconSize, CustomLoader };
+export { CustomLoader, iconSize };

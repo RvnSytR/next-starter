@@ -1,16 +1,10 @@
-import { Metadata } from "next";
-
-import { auth } from "@/lib/auth";
-
 import { page } from "@/components/content";
-import { GetCurrentPage } from "@/components/menu";
-
-import {
-  UpdateProfileForm,
-  UpdatePasswordForm,
-} from "@/components/modules/auth";
 import { Section, SectionNotFound } from "@/components/layout/section";
-
+import { GetCurrentPage } from "@/components/menu";
+import {
+  UpdatePasswordForm,
+  UpdateProfileForm,
+} from "@/components/modules/auth";
 import {
   Card,
   CardContent,
@@ -18,6 +12,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { auth } from "@/lib/auth";
+import { Metadata } from "next";
 
 export const metadata: Metadata = { title: GetCurrentPage("/settings", true) };
 

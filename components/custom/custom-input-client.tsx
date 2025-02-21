@@ -1,15 +1,13 @@
-import { Dispatch, ReactNode, SetStateAction } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 import { cn } from "@/lib/utils";
-
-import { Label } from "../ui/label";
-import { Badge } from "../ui/badge";
-import { Checkbox } from "../ui/checkbox";
-import { Separator } from "../ui/separator";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Filter } from "lucide-react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
+import { Badge } from "../ui/badge";
+import { Button, buttonVariants } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 
 export type CheckboxPopoverProps = {
   id: string;

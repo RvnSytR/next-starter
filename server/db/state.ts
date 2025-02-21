@@ -1,6 +1,6 @@
+import { eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "./config";
-import { user as userSchema, Role } from "./schema";
-import { eq, sql, getTableColumns } from "drizzle-orm";
+import { Role, user as userSchema } from "./schema";
 
 const { placeholder } = sql;
 

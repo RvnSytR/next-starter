@@ -1,10 +1,8 @@
-import { Metadata } from "next";
-
-import { auth } from "@/lib/auth";
-import { path, GetCurrentPage } from "@/components/menu";
-
-import { LayoutSkeleton } from "@/components/layout/section";
 import { AppSidebar } from "@/components/layout/app-sidebar";
+import { LayoutSkeleton } from "@/components/layout/section";
+import { GetCurrentPage, path } from "@/components/menu";
+import { auth } from "@/lib/auth";
+import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: GetCurrentPage(path.protected, true),

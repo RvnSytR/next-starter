@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import Credentials from "next-auth/providers/credentials";
+import { path } from "@/components/menu";
+import type { UserCredentials } from "@/server/db/schema";
 import NextAuth, { DefaultSession, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";
-
-import type { UserCredentials } from "@/server/db/schema";
+import Credentials from "next-auth/providers/credentials";
 import { state } from "../server/db/state";
-import { path } from "@/components/menu";
 
 // * Module Augmentation
 declare module "next-auth" {

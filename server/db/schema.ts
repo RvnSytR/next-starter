@@ -1,8 +1,8 @@
 import {
-  mysqlTable,
-  varchar,
   mysqlEnum,
+  mysqlTable,
   timestamp,
+  varchar,
 } from "drizzle-orm/mysql-core";
 
 //#region // * Column Attributes
@@ -27,5 +27,5 @@ type UserCredentials = Omit<typeof user.$inferSelect, "password">;
 export { role };
 export type { Role };
 
-export type { UserCredentials };
 export { user };
+export type { UserCredentials };

@@ -1,17 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
-
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { path } from "../menu";
-
+import { Collapsible } from "../ui/collapsible";
 import {
+  SidebarMenuButton,
   useSidebar,
   type SidebarMenuButtonProps,
-  SidebarMenuButton,
 } from "../ui/sidebar";
-import { Collapsible } from "../ui/collapsible";
 
 function IsActivePath(pathname: string): boolean {
   const currentPathname = usePathname();

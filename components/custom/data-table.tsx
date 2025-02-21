@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-
+import { cn } from "@/lib/utils";
 import {
   type Table as DataTableType,
   ColumnDef,
@@ -17,32 +16,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
-import { cn } from "@/lib/utils";
-
-import {
-  type CheckboxPopoverProps,
-  CheckboxPopover,
-} from "../custom/custom-input-client";
-import { FormFloating } from "../custom/custom-input";
-import { SectionTitle } from "../layout/section";
-import { CustomButton } from "../custom/custom-button";
-import { iconSize } from "../icon";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../ui/table";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Checkbox } from "../ui/checkbox";
-import { Button, buttonVariants } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   ChevronLeft,
   ChevronRight,
@@ -52,6 +25,29 @@ import {
   Search,
   Settings2,
 } from "lucide-react";
+import { useState } from "react";
+import { CustomButton } from "../custom/custom-button";
+import { FormFloating } from "../custom/custom-input";
+import {
+  type CheckboxPopoverProps,
+  CheckboxPopover,
+} from "../custom/custom-input-client";
+import { iconSize } from "../icon";
+import { SectionTitle } from "../layout/section";
+import { Button, buttonVariants } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
 
 // #region // * Types
 type TableProps<TData> = {

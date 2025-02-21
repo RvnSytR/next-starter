@@ -1,19 +1,16 @@
+import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
+import { LayoutDashboard } from "lucide-react";
 import { page } from "../content";
-import { path } from "../menu";
-import { CustomLoader, iconSize } from "../icon";
-
+import { CustomButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "../custom/dynamic-breadcrumb";
-import { CustomButton } from "../custom/custom-button";
 import { ThemeToggle } from "../custom/theme";
-
+import { CustomLoader, iconSize } from "../icon";
+import { path } from "../menu";
 import { Separator } from "../ui/separator";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-
-import { LayoutDashboard } from "lucide-react";
 
 export function Section({
   children,

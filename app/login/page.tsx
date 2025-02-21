@@ -1,10 +1,7 @@
-import Link from "next/link";
-import { Metadata } from "next";
-
-import { LoginForm } from "@/components/modules/auth";
 import { page } from "@/components/content";
-import { path, GetCurrentPage } from "@/components/menu";
-
+import { SectionTitle } from "@/components/layout/section";
+import { GetCurrentPage, path } from "@/components/menu";
+import { LoginForm } from "@/components/modules/auth";
 import {
   Card,
   CardContent,
@@ -14,7 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { SectionTitle } from "@/components/layout/section";
+import { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = { title: GetCurrentPage(path.login, true) };
 
