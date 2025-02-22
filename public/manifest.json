@@ -1,26 +1,26 @@
 {
-    "theme_color": "#18181b",
-    "background_color": "#ffffff",
-    "icons": [
-        {
-            "src": "icon512_maskable.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "maskable"
-        },
-        {
-            "src": "icon512_rounded.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any"
-        }
-    ],
-    "orientation": "any",
-    "display": "standalone",
-    "dir": "auto",
-    "lang": "en-US",
-    "start_url": "http://localhost:3000",
-    "scope": "http://localhost:3000",
-    "name": "Starter - RvnS",
-    "short_name": "Starter"
+  "theme_color": "#18181b",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "icon512_maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon512_rounded.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "orientation": "any",
+  "display": "standalone",
+  "dir": "auto",
+  "lang": "en-US",
+  "start_url": "http://localhost:3000",
+  "scope": "http://localhost:3000",
+  "name": "Starter - RvnS",
+  "short_name": "Starter"
 }

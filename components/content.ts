@@ -91,4 +91,4 @@ const label = {
   },
 };
 
-export { title, page, label, color, image };
+export { color, image, label, page, title };
