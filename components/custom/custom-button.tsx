@@ -172,7 +172,7 @@ export function CustomButton({
             : size
         }
         className={cn(
-          "shrink-0 group-data-[collapsible=icon]:justify-start",
+          "shrink-0 truncate",
           inSidebar &&
             (sidebarMenuButtonVariants({
               size:
@@ -201,7 +201,14 @@ export function CustomButton({
     const node = (
       <Fragment>
         {iconPosition === "left" && iconNode}
-        <span className={cn(hideTextOnMobile && "hidden md:flex")}>{text}</span>
+        <span
+          className={cn(
+            hideTextOnMobile && "hidden md:flex",
+            "group-data-[collapsible=icon]:hidden",
+          )}
+        >
+          {text}
+        </span>
         {iconPosition === "right" && iconNode}
       </Fragment>
     );
