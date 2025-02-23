@@ -69,6 +69,25 @@ export default function Page() {
         </CardContent>
       </Card>
 
+      {/* Badges */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Badges</CardTitle>
+          <CardDescription>Card Description</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap gap-2">
+          <Badge>Default</Badge>
+          <Badge variant="secondary">Secondary</Badge>
+          <Badge variant="outline">Outline</Badge>
+          <Badge variant="success">Success</Badge>
+          <Badge variant="outline_success">Success Outline</Badge>
+          <Badge variant="warning">Warning</Badge>
+          <Badge variant="outline_warning">Warning Outline</Badge>
+          <Badge variant="destructive">Destructive</Badge>
+          <Badge variant="outline_destructive">Destructive Outline</Badge>
+        </CardContent>
+      </Card>
+
       {/* Button Sizes */}
       <Card>
         <CardHeader>
@@ -143,18 +162,6 @@ export default function Page() {
           <Calendar mode="single" className="rounded-md border" />
         </CardContent>
       </Card>
-
-      <div className="flex flex-wrap justify-start gap-2 md:justify-center">
-        <Badge>Default</Badge>
-        <Badge variant="secondary">Secondary</Badge>
-        <Badge variant="outline">Outline</Badge>
-        <Badge variant="success">Success</Badge>
-        <Badge variant="outline_success">Success Outline</Badge>
-        <Badge variant="warning">Warning</Badge>
-        <Badge variant="outline_warning">Warning Outline</Badge>
-        <Badge variant="destructive">Destructive</Badge>
-        <Badge variant="outline_destructive">Destructive Outline</Badge>
-      </div>
     </div>
   );
 }
