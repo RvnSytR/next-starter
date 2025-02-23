@@ -140,7 +140,7 @@ export default function Page() {
           <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
-          <Calendar />
+          <Calendar mode="single" className="rounded-md border" />
         </CardContent>
       </Card>
 
