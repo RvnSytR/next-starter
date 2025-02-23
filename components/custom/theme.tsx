@@ -13,12 +13,17 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
 }
 
-export function ThemeToggle({ className, ...props }: ButtonProps) {
+export function ThemeToggle({
+  size = "iconsm",
+  variant = "ghost",
+  className,
+  ...props
+}: Omit<ButtonProps, "onClick">) {
   const { setTheme } = useTheme();
   return (
     <Button
-      size="iconsm"
-      variant="ghost"
+      size={size}
+      variant={variant}
       className={cn("flex-none", className)}
       onClick={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))}
       {...props}
