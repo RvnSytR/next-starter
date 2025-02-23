@@ -82,6 +82,7 @@ export function CustomButton({
       icon = <LogOut />;
       text = label.button.logout;
       variant = "outline_destructive";
+      className = "bg-transparent";
 
       action = () => {
         toast.promise(SignOutHandler(), {
