@@ -3,13 +3,7 @@ import { ThemeToggle } from "@/components/custom/theme";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
   FlaskConical,
@@ -53,7 +47,6 @@ export default function Page() {
       <Card>
         <CardHeader>
           <CardTitle>Typography</CardTitle>
-          <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap items-center gap-4">
           <h1>Heading 1</h1>
@@ -73,7 +66,6 @@ export default function Page() {
       <Card>
         <CardHeader>
           <CardTitle>Badges</CardTitle>
-          <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-wrap gap-2">
           <Badge>Default</Badge>
@@ -88,67 +80,63 @@ export default function Page() {
         </CardContent>
       </Card>
 
-      {/* Button Sizes */}
+      {/* Button */}
       <Card>
         <CardHeader>
-          <CardTitle>Button Sizes</CardTitle>
-          <CardDescription>Card Description</CardDescription>
+          <CardTitle>Button</CardTitle>
         </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-2">
-          <Button size="sm">Small</Button>
-          <Button>Default</Button>
-          <Button size="lg">Large</Button>
+        <CardContent className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <Button size="sm">Small</Button>
+            <Button>Default</Button>
+            <Button size="lg">Large</Button>
 
-          <Separator orientation="vertical" className="h-8" />
+            <Separator orientation="vertical" className="h-8" />
 
-          <Button size="iconsm">
-            <Settings />
-          </Button>
-          <Button size="icon">
-            <Settings />
-          </Button>
-          <Button size="iconlg">
-            <Settings />
-          </Button>
+            <Button size="iconsm">
+              <Settings />
+            </Button>
+            <Button size="icon">
+              <Settings />
+            </Button>
+            <Button size="iconlg">
+              <Settings />
+            </Button>
 
-          <Separator orientation="vertical" className="h-8" />
+            <Separator orientation="vertical" className="h-8" />
 
-          <Button size="sm">
-            <UserRoundPlus />
-            Small with Icon
-          </Button>
-          <Button>
-            <UserRoundPlus />
-            Default with Icon
-          </Button>
-          <Button size="lg">
-            <UserRoundPlus />
-            Large with Icon
-          </Button>
-        </CardContent>
-      </Card>
+            <Button size="sm">
+              <UserRoundPlus />
+              Small with Icon
+            </Button>
+            <Button>
+              <UserRoundPlus />
+              Default with Icon
+            </Button>
+            <Button size="lg">
+              <UserRoundPlus />
+              Large with Icon
+            </Button>
+          </div>
 
-      {/* Button Variant */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Button Variant</CardTitle>
-          <CardDescription>Card Description</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-2">
-          <Button>Default</Button>
-          <Button variant="secondary">Secondary</Button>
-          <Button variant="outline">Outline</Button>
-          <Button variant="ghost">Ghost</Button>
-          <Button variant="link">Link</Button>
+          <Separator />
 
-          <Separator orientation="vertical" className="h-8" />
+          <div className="flex flex-wrap items-center gap-2">
+            <Button>Default</Button>
+            <Button variant="secondary">Secondary</Button>
+            <Button variant="outline">Outline</Button>
+            <Button variant="ghost">Ghost</Button>
+            <Button variant="link">Link</Button>
 
-          <Button variant="success">Success</Button>
-          <Button variant="outline_success">SuccessOutline</Button>
-          <Button variant="warning">Warning</Button>
-          <Button variant="outline_warning">Warning Outline</Button>
-          <Button variant="destructive">Destructive</Button>
-          <Button variant="outline_destructive">Destructive Outline</Button>
+            <Separator orientation="vertical" className="h-8" />
+
+            <Button variant="success">Success</Button>
+            <Button variant="outline_success">SuccessOutline</Button>
+            <Button variant="warning">Warning</Button>
+            <Button variant="outline_warning">Warning Outline</Button>
+            <Button variant="destructive">Destructive</Button>
+            <Button variant="outline_destructive">Destructive Outline</Button>
+          </div>
         </CardContent>
       </Card>
 
@@ -156,7 +144,6 @@ export default function Page() {
       <Card>
         <CardHeader>
           <CardTitle>Calendar</CardTitle>
-          <CardDescription>Card Description</CardDescription>
         </CardHeader>
         <CardContent>
           <Calendar mode="single" className="rounded-md border" />
