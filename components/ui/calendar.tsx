@@ -169,8 +169,7 @@ function Calendar({
     <DayPicker
       timeZone={timeZone}
       showOutsideDays={showOutsideDays}
-      className={cn("w-fit p-4", className)}
-      // style={{ width: 248.8 * (columnsDisplayed ?? 1) + "px" }}
+      className={cn("w-fit p-4 select-none", className)}
       classNames={{
         months: _monthsClassName,
         month_caption: _monthCaptionClassName,
