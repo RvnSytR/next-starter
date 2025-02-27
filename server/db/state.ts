@@ -1,4 +1,4 @@
-import { eq, getTableColumns, sql } from "drizzle-orm";
+import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "./config";
 import { Role, user as userSchema } from "./schema";
 
@@ -35,7 +35,11 @@ const user = {
       .where(eq(userSchema.email, placeholder("email")))
       .prepare(),
 
-    all: db.select(param.user()).from(userSchema).prepare(),
+    all: db
+      .select(param.user())
+      .from(userSchema)
+      .orderBy(desc(userSchema.created_at))
+      .prepare(),
 
     byId: db
       .select(param.user())
