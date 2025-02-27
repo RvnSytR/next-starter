@@ -5,7 +5,6 @@ import { CustomButton } from "../custom/custom-button";
 import { GetMenuByRole, secondaryMenu } from "../menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
-import { Separator } from "../ui/separator";
 import {
   Sidebar,
   SidebarContent,
@@ -22,6 +21,7 @@ import {
   SidebarMenuSubItem,
   SidebarProvider,
   SidebarRail,
+  SidebarSeparator,
 } from "../ui/sidebar";
 import {
   ClientSidebarCollapsible,
@@ -45,7 +45,7 @@ export function AppSidebar({
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
           <Head username={username} email={email} />
-          <Separator />
+          <SidebarSeparator />
         </SidebarHeader>
 
         <SidebarContent>
@@ -67,7 +67,10 @@ export function AppSidebar({
 
 function Head({ username, email }: { username: string; email: string }) {
   return (
-    <SidebarMenuButton size="lg" className="group-data-[collapsible=icon]:my-2">
+    <SidebarMenuButton
+      size="lg"
+      className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
+    >
       <Avatar className="rounded-md">
         <AvatarFallback className="rounded-md">
           {username.slice(0, 2)}
@@ -88,6 +91,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
   return menu.map((item, index) => (
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
+
       <SidebarMenu>
         {item.body.map((bodyItem, bodyIndex) => {
           const { href, label, isDisable, subMenu } = bodyItem;
@@ -163,7 +167,7 @@ function Footer() {
   return (
     <SidebarMenu>
       <SidebarMenuItem className="flex h-12 flex-col justify-between">
-        <Separator />
+        <SidebarSeparator />
 
         <CustomButton
           customType="logout"

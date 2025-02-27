@@ -1,6 +1,4 @@
 import type { Role } from "@/server/db/schema";
-import { label, page } from "./content";
-
 import {
   type LucideIcon,
   CircleHelp,
@@ -9,6 +7,7 @@ import {
   Settings,
   UserRound,
 } from "lucide-react";
+import { label, page } from "./content";
 
 type MenuProps = { section: string; body: MenuBody[] };
 type MenuRole = Exclude<Role, "pending"> | "all";
