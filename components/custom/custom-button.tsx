@@ -6,7 +6,7 @@ import { cn, Delay } from "@/lib/utils";
 import { Check, Copy, LogOut } from "lucide-react";
 import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
 import { label } from "../content";
 import { CustomLoader } from "../icon";
@@ -41,8 +41,8 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
   CustomTypeProps & {
     iconPosition?: "left" | "right";
     loading?: boolean;
-    withLoading?: boolean;
     inSidebar?: boolean;
+    onClickLoading?: boolean;
     hideTextOnMobile?: boolean;
     customLoader?: ReactNode;
   };
@@ -54,8 +54,8 @@ export function CustomButton({
   icon,
   iconPosition = "left",
   loading = false,
-  withLoading = false,
   inSidebar = false,
+  onClickLoading = false,
   hideTextOnMobile = false,
   customLoader = (
     <CustomLoader
@@ -72,10 +72,12 @@ export function CustomButton({
 }: CustomButtonProps) {
   const router = useRouter();
   const isMobile = useIsMobile();
-  const [isLoading, setIsLoading] = useState<boolean>(loading);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   let buttonProps: typeof props = props;
   let action: () => Promise<void> | void = () => {};
+
+  useEffect(() => setIsLoading(loading), [loading]);
 
   switch (customType) {
     case "logout": {
@@ -182,7 +184,7 @@ export function CustomButton({
           className,
         )}
         onClick={async (e) => {
-          if (withLoading) setTimeout(() => setIsLoading(true), 0);
+          if (onClickLoading) setTimeout(() => setIsLoading(true), 0);
           if (onClick) onClick(e);
           await action();
         }}

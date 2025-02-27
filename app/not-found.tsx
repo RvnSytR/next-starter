@@ -21,7 +21,7 @@ export default function NotFound() {
           variant="outline"
           className="hover:border-primary h-16 gap-4 rounded-full border-4 px-8 text-xl font-bold [&_svg]:size-5"
           text="Go To Main Page"
-          withLoading
+          onClickLoading
         />
       </div>
     </main>

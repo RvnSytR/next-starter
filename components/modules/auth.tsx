@@ -130,7 +130,6 @@ export function LoginForm() {
           icon={<LogIn />}
           text={button.login}
           className="w-full"
-          withLoading
         />
       </form>
     </Form>
@@ -254,7 +253,6 @@ export function CreateUserDialog() {
                 type="submit"
                 loading={isLoading}
                 text={button.confirm}
-                withLoading
               />
             </DialogFooter>
           </form>
@@ -534,7 +532,6 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
             text={button.save}
-            withLoading
           />
 
           <Button
@@ -627,7 +624,6 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
             text={button.save}
-            withLoading
           />
 
           <Button

@@ -173,7 +173,7 @@ function Footer() {
           customType="logout"
           variant="outline_destructive"
           inSidebar
-          withLoading
+          onClickLoading
         />
       </SidebarMenuItem>
     </SidebarMenu>
