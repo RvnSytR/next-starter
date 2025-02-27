@@ -12,20 +12,20 @@ const page = {
 
   login: {
     title: `${title.primary} Admin`,
-    subtitle: `Silakan masukkan email dan password akun Admin Anda dibawah ini untuk mengakses ${title.primary} Dashboard.`,
+    subtitle: `Please enter your Admin account email and password below to access the ${title.primary} Dashboard.`,
   },
 
   settings: {
     profile: {
-      title: "Ubah Profile",
+      title: "Change Profile",
       subtitle:
-        "Setelah melakukan perubahan pada profil, sistem akan meminta Anda untuk login kembali. Pastikan informasi sudah benar sebelum melanjutkan.",
+        "After making changes to your profile, the system will ask you to log in again. Make sure the information is correct before continuing.",
     },
 
     password: {
-      title: "Ubah Password",
+      title: "Change Password",
       subtitle:
-        "Setelah melakukan perubahan password, sistem akan meminta Anda untuk login kembali. Pastikan informasi sudah benar sebelum melanjutkan.",
+        "After changing your password, the system will ask you to log in again. Make sure the information is correct before continuing.",
     },
   },
 };
@@ -38,56 +38,56 @@ const label = {
   },
 
   toast: {
-    loading: { default: "Mohon Tunggu Sebentar..." },
+    loading: { default: "Please Wait a Moment..." },
 
     success: {
-      login: "Login Berhasil!",
-      logout: "Logout Berhasil!",
+      login: "Sign In Successfully!",
+      logout: "Sign Out Successfully!",
 
       user: {
-        create: "Pengguna berhasil ditambah!",
+        create: "User successfully added!",
 
         approve: (name: string, role: string) =>
-          `${name} berhasil disetujui sebagai ${role.toWellFormed()}.`,
+          `${name} successfully approved as ${role.toWellFormed()}.`,
 
         update: {
-          profile: "Profile Berhasil Diperbarui! Mohon Login Kembali",
-          password: "Password Berhasil Diperbarui! Mohon Login Kembali",
+          profile: "Profile Updated Successfully! Please Sign In Again",
+          password: "Password Updated Successfully! Please Sign In Again",
         },
 
-        delete: (name: string) => `${name} berhasil dihapus!`,
+        delete: (name: string) => `${name} successfully deleted!`,
       },
     },
 
     error: {
       file: {
-        required: (name: string) => `Mohon upload ${name}!`,
-        upload: "Terjadi kesalahan saat mengupload file!",
+        required: (name: string) => `Please upload ${name}!`,
+        upload: "An error occurred while uploading the file!",
       },
 
       login: {
-        notFound: "Akun tidak terdaftar!",
-        emailOrPassword: "Email atau Password Salah!",
+        notFound: "Account is not registered!",
+        emailOrPassword: "Wrong Email or Password!",
         pending:
-          "Akun Anda masih dalam antrian persetujuan. Harap tunggu konfirmasi dari admin.",
+          "Your account is still in the approval queue. Please wait for confirmation from the admin.",
       },
 
       user: {
-        email: "Email sudah terdaftar!",
-        delete: "Tidak dapat menghapus Pengguna yang sedang digunakan",
+        email: "Email is registered!",
+        delete: "Cannot delete User in use!",
       },
     },
   },
 
   button: {
-    login: `Masuk ke ${title.primary} Admin`,
-    logout: "Keluar",
+    login: `Sign In to ${title.primary} Admin`,
+    logout: "Sign Out",
     refresh: "Refresh",
 
-    save: "Simpan",
-    confirm: "Konfirmasi",
+    save: "Save",
+    confirm: "Confirm",
     reset: "Reset",
-    back: "Kembali",
+    back: "Back",
   },
 };
 

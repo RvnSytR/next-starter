@@ -24,12 +24,12 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "ID pengguna",
+    accessorKey: "user ID",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        ID Pengguna
+        User ID
       </HeaderButton>
     ),
     cell: ({ row }) => (
@@ -89,12 +89,12 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
   {
-    accessorKey: "terakhir login",
+    accessorKey: "last sign in at",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Terakhir Login
+        Last Sign In At
       </HeaderButton>
     ),
     cell: ({ row }) => {
@@ -115,12 +115,12 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     },
   },
   {
-    accessorKey: "registrasi pada",
+    accessorKey: "registration at",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Registrasi Pada
+        Registration At
       </HeaderButton>
     ),
     cell: ({ row }) => (

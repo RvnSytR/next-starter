@@ -40,7 +40,7 @@ const menu: MenuProps[] = [
       },
       {
         href: path.account,
-        label: "Pengguna",
+        label: "User Management",
         role: "all",
         icon: UserRound,
       },
@@ -51,12 +51,12 @@ const menu: MenuProps[] = [
     body: [
       {
         href: `${path.protected}/settings`,
-        label: "Pengaturan",
+        label: "Settings",
         role: "all",
         icon: Settings,
         subMenu: [
-          { subLabel: "Ubah Profile", elementId: "profile" },
-          { subLabel: "Ubah Password", elementId: "password" },
+          { subLabel: "Change Profile", elementId: "profile" },
+          { subLabel: "Change Password", elementId: "password" },
         ],
       },
     ],
@@ -64,7 +64,7 @@ const menu: MenuProps[] = [
 ];
 
 const secondaryMenu: MenuBody[] = [
-  { href: "/", label: "Beranda", role: "all", icon: ExternalLink },
+  { href: "/", label: "Homepage", role: "all", icon: ExternalLink },
   { href: "/somewhere", label: "Help", role: "all", icon: CircleHelp },
 ];
 

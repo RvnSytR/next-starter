@@ -14,7 +14,14 @@ import {
 import type { Role, UserCredentials } from "@/server/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ColumnDef } from "@tanstack/react-table";
-import { CircleCheckBig, LogIn, Plus, RotateCw, Trash } from "lucide-react";
+import {
+  CircleCheckBig,
+  LogIn,
+  Plus,
+  RotateCw,
+  Save,
+  Trash,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -171,7 +178,7 @@ export function CreateUserDialog() {
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
           <Plus />
-          Tambah Pengguna
+          Create New User
         </Button>
       </DialogTrigger>
 
@@ -531,6 +538,7 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
             type="submit"
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
+            icon={<Save />}
             text={button.save}
           />
 
@@ -623,6 +631,7 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             type="submit"
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
+            icon={<Save />}
             text={button.save}
           />
 
@@ -686,8 +695,9 @@ export function AccountDataTable({
       data={data}
       columns={columns}
       facetedFilter={facetedFilter}
-      title="Data Pengguna"
-      placeholder="Cari Pengguna"
+      title="Users Overview"
+      desc="A comprehensive overview of all registered users, providing their essential details and management actions."
+      placeholder="Search User"
       withRefresh
     >
       <CreateUserDialog />

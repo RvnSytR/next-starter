@@ -35,7 +35,7 @@ import {
 import { iconSize } from "../icon";
 import { SectionTitle } from "../layout/section";
 import { Button, buttonVariants } from "../ui/button";
-import { Card, CardContent, CardHeader } from "../ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -230,12 +230,14 @@ export function DataTable<TData, TValue>({
   data,
   columns,
   title = "Data Table",
+  desc = "Data Table Description",
   caption,
   label,
   children,
   ...props
 }: DataTableProps<TData, TValue> & {
   title?: string;
+  desc?: string;
   caption?: string;
   label?: string[];
   placeholder?: string;
@@ -279,8 +281,11 @@ export function DataTable<TData, TValue>({
 
   return (
     <Card>
-      <CardHeader className="flex-row items-center justify-between">
-        <SectionTitle text={title} />
+      <CardHeader className="gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <div>
+          <SectionTitle text={title} />
+          <CardDescription>{desc}</CardDescription>
+        </div>
 
         <ToolBox table={table} {...props}>
           {children}
