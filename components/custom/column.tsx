@@ -65,6 +65,30 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     ),
   },
   {
+    accessorKey: "role",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Role
+      </HeaderButton>
+    ),
+    cell: ({ row }) => (
+      <div className="text-center capitalize">
+        <Badge
+          variant={
+            row.original.role !== "pending"
+              ? "outline_success"
+              : "outline_warning"
+          }
+        >
+          {row.original.role}
+        </Badge>
+      </div>
+    ),
+    filterFn: (row, id, value) => value.includes(row.getValue(id)),
+  },
+  {
     accessorKey: "terakhir login",
     header: ({ column }) => (
       <HeaderButton
@@ -106,29 +130,5 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     ),
     sortingFn: (a, b) =>
       a.original.created_at.getTime() - b.original.created_at.getTime(),
-  },
-  {
-    accessorKey: "role",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Role
-      </HeaderButton>
-    ),
-    cell: ({ row }) => (
-      <div className="text-center capitalize">
-        <Badge
-          variant={
-            row.original.role !== "pending"
-              ? "outline_success"
-              : "outline_warning"
-          }
-        >
-          {row.original.role}
-        </Badge>
-      </div>
-    ),
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
 ];
