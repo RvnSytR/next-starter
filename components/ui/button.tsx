@@ -17,7 +17,7 @@ const buttonVariants = cva(
         link: "relative no-underline after:bg-primary after:absolute after:bottom-1 after:h-[1px] after:w-2/4 after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100",
 
         success:
-          "bg-success text-success-foreground shadow-xs hover:bg-success/90  focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
+          "bg-success text-success-foreground shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
         outline_success:
           "border-success text-success border shadow-xs hover:bg-success hover:text-success-foreground focus-visible:border-success focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
         ghost_success:

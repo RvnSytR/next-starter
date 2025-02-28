@@ -10,6 +10,7 @@ import { revalidatePath } from "next/cache";
 
 export type Action = Promise<{ status: boolean; message?: string }>;
 const GetStatus = (s: boolean, m?: string) => ({ status: s, message: m });
+
 const { login: loginError, user: userError } = label.toast.error;
 
 // #region // * User Action

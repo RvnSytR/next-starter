@@ -20,8 +20,6 @@ export const metadata: Metadata = { title: GetCurrentPage("/settings", true) };
 export default async function Page() {
   const session = await auth();
   if (!session) return <SectionNotFound />;
-
-  const { id_user } = session.user;
   const { profile, password } = page.settings;
 
   return (
@@ -44,7 +42,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent>
-          <UpdatePasswordForm id={id_user} />
+          <UpdatePasswordForm id={session.user.id_user} />
         </CardContent>
       </Card>
     </Section>

@@ -17,17 +17,16 @@ import Link from "next/link";
 export const metadata: Metadata = { title: GetCurrentPage(path.login, true) };
 
 export default function Page() {
-  const { title, subtitle } = page.login;
   return (
     <main className="container flex min-h-dvh items-center justify-center">
       <Card className="max-w-md">
         <CardHeader className="text-center">
           <CardTitle>
             <Link href="/" prefetch>
-              <SectionTitle text={title} />
+              <SectionTitle text={page.login.title} />
             </Link>
           </CardTitle>
-          <CardDescription>{subtitle}</CardDescription>
+          <CardDescription>{page.login.subtitle}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">

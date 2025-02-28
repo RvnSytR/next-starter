@@ -76,6 +76,7 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
+const { user: dialogUser } = dialog;
 const { success } = label.toast;
 const { button } = label;
 
@@ -191,8 +192,8 @@ export function CreateUserDialog() {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialog.user.create.title}</DialogTitle>
-          <DialogDescription>{dialog.user.create.desc}</DialogDescription>
+          <DialogTitle>{dialogUser.create.title}</DialogTitle>
+          <DialogDescription>{dialogUser.create.desc}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -310,8 +311,8 @@ function ApproveUserDialog({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialog.user.approve.title(username)}</DialogTitle>
-          <DialogDescription>{dialog.user.approve.desc}</DialogDescription>
+          <DialogTitle>{dialogUser.approve.title(username)}</DialogTitle>
+          <DialogDescription>{dialogUser.approve.desc}</DialogDescription>
         </DialogHeader>
 
         <div className="flex w-full flex-col gap-y-4">
@@ -406,10 +407,10 @@ function DeleteUserDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {dialog.user.delete.title(username)}
+            {dialogUser.delete.title(username)}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {dialog.user.delete.desc}
+            {dialogUser.delete.desc}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
