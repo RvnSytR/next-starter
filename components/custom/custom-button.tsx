@@ -76,6 +76,7 @@ export function CustomButton({
 
   let buttonProps: typeof props = props;
   let action: () => Promise<void> | void = () => {};
+  let withLink = false;
 
   useEffect(() => setIsLoading(loading), [loading]);
 
@@ -84,7 +85,6 @@ export function CustomButton({
       icon = <LogOut />;
       text = label.button.logout;
       variant = "outline_destructive";
-      className = "bg-transparent";
 
       action = () => {
         toast.promise(SignOutHandler(), {
@@ -153,6 +153,7 @@ export function CustomButton({
     }
 
     case "link": {
+      withLink = true;
       asChild = true;
       break;
     }
@@ -220,7 +221,7 @@ export function CustomButton({
 
   return (
     <ButtonNode>
-      {customType === "link" ? (
+      {withLink ? (
         <Link {...(props as LinkProps)}>
           <ChildrenNode />
         </Link>
