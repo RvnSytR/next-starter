@@ -249,12 +249,13 @@
     @apply text-xl leading-tight font-semibold;
   }
 
-  h5 h6 {
+  h5,
+  h6 {
     @apply leading-tight font-semibold;
   }
 
   p {
-    @apply font-light text-pretty whitespace-pre-wrap;
+    @apply font-normal text-pretty whitespace-pre-wrap;
   }
 
   small {
