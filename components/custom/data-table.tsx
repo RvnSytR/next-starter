@@ -281,8 +281,8 @@ export function DataTable<TData, TValue>({
 
   return (
     <Card>
-      <CardHeader className="gap-2 lg:flex-row lg:items-center lg:justify-between">
-        <div>
+      <CardHeader className="gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-1">
           <SectionTitle text={title} />
           <CardDescription>{desc}</CardDescription>
         </div>

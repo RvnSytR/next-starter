@@ -30,6 +30,27 @@ const page = {
   },
 };
 
+const dialog = {
+  user: {
+    create: {
+      title: "Create New User",
+      desc: "Create new user by entering their details. Make sure all required fields are filled correctly.",
+    },
+
+    approve: {
+      title: (username: string) =>
+        `Are you sure you want to approve ${username}'s registration?`,
+      desc: "Approving this registration is a permanent action and cannot be undone. Once approved, this user will gain dashboard access. Ensure you have reviewed all necessary details before proceeding.",
+    },
+
+    delete: {
+      title: (username: string) =>
+        `Are you sure, you want to delete ${username}?`,
+      desc: "Deleting this account is a permanent action and cannot be undone. Ensure you have reviewed all necessary details before proceeding.",
+    },
+  },
+};
+
 const label = {
   error: {
     protectedPath: "Protected path invalid!",
@@ -88,4 +109,4 @@ const label = {
   },
 };
 
-export { color, image, keyword, label, page, title };
+export { color, dialog, image, keyword, label, page, title };

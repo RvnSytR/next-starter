@@ -28,7 +28,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { label } from "../content";
+import { dialog, label } from "../content";
 import { userColumn } from "../custom/column";
 import { CustomButton } from "../custom/custom-button";
 import { type FacetedFilter, DataTable } from "../custom/data-table";
@@ -191,10 +191,8 @@ export function CreateUserDialog() {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New User</DialogTitle>
-          <DialogDescription>
-            Enter the information required to add a new user.
-          </DialogDescription>
+          <DialogTitle>{dialog.user.create.title}</DialogTitle>
+          <DialogDescription>{dialog.user.create.desc}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -312,12 +310,8 @@ function ApproveUserDialog({
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Approve {username} Registration?</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to approve {username} registration? Once
-            approved, this user will have login access and this action cannot be
-            undone. Please confirm your decision before proceeding.
-          </DialogDescription>
+          <DialogTitle>{dialog.user.approve.title(username)}</DialogTitle>
+          <DialogDescription>{dialog.user.approve.desc}</DialogDescription>
         </DialogHeader>
 
         <div className="flex w-full flex-col gap-y-4">
@@ -411,10 +405,11 @@ function DeleteUserDialog({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {username} ?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {dialog.user.delete.title(username)}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            This action will permanently delete this account and cannot be
-            restored. Please confirm your decision before proceeding.
+            {dialog.user.delete.desc}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
