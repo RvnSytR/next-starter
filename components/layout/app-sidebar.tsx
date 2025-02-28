@@ -1,8 +1,8 @@
+import { GetMenuByRole, secondaryMenu } from "@/lib/menu";
 import type { Role } from "@/server/db/schema";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { CustomButton } from "../custom/custom-button";
-import { GetMenuByRole, secondaryMenu } from "../menu";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {

@@ -1,9 +1,9 @@
 "use client";
 
+import { path } from "@/lib/menu";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { path } from "../menu";
 import { Collapsible } from "../ui/collapsible";
 import {
   SidebarMenuButton,

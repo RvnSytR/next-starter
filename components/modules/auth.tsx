@@ -2,6 +2,8 @@
 
 import { SignOutHandler } from "@/app/login/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { dialog, label } from "@/lib/content";
+import { path } from "@/lib/menu";
 import { zodUserSchema } from "@/lib/zod";
 import {
   ApproveUser,
@@ -28,12 +30,10 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { dialog, label } from "../content";
 import { userColumn } from "../custom/column";
 import { CustomButton } from "../custom/custom-button";
 import { type FacetedFilter, DataTable } from "../custom/data-table";
 import { ToastAction } from "../custom/toast-action";
-import { path } from "../menu";
 import {
   AlertDialog,
   AlertDialogAction,

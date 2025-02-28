@@ -1,7 +1,7 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { LayoutSkeleton } from "@/components/layout/section";
-import { GetCurrentPage, path } from "@/components/menu";
 import { auth } from "@/lib/auth";
+import { GetCurrentPage, path } from "@/lib/menu";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

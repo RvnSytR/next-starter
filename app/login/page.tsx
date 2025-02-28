@@ -1,6 +1,4 @@
-import { page } from "@/components/content";
 import { SectionTitle } from "@/components/layout/section";
-import { GetCurrentPage, path } from "@/components/menu";
 import { LoginForm } from "@/components/modules/auth";
 import {
   Card,
@@ -11,6 +9,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { page } from "@/lib/content";
+import { GetCurrentPage, path } from "@/lib/menu";
 import { Metadata } from "next";
 import Link from "next/link";
 

@@ -1,8 +1,8 @@
 "use server";
 
 import { SignInHandler } from "@/app/login/sign";
-import { label } from "@/components/content";
-import { path } from "@/components/menu";
+import { label } from "@/lib/content";
+import { path } from "@/lib/menu";
 import { Role, user } from "@/server/db/schema";
 import { state } from "@/server/db/state";
 import bcrypt from "bcrypt";

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-object-type */
-import { path } from "@/components/menu";
+import { path } from "@/lib/menu";
 import type { UserCredentials } from "@/server/db/schema";
 import NextAuth, { DefaultSession, Session, User } from "next-auth";
 import { JWT } from "next-auth/jwt";

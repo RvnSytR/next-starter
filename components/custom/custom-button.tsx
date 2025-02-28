@@ -2,15 +2,15 @@
 
 import { SignOutHandler } from "@/app/login/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { label } from "@/lib/content";
+import { path } from "@/lib/menu";
 import { cn, Delay } from "@/lib/utils";
 import { Check, Copy, LogOut } from "lucide-react";
 import Link, { type LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { toast } from "sonner";
-import { label } from "../content";
 import { CustomLoader } from "../icon";
-import { path } from "../menu";
 import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 

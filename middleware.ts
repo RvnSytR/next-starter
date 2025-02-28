@@ -1,7 +1,7 @@
+import { GetMenu, path } from "@/lib/menu";
 import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
-import { GetMenu, path } from "./components/menu";
 
 export async function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;

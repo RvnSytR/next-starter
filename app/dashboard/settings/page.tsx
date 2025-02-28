@@ -1,6 +1,4 @@
-import { page } from "@/components/content";
 import { Section, SectionNotFound } from "@/components/layout/section";
-import { GetCurrentPage } from "@/components/menu";
 import {
   UpdatePasswordForm,
   UpdateProfileForm,
@@ -13,6 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
+import { page } from "@/lib/content";
+import { GetCurrentPage } from "@/lib/menu";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: GetCurrentPage("/settings", true) };

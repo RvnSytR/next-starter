@@ -1,6 +1,6 @@
+import { label } from "@/lib/content";
 import type { Action } from "@/server/action";
 import { toast } from "sonner";
-import { label } from "../content";
 
 export function ToastAction(
   action: Action,

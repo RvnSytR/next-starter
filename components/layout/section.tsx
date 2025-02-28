@@ -1,7 +1,8 @@
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { page } from "@/lib/content";
+import { path } from "@/lib/menu";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
-import { page } from "../content";
 import { CustomButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
@@ -9,7 +10,6 @@ import {
 } from "../custom/dynamic-breadcrumb";
 import { ThemeToggle } from "../custom/theme";
 import { CustomLoader, iconSize } from "../icon";
-import { path } from "../menu";
 import { Separator } from "../ui/separator";
 
 export function Section({
