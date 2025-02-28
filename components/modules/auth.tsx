@@ -114,7 +114,7 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email *</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="Masukkan Email" {...field} />
+                <Input type="text" placeholder="Enter your Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -130,7 +130,7 @@ export function LoginForm() {
               <FormControl>
                 <Input
                   type="password"
-                  placeholder="Masukkan Password"
+                  placeholder="Enter your Password"
                   {...field}
                 />
               </FormControl>
@@ -207,7 +207,7 @@ export function CreateUserDialog() {
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder="Masukkan Username"
+                      placeholder="Enter Username"
                       {...field}
                     />
                   </FormControl>
@@ -223,11 +223,7 @@ export function CreateUserDialog() {
                 <FormItem>
                   <FormLabel>Email *</FormLabel>
                   <FormControl>
-                    <Input
-                      type="email"
-                      placeholder="Masukkan Email"
-                      {...field}
-                    />
+                    <Input type="email" placeholder="Enter Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -243,7 +239,7 @@ export function CreateUserDialog() {
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Masukkan Password"
+                      placeholder="Enter Password"
                       {...field}
                     />
                   </FormControl>
@@ -475,7 +471,7 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="Email" {...field} disabled />
+                  <Input type="text" {...field} disabled />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -491,7 +487,6 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Status"
                     className="capitalize"
                     disabled
                     {...field}
@@ -509,7 +504,11 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
               <FormItem>
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input type="text" placeholder="Username" {...field} />
+                  <Input
+                    type="text"
+                    placeholder="Enter your Username"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -584,11 +583,11 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             name="password"
             render={({ field }) => (
               <FormItem className="basis-1/2">
-                <FormLabel>Password Baru</FormLabel>
+                <FormLabel>New Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Masukkan Password Baru"
+                    placeholder="Enter your new password"
                     {...field}
                   />
                 </FormControl>
@@ -598,12 +597,12 @@ export function UpdatePasswordForm({ id }: { id: string }) {
           />
 
           <div className="basis-1/2 space-y-1">
-            <Label htmlFor="confirmPass">Konfirmasi Password Baru</Label>
+            <Label htmlFor="confirmPass">Confirm Password</Label>
             <Input
+              type="password"
               id="confirmPass"
               name="confirmPass"
-              type="password"
-              placeholder="Konfirmasi Password Baru"
+              placeholder="Confirm your new password"
               value={confirmPass}
               onChange={(e) => setConfirmPass(e.target.value)}
             />

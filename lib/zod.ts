@@ -5,20 +5,20 @@ import { z } from "zod";
 export const zodUserSchema = createSelectSchema(user, {
   email: (sc) =>
     sc
-      .email("Mohon masukkan Email yang valid")
+      .email("Please enter a valid email address.")
       .trim()
-      .min(1, "Email tidak boleh kosong")
-      .max(255, "Email terlalu panjang"),
+      .min(1, "Email cannot be empty.")
+      .max(255, "Email is too long."),
   password: (sc) =>
     sc
       .trim()
-      .min(1, "Password tidak boleh kosong")
-      .min(8, "Password minimal 8 Karakter")
-      .max(255, "Password terlalu panjang"),
+      .min(1, "Password cannot be empty.")
+      .min(8, "Password must be at least 8 characters long.")
+      .max(255, "Password is too long."),
   username: (sc) =>
     sc
       .trim()
-      .min(1, "Username tidak boleh kosong")
-      .max(255, "Username terlalu panjang"),
-  role: z.enum(role, { required_error: "Harap pilih Status Pengguna" }),
+      .min(1, "Username cannot be empty.")
+      .max(255, "Username is too long."),
+  role: z.enum(role, { required_error: "Please select a user role." }),
 });
