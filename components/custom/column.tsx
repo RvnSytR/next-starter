@@ -18,9 +18,9 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
 
 export const userColumn: ColumnDef<UserCredentials>[] = [
   {
-    accessorKey: "nomor",
-    header: () => <div className="text-center">No</div>,
-    cell: ({ row }) => <div className="text-center">{row.index + 1}</div>,
+    accessorKey: "number",
+    header: "No",
+    cell: ({ row }) => row.index + 1,
     enableHiding: false,
   },
   {
@@ -32,11 +32,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         User ID
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <div className="text-center normal-case">
-        {row.original.id_user.slice(0, 5) + "..."}
-      </div>
-    ),
+    cell: ({ row }) => row.original.id_user.slice(0, 5) + "...",
   },
   {
     accessorKey: "email",
@@ -47,9 +43,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Email
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <div className="text-center normal-case">{row.original.email}</div>
-    ),
+    cell: ({ row }) => row.original.email,
   },
   {
     accessorKey: "username",
@@ -60,9 +54,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Username
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <div className="text-center normal-case">{row.original.username}</div>
-    ),
+    cell: ({ row }) => row.original.username,
   },
   {
     accessorKey: "role",
@@ -74,17 +66,16 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <div className="text-center capitalize">
-        <Badge
-          variant={
-            row.original.role !== "pending"
-              ? "outline_success"
-              : "outline_warning"
-          }
-        >
-          {row.original.role}
-        </Badge>
-      </div>
+      <Badge
+        variant={
+          row.original.role !== "pending"
+            ? "outline_success"
+            : "outline_warning"
+        }
+        className="capitalize"
+      >
+        {row.original.role}
+      </Badge>
     ),
     filterFn: (row, id, value) => value.includes(row.getValue(id)),
   },
@@ -97,14 +88,10 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Last Sign In At
       </HeaderButton>
     ),
-    cell: ({ row }) => {
-      const { last_signin_at } = row.original;
-      return (
-        <div className="text-center">
-          {last_signin_at ? format(last_signin_at, "PPPp") : null}
-        </div>
-      );
-    },
+    cell: ({ row }) =>
+      row.original.last_signin_at
+        ? format(row.original.last_signin_at, "PPPp")
+        : null,
     sortingFn: (a, b) => {
       const { last_signin_at: aLog } = a.original;
       const { last_signin_at: bLog } = b.original;
@@ -123,11 +110,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Registration At
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <div className="text-center">
-        {format(row.original.created_at, "PPPp")}
-      </div>
-    ),
+    cell: ({ row }) => format(row.original.created_at, "PPPp"),
     sortingFn: (a, b) =>
       a.original.created_at.getTime() - b.original.created_at.getTime(),
   },
