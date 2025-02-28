@@ -72,10 +72,7 @@ const label = {
           "Your account is still in the approval queue. Please wait for confirmation from the admin.",
       },
 
-      user: {
-        email: "Email is registered!",
-        delete: "Cannot delete User in use!",
-      },
+      user: { email: "Email is registered!" },
     },
   },
 

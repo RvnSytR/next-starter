@@ -16,6 +16,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import type { ColumnDef } from "@tanstack/react-table";
 import {
   CircleCheckBig,
+  EllipsisVertical,
   LogIn,
   Plus,
   RotateCw,
@@ -57,6 +58,12 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
+import {
   Form,
   FormControl,
   FormField,
@@ -69,7 +76,7 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
-const { success, error } = label.toast;
+const { success } = label.toast;
 const { button } = label;
 
 export function LoginForm() {
@@ -272,11 +279,9 @@ export function CreateUserDialog() {
 function ApproveUserDialog({
   id_user,
   username,
-  currentIdUser,
 }: {
   id_user: string;
   username: string;
-  currentIdUser: string;
 }) {
   type UpdateRoles = Exclude<Role, "pending">;
   const [isDisable, setIsDisable] = useState<boolean>(false);
@@ -294,139 +299,125 @@ function ApproveUserDialog({
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 lg:flex-row">
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button size="iconsm" variant="outline_success" disabled={isDisable}>
-            <CircleCheckBig />
-          </Button>
-        </DialogTrigger>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost_success"
+          className="grow justify-start"
+          disabled={isDisable}
+        >
+          <CircleCheckBig /> Approve
+        </Button>
+      </DialogTrigger>
 
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Setujui Registrasi {username}?</DialogTitle>
-            <DialogDescription>
-              Apakah Anda yakin ingin menyetujui registrasi {username}? Setelah
-              disetujui, akun ini akan memiliki akses masuk dan tindakan ini
-              tidak dapat dibatalkan. Harap pastikan keputusan Anda sebelum
-              melanjutkan.
-            </DialogDescription>
-          </DialogHeader>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Approve {username} Registration?</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to approve {username} registration? Once
+            approved, this user will have login access and this action cannot be
+            undone. Please confirm your decision before proceeding.
+          </DialogDescription>
+        </DialogHeader>
 
-          <div className="flex w-full flex-col gap-y-2">
-            <Label>Setujui Sebagai :</Label>
+        <div className="flex w-full flex-col gap-y-2">
+          <Label>Approve As :</Label>
 
-            <RadioGroup
-              defaultValue="user"
-              className="flex gap-x-2"
-              onValueChange={(value) => setRole(value as UpdateRoles)}
+          <RadioGroup
+            defaultValue="user"
+            className="flex gap-x-2"
+            onValueChange={(value) => setRole(value as UpdateRoles)}
+          >
+            <Label
+              htmlFor="user"
+              data-role={role}
+              className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
             >
-              <Label
-                htmlFor="user"
-                data-role={role}
-                className="group data-[role=user]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
-              >
-                <RadioGroupItem
-                  id="user"
-                  value="user"
-                  className="border-foreground/50 group-data-[role=user]:border-foreground"
-                />
-                <p className="text-foreground/50 group-data-[role=user]:text-foreground font-semibold">
-                  User
-                </p>
-              </Label>
+              <RadioGroupItem
+                id="user"
+                value="user"
+                className="border-foreground/50 group-data-[role=user]:border-foreground"
+              />
+              <p className="text-foreground/50 group-data-[role=user]:text-foreground font-semibold">
+                User
+              </p>
+            </Label>
 
-              <Label
-                htmlFor="admin"
-                data-role={role}
-                className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
-              >
-                <RadioGroupItem
-                  id="admin"
-                  value="admin"
-                  className="border-foreground/50 group-data-[role=admin]:border-foreground"
-                />
-                <p className="text-foreground/50 group-data-[role=admin]:text-foreground font-semibold">
-                  Admin
-                </p>
-              </Label>
-            </RadioGroup>
-          </div>
+            <Label
+              htmlFor="admin"
+              data-role={role}
+              className="group data-[role=admin]:border-foreground flex basis-1/2 items-center justify-center gap-x-2 rounded-md border p-2 hover:cursor-pointer"
+            >
+              <RadioGroupItem
+                id="admin"
+                value="admin"
+                className="border-foreground/50 group-data-[role=admin]:border-foreground"
+              />
+              <p className="text-foreground/50 group-data-[role=admin]:text-foreground font-semibold">
+                Admin
+              </p>
+            </Label>
+          </RadioGroup>
+        </div>
 
-          <Separator />
+        <Separator />
 
-          <DialogFooter className="gap-y-2">
-            <DialogClose asChild>
-              <Button type="button" variant="outline">
-                {button.back}
-              </Button>
-            </DialogClose>
+        <DialogFooter className="gap-y-2">
+          <DialogClose asChild>
+            <Button type="button" variant="outline">
+              {button.back}
+            </Button>
+          </DialogClose>
 
-            <DialogClose asChild>
-              <Button onClick={handler}>{button.confirm}</Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      <DeleteUserDialog
-        id_user={id_user}
-        username={username}
-        currentIdUser={currentIdUser}
-      />
-    </div>
+          <DialogClose asChild>
+            <Button onClick={handler}>{button.confirm}</Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 function DeleteUserDialog({
   username,
   id_user,
-  currentIdUser,
 }: {
   username: string;
   id_user: string;
-  currentIdUser: string;
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const isCurrentUser = id_user === currentIdUser;
-  if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
-
   const handler = async () => {
     setIsLoading(true);
-
-    if (isCurrentUser) toast.info(error.user.delete);
-    else {
-      ToastAction(DeleteUser(id_user), {
-        success: () => {
-          setIsLoading(false);
-          return success.user.delete(username);
-        },
-        error: () => setIsLoading(false),
-      });
-    }
+    ToastAction(DeleteUser(id_user), {
+      success: () => {
+        setIsLoading(false);
+        return success.user.delete(username);
+      },
+      error: () => setIsLoading(false),
+    });
   };
 
   return (
     <AlertDialog>
-      <div className="flex justify-center">
-        <AlertDialogTrigger asChild>
-          <Button
-            size="iconsm"
-            variant="outline_destructive"
-            disabled={isLoading}
-          >
-            <Trash />
-          </Button>
-        </AlertDialogTrigger>
-      </div>
+      <AlertDialogTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost_destructive"
+          className="grow justify-start"
+          disabled={isLoading}
+        >
+          <Trash /> Delete
+        </Button>
+      </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Hapus {username} ?</AlertDialogTitle>
+          <AlertDialogTitle>Delete {username} ?</AlertDialogTitle>
           <AlertDialogDescription>
-            Tindakan ini akan menghapus akun secara permanen dan tidak dapat
-            dipulihkan. Pastikan Anda benar-benar yakin sebelum melanjutkan.
+            This action will permanently delete your account and cannot be
+            restored. Please make sure you are sure before proceeding.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -666,25 +657,32 @@ export function AccountDataTable({
     ...userColumn,
     {
       accessorKey: "action",
-      header: () => <div className="text-center">Action</div>,
+      header: "Action",
       cell: ({ row }) => {
         const { id_user, username, role } = row.original;
+
+        const isCurrentUser = id_user === currentIdUser;
+        if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
+
         return (
-          <div className="flex justify-center">
-            {role === "pending" ? (
-              <ApproveUserDialog
-                id_user={id_user}
-                username={username}
-                currentIdUser={currentIdUser}
-              />
-            ) : (
-              <DeleteUserDialog
-                id_user={id_user}
-                username={username}
-                currentIdUser={currentIdUser}
-              />
-            )}
-          </div>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button type="button" size="iconsm" variant="ghost">
+                <EllipsisVertical />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              {role === "pending" && (
+                <DropdownMenuItem asChild>
+                  <ApproveUserDialog id_user={id_user} username={username} />
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuItem asChild>
+                <DeleteUserDialog id_user={id_user} username={username} />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         );
       },
     },
