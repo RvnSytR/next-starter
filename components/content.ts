@@ -1,61 +1,61 @@
 const currentYear = new Date().getFullYear();
 
-const color = { primary: "#81F5FF" };
-
-const image = {};
-
 const title = { primary: "Project Title", description: "Project Description" };
+const keyword = ["web application", "next starter"];
+
+const color = { primary: "#81F5FF" };
+const image = {};
 
 const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
   copyright: `Copyright © ${currentYear}. Project Maker. All rights reserved.`,
 
   login: {
-    title: `${title.primary} Admin`,
-    subtitle: `Please enter your Admin account email and password below to access the ${title.primary} Dashboard.`,
+    title: `${title.primary}`,
+    subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
   },
 
   settings: {
     profile: {
       title: "Change Profile",
       subtitle:
-        "After making changes to your profile, the system will ask you to log in again. Make sure the information is correct before continuing.",
+        "To apply profile changes, you'll need to sign in again. Please review your updates carefully before proceeding.",
     },
 
     password: {
       title: "Change Password",
       subtitle:
-        "After changing your password, the system will ask you to log in again. Make sure the information is correct before continuing.",
+        "For security reasons, you'll be required to log in again after updating your password. Ensure your new password is accurate before confirming.",
     },
   },
 };
 
 const label = {
   error: {
-    protectedPath: "Protected Path Invalid!",
-    breadcrumb: "Menu Path Invalid!",
-    parsedNumber: "Parsed Number Invalid!",
+    protectedPath: "Protected path invalid!",
+    breadcrumb: "Menu path invalid!",
+    parsedNumber: "Parsed number invalid!",
   },
 
   toast: {
-    loading: { default: "Please Wait a Moment..." },
+    loading: { default: "Please wait a moment..." },
 
     success: {
-      login: "Sign In Successfully!",
-      logout: "Sign Out Successfully!",
+      login: "Signed in successfully!",
+      logout: "Signed out successfully!",
 
       user: {
-        create: "User successfully added!",
+        create: "User added successfully!",
 
         approve: (name: string, role: string) =>
-          `${name} successfully approved as ${role.toWellFormed()}.`,
+          `${name} has been successfully approved as ${role.toWellFormed()}.`,
 
         update: {
-          profile: "Profile Updated Successfully! Please Sign In Again",
-          password: "Password Updated Successfully! Please Sign In Again",
+          profile: "Profile updated successfully! Please sign in again.",
+          password: "Password updated successfully! Please sign in again.",
         },
 
-        delete: (name: string) => `${name} successfully deleted!`,
+        delete: (name: string) => `${name} has been successfully deleted!`,
       },
     },
 
@@ -66,19 +66,19 @@ const label = {
       },
 
       login: {
-        notFound: "Account is not registered!",
-        emailOrPassword: "Wrong Email or Password!",
+        notFound: "This account is not registered!",
+        emailOrPassword: "Incorrect email or password!",
         pending:
-          "Your account is still in the approval queue. Please wait for confirmation from the admin.",
+          "Your account is still in the approval queue. Please wait for admin confirmation.",
       },
 
-      user: { email: "Email is registered!" },
+      user: { email: "This email is already registered!" },
     },
   },
 
   button: {
-    login: `Sign In to ${title.primary} Admin`,
-    logout: "Sign Out",
+    login: `Sign in to ${title.primary}`,
+    logout: "Sign out",
     refresh: "Refresh",
 
     save: "Save",
@@ -88,4 +88,4 @@ const label = {
   },
 };
 
-export { color, image, label, page, title };
+export { color, image, keyword, label, page, title };

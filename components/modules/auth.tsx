@@ -191,33 +191,14 @@ export function CreateUserDialog() {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Tambah Pengguna</DialogTitle>
+          <DialogTitle>Create New User</DialogTitle>
           <DialogDescription>
-            Masukkan informasi yang diperlukan untuk menambah akun pengguna
-            baru.
+            Enter the information required to add a new user.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email *</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Masukkan Email"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
             <FormField
               control={form.control}
               name="username"
@@ -228,6 +209,24 @@ export function CreateUserDialog() {
                     <Input
                       type="text"
                       placeholder="Masukkan Username"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email *</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="Masukkan Email"
                       {...field}
                     />
                   </FormControl>
@@ -321,7 +320,7 @@ function ApproveUserDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex w-full flex-col gap-y-2">
+        <div className="flex w-full flex-col gap-y-4">
           <Label>Approve As :</Label>
 
           <RadioGroup
@@ -360,8 +359,6 @@ function ApproveUserDialog({
             </Label>
           </RadioGroup>
         </div>
-
-        <Separator />
 
         <DialogFooter className="gap-y-2">
           <DialogClose asChild>
@@ -416,8 +413,8 @@ function DeleteUserDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Delete {username} ?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action will permanently delete your account and cannot be
-            restored. Please make sure you are sure before proceeding.
+            This action will permanently delete this account and cannot be
+            restored. Please confirm your decision before proceeding.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

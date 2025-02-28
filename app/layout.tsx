@@ -1,4 +1,4 @@
-import { title } from "@/components/content";
+import { keyword, title } from "@/components/content";
 import { Toaster } from "@/components/ui/sonner";
 import "@/styles/globals.css";
 import type { Metadata, Viewport } from "next";
@@ -10,8 +10,8 @@ const font = Inter({ subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
   title: title.primary,
   description: title.description,
+  keywords: keyword,
   manifest: "/manifest.json",
-  keywords: ["web application", "next starter"],
 };
 
 export const viewport: Viewport = {

@@ -26,7 +26,7 @@ export default async function Page() {
 
   return (
     <Section currentPage={GetCurrentPage("/dashboard/settings")}>
-      <Card id="profile">
+      <Card id="changeProfile">
         <CardHeader>
           <CardTitle>{profile.title} </CardTitle>
           <CardDescription>{profile.subtitle}</CardDescription>
@@ -37,7 +37,7 @@ export default async function Page() {
         </CardContent>
       </Card>
 
-      <Card className="password">
+      <Card className="changePassword">
         <CardHeader>
           <CardTitle>{password.title} </CardTitle>
           <CardDescription>{password.subtitle}</CardDescription>

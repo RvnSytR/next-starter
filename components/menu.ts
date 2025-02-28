@@ -55,8 +55,8 @@ const menu: MenuProps[] = [
         role: "all",
         icon: Settings,
         subMenu: [
-          { subLabel: "Change Profile", elementId: "profile" },
-          { subLabel: "Change Password", elementId: "password" },
+          { subLabel: "Change Profile", elementId: "changeProfile" },
+          { subLabel: "Change Password", elementId: "changePassword" },
         ],
       },
     ],
