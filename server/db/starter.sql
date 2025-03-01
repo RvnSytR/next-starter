@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Dec 30, 2024 at 04:37 AM
+-- Generation Time: Mar 01, 2025 at 07:32 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.2
 
@@ -40,9 +40,6 @@ CREATE TABLE `user` (
 --
 -- Dumping data for table `user`
 --
-
-INSERT INTO `user` (`id_user`, `email`, `password`, `username`, `role`, `last_signin_at`, `created_at`) VALUES
-('592e59ee-c455-4492-b62d-18132c77ef6e', 'admin@gmail.com', '$2b$10$dof5JUAZcQxpFobMm3U6r.AThBK4WIaUT6Z9dSMCIdc0X3IOxZRhG', 'RvnSytR17', 'user', '2024-12-29 13:52:43', '2024-12-29 13:52:43'),
 
 --
 -- Indexes for dumped tables
