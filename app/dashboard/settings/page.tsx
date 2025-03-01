@@ -1,7 +1,7 @@
 import { Section, SectionNotFound } from "@/components/layout/section";
 import {
-  UpdatePasswordForm,
-  UpdateProfileForm,
+  ChangePasswordForm,
+  ChangeProfileForm,
 } from "@/components/modules/auth";
 import {
   Card,
@@ -31,7 +31,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent>
-          <UpdateProfileForm data={session.user} />
+          <ChangeProfileForm data={session.user} />
         </CardContent>
       </Card>
 
@@ -42,7 +42,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent>
-          <UpdatePasswordForm id={session.user.id_user} />
+          <ChangePasswordForm user_id={session.user.id_user} />
         </CardContent>
       </Card>
     </Section>

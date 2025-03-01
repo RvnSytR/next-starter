@@ -27,11 +27,11 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { CustomButton } from "../custom/custom-button";
-import { FormFloating } from "../custom/custom-input";
 import {
   type CheckboxPopoverProps,
   CheckboxPopover,
-} from "../custom/custom-input-client";
+  FormFloating,
+} from "../custom/custom-input";
 import { iconSize } from "../icon";
 import { SectionTitle } from "../layout/section";
 import { Button, buttonVariants } from "../ui/button";
@@ -50,9 +50,7 @@ import {
 } from "../ui/table";
 
 // #region // * Types
-type TableProps<TData> = {
-  table: DataTableType<TData>;
-};
+type TableProps<TData> = { table: DataTableType<TData> };
 
 type DataTableProps<TData, TValue> = {
   data: TData[];
@@ -60,14 +58,20 @@ type DataTableProps<TData, TValue> = {
 };
 
 export type FacetedFilter = Pick<CheckboxPopoverProps, "id" | "arr" | "icon">;
+
+type ToolBox = {
+  withRefresh?: boolean;
+  facetedFilter?: FacetedFilter[];
+  searchPlaceholder?: string;
+  children?: React.ReactNode;
+};
 // #endregion
 
 // #region // * Side Component
 function FacetedFilter<TData>({
   table,
   id,
-  arr,
-  icon,
+  ...props
 }: TableProps<TData> & FacetedFilter) {
   const column = table.getColumn(id);
   if (!column) throw new Error(`Column ${id} not found`);
@@ -76,30 +80,26 @@ function FacetedFilter<TData>({
       id={id}
       state={column.getFilterValue() as string[]}
       setState={column.setFilterValue}
-      arr={arr}
-      icon={icon}
+      {...props}
     />
   );
 }
 
 function ToolBox<TData>({
   table,
-  placeholder = "Search Something",
-  facetedFilter: filterCol,
   withRefresh,
+  facetedFilter,
+  searchPlaceholder = "Search Something",
   children,
-}: TableProps<TData> & {
-  placeholder?: string;
-  facetedFilter?: FacetedFilter[];
-  withRefresh?: boolean;
-  children?: React.ReactNode;
-}) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+}: TableProps<TData> & ToolBox) {
+  const columnFilter = table.getState().columnFilters;
+  const isFiltered = columnFilter.length > 0;
+
   return (
     <div className="flex flex-col gap-2 lg:flex-row">
       {children}
 
-      {filterCol && isFiltered && (
+      {facetedFilter && isFiltered && (
         <Button
           size="sm"
           variant="outline"
@@ -111,10 +111,10 @@ function ToolBox<TData>({
         </Button>
       )}
 
-      {filterCol && (
+      {facetedFilter && (
         <div className="order-1 flex gap-2 lg:order-2">
-          {filterCol.map((item, index) => (
-            <FacetedFilter key={index} table={table} {...item} />
+          {facetedFilter.map((props, index) => (
+            <FacetedFilter key={index} table={table} {...props} />
           ))}
         </div>
       )}
@@ -162,13 +162,10 @@ function ToolBox<TData>({
           <CustomButton customType="refresh" size="sm" variant="outline" />
         )}
 
-        <FormFloating
-          icon={<Search size={iconSize.base} />}
-          className="h-8 grow"
-        >
+        <FormFloating icon={<Search size={iconSize.base} />}>
           <Input
             type="search"
-            placeholder={placeholder}
+            placeholder={searchPlaceholder}
             value={table.getState().globalFilter}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
             className="h-8 pl-10"
@@ -235,16 +232,13 @@ export function DataTable<TData, TValue>({
   label,
   children,
   ...props
-}: DataTableProps<TData, TValue> & {
-  title?: string;
-  desc?: string;
-  caption?: string;
-  label?: string[];
-  placeholder?: string;
-  withRefresh?: boolean;
-  facetedFilter?: FacetedFilter[];
-  children?: React.ReactNode;
-}) {
+}: DataTableProps<TData, TValue> &
+  ToolBox & {
+    title?: string;
+    desc?: string;
+    caption?: string;
+    label?: string[];
+  }) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
@@ -352,6 +346,7 @@ export function DataTable<TData, TValue>({
           <small className="text-muted-foreground text-left font-medium lg:text-center">
             {caption}
           </small>
+
           <Pagination table={table} />
         </div>
       </CardContent>
