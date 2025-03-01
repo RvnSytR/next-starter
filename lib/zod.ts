@@ -2,7 +2,7 @@ import { role, user } from "@/server/db/schema";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
 
-export const zodUserSchema = createSelectSchema(user, {
+export const zodUser = createSelectSchema(user, {
   role: z.enum(role, { required_error: "Please select a user role." }),
   username: (sc) =>
     sc
@@ -23,11 +23,11 @@ export const zodUserSchema = createSelectSchema(user, {
       .max(255, "Password is too long."),
 });
 
-export const zodChangePasswordSchema = z
+export const zodChangePassword = z
   .object({
-    currentPassword: zodUserSchema.shape.password,
-    newPassword: zodUserSchema.shape.password,
-    confirmPassword: zodUserSchema.shape.password,
+    currentPassword: zodUser.shape.password,
+    newPassword: zodUser.shape.password,
+    confirmPassword: zodUser.shape.password,
   })
   .refine((sc) => sc.newPassword === sc.confirmPassword, {
     message: "Passwords do not match",

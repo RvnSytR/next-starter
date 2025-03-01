@@ -4,7 +4,7 @@ import { SignOutHandler } from "@/app/login/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { dialog, label } from "@/lib/content";
 import { path } from "@/lib/menu";
-import { zodChangePasswordSchema, zodUserSchema } from "@/lib/zod";
+import { zodChangePassword, zodUser } from "@/lib/zod";
 import {
   ApproveUser,
   CheckUser,
@@ -83,14 +83,14 @@ export function LoginForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const loginSchema = zodUserSchema.pick({ email: true, password: true });
+  const schema = zodUser.pick({ email: true, password: true });
 
-  const form = useForm<z.infer<typeof loginSchema>>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: { email: "", password: "" },
   });
 
-  const formHandler = async (data: z.infer<typeof loginSchema>) => {
+  const formHandler = async (data: z.infer<typeof schema>) => {
     const { email, password } = data;
     setIsLoading(true);
 
@@ -156,18 +156,18 @@ export function CreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const createSchema = zodUserSchema.pick({
+  const schema = zodUser.pick({
     email: true,
     username: true,
     password: true,
   });
 
-  const form = useForm<z.infer<typeof createSchema>>({
-    resolver: zodResolver(createSchema),
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: { email: "", username: "", password: "" },
   });
 
-  const formHandler = async (data: z.infer<typeof createSchema>) => {
+  const formHandler = async (data: z.infer<typeof schema>) => {
     setIsLoading(true);
 
     ToastAction(CreateUser(data), {
@@ -428,7 +428,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUserSchema.pick({
+  const schema = zodUser.pick({
     email: true,
     role: true,
     username: true,
@@ -542,10 +542,8 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodChangePasswordSchema;
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<z.infer<typeof zodChangePassword>>({
+    resolver: zodResolver(zodChangePassword),
     defaultValues: {
       currentPassword: "",
       newPassword: "",
@@ -553,7 +551,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
     },
   });
 
-  const formHandler = async (data: z.infer<typeof schema>) => {
+  const formHandler = async (data: z.infer<typeof zodChangePassword>) => {
     setIsLoading(true);
 
     ToastAction(UpdateUserPassword(id_user, data), {

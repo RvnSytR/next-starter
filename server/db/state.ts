@@ -1,6 +1,6 @@
 import { desc, eq, getTableColumns, sql } from "drizzle-orm";
 import { db } from "./config";
-import { Role, user as userSchema } from "./schema";
+import { type Role, user as userSchema } from "./schema";
 
 const { placeholder } = sql;
 
@@ -95,6 +95,4 @@ const user = {
     .prepare(),
 };
 
-export const state = {
-  user,
-};
+export const state = { user };

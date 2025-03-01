@@ -3,7 +3,7 @@
 import { SignInHandler, SignOutHandler } from "@/app/login/sign";
 import { label } from "@/lib/content";
 import { path } from "@/lib/menu";
-import { zodChangePasswordSchema } from "@/lib/zod";
+import { zodChangePassword } from "@/lib/zod";
 import { Role, user } from "@/server/db/schema";
 import { state } from "@/server/db/state";
 import bcrypt from "bcrypt";
@@ -71,7 +71,7 @@ export async function UpdateUserProfile(
 
 export async function UpdateUserPassword(
   id_user: string,
-  data: z.infer<typeof zodChangePasswordSchema>,
+  data: z.infer<typeof zodChangePassword>,
 ): Action {
   const { currentPassword, newPassword } = data;
   const [res] = await state.user.select.passwordById.execute({
