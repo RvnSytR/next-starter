@@ -4,7 +4,7 @@ import { SignOutHandler } from "@/app/login/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { dialog, label } from "@/lib/content";
 import { path } from "@/lib/menu";
-import { zodUserSchema } from "@/lib/zod";
+import { zodChangePasswordSchema, zodUserSchema } from "@/lib/zod";
 import {
   ApproveUser,
   CheckUser,
@@ -28,7 +28,6 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 import { userColumn } from "../custom/column";
 import { CustomButton } from "../custom/custom-button";
@@ -153,6 +152,7 @@ export function LoginForm() {
 
 export function CreateUserDialog() {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -184,7 +184,7 @@ export function CreateUserDialog() {
   return (
     <Dialog onOpenChange={setIsOpen} open={isOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button size={isMobile ? "default" : "sm"} variant="outline">
           <Plus />
           Create New User
         </Button>
@@ -423,7 +423,7 @@ function DeleteUserDialog({
   );
 }
 
-export function UpdateProfileForm({ data }: { data: UserCredentials }) {
+export function ChangeProfileForm({ data }: { data: UserCredentials }) {
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -459,10 +459,7 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-4"
-      >
+      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
         <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}
@@ -540,54 +537,48 @@ export function UpdateProfileForm({ data }: { data: UserCredentials }) {
   );
 }
 
-export function UpdatePasswordForm({ id }: { id: string }) {
+export function ChangePasswordForm({ id_user }: { id_user: string }) {
   const router = useRouter();
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [confirmPass, setConfirmPass] = useState<string>("");
 
-  const schema = zodUserSchema.pick({ password: true });
+  const schema = zodChangePasswordSchema;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { password: "" },
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
   });
 
   const formHandler = async (data: z.infer<typeof schema>) => {
-    const { password } = data;
+    setIsLoading(true);
 
-    if (password !== confirmPass) toast.error("Password Tidak Sama!");
-    else {
-      setIsLoading(true);
-
-      ToastAction(UpdateUserPassword(id, password), {
-        success: async () => {
-          await SignOutHandler();
-          router.push(path.login);
-          return success.user.update.password;
-        },
-        error: () => setIsLoading(false),
-      });
-    }
+    ToastAction(UpdateUserPassword(id_user, data), {
+      success: () => {
+        router.push(path.login);
+        return success.user.update.password;
+      },
+      error: () => setIsLoading(false),
+    });
   };
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(formHandler)}
-        className="flex flex-col gap-y-4"
-      >
+      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
         <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}
-            name="password"
+            name="currentPassword"
             render={({ field }) => (
               <FormItem className="basis-1/2">
-                <FormLabel>New Password</FormLabel>
+                <FormLabel>Current Password</FormLabel>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your new password"
+                    placeholder="Enter your current password"
                     {...field}
                   />
                 </FormControl>
@@ -596,17 +587,41 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             )}
           />
 
-          <div className="basis-1/2 space-y-1">
-            <Label htmlFor="confirmPass">Confirm Password</Label>
-            <Input
-              type="password"
-              id="confirmPass"
-              name="confirmPass"
-              placeholder="Confirm your new password"
-              value={confirmPass}
-              onChange={(e) => setConfirmPass(e.target.value)}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>New Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Create a new password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem className="basis-1/2">
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         <div className="flex gap-2">
@@ -622,10 +637,7 @@ export function UpdatePasswordForm({ id }: { id: string }) {
             type="button"
             size={isMobile ? "default" : "sm"}
             variant="outline"
-            onClick={() => {
-              form.reset();
-              setConfirmPass("");
-            }}
+            onClick={() => form.reset()}
           >
             <RotateCw />
             {button.reset}
@@ -687,7 +699,7 @@ export function AccountDataTable({
       facetedFilter={facetedFilter}
       title="Users Overview"
       desc="A comprehensive overview of all registered users, providing their essential details and management actions."
-      placeholder="Search User"
+      searchPlaceholder="Search User"
       withRefresh
     >
       <CreateUserDialog />

@@ -25,7 +25,7 @@ const user = {
     .prepare(),
 
   select: {
-    check: db
+    checkByEmail: db
       .select({
         password: userSchema.password,
         username: userSchema.username,
@@ -33,6 +33,12 @@ const user = {
       })
       .from(userSchema)
       .where(eq(userSchema.email, placeholder("email")))
+      .prepare(),
+
+    passwordById: db
+      .select({ password: userSchema.password })
+      .from(userSchema)
+      .where(eq(userSchema.id_user, placeholder("id_user")))
       .prepare(),
 
     all: db

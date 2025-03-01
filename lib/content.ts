@@ -81,6 +81,8 @@ const label = {
     },
 
     error: {
+      catch: "Uh-oh! Something went wrong. Please try again later.",
+
       file: {
         required: (name: string) => `Please upload ${name}!`,
         upload: "An error occurred while uploading the file!",
@@ -93,7 +95,12 @@ const label = {
           "Your account is still in the approval queue. Please wait for admin confirmation.",
       },
 
-      user: { email: "This email is already registered!" },
+      user: {
+        email: "This email is already registered!",
+        password: "Incorrect password!",
+        samePassword:
+          "The new password cannot be the same as the current password!",
+      },
     },
   },
 

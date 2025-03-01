@@ -42,7 +42,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent>
-          <ChangePasswordForm user_id={session.user.id_user} />
+          <ChangePasswordForm id_user={session.user.id_user} />
         </CardContent>
       </Card>
     </Section>
