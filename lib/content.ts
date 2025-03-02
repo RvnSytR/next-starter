@@ -15,6 +15,12 @@ const page = {
     subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
   },
 
+  account: {
+    title: "Users Overview",
+    subtitle:
+      "A comprehensive overview of all registered users, providing their essential details and management actions.",
+  },
+
   settings: {
     profile: {
       title: "Change Profile",

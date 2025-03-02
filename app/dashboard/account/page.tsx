@@ -1,5 +1,5 @@
 import { LayoutSkeleton, Section } from "@/components/layout/section";
-import { AccountDataTable } from "@/components/modules/auth";
+import { UserDataTable } from "@/components/modules/auth";
 import { auth } from "@/lib/auth";
 import { GetCurrentPage, path } from "@/lib/menu";
 import { role } from "@/server/db/schema";
@@ -29,7 +29,7 @@ export default async function Page() {
 
   return (
     <Section currentPage={GetCurrentPage(path.account)}>
-      <AccountDataTable
+      <UserDataTable
         data={data}
         currentIdUser={session.user.id_user}
         facetedFilter={facetedFilter}

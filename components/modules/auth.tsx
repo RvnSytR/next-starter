@@ -2,7 +2,7 @@
 
 import { SignOutHandler } from "@/app/login/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { dialog, label } from "@/lib/content";
+import { dialog, label, page } from "@/lib/content";
 import { path } from "@/lib/menu";
 import { zodChangePassword, zodUser } from "@/lib/zod";
 import {
@@ -646,7 +646,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
   );
 }
 
-export function AccountDataTable({
+export function UserDataTable({
   data,
   currentIdUser,
   facetedFilter,
@@ -695,8 +695,8 @@ export function AccountDataTable({
       data={data}
       columns={columns}
       facetedFilter={facetedFilter}
-      title="Users Overview"
-      desc="A comprehensive overview of all registered users, providing their essential details and management actions."
+      title={page.account.title}
+      desc={page.account.subtitle}
       searchPlaceholder="Search User"
       withRefresh
     >
