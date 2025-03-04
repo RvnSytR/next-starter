@@ -23,7 +23,7 @@ import {
   Plus,
   RotateCw,
   Save,
-  Trash,
+  Trash2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -396,7 +396,7 @@ function DeleteUserDialog({
           className="grow justify-start"
           disabled={isLoading}
         >
-          <Trash /> Delete
+          <Trash2 /> Delete
         </Button>
       </AlertDialogTrigger>
 

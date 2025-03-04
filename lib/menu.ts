@@ -16,7 +16,7 @@ type SubMenuProps = { subLabel: string; elementId: string }[];
 type MenuBody = {
   href: string;
   label: string;
-  role: MenuRole;
+  role: MenuRole[];
   icon?: LucideIcon;
   isDisable?: boolean;
   subMenu?: SubMenuProps;
@@ -35,13 +35,13 @@ const menu: MenuProps[] = [
       {
         href: path.protected,
         label: "Dashboard",
-        role: "all",
+        role: ["all"],
         icon: LayoutDashboard,
       },
       {
         href: path.account,
         label: "User Management",
-        role: "all",
+        role: ["all"],
         icon: UserRound,
       },
     ],
@@ -52,7 +52,7 @@ const menu: MenuProps[] = [
       {
         href: `${path.protected}/settings`,
         label: "Settings",
-        role: "all",
+        role: ["all"],
         icon: Settings,
         subMenu: [
           { subLabel: "Change Profile", elementId: "changeProfile" },
@@ -64,8 +64,8 @@ const menu: MenuProps[] = [
 ];
 
 const secondaryMenu: MenuBody[] = [
-  { href: "/", label: "Homepage", role: "all", icon: ExternalLink },
-  { href: "/somewhere", label: "Help", role: "all", icon: CircleHelp },
+  { href: "/", label: "Homepage", role: ["all"], icon: ExternalLink },
+  { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
 ];
 
 function GetMenu(
@@ -92,7 +92,7 @@ function GetMenuByRole(role: MenuRole) {
   return menu
     .map((section) => {
       const filteredBody = section.body.filter(
-        (item) => item.role === role || item.role === "all",
+        (item) => item.role.includes(role) || item.role.includes("all"),
       );
 
       if (filteredBody.length) {
