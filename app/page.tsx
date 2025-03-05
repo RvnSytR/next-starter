@@ -1,8 +1,8 @@
 import { CustomButton } from "@/components/custom/custom-button";
+import { PieChart } from "@/components/custom/custom-chart";
 import { ThemeToggle } from "@/components/custom/theme";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -17,6 +17,15 @@ import {
 // };
 
 export default function Page() {
+  const pieChartData = [
+    { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
+    { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
+    { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
+    { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
+    { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
+    { nameKey: "Other2", dataKey: 90, fill: "var(--color-chart-5)" },
+  ];
+
   return (
     <div className="container space-y-4 py-8">
       <div className="flex flex-wrap items-center gap-2">
@@ -140,13 +149,16 @@ export default function Page() {
         </CardContent>
       </Card>
 
-      {/* Calendar */}
+      {/* Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Calendar</CardTitle>
+          <CardTitle>Chart</CardTitle>
         </CardHeader>
         <CardContent>
-          <Calendar mode="single" className="rounded-md border" />
+          {/* <Calendar mode="single" className="rounded-md border" /> */}
+          <div className="md:max-w-1/4">
+            <PieChart label="Kategori" data={pieChartData} />
+          </div>
         </CardContent>
       </Card>
     </div>

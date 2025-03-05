@@ -9,7 +9,7 @@ import {
   CartesianGrid,
   LabelList,
   Pie,
-  PieChart,
+  PieChart as PieChartComp,
   XAxis,
 } from "recharts";
 import {
@@ -21,37 +21,43 @@ import {
   ChartTooltipContent,
 } from "../ui/chart";
 
-export type ChartPieData = { nameKey: string; dataKey: number; fill?: string };
-
 const radius = 8;
 const tickMargin = 10;
 const tickFormater = (str: string) => str.slice(0, 3);
 
-export function ChartPie({
-  config,
+export function PieChart({
+  label,
   data,
 }: {
-  config: ChartConfig;
-  data: ChartPieData[];
+  label: string;
+  data: { nameKey: string; dataKey: number; fill?: string }[];
 }) {
   return (
     <ChartContainer
-      config={config}
+      config={{
+        dataKey: { label: label },
+        ...data.reduce(
+          (acc, item) => {
+            acc[item.nameKey] = { label: item.nameKey };
+            return acc;
+          },
+          {} as Record<string, { label: string }>,
+        ),
+      }}
       className={cn(
         "aspect-square",
         "[&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 [&_.recharts-pie-label-text]:hidden md:[&_.recharts-pie-label-text]:flex",
+        "[&_.recharts-pie-label-line]:animate-fade [&_.recharts-pie-label-line]:animate-delay-1250 [&_.recharts-pie-label-line]:hidden md:[&_.recharts-pie-label-line]:flex",
       )}
     >
-      <PieChart>
+      <PieChartComp>
         <Pie
           data={data}
           nameKey="nameKey"
           dataKey="dataKey"
           innerRadius={40}
           label
-          labelLine={false}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
         <ChartLegend
           content={
             <ChartLegendContent
@@ -60,7 +66,8 @@ export function ChartPie({
             />
           }
         />
-      </PieChart>
+        <ChartTooltip content={<ChartTooltipContent />} />
+      </PieChartComp>
     </ChartContainer>
   );
 }
