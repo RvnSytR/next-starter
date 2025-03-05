@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 import {
   Area,
-  AreaChart,
+  AreaChart as AreaChartComp,
   Bar,
   BarChart,
   CartesianGrid,
@@ -23,14 +23,14 @@ import {
 
 const radius = 8;
 const tickMargin = 10;
-const tickFormater = (str: string) => str.slice(0, 3);
+const tickFormatter = (str: string) => str.slice(0, 3);
 
 export function PieChart({
   label,
   data,
 }: {
   label: string;
-  data: { nameKey: string; dataKey: number; fill?: string }[];
+  data: { nameKey: string; dataKey: number; fill: string }[];
 }) {
   return (
     <ChartContainer
@@ -72,62 +72,65 @@ export function PieChart({
   );
 }
 
-export function ChartArea({
+export function AreaChart({
   config,
   data,
 }: {
   config: ChartConfig;
-  data: { label: string; key1: number; key2: number }[];
+  data: { xLabel: string; data: Record<string, number> }[];
 }) {
-  // TODO : Dynamic Keys
   return (
     <ChartContainer config={config}>
-      <AreaChart accessibilityLayer data={data} margin={{ left: 10 }}>
-        <CartesianGrid vertical={false} />
-
-        <XAxis
-          dataKey="label"
-          axisLine={false}
-          tickMargin={tickMargin}
-          tickFormatter={tickFormater}
-        />
-
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
-
+      <AreaChartComp
+        accessibilityLayer
+        margin={{ left: 12, right: 12 }}
+        data={data.map((item) => ({ xLabel: item.xLabel, ...item.data }))}
+      >
         <defs>
-          <linearGradient id="fill1" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="var(--color-key1)" stopOpacity={0.8} />
-            <stop
-              offset="95%"
-              stopColor="var(--color-key1)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
-
-          <linearGradient id="fill2" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="var(--color-key2)" stopOpacity={0.8} />
-            <stop
-              offset="95%"
-              stopColor="var(--color-key2)"
-              stopOpacity={0.1}
-            />
-          </linearGradient>
+          {Object.keys(config).map((item) => (
+            <linearGradient
+              key={item}
+              id={`fill-${item}`}
+              x1="0"
+              y1="0"
+              x2="0"
+              y2="1"
+            >
+              <stop
+                offset="5%"
+                stopColor={`var(--color-${item})`}
+                stopOpacity={0.8}
+              />
+              <stop
+                offset="95%"
+                stopColor={`var(--color-${item})`}
+                stopOpacity={0.1}
+              />
+            </linearGradient>
+          ))}
         </defs>
 
-        <Area
-          dataKey="key1"
-          fill="url(#fill1)"
-          fillOpacity={0.4}
-          stroke="var(--color-key1)"
+        {Object.keys(config).map((item) => (
+          <Area
+            key={item}
+            dataKey={item}
+            fill={`url(#fill-${item})`}
+            stroke={`var(--color-${item})`}
+            fillOpacity={0.4}
+          />
+        ))}
+
+        <XAxis
+          dataKey="xLabel"
+          axisLine={false}
+          tickMargin={tickMargin}
+          tickFormatter={tickFormatter}
         />
 
-        <Area
-          dataKey="key2"
-          fill="url(#fill2)"
-          fillOpacity={0.4}
-          stroke="var(--color-key2)"
-        />
-      </AreaChart>
+        <CartesianGrid vertical={false} />
+
+        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+      </AreaChartComp>
     </ChartContainer>
   );
 }
@@ -148,7 +151,7 @@ export function ChartBar({
           dataKey="label"
           axisLine={false}
           tickMargin={tickMargin}
-          tickFormatter={tickFormater}
+          tickFormatter={tickFormatter}
         />
 
         <ChartTooltip
