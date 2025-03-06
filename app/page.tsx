@@ -1,5 +1,9 @@
 import { CustomButton } from "@/components/custom/custom-button";
-import { AreaChart, PieChart } from "@/components/custom/custom-chart";
+import {
+  AreaChart,
+  BarChart,
+  PieChart,
+} from "@/components/custom/custom-chart";
 import { ThemeToggle } from "@/components/custom/theme";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -26,13 +30,13 @@ export default function Page() {
     { nameKey: "Other2", dataKey: 190, fill: "var(--primary)" },
   ];
 
-  const areaChartData = [
-    { xLabel: "January", data: { key1: 186, key2: 80 } },
-    { xLabel: "February", data: { key1: 305, key2: 200 } },
-    { xLabel: "March", data: { key1: 237, key2: 120 } },
-    { xLabel: "April", data: { key1: 73, key2: 190 } },
-    { xLabel: "May", data: { key1: 209, key2: 130 } },
-    { xLabel: "June", data: { key1: 214, key2: 140 } },
+  const areaAndPieChartData = [
+    { xLabel: "January", dataKeys: { key1: 186, key2: 80 } },
+    { xLabel: "February", dataKeys: { key1: 305, key2: 200 } },
+    { xLabel: "March", dataKeys: { key1: 237, key2: 120 } },
+    { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
+    { xLabel: "May", dataKeys: { key1: 209, key2: 130 } },
+    { xLabel: "June", dataKeys: { key1: 214, key2: 140 } },
   ];
 
   const areaChartConfig = {
@@ -168,12 +172,14 @@ export default function Page() {
         <CardHeader>
           <CardTitle>Custom Chart</CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center gap-2">
+        <CardContent className="flex gap-4">
           <div className="basis-1/3">
             <PieChart label="Kategori" data={pieChartData} />
           </div>
-          <div className="basis-2/3">
-            <AreaChart config={areaChartConfig} data={areaChartData} />
+
+          <div className="basis-2/3 space-y-4">
+            <AreaChart config={areaChartConfig} data={areaAndPieChartData} />
+            <BarChart config={areaChartConfig} data={areaAndPieChartData} />
           </div>
         </CardContent>
       </Card>

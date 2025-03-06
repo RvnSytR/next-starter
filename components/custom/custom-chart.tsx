@@ -5,12 +5,13 @@ import {
   Area,
   AreaChart as AreaChartComp,
   Bar,
-  BarChart,
+  BarChart as BarChartComp,
   CartesianGrid,
   LabelList,
   Pie,
   PieChart as PieChartComp,
   XAxis,
+  YAxis,
 } from "recharts";
 import {
   type ChartConfig,
@@ -20,6 +21,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart";
+
+type TimelineChart = {
+  config: ChartConfig;
+  data: { xLabel: string; dataKeys: Record<string, number> }[];
+};
 
 const radius = 8;
 const tickMargin = 10;
@@ -58,6 +64,7 @@ export function PieChart({
           innerRadius={40}
           label
         />
+
         <ChartLegend
           content={
             <ChartLegendContent
@@ -66,25 +73,20 @@ export function PieChart({
             />
           }
         />
+
         <ChartTooltip content={<ChartTooltipContent />} />
       </PieChartComp>
     </ChartContainer>
   );
 }
 
-export function AreaChart({
-  config,
-  data,
-}: {
-  config: ChartConfig;
-  data: { xLabel: string; data: Record<string, number> }[];
-}) {
+export function AreaChart({ config, data }: TimelineChart) {
   return (
     <ChartContainer config={config}>
       <AreaChartComp
         accessibilityLayer
         margin={{ left: 12, right: 12 }}
-        data={data.map((item) => ({ xLabel: item.xLabel, ...item.data }))}
+        data={data.map((item) => ({ xLabel: item.xLabel, ...item.dataKeys }))}
       >
         <defs>
           {Object.keys(config).map((item) => (
@@ -127,6 +129,8 @@ export function AreaChart({
           tickFormatter={tickFormatter}
         />
 
+        <YAxis axisLine={false} tickMargin={tickMargin} />
+
         <CartesianGrid vertical={false} />
 
         <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
@@ -135,34 +139,41 @@ export function AreaChart({
   );
 }
 
-export function ChartBar({
-  config,
-  data,
-}: {
-  config: ChartConfig;
-  data: { label: string; key: number }[];
-}) {
+export function BarChart({ config, data }: TimelineChart) {
   return (
     <ChartContainer config={config}>
-      <BarChart accessibilityLayer data={data} margin={{ top: 30 }}>
-        <CartesianGrid vertical={false} />
+      <BarChartComp
+        accessibilityLayer
+        margin={{ top: 30 }}
+        data={data.map((item) => ({ xLabel: item.xLabel, ...item.dataKeys }))}
+      >
+        {Object.keys(config).map((item) => (
+          <Bar
+            key={item}
+            dataKey={item}
+            fill={`var(--color-${item})`}
+            radius={radius}
+          >
+            <LabelList className="fill-foreground" />
+          </Bar>
+        ))}
 
         <XAxis
-          dataKey="label"
+          dataKey="xLabel"
           axisLine={false}
           tickMargin={tickMargin}
           tickFormatter={tickFormatter}
         />
 
+        <YAxis axisLine={false} tickMargin={tickMargin} />
+
+        <CartesianGrid vertical={false} />
+
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
-
-        <Bar dataKey="key" fill="var(--color-key)" radius={radius}>
-          <LabelList className="fill-foreground" />
-        </Bar>
-      </BarChart>
+      </BarChartComp>
     </ChartContainer>
   );
 }
