@@ -39,7 +39,7 @@ export default function Page() {
     { xLabel: "June", dataKeys: { key1: 214, key2: 140 } },
   ];
 
-  const areaChartConfig = {
+  const areaAndPieChartConfig = {
     key1: { label: "Desktop", color: "var(--color-chart-1)" },
     key2: { label: "Mobile", color: "var(--color-chart-2)" },
   };
@@ -178,8 +178,14 @@ export default function Page() {
           </div>
 
           <div className="basis-2/3 space-y-4">
-            <AreaChart config={areaChartConfig} data={areaAndPieChartData} />
-            <BarChart config={areaChartConfig} data={areaAndPieChartData} />
+            <AreaChart
+              config={areaAndPieChartConfig}
+              data={areaAndPieChartData}
+            />
+            <BarChart
+              config={areaAndPieChartConfig}
+              data={areaAndPieChartData}
+            />
           </div>
         </CardContent>
       </Card>
