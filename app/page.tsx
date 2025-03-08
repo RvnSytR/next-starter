@@ -5,20 +5,20 @@ import {
   PieChart,
 } from "@/components/custom/custom-chart";
 import { ThemeToggle } from "@/components/custom/theme";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import {
-  FlaskConical,
-  LayoutDashboard,
-  Settings,
-  UserRoundPlus,
-} from "lucide-react";
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { LayoutDashboard } from "lucide-react";
 
-// export const metadata: Metadata = {
-//   title: "Current Page",
-// };
+// export const metadata: Metadata = { title: "Current Page" };
 
 export default function Page() {
   const pieChartData = [
@@ -27,7 +27,6 @@ export default function Page() {
     { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
     { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
     { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
-    { nameKey: "Other2", dataKey: 190, fill: "var(--primary)" },
   ];
 
   const areaAndPieChartData = [
@@ -44,9 +43,38 @@ export default function Page() {
     key2: { label: "Mobile", color: "var(--color-chart-2)" },
   };
 
+  const PropTable = ({
+    data,
+  }: {
+    data: { name: string; type: string; default?: string }[];
+  }) => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Prop Name</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Default</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {data.map((item, index) => (
+          <TableRow key={index}>
+            <TableCell>
+              <code>{item.name}</code>
+            </TableCell>
+            <TableCell>
+              <code>{item.type}</code>
+            </TableCell>
+            <TableCell>{item.default && <code>{item.default}</code>}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  );
+
   return (
-    <div className="container space-y-4 py-8">
-      <div className="flex flex-wrap items-center gap-2">
+    <div className="container flex flex-col gap-y-4 py-8">
+      <div className="flex gap-2">
         <ThemeToggle size="icon" variant="outline" />
 
         <CustomButton
@@ -57,138 +85,80 @@ export default function Page() {
           text="Go To Dashboard"
           onClickLoading
         />
-
-        <CustomButton
-          customType="link"
-          href="/coverage"
-          icon={<FlaskConical />}
-          variant="outline"
-          text="Go to Testing Page (Coverage)"
-          onClickLoading
-        />
       </div>
 
       <Separator />
 
-      {/* Typography */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Typography</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center gap-4">
-          <h1>Heading 1</h1>
-          <h2>Heading 2</h2>
-          <h3>Heading 3</h3>
-          <h4>Heading 4</h4>
-          <h5>Heading 5</h5>
-          <h6>Heading 6</h6>
-          <p>Paragraph</p>
-          <small>Small</small>
-          <code>console.log(&quot;Code&quot;)</code>
-          <blockquote>Blockquote ~</blockquote>
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="Typography">
+        <TabsList>
+          <TabsTrigger value="Custom Button" disabled>
+            Custom Button
+          </TabsTrigger>
+          <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
+        </TabsList>
 
-      {/* Badges */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Badges</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-wrap gap-2">
-          <Badge>Default</Badge>
-          <Badge variant="secondary">Secondary</Badge>
-          <Badge variant="outline">Outline</Badge>
-          <Badge variant="success">Success</Badge>
-          <Badge variant="outline_success">Success Outline</Badge>
-          <Badge variant="warning">Warning</Badge>
-          <Badge variant="outline_warning">Warning Outline</Badge>
-          <Badge variant="destructive">Destructive</Badge>
-          <Badge variant="outline_destructive">Destructive Outline</Badge>
-        </CardContent>
-      </Card>
+        <TabsContent value="Custom Chart" className="space-y-2">
+          <Card>
+            <CardHeader>
+              <CardTitle>Pie Chart</CardTitle>
+            </CardHeader>
 
-      {/* Button */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Button</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Button size="sm">Small</Button>
-            <Button>Default</Button>
-            <Button size="lg">Large</Button>
+            <CardContent className="flex flex-col gap-4 lg:flex-row">
+              <div className="basis-1/3">
+                <PieChart label="Kategori" data={pieChartData} />
+              </div>
 
-            <Separator orientation="vertical" className="h-8" />
+              <div className="flex basis-2/3 items-center">
+                <PropTable
+                  data={[
+                    { name: "label", type: "string" },
+                    {
+                      name: "data",
+                      type: "{ nameKey: string; dataKey: number; fill: string }[]",
+                    },
+                  ]}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-            <Button size="iconsm">
-              <Settings />
-            </Button>
-            <Button size="icon">
-              <Settings />
-            </Button>
-            <Button size="iconlg">
-              <Settings />
-            </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Area and Pie Chart</CardTitle>
+            </CardHeader>
 
-            <Separator orientation="vertical" className="h-8" />
+            <CardContent className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <div className="basis-1/2">
+                  <AreaChart
+                    config={areaAndPieChartConfig}
+                    data={areaAndPieChartData}
+                  />
+                </div>
 
-            <Button size="sm">
-              <UserRoundPlus />
-              Small with Icon
-            </Button>
-            <Button>
-              <UserRoundPlus />
-              Default with Icon
-            </Button>
-            <Button size="lg">
-              <UserRoundPlus />
-              Large with Icon
-            </Button>
-          </div>
+                <div className="basis-1/2">
+                  <BarChart
+                    config={areaAndPieChartConfig}
+                    data={areaAndPieChartData}
+                  />
+                </div>
+              </div>
 
-          <Separator />
-
-          <div className="flex flex-wrap items-center gap-2">
-            <Button>Default</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="link">Link</Button>
-
-            <Separator orientation="vertical" className="h-8" />
-
-            <Button variant="success">Success</Button>
-            <Button variant="outline_success">SuccessOutline</Button>
-            <Button variant="warning">Warning</Button>
-            <Button variant="outline_warning">Warning Outline</Button>
-            <Button variant="destructive">Destructive</Button>
-            <Button variant="outline_destructive">Destructive Outline</Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Custom Chart</CardTitle>
-        </CardHeader>
-        <CardContent className="flex gap-4">
-          <div className="basis-1/3">
-            <PieChart label="Kategori" data={pieChartData} />
-          </div>
-
-          <div className="basis-2/3 space-y-4">
-            <AreaChart
-              config={areaAndPieChartConfig}
-              data={areaAndPieChartData}
-            />
-            <BarChart
-              config={areaAndPieChartConfig}
-              data={areaAndPieChartData}
-            />
-          </div>
-        </CardContent>
-      </Card>
+              <div className="flex basis-2/3 items-center">
+                <PropTable
+                  data={[
+                    { name: "config", type: "ChartConfig (rechart)" },
+                    {
+                      name: "dataKeys",
+                      type: "Record<string, number>",
+                    },
+                  ]}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
