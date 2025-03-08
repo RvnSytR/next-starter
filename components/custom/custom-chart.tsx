@@ -85,7 +85,7 @@ export function AreaChart({ config, data }: TimelineChart) {
     <ChartContainer config={config}>
       <AreaChartComp
         accessibilityLayer
-        margin={{ left: 12, right: 12 }}
+        margin={{ right: 6 }}
         data={data.map((item) => ({ xLabel: item.xLabel, ...item.dataKeys }))}
       >
         <defs>

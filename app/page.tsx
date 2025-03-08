@@ -89,11 +89,9 @@ export default function Page() {
 
       <Separator />
 
-      <Tabs defaultValue="Typography">
+      <Tabs defaultValue="Custom Button">
         <TabsList>
-          <TabsTrigger value="Custom Button" disabled>
-            Custom Button
-          </TabsTrigger>
+          <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
           <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
         </TabsList>
 
@@ -128,15 +126,15 @@ export default function Page() {
             </CardHeader>
 
             <CardContent className="flex flex-col gap-4">
-              <div className="flex gap-4">
-                <div className="basis-1/2">
+              <div className="flex flex-col gap-4 md:flex-row">
+                <div className="md:basis-1/2">
                   <AreaChart
                     config={areaAndPieChartConfig}
                     data={areaAndPieChartData}
                   />
                 </div>
 
-                <div className="basis-1/2">
+                <div className="md:basis-1/2">
                   <BarChart
                     config={areaAndPieChartConfig}
                     data={areaAndPieChartData}
