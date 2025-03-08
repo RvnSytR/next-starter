@@ -20,6 +20,7 @@ import {
   CircleCheckBig,
   EllipsisVertical,
   LogIn,
+  LogOut,
   Plus,
   RotateCw,
   Save,
@@ -28,6 +29,7 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { userColumn } from "../custom/column";
 import { CustomButton } from "../custom/custom-button";
@@ -78,6 +80,35 @@ import { Separator } from "../ui/separator";
 const { user: dialogUser } = dialog;
 const { success } = label.toast;
 const { button } = label;
+
+export function SignOutButton() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  return (
+    <CustomButton
+      icon={<LogOut />}
+      text={button.logout}
+      variant="outline_destructive"
+      loading={isLoading}
+      onClick={() => {
+        setIsLoading(true);
+        toast.promise(SignOutHandler(), {
+          loading: label.toast.loading.default,
+          success: () => {
+            router.push(path.login);
+            return label.toast.success.logout;
+          },
+          error: (e: Error) => {
+            setIsLoading(false);
+            return e.message;
+          },
+        });
+      }}
+      inSidebar
+    />
+  );
+}
 
 export function LoginForm() {
   const router = useRouter();
