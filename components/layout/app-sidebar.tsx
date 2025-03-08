@@ -2,7 +2,6 @@ import { GetMenuByRole, secondaryMenu } from "@/lib/menu";
 import type { Role } from "@/server/db/schema";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { CustomButton } from "../custom/custom-button";
 import { Avatar, AvatarFallback } from "../ui/avatar";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
@@ -169,12 +168,12 @@ function Footer() {
       <SidebarMenuItem className="flex h-12 flex-col justify-between">
         <SidebarSeparator />
 
-        <CustomButton
+        {/* <CustomButton
           customType="logout"
           variant="outline_destructive"
           inSidebar
           onClickLoading
-        />
+        /> */}
       </SidebarMenuItem>
     </SidebarMenu>
   );

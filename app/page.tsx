@@ -109,7 +109,7 @@ export default function Page() {
               Example Code
             </AccordionTrigger>
             <AccordionContent>
-              <div className="rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
+              <div className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
                 {exampleCode}
               </div>
             </AccordionContent>
@@ -125,7 +125,6 @@ export default function Page() {
         <ThemeToggle size="icon" variant="outline" />
 
         <CustomButton
-          customType="link"
           href="/dashboard"
           icon={<LayoutDashboard />}
           variant="outline"
@@ -136,20 +135,24 @@ export default function Page() {
 
       <Separator />
 
-      <Tabs defaultValue="Custom Chart">
+      <Tabs defaultValue="Custom Button">
         <TabsList>
           <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
           <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
         </TabsList>
 
         <TabsContent value="Custom Button" className="space-y-2">
-          {/* <CustomButton
-            href="/dashboard"
-            elementId="asd"
-            icon={<Sparkles />}
-            text="Custom Button"
-          /> */}
-          <p>Hello world</p>
+          <ComponentCard
+            title="Custom Button"
+            apiReference={[{ name: "label", type: "string" }]}
+            exampleCode={`Hello World`}
+          >
+            <CustomButton
+              href="/dashboard"
+              text="Go To Dashboard"
+              onClickLoading
+            />
+          </ComponentCard>
         </TabsContent>
 
         <TabsContent value="Custom Chart" className="space-y-2">

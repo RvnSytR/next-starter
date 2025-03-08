@@ -26,7 +26,6 @@ import {
   Settings2,
 } from "lucide-react";
 import { useState } from "react";
-import { CustomButton } from "../custom/custom-button";
 import {
   type CheckboxPopoverProps,
   CheckboxPopover,
@@ -48,6 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { CustomRefreshButton } from "./custom-button";
 
 // #region // * Types
 type TableProps<TData> = { table: DataTableType<TData> };
@@ -158,9 +158,7 @@ function ToolBox<TData>({
           </PopoverContent>
         </Popover>
 
-        {withRefresh && (
-          <CustomButton customType="refresh" size="sm" variant="outline" />
-        )}
+        {withRefresh && <CustomRefreshButton size="sm" variant="outline" />}
 
         <FormFloating icon={<Search size={iconSize.base} />}>
           <Input
