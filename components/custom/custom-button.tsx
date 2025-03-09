@@ -168,22 +168,3 @@ export function CopyButton({
     />
   );
 }
-
-// { customType: "scroll"; elementId: string; offset?: number }
-
-//   case "scroll": {
-//     const {
-//       elementId,
-//       offset = 80,
-//       ...rest
-//     } = props as Extract<CustomButtonProps, { customType: "scroll" }>;
-
-//     buttonProps = rest;
-//     action = async () => {
-//       const element = document.getElementById(elementId);
-//       if (!element) return;
-//       window.scroll({ top: element.offsetTop - offset });
-//     };
-
-//     break;
-//   }
