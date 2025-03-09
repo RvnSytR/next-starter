@@ -47,7 +47,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { CustomRefreshButton } from "./custom-button";
+import { RefreshButton } from "./custom-button";
 
 // #region // * Types
 type TableProps<TData> = { table: DataTableType<TData> };
@@ -158,7 +158,7 @@ function ToolBox<TData>({
           </PopoverContent>
         </Popover>
 
-        {withRefresh && <CustomRefreshButton size="sm" variant="outline" />}
+        {withRefresh && <RefreshButton size="sm" variant="outline" />}
 
         <FormFloating icon={<Search size={iconSize.base} />}>
           <Input

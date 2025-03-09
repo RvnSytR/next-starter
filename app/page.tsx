@@ -1,4 +1,4 @@
-import { CustomButton } from "@/components/custom/custom-button";
+import { CopyButton, CustomButton } from "@/components/custom/custom-button";
 import {
   AreaChart,
   BarChart,
@@ -110,6 +110,11 @@ export default function Page() {
             </AccordionTrigger>
             <AccordionContent>
               <div className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
+                <CopyButton
+                  variant="outline"
+                  value={exampleCode}
+                  className="absolute top-2 right-2"
+                />
                 {exampleCode}
               </div>
             </AccordionContent>

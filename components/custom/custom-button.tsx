@@ -3,6 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { label } from "@/lib/content";
 import { cn, Delay } from "@/lib/utils";
+import { Check, Copy } from "lucide-react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
@@ -12,7 +13,6 @@ import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 // #region // * Types
 type FilteredLinkProps = Omit<LinkProps, keyof ButtonProps | "href">;
-type OptionalChildrenProps = { text?: string; icon?: ReactNode };
 type RequiredChildrenProps =
   | { text: string; icon?: ReactNode }
   | { text?: string; icon: ReactNode };
@@ -28,6 +28,11 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     hideTextOnMobile?: boolean;
     customLoader?: ReactNode;
   };
+
+type OptionalChildrenProps = Omit<
+  CustomButtonProps,
+  keyof RequiredChildrenProps
+> & { text?: string; icon?: ReactNode };
 
 // #endregion
 
@@ -54,43 +59,6 @@ export function CustomButton({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   useEffect(() => setIsLoading(loading), [loading]);
 
-  const ButtonNode = ({ children }: { children: ReactNode }) => {
-    return (
-      <Button
-        type={type}
-        variant={variant}
-        asChild={asChild || !!href}
-        disabled={disabled || isLoading}
-        size={
-          !text || (hideTextOnMobile && isMobile)
-            ? size === "lg"
-              ? "iconlg"
-              : size === "sm"
-                ? "iconsm"
-                : "icon"
-            : size
-        }
-        className={cn(
-          "shrink-0 truncate",
-          inSidebar &&
-            (sidebarMenuButtonVariants({
-              size:
-                size === "iconlg" ? "lg" : size === "iconsm" ? "sm" : "default",
-            }),
-            buttonVariants({ variant: variant })),
-          className,
-        )}
-        onClick={async (e) => {
-          if (onClickLoading) setTimeout(() => setIsLoading(true), 0);
-          if (onClick) onClick(e);
-        }}
-        {...props}
-      >
-        {children}
-      </Button>
-    );
-  };
-
   const ChildrenNode = () => {
     const iconNode = isLoading ? customLoader : icon;
     if (!text) return iconNode;
@@ -112,7 +80,36 @@ export function CustomButton({
   };
 
   return (
-    <ButtonNode>
+    <Button
+      type={type}
+      variant={variant}
+      asChild={asChild || !!href}
+      disabled={disabled || isLoading}
+      size={
+        !text || (hideTextOnMobile && isMobile)
+          ? size === "lg"
+            ? "iconlg"
+            : size === "sm"
+              ? "iconsm"
+              : "icon"
+          : size
+      }
+      className={cn(
+        "shrink-0 truncate",
+        inSidebar &&
+          (sidebarMenuButtonVariants({
+            size:
+              size === "iconlg" ? "lg" : size === "iconsm" ? "sm" : "default",
+          }),
+          buttonVariants({ variant: variant })),
+        className,
+      )}
+      onClick={async (e) => {
+        if (onClickLoading) setTimeout(() => setIsLoading(true), 0);
+        if (onClick) onClick(e);
+      }}
+      {...props}
+    >
       {href ? (
         <Link href={href} {...(props as FilteredLinkProps)}>
           <ChildrenNode />
@@ -120,23 +117,18 @@ export function CustomButton({
       ) : (
         <ChildrenNode />
       )}
-    </ButtonNode>
+    </Button>
   );
 }
 
-export function CustomRefreshButton({
+export function RefreshButton({
   text = label.button.refresh,
   icon = <CustomLoader customType="refresh" animate={false} />,
   customLoader = <CustomLoader customType="refresh" />,
   ...props
-}: OptionalChildrenProps &
-  Omit<
-    CustomButtonProps,
-    keyof RequiredChildrenProps | "loading" | "onClick"
-  >) {
+}: Omit<OptionalChildrenProps, "loading" | "onClick">) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   return (
     <CustomButton
       text={text}
@@ -154,63 +146,30 @@ export function CustomRefreshButton({
   );
 }
 
-// type CustomTypeProps =
-//   | ((
-//       | { customType: "logout" | "refresh" }
-//       | { customType: "copy"; copyValue: string }
-//     ) &
-//       OptionalChildrenProps)
-//   | ((
-//       | { customType?: never }
-//       | { customType: "scroll"; elementId: string; offset?: number }
-//       | ({ customType: "link" } & LinkProps &
-//           Omit<
-//             React.AnchorHTMLAttributes<HTMLAnchorElement>,
-//             keyof LinkProps & "children"
-//           >)
-//     ) &
-//       RequiredChildrenProps);
+export function CopyButton({
+  icon = <Copy />,
+  customLoader = <Check />,
+  value,
+  ...props
+}: Omit<OptionalChildrenProps, "loading" | "onClick"> & { value: string }) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  return (
+    <CustomButton
+      icon={icon}
+      customLoader={customLoader}
+      loading={isLoading}
+      onClick={async () => {
+        setIsLoading(true);
+        navigator.clipboard.writeText(value);
+        await Delay(1);
+        setIsLoading(false);
+      }}
+      {...props}
+    />
+  );
+}
 
-// switch (customType) {
-//   case "logout": {
-//     icon = <LogOut />;
-//     text = label.button.logout;
-//     variant = "outline_destructive";
-
-//     action = () => {
-//       toast.promise(SignOutHandler(), {
-//         loading: label.toast.loading.default,
-//         success: () => {
-//           router.push(path.login);
-//           return label.toast.success.logout;
-//         },
-//         error: (e: Error) => {
-//           setIsLoading(false);
-//           return e.message;
-//         },
-//       });
-//     };
-//     break;
-//   }
-
-//   case "copy": {
-//     icon = icon ?? <Copy />;
-//     customLoader = <Check />;
-//     const { copyValue, ...rest } = props as Extract<
-//       CustomButtonProps,
-//       { customType: "copy" }
-//     >;
-
-//     buttonProps = rest;
-//     action = async () => {
-//       setIsLoading(true);
-//       navigator.clipboard.writeText(copyValue);
-//       await Delay(1);
-//       setIsLoading(false);
-//     };
-
-//     break;
-//   }
+// { customType: "scroll"; elementId: string; offset?: number }
 
 //   case "scroll": {
 //     const {
@@ -228,10 +187,3 @@ export function CustomRefreshButton({
 
 //     break;
 //   }
-
-//   case "link": {
-//     withLink = true;
-//     asChild = true;
-//     break;
-//   }
-// }
