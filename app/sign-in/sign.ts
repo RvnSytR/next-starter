@@ -2,7 +2,7 @@
 
 import { signIn, signOut } from "@/lib/auth";
 
-export async function SignInHandler(email: string, password: string) {
+export async function SignIn(email: string, password: string) {
   await signIn("credentials", {
     email: email,
     password: password,
@@ -10,6 +10,6 @@ export async function SignInHandler(email: string, password: string) {
   });
 }
 
-export async function SignOutHandler() {
+export async function SignOut() {
   await signOut({ redirect: false });
 }

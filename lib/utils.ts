@@ -13,6 +13,10 @@ export function Delay(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
+export function CapitalizeFirstLetter(str: string) {
+  return String(str).charAt(0).toUpperCase() + String(str).slice(1);
+}
+
 export function GetRandomString(length: number) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -75,7 +79,7 @@ export function CalculateAge(birthDate: Date): number | string {
 }
 // #endregion
 
-// #region // * File Reader
+// #region // * Image Reader
 function ReadFileAsURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

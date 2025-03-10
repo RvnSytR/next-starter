@@ -1,22 +1,21 @@
 import { label } from "@/lib/content";
-import type { Action } from "@/server/action";
+import type { ActionResponse } from "@/server/action";
 import { toast } from "sonner";
 
 export function ToastAction(
-  action: Action,
+  action: Promise<ActionResponse>,
   data: {
     loading?: React.ReactNode;
-    success: () => React.ReactNode;
+    success: (res: ActionResponse) => React.ReactNode;
     error?: () => void;
   },
 ) {
   const { loading, success, error } = data;
-
   toast.promise(action, {
     loading: loading ?? label.toast.loading.default,
     success: (res) => {
-      if (!res.status) throw new Error(res.message);
-      return success();
+      if (!res.success) throw new Error(res.message);
+      return success(res);
     },
     error: (e: Error) => {
       if (error) error();

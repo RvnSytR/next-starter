@@ -23,7 +23,7 @@ type MenuBody = {
 };
 
 const path = {
-  login: "/login",
+  signIn: "/sign-in",
   protected: "/dashboard",
   account: "/dashboard/account",
 };
@@ -74,7 +74,7 @@ function GetMenu(
 ): MenuBody | Omit<MenuBody, "icon"> | null {
   const allMenu = Object.values(menu).flatMap((item) => item.body);
 
-  const result = allMenu
+  const [result] = allMenu
     .map((item) => {
       if (withoutIcon) {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -85,7 +85,7 @@ function GetMenu(
     })
     .filter((item) => item.href === path);
 
-  return result[0] ?? null;
+  return result ?? null;
 }
 
 function GetMenuByRole(role: MenuRole) {

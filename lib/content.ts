@@ -1,3 +1,5 @@
+import { CapitalizeFirstLetter } from "./utils";
+
 const currentYear = new Date().getFullYear();
 
 const title = { primary: "Project Title", description: "Project Description" };
@@ -10,7 +12,7 @@ const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
   copyright: `Copyright © ${currentYear}. Project Maker. All rights reserved.`,
 
-  login: {
+  signIn: {
     title: `${title.primary}`,
     subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
   },
@@ -39,17 +41,20 @@ const page = {
 const dialog = {
   user: {
     create: {
+      trigger: "Create New User",
       title: "Create New User",
       desc: "Create new user by entering their details. Make sure all required fields are filled correctly.",
     },
 
     approve: {
+      trigger: "Approve",
       title: (username: string) =>
         `Are you sure you want to approve ${username}'s registration?`,
       desc: "Approving this registration is a permanent action and cannot be undone. Once approved, this user will gain dashboard access. Ensure you have reviewed all necessary details before proceeding.",
     },
 
     delete: {
+      trigger: "Delete",
       title: (username: string) =>
         `Are you sure, you want to delete ${username}?`,
       desc: "Deleting this account is a permanent action and cannot be undone. Ensure you have reviewed all necessary details before proceeding.",
@@ -68,18 +73,19 @@ const label = {
     loading: { default: "Please wait a moment..." },
 
     success: {
-      login: "Signed in successfully!",
-      logout: "Signed out successfully!",
+      signIn: (username: string) =>
+        `Signed in successfully, Welcome ${username}!`,
+      signOut: "Signed out successfully!",
 
       user: {
-        create: "User added successfully!",
+        create: "User created successfully!",
 
         approve: (name: string, role: string) =>
-          `${name} has been successfully approved as ${role.toWellFormed()}.`,
+          `${name} has been successfully approved as ${CapitalizeFirstLetter(role)}.`,
 
         update: {
-          profile: "Profile updated successfully! Please sign in again.",
-          password: "Password updated successfully! Please sign in again.",
+          profile: "Profile updated successfully, Please sign in again!",
+          password: "Password updated successfully, Please sign in again!",
         },
 
         delete: (name: string) => `${name} has been successfully deleted!`,
@@ -94,7 +100,7 @@ const label = {
         upload: "An error occurred while uploading the file!",
       },
 
-      login: {
+      signIn: {
         notFound: "This account is not registered!",
         emailOrPassword: "Incorrect email or password!",
         pending:
@@ -102,6 +108,7 @@ const label = {
       },
 
       user: {
+        notFound: "User not found!",
         email: "This email is already registered!",
         password: "Incorrect password!",
         samePassword:
@@ -111,8 +118,8 @@ const label = {
   },
 
   button: {
-    login: `Sign in to ${title.primary}`,
-    logout: "Sign out",
+    signIn: `Sign in to ${title.primary}`,
+    signOut: "Sign out",
     refresh: "Refresh",
 
     save: "Save",

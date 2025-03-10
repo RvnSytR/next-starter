@@ -1,5 +1,5 @@
 import { SectionTitle } from "@/components/layout/section";
-import { LoginForm } from "@/components/modules/auth";
+import { SignInForm } from "@/components/modules/auth";
 import {
   Card,
   CardContent,
@@ -14,7 +14,7 @@ import { GetCurrentPage, path } from "@/lib/menu";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: GetCurrentPage(path.login, true) };
+export const metadata: Metadata = { title: GetCurrentPage(path.signIn, true) };
 
 export default function Page() {
   return (
@@ -23,16 +23,16 @@ export default function Page() {
         <CardHeader className="text-center">
           <CardTitle>
             <Link href="/" prefetch>
-              <SectionTitle text={page.login.title} />
+              <SectionTitle text={page.signIn.title} />
             </Link>
           </CardTitle>
-          <CardDescription>{page.login.subtitle}</CardDescription>
+          <CardDescription>{page.signIn.subtitle}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
           <Separator />
 
-          <LoginForm />
+          <SignInForm />
 
           <Separator />
         </CardContent>

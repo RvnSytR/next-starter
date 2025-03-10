@@ -1,6 +1,6 @@
 "use client";
 
-import { SignOutHandler } from "@/app/login/sign";
+import { SignOut } from "@/app/sign-in/sign";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { dialog, label, page } from "@/lib/content";
 import { path } from "@/lib/menu";
@@ -78,8 +78,6 @@ import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
 const { user: dialogUser } = dialog;
-const { success } = label.toast;
-const { button } = label;
 
 export function SignOutButton() {
   const router = useRouter();
@@ -88,16 +86,16 @@ export function SignOutButton() {
   return (
     <CustomButton
       icon={<LogOut />}
-      text={button.logout}
+      text={label.button.signOut}
       variant="outline_destructive"
       loading={isLoading}
       onClick={() => {
         setIsLoading(true);
-        toast.promise(SignOutHandler(), {
+        toast.promise(SignOut(), {
           loading: label.toast.loading.default,
           success: () => {
-            router.push(path.login);
-            return label.toast.success.logout;
+            router.push(path.signIn);
+            return label.toast.success.signOut;
           },
           error: (e: Error) => {
             setIsLoading(false);
@@ -110,7 +108,7 @@ export function SignOutButton() {
   );
 }
 
-export function LoginForm() {
+export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -126,9 +124,9 @@ export function LoginForm() {
     setIsLoading(true);
 
     ToastAction(CheckUser(email, password), {
-      success: () => {
+      success: ({ message }) => {
         router.push(path.protected);
-        return success.login;
+        return message;
       },
       error: () => setIsLoading(false),
     });
@@ -173,7 +171,7 @@ export function LoginForm() {
           type="submit"
           loading={isLoading}
           icon={<LogIn />}
-          text={button.login}
+          text={label.button.signIn}
           className="w-full"
         />
       </form>
@@ -202,11 +200,11 @@ export function CreateUserDialog() {
     setIsLoading(true);
 
     ToastAction(CreateUser(data), {
-      success: () => {
+      success: ({ message }) => {
         setIsOpen(false);
         setIsLoading(false);
         router.refresh();
-        return success.user.create;
+        return message;
       },
       error: () => setIsLoading(false),
     });
@@ -217,7 +215,7 @@ export function CreateUserDialog() {
       <DialogTrigger asChild>
         <Button size={isMobile ? "default" : "sm"} variant="outline">
           <Plus />
-          Create New User
+          {dialogUser.create.trigger}
         </Button>
       </DialogTrigger>
 
@@ -284,14 +282,14 @@ export function CreateUserDialog() {
             <DialogFooter className="gap-y-2">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  {button.back}
+                  {label.button.back}
                 </Button>
               </DialogClose>
 
               <CustomButton
                 type="submit"
                 loading={isLoading}
-                text={button.confirm}
+                text={label.button.confirm}
               />
             </DialogFooter>
           </form>
@@ -314,11 +312,8 @@ function ApproveUserDialog({
 
   const handler = async () => {
     setIsDisable(true);
-    ToastAction(ApproveUser(role, id_user), {
-      success: () => {
-        setIsDisable(false);
-        return success.user.approve(username, role);
-      },
+    ToastAction(ApproveUser(id_user, username, role), {
+      success: ({ message }) => message,
       error: () => setIsDisable(false),
     });
   };
@@ -332,7 +327,8 @@ function ApproveUserDialog({
           className="grow justify-start"
           disabled={isDisable}
         >
-          <CircleCheckBig /> Approve
+          <CircleCheckBig />
+          {dialogUser.approve.trigger}
         </Button>
       </DialogTrigger>
 
@@ -385,12 +381,12 @@ function ApproveUserDialog({
         <DialogFooter className="gap-y-2">
           <DialogClose asChild>
             <Button type="button" variant="outline">
-              {button.back}
+              {label.button.back}
             </Button>
           </DialogClose>
 
           <DialogClose asChild>
-            <Button onClick={handler}>{button.confirm}</Button>
+            <Button onClick={handler}>{label.button.confirm}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>
@@ -409,11 +405,8 @@ function DeleteUserDialog({
 
   const handler = async () => {
     setIsLoading(true);
-    ToastAction(DeleteUser(id_user), {
-      success: () => {
-        setIsLoading(false);
-        return success.user.delete(username);
-      },
+    ToastAction(DeleteUser(id_user, username), {
+      success: ({ message }) => message,
       error: () => setIsLoading(false),
     });
   };
@@ -427,7 +420,8 @@ function DeleteUserDialog({
           className="grow justify-start"
           disabled={isLoading}
         >
-          <Trash2 /> Delete
+          <Trash2 />
+          {dialogUser.delete.trigger}
         </Button>
       </AlertDialogTrigger>
 
@@ -441,12 +435,12 @@ function DeleteUserDialog({
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>{button.back}</AlertDialogCancel>
+          <AlertDialogCancel>{label.button.back}</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={handler}
           >
-            {button.confirm}
+            {label.button.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -479,10 +473,10 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
     const { username } = formData;
 
     ToastAction(UpdateUserProfile(data.id_user, username), {
-      success: async () => {
-        await SignOutHandler();
-        router.push(path.login);
-        return success.user.update.profile;
+      success: async ({ message }) => {
+        await SignOut();
+        router.push(path.signIn);
+        return message;
       },
       error: () => setIsLoading(false),
     });
@@ -550,7 +544,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
             icon={<Save />}
-            text={button.save}
+            text={label.button.save}
           />
 
           <Button
@@ -560,7 +554,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
             onClick={() => form.reset()}
           >
             <RotateCw />
-            {button.reset}
+            {label.button.reset}
           </Button>
         </div>
       </form>
@@ -586,9 +580,9 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
     setIsLoading(true);
 
     ToastAction(UpdateUserPassword(id_user, data), {
-      success: () => {
-        router.push(path.login);
-        return success.user.update.password;
+      success: ({ message }) => {
+        router.push(path.signIn);
+        return message;
       },
       error: () => setIsLoading(false),
     });
@@ -659,7 +653,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
             loading={isLoading}
             size={isMobile ? "default" : "sm"}
             icon={<Save />}
-            text={button.save}
+            text={label.button.save}
           />
 
           <Button
@@ -669,7 +663,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
             onClick={() => form.reset()}
           >
             <RotateCw />
-            {button.reset}
+            {label.button.reset}
           </Button>
         </div>
       </form>
@@ -693,7 +687,6 @@ export function UserDataTable({
       header: "Action",
       cell: ({ row }) => {
         const { id_user, username, role } = row.original;
-
         const isCurrentUser = id_user === currentIdUser;
         if (isCurrentUser) return <Badge variant="outline">Current User</Badge>;
 

@@ -1,6 +1,6 @@
 "use server";
 
-import { SignInHandler, SignOutHandler } from "@/app/login/sign";
+import { SignIn, SignOut } from "@/app/sign-in/sign";
 import { label } from "@/lib/content";
 import { path } from "@/lib/menu";
 import { zodChangePassword } from "@/lib/zod";
@@ -10,95 +10,103 @@ import bcrypt from "bcrypt";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export type Action = Promise<{ status: boolean; message?: string }>;
-const GetStatus = (s: boolean, m?: string) => ({ status: s, message: m });
+export type ActionResponse = {
+  success: boolean;
+  code: number;
+  message?: string;
+};
 
-const { login: loginError, user: userError } = label.toast.error;
+const setResponse = (success: boolean, code: number, message: string) =>
+  ({
+    success: success,
+    code: code,
+    message: message,
+  }) satisfies ActionResponse;
+
+const { signIn: signInSuccess, user: userSuccess } = label.toast.success;
+const { signIn: signInError, user: userError } = label.toast.error;
 
 // #region // * User Action
-export async function CheckUser(email: string, password: string): Action {
-  const { notFound, emailOrPassword, pending } = loginError;
+export async function CheckUser(
+  email: string,
+  password: string,
+): Promise<ActionResponse> {
+  const { notFound, emailOrPassword, pending } = signInError;
+  const [res] = await state.user.select.checkByEmail.execute({ email });
 
-  const [res] = await state.user.select.checkByEmail.execute({ email: email });
-  if (!res) return GetStatus(false, notFound);
+  if (!res) return setResponse(false, 404, notFound);
+  if (!bcrypt.compareSync(password, res.password))
+    return setResponse(false, 401, emailOrPassword);
 
-  if (!bcrypt.compareSync(password, res.password)) {
-    return GetStatus(false, emailOrPassword);
-  }
+  if (res.role == "pending") return setResponse(false, 403, pending);
+  else await SignIn(email, password);
 
-  if (res.role == "pending") return GetStatus(false, pending);
-  else await SignInHandler(email, password);
-
-  return GetStatus(true, res.username);
+  return setResponse(true, 200, signInSuccess(res.username));
 }
 
 export async function CreateUser(
   data: Omit<typeof user.$inferInsert, "id_user" | "created_at">,
-): Action {
+): Promise<ActionResponse> {
   const { email, password, ...restData } = data;
-  const [check] = await state.user.select.byEmail.execute({ email: email });
+  const [check] = await state.user.select.byEmail.execute({ email });
+  if (check) return setResponse(false, 409, userError.email);
 
-  if (check) return GetStatus(false, userError.email);
-  else {
-    const salt = bcrypt.genSaltSync();
-    await state.user.insert.execute({
-      id_user: crypto.randomUUID(),
-      email: email,
-      password: bcrypt.hashSync(password, salt),
-      ...restData,
-    });
-  }
+  const salt = bcrypt.genSaltSync();
+  await state.user.insert.execute({
+    id_user: crypto.randomUUID(),
+    password: bcrypt.hashSync(password, salt),
+    email,
+    ...restData,
+  });
 
-  return GetStatus(true);
+  return setResponse(true, 201, userSuccess.create);
 }
 
 export async function ApproveUser(
-  role: Exclude<Role, "pending">,
   id_user: string,
-): Action {
-  await state.user.update.role(role).execute({ id_user: id_user });
+  username: string,
+  role: Exclude<Role, "pending">,
+): Promise<ActionResponse> {
+  await state.user.update.role(role).execute({ id_user });
   revalidatePath(path.account);
-  return GetStatus(true);
+  return setResponse(true, 200, userSuccess.approve(username, role));
 }
 
 export async function UpdateUserProfile(
   id_user: string,
   username: string,
-): Action {
+): Promise<ActionResponse> {
   await state.user.update.profile(id_user, username).execute();
-  return GetStatus(true);
+  return setResponse(true, 200, userSuccess.update.profile);
 }
 
 export async function UpdateUserPassword(
   id_user: string,
   data: z.infer<typeof zodChangePassword>,
-): Action {
+): Promise<ActionResponse> {
   const { currentPassword, newPassword } = data;
-  const [res] = await state.user.select.passwordById.execute({
-    id_user: id_user,
-  });
 
-  if (!res) return GetStatus(false, loginError.notFound);
+  const [res] = await state.user.select.passwordById.execute({ id_user });
+  if (!res) return setResponse(false, 404, userError.notFound);
 
-  if (!bcrypt.compareSync(currentPassword, res.password)) {
-    return GetStatus(false, userError.password);
-  }
-
-  if (bcrypt.compareSync(newPassword, res.password)) {
-    return GetStatus(false, userError.samePassword);
-  }
+  if (!bcrypt.compareSync(currentPassword, res.password))
+    return setResponse(false, 401, userError.password);
+  if (bcrypt.compareSync(newPassword, res.password))
+    return setResponse(false, 400, userError.samePassword);
 
   await state.user.update
     .password(id_user, bcrypt.hashSync(newPassword, bcrypt.genSaltSync()))
     .execute();
-  await SignOutHandler();
-
-  return GetStatus(true);
+  await SignOut();
+  return setResponse(true, 200, userSuccess.update.password);
 }
 
-export async function DeleteUser(id_user: string): Action {
-  await state.user.delete.execute({ id_user: id_user });
-  revalidatePath("/account");
-  return GetStatus(true);
+export async function DeleteUser(
+  id_user: string,
+  username: string,
+): Promise<ActionResponse> {
+  await state.user.delete.execute({ id_user });
+  revalidatePath(path.account);
+  return setResponse(true, 200, userSuccess.delete(username));
 }
 // #endregion
