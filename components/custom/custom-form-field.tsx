@@ -20,8 +20,8 @@ export type CheckboxPopoverProps = {
   id: string;
   state: string[];
   setState: Dispatch<SetStateAction<string[]>>;
-  arr: { value: string; length: number; icon?: ReactNode }[];
   icon?: ReactNode;
+  arr: { value: string; length: number; icon?: ReactNode }[];
 };
 
 export function FormFloating({
@@ -31,10 +31,12 @@ export function FormFloating({
   ...props
 }: React.ComponentProps<"div"> & { icon: React.ReactNode }) {
   return (
-    <div className={cn("relative block", className)} {...props}>
-      <small className="text-muted-foreground absolute inset-y-0 left-3.5 flex items-center font-normal">
-        {icon}
-      </small>
+    <div className={cn("relative block [&_input]:pl-12", className)} {...props}>
+      <div className="absolute inset-y-0 flex w-12 items-center justify-center">
+        <small className="text-muted-foreground font-normal [&_svg:not([class*='size-'])]:size-4">
+          {icon}
+        </small>
+      </div>
       {children}
     </div>
   );
@@ -106,7 +108,7 @@ export function InputFile({
             if (error instanceof Error) toast.error(error.message);
           }
         }}
-        accept="image/*"
+        accept="image/png, image/jpeg, image/jpg, image/webp"
         className="hidden"
       />
 
@@ -149,12 +151,7 @@ export function InputDatePicker({
       </PopoverTrigger>
 
       <PopoverContent className="w-fit p-0">
-        <Calendar
-          mode="single"
-          selected={state}
-          onSelect={setState}
-          initialFocus
-        />
+        <Calendar mode="single" selected={state} onSelect={setState} />
       </PopoverContent>
     </Popover>
   );
@@ -203,7 +200,6 @@ export function InputDateRangePicker({
           selected={state}
           onSelect={setState}
           numberOfMonths={2}
-          initialFocus
         />
       </PopoverContent>
     </Popover>

@@ -269,6 +269,10 @@
   code {
     @apply bg-muted rounded px-2 py-1 font-mono text-sm;
   }
+
+  form {
+    @apply flex w-full flex-col gap-y-4;
+  }
 }
 
 @layer base {

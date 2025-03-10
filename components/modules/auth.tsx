@@ -134,7 +134,7 @@ export function SignInForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(formHandler)}>
         <FormField
           control={form.control}
           name="email"
@@ -226,7 +226,7 @@ export function CreateUserDialog() {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(formHandler)}>
             <FormField
               control={form.control}
               name="username"
@@ -484,7 +484,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(formHandler)}>
         <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}
@@ -590,7 +590,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(formHandler)}>
         <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           <FormField
             control={form.control}

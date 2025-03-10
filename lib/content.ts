@@ -1,4 +1,4 @@
-import { CapitalizeFirstLetter } from "./utils";
+import { Capitalize } from "./utils";
 
 const currentYear = new Date().getFullYear();
 
@@ -81,7 +81,7 @@ const label = {
         create: "User created successfully!",
 
         approve: (name: string, role: string) =>
-          `${name} has been successfully approved as ${CapitalizeFirstLetter(role)}.`,
+          `${name} has been successfully approved as ${Capitalize(role)}.`,
 
         update: {
           profile: "Profile updated successfully, Please sign in again!",

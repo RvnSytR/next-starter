@@ -87,9 +87,9 @@ export function CustomButton({
       disabled={disabled || isLoading}
       size={
         !text || (hideTextOnMobile && isMobile)
-          ? size === "lg"
+          ? size === "lg" || size === "iconlg"
             ? "iconlg"
-            : size === "sm"
+            : size === "sm" || size === "iconsm"
               ? "iconsm"
               : "icon"
           : size

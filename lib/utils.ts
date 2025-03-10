@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
-export type cv = ClassValue;
+
 export const maxFileSize = { mb: 1, byte: 1 * 1000 * 1000 };
 
 export function cn(...inputs: ClassValue[]) {
@@ -13,10 +13,7 @@ export function Delay(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
-export function CapitalizeFirstLetter(str: string) {
-  return String(str).charAt(0).toUpperCase() + String(str).slice(1);
-}
-
+// #region // * Get Random Things
 export function GetRandomString(length: number) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -36,16 +33,40 @@ export function GetRandomColor(withHash?: boolean) {
   }
   return color as string;
 }
+// #endregion
 
-export function FormatNumber(num: string | number, withRp?: boolean): string {
-  if (!num) return withRp ? "Rp. 0" : "0";
+// #region // * Formater
+export function Capitalize(str: string) {
+  return String(str).charAt(0).toUpperCase() + String(str).slice(1);
+}
+
+export function SanitizeNumber(str: string) {
+  return str.replace(/[^\d]/g, "") || "0";
+}
+
+export function FormatNumeric(
+  num: string | number,
+  prefix: string = "",
+): string {
+  if (!num) return `${prefix}0`;
   const value = new Intl.NumberFormat("id-ID").format(Number(num) || 0);
-  return withRp ? `Rp. ${value}` : value;
+  return `${prefix}${value}`;
 }
 
-export function SanitizeNumberInput(targetValue: string) {
-  return targetValue.replace(/[^\d]/g, "");
+export function FormatPhone(num: string | number): string {
+  const phoneStr = SanitizeNumber(num.toString());
+  if (phoneStr.length <= 3) return phoneStr;
+
+  let formatted = phoneStr.slice(0, 3);
+  let remaining = phoneStr.slice(3);
+  while (remaining.length > 0) {
+    formatted += "-" + remaining.slice(0, 4);
+    remaining = remaining.slice(4);
+  }
+
+  return formatted;
 }
+// #endregion
 
 // #region // * Date
 export function FormatDate(date: Date, formatStr: string) {

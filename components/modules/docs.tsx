@@ -22,6 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
+import ExampleForm from "./example-form";
 
 export function References() {
   const pieChartData = [
@@ -53,8 +54,8 @@ export function References() {
     children,
   }: {
     title: string;
-    apiReference: { name: string; type: string; def?: string }[];
-    exampleCode: string;
+    apiReference?: { name: string; type: string; def?: string }[];
+    exampleCode?: string;
     children: ReactNode;
   }) => (
     <Card className="grow basis-1/3">
@@ -67,58 +68,63 @@ export function References() {
 
         <Accordion
           type="multiple"
-          defaultValue={["apiReference"]}
+          defaultValue={["apiReference", "exampleCode"]}
           className="w-full"
         >
-          <AccordionItem value="apiReference">
-            <AccordionTrigger className="text-lg font-semibold">
-              API Reference
-            </AccordionTrigger>
-            <AccordionContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Prop</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Default</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {apiReference.map(({ name, type, def }, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        <code className="bg-sky-500/20 text-sky-500">
-                          {name}
-                        </code>
-                      </TableCell>
-                      <TableCell>
-                        <code>{type}</code>
-                      </TableCell>
-                      <TableCell>
-                        <code>{def ?? "-"}</code>
-                      </TableCell>
+          {apiReference && (
+            <AccordionItem value="apiReference">
+              <AccordionTrigger className="text-lg font-semibold">
+                API Reference
+              </AccordionTrigger>
+              <AccordionContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Prop</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Default</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </AccordionContent>
-          </AccordionItem>
+                  </TableHeader>
+                  <TableBody>
+                    {apiReference.map(({ name, type, def }, index) => (
+                      <TableRow key={index}>
+                        <TableCell>
+                          <code className="bg-sky-500/20 text-sky-500">
+                            {name}
+                          </code>
+                        </TableCell>
+                        <TableCell>
+                          <code>{type}</code>
+                        </TableCell>
+                        <TableCell>
+                          <code>{def ?? "-"}</code>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </AccordionContent>
+            </AccordionItem>
+          )}
 
-          <AccordionItem value="exampleCode">
-            <AccordionTrigger className="text-lg font-semibold">
-              Example Code
-            </AccordionTrigger>
-            <AccordionContent>
-              <div className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
-                <CopyButton
-                  variant="outline"
-                  value={exampleCode}
-                  className="absolute top-2 right-2"
-                />
-                {exampleCode}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
+          {exampleCode && (
+            <AccordionItem value="exampleCode">
+              <AccordionTrigger className="text-lg font-semibold">
+                Example Code
+              </AccordionTrigger>
+              <AccordionContent>
+                <div className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
+                  <CopyButton
+                    size="iconsm"
+                    variant="outline"
+                    value={exampleCode}
+                    className="absolute top-2 right-2"
+                  />
+                  {exampleCode}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          )}
         </Accordion>
       </CardContent>
     </Card>
@@ -129,35 +135,10 @@ export function References() {
       <TabsList>
         <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
         <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
+        <TabsTrigger value="Form Example">Form Example</TabsTrigger>
       </TabsList>
 
       <TabsContent value="Custom Chart" className="space-y-2">
-        <ComponentCard
-          title="Pie Chart"
-          apiReference={[
-            { name: "label", type: "string" },
-            {
-              name: "data",
-              type: "{ nameKey: string; dataKey: number; fill: string }[]",
-            },
-          ]}
-          exampleCode={`import { PieChart } from "@/components/custom/custom-chart";
-
-const data = [
-  { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
-  { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
-  { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
-  { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
-  { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
-];
-
-<PieChart label="Kategori" data={data} />`}
-        >
-          <div className="mx-auto aspect-square h-[20rem]">
-            <PieChart label="Kategori" data={pieChartData} />
-          </div>
-        </ComponentCard>
-
         <ComponentCard
           title="Area and Pie Chart"
           apiReference={[
@@ -200,6 +181,32 @@ const config = {
                 data={areaAndPieChartData}
               />
             </div>
+          </div>
+        </ComponentCard>
+
+        <ComponentCard
+          title="Pie Chart"
+          apiReference={[
+            { name: "label", type: "string" },
+            {
+              name: "data",
+              type: "{ nameKey: string; dataKey: number; fill: string }[]",
+            },
+          ]}
+          exampleCode={`import { PieChart } from "@/components/custom/custom-chart";
+
+const data = [
+  { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
+  { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
+  { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
+  { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
+  { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
+];
+
+<PieChart label="Kategori" data={data} />`}
+        >
+          <div className="mx-auto aspect-square h-[20rem]">
+            <PieChart label="Kategori" data={pieChartData} />
           </div>
         </ComponentCard>
       </TabsContent>
@@ -248,6 +255,12 @@ const config = {
               hideTextOnMobile
             />
           </div>
+        </ComponentCard>
+      </TabsContent>
+
+      <TabsContent value="Form Example" className="space-y-2">
+        <ComponentCard title="Form Example">
+          <ExampleForm />
         </ComponentCard>
       </TabsContent>
     </Tabs>

@@ -30,8 +30,7 @@ import {
   type CheckboxPopoverProps,
   CheckboxPopover,
   FormFloating,
-} from "../custom/custom-input";
-import { iconSize } from "../icon";
+} from "../custom/custom-form-field";
 import { SectionTitle } from "../layout/section";
 import { Button, buttonVariants } from "../ui/button";
 import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
@@ -160,13 +159,13 @@ function ToolBox<TData>({
 
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
 
-        <FormFloating icon={<Search size={iconSize.base} />}>
+        <FormFloating icon={<Search />}>
           <Input
             type="search"
             placeholder={searchPlaceholder}
             value={table.getState().globalFilter}
             onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-            className="h-8 pl-10"
+            className="h-8"
           />
         </FormFloating>
       </div>
