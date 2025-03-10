@@ -1,6 +1,6 @@
 import { CustomButton } from "@/components/custom/custom-button";
 import { ThemeToggle } from "@/components/custom/theme";
-import { References } from "@/components/modules/docs";
+import { References } from "@/components/modules/references";
 import { Separator } from "@/components/ui/separator";
 import { LayoutDashboard } from "lucide-react";
 

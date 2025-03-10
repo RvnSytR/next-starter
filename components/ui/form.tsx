@@ -79,7 +79,10 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     <FormItemContext.Provider value={{ id }}>
       <div
         data-slot="form-item"
-        className={cn("grid grow gap-2", className)}
+        className={cn(
+          "flex flex-col gap-y-2 [&_svg:not([class*='size-'])]:size-4",
+          className,
+        )}
         {...props}
       />
     </FormItemContext.Provider>

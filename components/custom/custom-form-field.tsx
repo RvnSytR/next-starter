@@ -10,10 +10,11 @@ import { Badge } from "../ui/badge";
 import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { Checkbox } from "../ui/checkbox";
-import { FormDescription } from "../ui/form";
+import { FormControl, FormDescription, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
 export type CheckboxPopoverProps = {
@@ -31,14 +32,49 @@ export function FormFloating({
   ...props
 }: React.ComponentProps<"div"> & { icon: React.ReactNode }) {
   return (
-    <div className={cn("relative block [&_input]:pl-12", className)} {...props}>
+    <div className={cn("relative h-fit [&_input]:pl-12", className)} {...props}>
       <div className="absolute inset-y-0 flex w-12 items-center justify-center">
-        <small className="text-muted-foreground font-normal [&_svg:not([class*='size-'])]:size-4">
-          {icon}
-        </small>
+        <small className="text-muted-foreground font-normal">{icon}</small>
       </div>
       {children}
     </div>
+  );
+}
+
+export function InputRadioGroup({
+  defaultValue,
+  className,
+  radioItems,
+  ...props
+}: RadioGroupProps & {
+  radioItems: {
+    value: string;
+    label: string;
+    icon?: ReactNode;
+    checkedClassName?: string;
+  }[];
+}) {
+  return (
+    <RadioGroup
+      defaultValue={defaultValue}
+      className={cn("flex-wrap", className)}
+      {...props}
+    >
+      {radioItems.map((item) => (
+        <FormItem key={item.value} className="grow">
+          <FormControl>
+            <RadioGroupItem
+              value={item.value}
+              currentValue={defaultValue}
+              checkedClassName={item.checkedClassName}
+            >
+              {item.icon}
+              {item.label}
+            </RadioGroupItem>
+          </FormControl>
+        </FormItem>
+      ))}
+    </RadioGroup>
   );
 }
 
