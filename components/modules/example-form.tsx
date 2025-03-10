@@ -8,6 +8,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Club, Diamond, Heart, LockKeyhole, Spade } from "lucide-react";
@@ -19,11 +26,14 @@ import { FormFloating, InputRadioGroup } from "../custom/custom-form-field";
 import { Input } from "../ui/input";
 
 export default function ExampleForm() {
+  const golDarah = ["O", "A", "B", "AB"] as const;
+
   const schema = z.object({
     text: z.string().min(1),
     numeric: z.number(),
     phone: z.number(),
     radio: z.enum(["spade", "heart", "diamond", "club"]),
+    select: z.enum(golDarah),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -118,15 +128,47 @@ export default function ExampleForm() {
               </FormItem>
             )}
           />
+
+          {/* Select */}
+          <FormField
+            control={form.control}
+            name="select"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Select *</FormLabel>
+
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                  </FormControl>
+
+                  <SelectContent>
+                    {golDarah.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
-        {/* Radio */}
+        {/* Radio Group */}
         <FormField
           control={form.control}
           name="radio"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Radio</FormLabel>
+              <FormLabel>Radio Group</FormLabel>
 
               <FormControl>
                 <InputRadioGroup
