@@ -22,7 +22,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { CustomButton } from "../custom/custom-button";
-import { FormFloating, InputRadioGroup } from "../custom/custom-form-field";
+import {
+  FormFloating,
+  InputDate,
+  InputRadioGroup,
+} from "../custom/custom-field";
 import { Input } from "../ui/input";
 
 export default function ExampleForm() {
@@ -32,17 +36,20 @@ export default function ExampleForm() {
     text: z.string().min(1),
     numeric: z.number(),
     phone: z.number(),
-    radio: z.enum(["spade", "heart", "diamond", "club"]),
     select: z.enum(golDarah),
+    radio: z.enum(["spade", "heart", "diamond", "club"]),
+    date: z.date(),
   });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      text: "",
-      numeric: 0,
-      phone: 0,
+      text: "Some Text",
+      numeric: 100000,
+      phone: 81234567890,
+      select: "O",
       radio: "spade",
+      date: new Date(),
     },
   });
 
@@ -60,7 +67,7 @@ export default function ExampleForm() {
             name="text"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Text input</FormLabel>
+                <FormLabel>Text</FormLabel>
 
                 <FormControl>
                   <FormFloating icon={<LockKeyhole />}>
@@ -79,7 +86,7 @@ export default function ExampleForm() {
             name="numeric"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Numeric input</FormLabel>
+                <FormLabel>Numeric</FormLabel>
 
                 <FormFloating icon={"Rp."}>
                   <Input
@@ -107,7 +114,7 @@ export default function ExampleForm() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone input</FormLabel>
+                <FormLabel>Phone</FormLabel>
 
                 <FormFloating icon={"+62"}>
                   <Input
@@ -134,8 +141,8 @@ export default function ExampleForm() {
             control={form.control}
             name="select"
             render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel>Select *</FormLabel>
+              <FormItem>
+                <FormLabel>Select</FormLabel>
 
                 <Select
                   onValueChange={field.onChange}
@@ -162,46 +169,66 @@ export default function ExampleForm() {
           />
         </div>
 
-        {/* Radio Group */}
-        <FormField
-          control={form.control}
-          name="radio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Radio Group</FormLabel>
+        <div className="grid grid-cols-1 gap-x-2 gap-y-4 md:grid-cols-4">
+          {/* Radio Group */}
+          <FormField
+            control={form.control}
+            name="radio"
+            render={({ field }) => (
+              <FormItem className="md:col-span-2">
+                <FormLabel>Radio Group</FormLabel>
 
-              <FormControl>
-                <InputRadioGroup
-                  defaultValue={field.value}
-                  onValueChange={field.onChange}
-                  radioItems={[
-                    { value: "spade", label: "Spade", icon: <Spade /> },
-                    {
-                      value: "heart",
-                      label: "Heart",
-                      icon: <Heart />,
-                      checkedClassName: "text-pink-500 border-pink-500",
-                    },
-                    {
-                      value: "diamond",
-                      label: "Diamond",
-                      icon: <Diamond />,
-                      checkedClassName: "text-sky-500 border-sky-500",
-                    },
-                    {
-                      value: "club",
-                      label: "Club",
-                      icon: <Club />,
-                      checkedClassName: "text-green-500 border-green-500",
-                    },
-                  ]}
-                />
-              </FormControl>
+                <FormControl>
+                  <InputRadioGroup
+                    defaultValue={field.value}
+                    onValueChange={field.onChange}
+                    radioItems={[
+                      { value: "spade", label: "Spade", icon: <Spade /> },
+                      {
+                        value: "heart",
+                        label: "Heart",
+                        icon: <Heart />,
+                        checkedClassName: "text-pink-500 border-pink-500",
+                      },
+                      {
+                        value: "diamond",
+                        label: "Diamond",
+                        icon: <Diamond />,
+                        checkedClassName: "text-sky-500 border-sky-500",
+                      },
+                      {
+                        value: "club",
+                        label: "Club",
+                        icon: <Club />,
+                        checkedClassName: "text-green-500 border-green-500",
+                      },
+                    ]}
+                  />
+                </FormControl>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Date */}
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <InputDate selected={field.value} onSelect={field.onChange} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Files */}
 
         <CustomButton type="submit" className="w-fit" text="Submit" />
       </form>

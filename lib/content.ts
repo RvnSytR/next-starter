@@ -121,6 +121,7 @@ const label = {
     signIn: `Sign in to ${title.primary}`,
     signOut: "Sign out",
     refresh: "Refresh",
+    datePicker: "Pick a date",
 
     save: "Save",
     confirm: "Confirm",

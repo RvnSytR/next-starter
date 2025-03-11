@@ -1,14 +1,15 @@
 import { useIsMobile } from "@/hooks/use-mobile";
+import { label as labelContent } from "@/lib/content";
 import { cn, FileOnChangeAsURL, FormatDate, maxFileSize } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, ReactNode, RefObject, SetStateAction } from "react";
-import type { DateRange } from "react-day-picker";
+import type { DateRange, PropsSingleRequired } from "react-day-picker";
 import { toast } from "sonner";
 import { iconSize } from "../icon";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps, buttonVariants } from "../ui/button";
-import { Calendar } from "../ui/calendar";
+import { Calendar, CalendarProps } from "../ui/calendar";
 import { Checkbox } from "../ui/checkbox";
 import { FormControl, FormDescription, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
@@ -75,6 +76,43 @@ export function InputRadioGroup({
         </FormItem>
       ))}
     </RadioGroup>
+  );
+}
+
+export function InputDate({
+  selected,
+  onSelect,
+  label,
+  ...props
+}: Omit<Extract<CalendarProps, PropsSingleRequired>, "mode" | "required"> & {
+  label?: string;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(!selected && "text-muted-foreground")}
+        >
+          <CalendarIcon />
+          {selected ? (
+            FormatDate(selected, "PPPP")
+          ) : (
+            <span>{label ?? labelContent.button.datePicker}</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="size-fit p-0">
+        <Calendar
+          mode="single"
+          selected={selected}
+          onSelect={onSelect}
+          required
+          {...props}
+        />
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -155,45 +193,7 @@ export function InputFile({
   );
 }
 
-export function InputDatePicker({
-  state,
-  setState,
-  label,
-  className,
-}: {
-  state: Date | undefined;
-  setState: Dispatch<SetStateAction<Date | undefined>>;
-  label?: string;
-  className?: string;
-}) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(
-            "flex w-full",
-            !state && "text-muted-foreground",
-            className,
-          )}
-        >
-          <CalendarIcon />
-          {state ? (
-            FormatDate(state, "PPPP")
-          ) : (
-            <span>{label ?? "Pick a date"}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-fit p-0">
-        <Calendar mode="single" selected={state} onSelect={setState} />
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-export function InputDateRangePicker({
+export function InputDateRange({
   state,
   setState,
   label,
@@ -213,7 +213,7 @@ export function InputDateRangePicker({
       <PopoverTrigger asChild>
         <Button
           variant="outline"
-          className={cn("w-full", !state && "text-muted-foreground", className)}
+          className={cn(!state && "text-muted-foreground", className)}
           disabled={disabled}
         >
           <CalendarIcon />

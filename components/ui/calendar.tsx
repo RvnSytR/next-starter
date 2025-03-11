@@ -13,19 +13,10 @@ import {
   type DayPickerProps,
 } from "react-day-picker";
 
+type NavView = "days" | "years";
 export type CalendarProps = DayPickerProps & {
-  /**
-   * In the year view, the number of years to display at once.
-   * @default 12
-   */
   yearRange?: number;
-
-  /**
-   * Wether to show the year switcher in the caption.
-   * @default true
-   */
   showYearSwitcher?: boolean;
-
   monthsClassName?: string;
   monthCaptionClassName?: string;
   weekdaysClassName?: string;
@@ -50,14 +41,6 @@ export type CalendarProps = DayPickerProps & {
   hiddenClassName?: string;
 };
 
-type NavView = "days" | "years";
-
-/**
- * A custom calendar component built on top of react-day-picker.
- * @param props The props for the calendar.
- * @default yearRange 12
- * @returns
- */
 function Calendar({
   timeZone = "Asia/Jakarta",
   showOutsideDays = true,
@@ -197,7 +180,7 @@ function Calendar({
       components={{
         Chevron: ({ orientation }) => {
           const Icon = orientation === "left" ? ChevronLeft : ChevronRight;
-          return <Icon className="h-4 w-4" />;
+          return <Icon className="size-4" />;
         },
         Nav: ({ className }) => (
           <Nav
@@ -238,7 +221,6 @@ function Calendar({
     />
   );
 }
-Calendar.displayName = "Calendar";
 
 function Nav({
   className,
@@ -357,7 +339,7 @@ function Nav({
         }
         onClick={handlePreviousClick}
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="size-4" />
       </Button>
 
       <Button
@@ -373,7 +355,7 @@ function Nav({
         }
         onClick={handleNextClick}
       >
-        <ChevronRight className="h-4 w-4" />
+        <ChevronRight className="size-4" />
       </Button>
     </nav>
   );
