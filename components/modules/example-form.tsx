@@ -269,7 +269,7 @@ export function TextAndNumericField() {
   const [numericValue, setNumericValue] = useState<number>(0);
   const [phoneValue, setPhoneValue] = useState<number>(0);
   return (
-    <div className="flex flex-wrap justify-center gap-4">
+    <div className="grid w-full gap-x-2 gap-y-4 lg:grid-cols-4">
       <ReplicaFormItem>
         <Label>Text</Label>
         <Input type="text" placeholder="Enter some text" />
@@ -330,7 +330,7 @@ export function SelectAndRadioField() {
   ];
 
   return (
-    <div className="grid w-full grid-cols-3 gap-4">
+    <div className="grid w-full gap-x-2 gap-y-4 lg:grid-cols-3">
       <ReplicaFormItem>
         <Label>Select</Label>
         <Select defaultValue="Spade">
@@ -370,7 +370,7 @@ export function SelectAndRadioField() {
         <RadioGroup
           defaultValue={radioValue}
           onValueChange={setRadioValue}
-          className="flex-wrap"
+          className="grid grid-cols-2 lg:grid-cols-4"
         >
           {selectAndRadioData.map((item) => (
             <RadioGroupItem
