@@ -501,8 +501,8 @@ export function ExampleForm() {
       <InputRadioGroup
         defaultValue={field.value}
         onValueChange={field.onChange}
-        className="grid grid-cols-2 md:flex md:grid-cols-4"
         radioItems={selectAndRadioData}
+        className="grid grid-cols-2 md:grid-cols-4"
       />
       <FormMessage />
     </FormItem>
