@@ -48,21 +48,20 @@ export function Capitalize(str: string) {
   return String(str).charAt(0).toUpperCase() + String(str).slice(1);
 }
 
-export function SanitizeNumber(str: string) {
-  return str.replace(/[^\d]/g, "") || "0";
+export function SanitizeNumber(str: string): number {
+  return Number(str.replace(/[^\d]/g, "") || "0");
 }
 
 export function FormatNumeric(
   num: string | number,
   prefix: string = "",
 ): string {
-  if (!num) return `${prefix}0`;
-  const value = new Intl.NumberFormat("id-ID").format(Number(num) || 0);
-  return `${prefix}${value}`;
+  return `${prefix}${new Intl.NumberFormat("id-ID").format(SanitizeNumber(String(num)))}`;
 }
 
 export function FormatPhone(num: string | number): string {
-  const phoneStr = SanitizeNumber(num.toString());
+  const phoneStr = String(SanitizeNumber(String(num)));
+  if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
 
   let formatted = phoneStr.slice(0, 3);
@@ -74,6 +73,7 @@ export function FormatPhone(num: string | number): string {
 
   return formatted;
 }
+
 // #endregion
 
 // #region // * Date

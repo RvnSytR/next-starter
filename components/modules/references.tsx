@@ -20,12 +20,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { label } from "@/lib/content";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
-import ExampleForm from "./example-form";
+import { ExampleForm, TextAndNumericField } from "./example-form";
 
 export function References() {
   const pieChartData = [
@@ -52,11 +51,13 @@ export function References() {
 
   const ComponentCard = ({
     title,
+    trigger,
     apiReference,
     exampleCode,
     children,
   }: {
     title: string;
+    trigger?: { apiReference?: string; exampleCode?: string };
     apiReference?: { name: string; type: string; def?: string }[];
     exampleCode?: string;
     children: ReactNode;
@@ -79,7 +80,7 @@ export function References() {
           {apiReference && (
             <AccordionItem value="apiReference">
               <AccordionTrigger className="text-base">
-                API Reference
+                {`${trigger?.apiReference} API Reference`}
               </AccordionTrigger>
               <AccordionContent>
                 <Table>
@@ -115,7 +116,7 @@ export function References() {
           {exampleCode && (
             <AccordionItem value="exampleCode">
               <AccordionTrigger className="text-base">
-                Example Code
+                {trigger?.exampleCode ?? "Example Code"}
               </AccordionTrigger>
               <AccordionContent>
                 <ScrollArea className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
@@ -142,6 +143,7 @@ export function References() {
         <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
         <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
         <TabsTrigger value="Form Example">Form Example</TabsTrigger>
+        <TabsTrigger value="Text and Number">Text and Number</TabsTrigger>
       </TabsList>
 
       <TabsContent value="Custom Chart" className="space-y-2">
@@ -267,57 +269,162 @@ const data = [
       <TabsContent value="Form Example" className="space-y-2">
         <ComponentCard
           title="Form Example"
+          trigger={{ exampleCode: "Form Setup" }}
           exampleCode={`import { CustomButton } from "@/components/custom/custom-button";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { label } from "@/lib/content";
 import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { RotateCcw } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const schema = z.object({
-  text: z.string().min(1),
-  numeric: z.number(),
-  phone: z.number(),
-  select: z.enum(["O", "A", "B", "AB"]),
-  radio: z.enum(["spade", "heart", "diamond", "club"]),
-  date: z.date(),
-  file: zodFile.document,
-  fileList: zodFile.imageList,
-});
+export function ExampleForm() {
+  const schema = z.object({
+    text: z.string().min(1),
+    numeric: z.number(),
+    phone: z.number(),
+    select: z.enum(["Spade", "Heart", "Diamond", "Club"]),
+    radio: z.enum(["Spade", "Heart", "Diamond", "Club"]),
+    date: z.date(),
+    file: zodFile.image,
+  });
 
-const form = useForm<z.infer<typeof schema>>({
-  resolver: zodResolver(schema),
-  defaultValues: {
-    text: "Some Text",
-    numeric: 100000,
-    phone: 81234567890,
-    select: "O",
-    radio: "spade",
-    date: new Date(),
-  },
-});
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      text: "Some Text",
+      numeric: 100000,
+      phone: 81234567890,
+      select: "Spade",
+      radio: "Spade",
+      date: new Date(),
+    },
+  });
 
-const formHandler = async (data: z.infer<typeof schema>) => {
-  console.log(data.file);
-  console.log(data.fileList);
-  toast(<p>{JSON.stringify(data, null, 2)}</p>);
-};
+  const formHandler = async (data: z.infer<typeof schema>) => {
+    console.log(data.file);
+    toast(<p>{JSON.stringify(data, null, 2)}</p>);
+  };
 
-<Form {...form}>
-  <form onSubmit={form.handleSubmit(formHandler)}>
-    {/* Form Field Goes Here */}
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        {/* Form Field Goes Here */}
 
-    {/* You can add a loading state to the submit button using CustomButton component, for example: */}
-    <CustomButton type="submit" loading={isLoading} text="${label.button.save}" />
+        {/* You can add a loading state to the submit button using CustomButton component, for example: */}
+        <CustomButton
+          type="submit"
+          // loading={isLoading}
+          text={label.button.save}
+        />
 
-    <Button type="reset" variant="outline" onClick={() => form.reset()}>
-      <RotateCcw />
-      ${label.button.reset}
-    </Button>
-  </form>
-</Form>`}
+        <Button type="reset" variant="outline" onClick={() => form.reset()}>
+          <RotateCcw />
+          {label.button.reset}
+        </Button>
+      </form>
+    </Form>
+  );
+}`}
         >
           <ExampleForm />
+        </ComponentCard>
+      </TabsContent>
+
+      <TabsContent value="Text and Number" className="space-y-2">
+        <ComponentCard
+          title="Text and Number Field"
+          trigger={{ apiReference: "Form Floating" }}
+          apiReference={[
+            { name: "icon", type: "ReactNode" },
+            { name: "...props", type: `ComponentProps<"div">` },
+          ]}
+          exampleCode={`{/* Text */}
+<FormField
+  control={form.control}
+  name="text"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Text</FormLabel>
+      <FormControl>
+        <Input type="text" placeholder="Enter your text" {...field} />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{/* Numeric */}
+<FormField
+  control={form.control}
+  name="numeric"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Numeric</FormLabel>
+      <Input
+        type="text"
+        inputMode="numeric"
+        value={FormatNumeric(field.value)}
+        onChange={(e) =>
+          field.onChange(SanitizeNumber(e.target.value))
+        }
+      />
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{/* With form floating */}
+<FormField
+  control={form.control}
+  name="text"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>With form floating</FormLabel>
+      <FormControl>
+        <FormFloating icon={<LockKeyhole />}>
+          <Input type="text" placeholder="Enter your text" {...field} />
+        </FormFloating>
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{/* Phone */}
+<FormField
+  control={form.control}
+  name="phone"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Phone</FormLabel>
+      <FormFloating icon={"+62"}>
+        <Input
+          type="text"
+          inputMode="numeric"
+          value={FormatPhone(field.value)}
+          onChange={(e) => {
+            field.onChange(SanitizeNumber(e.target.value));
+          }}
+        />
+      </FormFloating>
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        >
+          <TextAndNumericField />
         </ComponentCard>
       </TabsContent>
     </Tabs>

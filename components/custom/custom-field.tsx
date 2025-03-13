@@ -34,7 +34,7 @@ export function FormFloating({
   className,
   children,
   ...props
-}: React.ComponentProps<"div"> & { icon: React.ReactNode }) {
+}: ComponentProps<"div"> & { icon: ReactNode }) {
   return (
     <div className={cn("relative h-fit [&_input]:pl-12", className)} {...props}>
       <div className="absolute inset-y-0 flex w-12 items-center justify-center">
@@ -193,9 +193,9 @@ export function InputFile({
 
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CloudUpload className="size-6" />
-        <small className="text-sm font-medium">
+        <span className="text-sm font-medium">
           {placeholder ?? label.button.fileInput.placeholder}
-        </small>
+        </span>
         <small className="text-muted-foreground">
           {label.button.fileInput.size(maxFileSize)}
         </small>
