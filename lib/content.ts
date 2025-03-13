@@ -121,7 +121,12 @@ const label = {
     signIn: `Sign in to ${title.primary}`,
     signOut: "Sign out",
     refresh: "Refresh",
+
     datePicker: "Pick a date",
+    fileInput: {
+      placeholder: "Drag & drop your file here, or Click to upload",
+      empty: "No file selected",
+    },
 
     save: "Save",
     confirm: "Confirm",

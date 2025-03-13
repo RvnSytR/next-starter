@@ -105,7 +105,7 @@ export function CustomButton({
         className,
       )}
       onClick={async (e) => {
-        if (onClickLoading) setTimeout(() => setIsLoading(true), 0);
+        if (onClickLoading) setIsLoading(true);
         if (onClick) onClick(e);
       }}
       {...props}

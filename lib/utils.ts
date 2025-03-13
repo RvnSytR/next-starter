@@ -3,7 +3,7 @@ import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
 
-export const maxFileSize = { mb: 1, byte: 1 * 1000 * 1000 };
+export const maxFileSize = { mb: 1, byte: FormatToByte(1) };
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -36,6 +36,14 @@ export function GetRandomColor(withHash?: boolean) {
 // #endregion
 
 // #region // * Formater
+export function FormatToByte(mb: number) {
+  return mb * 1000 * 1000;
+}
+
+export function FormatToMegabyte(byte: number) {
+  return byte / 1000 / 1000;
+}
+
 export function Capitalize(str: string) {
   return String(str).charAt(0).toUpperCase() + String(str).slice(1);
 }
@@ -100,7 +108,7 @@ export function CalculateAge(birthDate: Date): number | string {
 }
 // #endregion
 
-// #region // * Image Reader
+// #region // TODO Image Reader
 function ReadFileAsURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();

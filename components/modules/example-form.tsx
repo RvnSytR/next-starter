@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
+import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Club, Diamond, Heart, LockKeyhole, Spade } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -25,6 +26,7 @@ import { CustomButton } from "../custom/custom-button";
 import {
   FormFloating,
   InputDate,
+  InputFile,
   InputRadioGroup,
 } from "../custom/custom-field";
 import { Input } from "../ui/input";
@@ -39,6 +41,7 @@ export default function ExampleForm() {
     select: z.enum(golDarah),
     radio: z.enum(["spade", "heart", "diamond", "club"]),
     date: z.date(),
+    file: zodFile.imageList,
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -54,6 +57,7 @@ export default function ExampleForm() {
   });
 
   const formHandler = async (data: z.infer<typeof schema>) => {
+    console.log(data.file);
     toast(<p>{JSON.stringify(data, null, 2)}</p>);
   };
 
@@ -145,8 +149,8 @@ export default function ExampleForm() {
                 <FormLabel>Select</FormLabel>
 
                 <Select
-                  onValueChange={field.onChange}
                   defaultValue={field.value}
+                  onValueChange={field.onChange}
                 >
                   <FormControl>
                     <SelectTrigger>
@@ -226,9 +230,39 @@ export default function ExampleForm() {
               </FormItem>
             )}
           />
+
+          {/* Date Range */}
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date Range</FormLabel>
+                <FormControl>
+                  <InputDate selected={field.value} onSelect={field.onChange} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
 
         {/* Files */}
+        <FormField
+          control={form.control}
+          name="file"
+          render={() => (
+            <FormItem>
+              <FormLabel>File</FormLabel>
+              <InputFile
+                onDrop={(files) => files && form.setValue("file", files)}
+                multiple
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <CustomButton type="submit" className="w-fit" text="Submit" />
       </form>

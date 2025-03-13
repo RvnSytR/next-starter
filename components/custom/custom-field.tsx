@@ -1,17 +1,22 @@
 import { useIsMobile } from "@/hooks/use-mobile";
-import { label as labelContent } from "@/lib/content";
-import { cn, FileOnChangeAsURL, FormatDate, maxFileSize } from "@/lib/utils";
+import { label, label as labelContent } from "@/lib/content";
+import { cn, FormatDate, FormatToMegabyte, maxFileSize } from "@/lib/utils";
+import { docType, imgType } from "@/lib/zod";
 import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
-import Image from "next/image";
-import { Dispatch, ReactNode, RefObject, SetStateAction } from "react";
+import {
+  ComponentProps,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useRef,
+  useState,
+} from "react";
 import type { DateRange, PropsSingleRequired } from "react-day-picker";
-import { toast } from "sonner";
-import { iconSize } from "../icon";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
 import { Checkbox } from "../ui/checkbox";
-import { FormControl, FormDescription, FormItem } from "../ui/form";
+import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -68,6 +73,7 @@ export function InputRadioGroup({
               value={item.value}
               currentValue={defaultValue}
               checkedClassName={item.checkedClassName}
+              className="text-sm font-medium"
             >
               {item.icon}
               {item.label}
@@ -117,78 +123,59 @@ export function InputDate({
 }
 
 export function InputFile({
-  label,
-  state,
-  setState,
-  ref,
-  disabled = false,
-}: {
-  label: string;
-  state: string | null;
-  setState: Dispatch<SetStateAction<string | null>>;
-  ref: RefObject<HTMLInputElement>;
-  disabled?: boolean;
+  placeholder,
+  multiple = false,
+  accept = "img",
+  onDrop,
+}: Pick<ComponentProps<"input">, "multiple" | "placeholder"> & {
+  accept?: "img" | "doc";
+  onDrop: (file: FileList | null) => void;
 }) {
+  const [acceptedFiles, setAcceptedFiles] = useState<FileList | null>(null);
+  const hiddenInputRef = useRef<HTMLInputElement>(null);
+  const fileType = accept === "img" ? imgType : docType;
+
   return (
-    <div className="space-y-1">
-      <Label htmlFor="file" className={disabled ? "text-muted-foreground" : ""}>
-        {label}
-      </Label>
-
-      <div className="flex justify-center rounded-md border p-4">
-        {state ? (
-          <div
-            className={cn(
-              "group border-muted-foreground flex size-fit max-h-[36rem] grow justify-center overflow-hidden rounded-md border-dashed",
-              !disabled ? "hover:cursor-pointer hover:border" : "",
-            )}
-          >
-            <Image
-              src={state}
-              width={960}
-              height={960}
-              alt="Bukti Approval"
-              className="rounded-md object-contain object-center transition group-hover:scale-105"
-              onClick={() => {
-                if (!disabled) ref.current?.click();
-              }}
-            />
-          </div>
-        ) : (
-          <div
-            className={cn(
-              "flex h-[12rem] w-full flex-col items-center justify-center gap-y-2 rounded-md border opacity-25 outline-1 transition outline-dashed md:w-[18rem]",
-              !disabled ? "hover:cursor-pointer hover:opacity-100" : "",
-            )}
-            onClick={() => {
-              if (!disabled) ref.current?.click();
-            }}
-          >
-            <CloudUpload size={iconSize.lg} />
-            <small className="text-xs font-medium">Upload File</small>
-          </div>
-        )}
-      </div>
-
+    <div className="border-input hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-4 rounded-md border border-dashed px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer">
       <Input
         type="file"
-        id="file"
-        name="file"
-        ref={ref}
-        onChange={async (event) => {
-          try {
-            setState((await FileOnChangeAsURL(event))[0]);
-          } catch (error) {
-            if (error instanceof Error) toast.error(error.message);
+        ref={hiddenInputRef}
+        multiple={multiple}
+        accept={fileType.join(", ")}
+        className="absolute size-full opacity-0"
+        onChange={(e) => {
+          const files = e.target.files;
+          if (files) {
+            onDrop(files);
+            setAcceptedFiles(files);
           }
         }}
-        accept="image/png, image/jpeg, image/jpg, image/webp"
-        className="hidden"
       />
 
-      <FormDescription>
-        * Maksimal file berukuran {maxFileSize.mb}MB
-      </FormDescription>
+      <div className="flex flex-col items-center gap-y-2 text-center">
+        <CloudUpload className="size-6" />
+        <small className="text-sm font-medium">
+          {placeholder ?? label.button.fileInput.placeholder}
+        </small>
+        <small className="text-muted-foreground">
+          Max File Size: {maxFileSize.mb} MB
+        </small>
+      </div>
+
+      {acceptedFiles && acceptedFiles.length > 0 ? (
+        <ul className="text-center">
+          {Array.from(acceptedFiles).map((file, index) => (
+            <li key={index}>
+              <small>
+                <span className="font-medium">{file.name}</span>
+                {` - ${FormatToMegabyte(file.size).toFixed(2)} MB`}
+              </small>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <small>{label.button.fileInput.empty}</small>
+      )}
     </div>
   );
 }

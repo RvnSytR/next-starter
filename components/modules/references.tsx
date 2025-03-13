@@ -22,6 +22,7 @@ import {
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import ExampleForm from "./example-form";
 
 export function References() {
@@ -113,15 +114,16 @@ export function References() {
                 Example Code
               </AccordionTrigger>
               <AccordionContent>
-                <div className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
+                <ScrollArea className="relative rounded-xl border p-4 font-mono text-sm break-all whitespace-pre">
                   <CopyButton
                     size="iconsm"
                     variant="outline"
                     value={exampleCode}
-                    className="absolute top-2 right-2"
+                    className="bg-background absolute top-2 right-2"
                   />
                   {exampleCode}
-                </div>
+                  <ScrollBar orientation="horizontal" />
+                </ScrollArea>
               </AccordionContent>
             </AccordionItem>
           )}
@@ -217,7 +219,7 @@ const data = [
           apiReference={[
             { name: "text", type: "string" },
             { name: "icon", type: "ReactNode" },
-            { name: "iconPosition", type: `"left" | "right"`, def: "left" },
+            { name: "iconPosition", type: `"left" | "right"`, def: `"left"` },
             { name: "loading", type: "boolean", def: "false" },
             { name: "onClickLoading", type: "boolean", def: "false" },
             { name: "inSidebar", type: "boolean", def: "false" },
