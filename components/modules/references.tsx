@@ -20,9 +20,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { label } from "@/lib/content";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
+import { Separator } from "../ui/separator";
 import ExampleForm from "./example-form";
 
 export function References() {
@@ -64,8 +66,10 @@ export function References() {
         <CardTitle>{title}</CardTitle>
       </CardHeader>
 
-      <CardContent className="flex flex-col items-center gap-4">
+      <CardContent className="flex flex-col items-center">
         {children}
+
+        <Separator className="mt-6" />
 
         <Accordion
           type="multiple"
@@ -74,7 +78,7 @@ export function References() {
         >
           {apiReference && (
             <AccordionItem value="apiReference">
-              <AccordionTrigger className="text-lg font-semibold">
+              <AccordionTrigger className="text-base">
                 API Reference
               </AccordionTrigger>
               <AccordionContent>
@@ -110,7 +114,7 @@ export function References() {
 
           {exampleCode && (
             <AccordionItem value="exampleCode">
-              <AccordionTrigger className="text-lg font-semibold">
+              <AccordionTrigger className="text-base">
                 Example Code
               </AccordionTrigger>
               <AccordionContent>
@@ -261,7 +265,58 @@ const data = [
       </TabsContent>
 
       <TabsContent value="Form Example" className="space-y-2">
-        <ComponentCard title="Form Example">
+        <ComponentCard
+          title="Form Example"
+          exampleCode={`import { CustomButton } from "@/components/custom/custom-button";
+import { zodFile } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+
+const schema = z.object({
+  text: z.string().min(1),
+  numeric: z.number(),
+  phone: z.number(),
+  select: z.enum(["O", "A", "B", "AB"]),
+  radio: z.enum(["spade", "heart", "diamond", "club"]),
+  date: z.date(),
+  file: zodFile.document,
+  fileList: zodFile.imageList,
+});
+
+const form = useForm<z.infer<typeof schema>>({
+  resolver: zodResolver(schema),
+  defaultValues: {
+    text: "Some Text",
+    numeric: 100000,
+    phone: 81234567890,
+    select: "O",
+    radio: "spade",
+    date: new Date(),
+  },
+});
+
+const formHandler = async (data: z.infer<typeof schema>) => {
+  console.log(data.file);
+  console.log(data.fileList);
+  toast(<p>{JSON.stringify(data, null, 2)}</p>);
+};
+
+<Form {...form}>
+  <form onSubmit={form.handleSubmit(formHandler)}>
+    {/* Form Field Goes Here */}
+
+    {/* You can add a loading state to the submit button using CustomButton component, for example: */}
+    <CustomButton type="submit" loading={isLoading} text="${label.button.save}" />
+
+    <Button type="reset" variant="outline" onClick={() => form.reset()}>
+      <RotateCcw />
+      ${label.button.reset}
+    </Button>
+  </form>
+</Form>`}
+        >
           <ExampleForm />
         </ComponentCard>
       </TabsContent>

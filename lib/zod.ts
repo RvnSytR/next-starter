@@ -19,45 +19,27 @@ export const docType = [
 
 export const zodFile = {
   image: z
-    .instanceof(File)
-    .refine((file) => imgType.includes(file.type), {
-      message: "Invalid image file type",
-    })
-    .refine((file) => file.size <= maxFileSize.byte, {
-      message: `Image size should not exceed ${maxFileSize.mb}MB`,
-    }),
-
-  imageList: z
     .instanceof(FileList)
     .refine(
       (files) => Array.from(files).every((file) => imgType.includes(file.type)),
-      { message: "Invalid image file type in the list" },
+      { message: "Invalid image file type" },
     )
     .refine(
       (files) =>
         Array.from(files).every((file) => file.size <= maxFileSize.byte),
-      { message: `Each image should not exceed ${maxFileSize.mb}MB` },
+      { message: `Image size should not exceed ${maxFileSize.mb} MB` },
     ),
 
   document: z
-    .instanceof(File)
-    .refine((file) => docType.includes(file.type), {
-      message: "Invalid document file type",
-    })
-    .refine((file) => file.size <= maxFileSize.byte, {
-      message: `Document size should not exceed ${maxFileSize.mb}MB`,
-    }),
-
-  documentList: z
     .instanceof(FileList)
     .refine(
       (files) => Array.from(files).every((file) => docType.includes(file.type)),
-      { message: "Invalid document file type in the list" },
+      { message: "Invalid document file type" },
     )
     .refine(
       (files) =>
         Array.from(files).every((file) => file.size <= maxFileSize.byte),
-      { message: `Each document should not exceed ${maxFileSize.mb}MB` },
+      { message: `Document size should not exceed ${maxFileSize.mb} MB` },
     ),
 };
 

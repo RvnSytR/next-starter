@@ -96,7 +96,7 @@ const label = {
       catch: "Uh-oh! Something went wrong. Please try again later.",
 
       file: {
-        required: (name: string) => `Please upload ${name}!`,
+        required: (f: string) => `Please upload ${f}!`,
         upload: "An error occurred while uploading the file!",
       },
 
@@ -125,6 +125,7 @@ const label = {
     datePicker: "Pick a date",
     fileInput: {
       placeholder: "Drag & drop your file here, or Click to upload",
+      size: (mb: number) => `Max File Size: ${mb} MB`,
       empty: "No file selected",
     },
 

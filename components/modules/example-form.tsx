@@ -15,10 +15,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { label } from "@/lib/content";
 import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Club, Diamond, Heart, LockKeyhole, Spade } from "lucide-react";
+import {
+  Club,
+  Diamond,
+  Heart,
+  LockKeyhole,
+  RotateCcw,
+  Save,
+  Spade,
+} from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -29,19 +38,38 @@ import {
   InputFile,
   InputRadioGroup,
 } from "../custom/custom-field";
+import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 
 export default function ExampleForm() {
-  const golDarah = ["O", "A", "B", "AB"] as const;
+  const card = ["Spade", "Heart", "Diamond", "Club"] as const;
+  const selectAndRadioData = [
+    { value: "Spade", icon: <Spade /> },
+    {
+      value: "Heart",
+      icon: <Heart />,
+      checkedClassName: "text-pink-500 border-pink-500",
+    },
+    {
+      value: "Diamond",
+      icon: <Diamond />,
+      checkedClassName: "text-sky-500 border-sky-500",
+    },
+    {
+      value: "Club",
+      icon: <Club />,
+      checkedClassName: "text-green-500 border-green-500",
+    },
+  ];
 
   const schema = z.object({
     text: z.string().min(1),
     numeric: z.number(),
     phone: z.number(),
-    select: z.enum(golDarah),
-    radio: z.enum(["spade", "heart", "diamond", "club"]),
+    select: z.enum(card),
+    radio: z.enum(card),
     date: z.date(),
-    file: zodFile.imageList,
+    file: zodFile.image,
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -50,8 +78,8 @@ export default function ExampleForm() {
       text: "Some Text",
       numeric: 100000,
       phone: 81234567890,
-      select: "O",
-      radio: "spade",
+      select: "Spade",
+      radio: "Spade",
       date: new Date(),
     },
   });
@@ -64,7 +92,7 @@ export default function ExampleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="grid grid-cols-2 gap-x-2 gap-y-4 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-3">
           {/* Text */}
           <FormField
             control={form.control}
@@ -148,10 +176,7 @@ export default function ExampleForm() {
               <FormItem>
                 <FormLabel>Select</FormLabel>
 
-                <Select
-                  defaultValue={field.value}
-                  onValueChange={field.onChange}
-                >
+                <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue />
@@ -159,9 +184,10 @@ export default function ExampleForm() {
                   </FormControl>
 
                   <SelectContent>
-                    {golDarah.map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
+                    {selectAndRadioData.map((item, index) => (
+                      <SelectItem key={index} value={item.value}>
+                        {item.icon}
+                        {item.value}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -171,42 +197,21 @@ export default function ExampleForm() {
               </FormItem>
             )}
           />
-        </div>
 
-        <div className="grid grid-cols-1 gap-x-2 gap-y-4 md:grid-cols-4">
           {/* Radio Group */}
           <FormField
             control={form.control}
             name="radio"
             render={({ field }) => (
-              <FormItem className="md:col-span-2">
+              <FormItem>
                 <FormLabel>Radio Group</FormLabel>
 
                 <FormControl>
                   <InputRadioGroup
                     defaultValue={field.value}
                     onValueChange={field.onChange}
-                    radioItems={[
-                      { value: "spade", label: "Spade", icon: <Spade /> },
-                      {
-                        value: "heart",
-                        label: "Heart",
-                        icon: <Heart />,
-                        checkedClassName: "text-pink-500 border-pink-500",
-                      },
-                      {
-                        value: "diamond",
-                        label: "Diamond",
-                        icon: <Diamond />,
-                        checkedClassName: "text-sky-500 border-sky-500",
-                      },
-                      {
-                        value: "club",
-                        label: "Club",
-                        icon: <Club />,
-                        checkedClassName: "text-green-500 border-green-500",
-                      },
-                    ]}
+                    className="grid grid-cols-2 md:flex md:grid-cols-4"
+                    radioItems={selectAndRadioData}
                   />
                 </FormControl>
 
@@ -230,41 +235,35 @@ export default function ExampleForm() {
               </FormItem>
             )}
           />
-
-          {/* Date Range */}
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date Range</FormLabel>
-                <FormControl>
-                  <InputDate selected={field.value} onSelect={field.onChange} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
         </div>
 
-        {/* Files */}
+        {/* File */}
         <FormField
           control={form.control}
           name="file"
-          render={() => (
+          render={({ field: { onChange, ...restField } }) => (
             <FormItem>
               <FormLabel>File</FormLabel>
               <InputFile
-                onDrop={(files) => files && form.setValue("file", files)}
-                multiple
+                onChange={(e) => onChange(e.target.files)}
+                {...restField}
               />
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <CustomButton type="submit" className="w-fit" text="Submit" />
+        <div className="flex gap-2">
+          <CustomButton
+            type="submit"
+            icon={<Save />}
+            text={label.button.save}
+          />
+          <Button type="reset" variant="outline" onClick={() => form.reset()}>
+            <RotateCcw />
+            {label.button.reset}
+          </Button>
+        </div>
       </form>
     </Form>
   );

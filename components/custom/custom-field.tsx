@@ -1,17 +1,15 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { label, label as labelContent } from "@/lib/content";
-import { cn, FormatDate, FormatToMegabyte, maxFileSize } from "@/lib/utils";
+import {
+  cn,
+  FormatDate,
+  FormatToMegabyte,
+  maxFileSize as MaxFileSize,
+} from "@/lib/utils";
 import { docType, imgType } from "@/lib/zod";
 import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
-import {
-  ComponentProps,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useRef,
-  useState,
-} from "react";
-import type { DateRange, PropsSingleRequired } from "react-day-picker";
+import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
+import type { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
@@ -55,7 +53,7 @@ export function InputRadioGroup({
 }: RadioGroupProps & {
   radioItems: {
     value: string;
-    label: string;
+    label?: string;
     icon?: ReactNode;
     checkedClassName?: string;
   }[];
@@ -76,7 +74,7 @@ export function InputRadioGroup({
               className="text-sm font-medium"
             >
               {item.icon}
-              {item.label}
+              {item.label ?? item.value}
             </RadioGroupItem>
           </FormControl>
         </FormItem>
@@ -122,34 +120,75 @@ export function InputDate({
   );
 }
 
-export function InputFile({
-  placeholder,
-  multiple = false,
-  accept = "img",
-  onDrop,
-}: Pick<ComponentProps<"input">, "multiple" | "placeholder"> & {
-  accept?: "img" | "doc";
-  onDrop: (file: FileList | null) => void;
+export function InputDateRange({
+  selected,
+  onSelect,
+  numberOfMonths = 2,
+  label,
+  ...props
+}: Omit<Extract<CalendarProps, PropsRangeRequired>, "mode" | "required"> & {
+  label?: string;
 }) {
-  const [acceptedFiles, setAcceptedFiles] = useState<FileList | null>(null);
-  const hiddenInputRef = useRef<HTMLInputElement>(null);
-  const fileType = accept === "img" ? imgType : docType;
-
   return (
-    <div className="border-input hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-4 rounded-md border border-dashed px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer">
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          className={cn(!selected && "text-muted-foreground")}
+        >
+          <CalendarIcon />
+          {selected?.from ? (
+            selected.to ? (
+              `${FormatDate(selected.from, "PPP")} - ${FormatDate(selected.to, "PPP")}`
+            ) : (
+              FormatDate(selected.from, "PPP")
+            )
+          ) : (
+            <span>{label ?? labelContent.button.datePicker}</span>
+          )}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="size-fit p-0">
+        <Calendar
+          mode="range"
+          defaultMonth={selected?.from}
+          selected={selected}
+          onSelect={onSelect}
+          numberOfMonths={numberOfMonths}
+          required
+          {...props}
+        />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+export function InputFile({
+  value,
+  accept = "img",
+  maxFileSize = MaxFileSize.mb,
+  className,
+  placeholder,
+  ...props
+}: Omit<ComponentProps<"input">, "Type" | "value" | "accept"> & {
+  value: FileList;
+  accept?: "img" | "doc";
+  maxFileSize?: number;
+}) {
+  const fileType = accept === "img" ? imgType : docType;
+  return (
+    <div
+      className={cn(
+        "border-input hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-4 rounded-md border border-dashed px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer",
+        className,
+      )}
+    >
       <Input
         type="file"
-        ref={hiddenInputRef}
-        multiple={multiple}
         accept={fileType.join(", ")}
         className="absolute size-full opacity-0"
-        onChange={(e) => {
-          const files = e.target.files;
-          if (files) {
-            onDrop(files);
-            setAcceptedFiles(files);
-          }
-        }}
+        {...props}
       />
 
       <div className="flex flex-col items-center gap-y-2 text-center">
@@ -158,13 +197,13 @@ export function InputFile({
           {placeholder ?? label.button.fileInput.placeholder}
         </small>
         <small className="text-muted-foreground">
-          Max File Size: {maxFileSize.mb} MB
+          {label.button.fileInput.size(maxFileSize)}
         </small>
       </div>
 
-      {acceptedFiles && acceptedFiles.length > 0 ? (
+      {value && value.length > 0 ? (
         <ul className="text-center">
-          {Array.from(acceptedFiles).map((file, index) => (
+          {Array.from(value).map((file, index) => (
             <li key={index}>
               <small>
                 <span className="font-medium">{file.name}</span>
@@ -177,55 +216,6 @@ export function InputFile({
         <small>{label.button.fileInput.empty}</small>
       )}
     </div>
-  );
-}
-
-export function InputDateRange({
-  state,
-  setState,
-  label,
-  align = "center",
-  className,
-  disabled = false,
-}: {
-  state: DateRange | undefined;
-  setState: Dispatch<SetStateAction<DateRange | undefined>>;
-  label?: string;
-  align?: "center" | "end" | "start";
-  className?: string;
-  disabled?: boolean;
-}) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(!state && "text-muted-foreground", className)}
-          disabled={disabled}
-        >
-          <CalendarIcon />
-          {state?.from ? (
-            state.to ? (
-              `${FormatDate(state.from, "PPP")} - ${FormatDate(state.to, "PPP")}`
-            ) : (
-              FormatDate(state.from, "PPP")
-            )
-          ) : (
-            <span>{label ?? "Pick a date"}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="w-fit p-0" align={align}>
-        <Calendar
-          mode="range"
-          defaultMonth={state?.from}
-          selected={state}
-          onSelect={setState}
-          numberOfMonths={2}
-        />
-      </PopoverContent>
-    </Popover>
   );
 }
 
