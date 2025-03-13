@@ -24,7 +24,11 @@ import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
-import { ExampleForm, TextAndNumericField } from "./example-form";
+import {
+  ExampleForm,
+  SelectAndRadioField,
+  TextAndNumericField,
+} from "./example-form";
 
 export function References() {
   const pieChartData = [
@@ -144,6 +148,7 @@ export function References() {
         <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
         <TabsTrigger value="Form Example">Form Example</TabsTrigger>
         <TabsTrigger value="Text and Number">Text and Number</TabsTrigger>
+        <TabsTrigger value="Select and Radio">Select and Radio</TabsTrigger>
       </TabsList>
 
       <TabsContent value="Custom Chart" className="space-y-2">
@@ -358,7 +363,7 @@ export function ExampleForm() {
     <FormItem>
       <FormLabel>Text</FormLabel>
       <FormControl>
-        <Input type="text" placeholder="Enter your text" {...field} />
+        <Input type="text" placeholder="Enter some text" {...field} />
       </FormControl>
       <FormMessage />
     </FormItem>
@@ -372,29 +377,31 @@ export function ExampleForm() {
   render={({ field }) => (
     <FormItem>
       <FormLabel>Numeric</FormLabel>
-      <Input
-        type="text"
-        inputMode="numeric"
-        value={FormatNumeric(field.value)}
-        onChange={(e) =>
-          field.onChange(SanitizeNumber(e.target.value))
-        }
-      />
+      <FormControl>
+        <Input
+          type="text"
+          inputMode="numeric"
+          value={FormatNumeric(field.value)}
+          onChange={(e) =>
+            field.onChange(SanitizeNumber(e.target.value))
+          }
+        />
+      </FormControl>
       <FormMessage />
     </FormItem>
   )}
 />
 
-{/* With form floating */}
+{/* With Form Floating */}
 <FormField
   control={form.control}
   name="text"
   render={({ field }) => (
     <FormItem>
-      <FormLabel>With form floating</FormLabel>
+      <FormLabel>With Form Floating</FormLabel>
       <FormControl>
         <FormFloating icon={<LockKeyhole />}>
-          <Input type="text" placeholder="Enter your text" {...field} />
+          <Input type="text" placeholder="Enter some text" {...field} />
         </FormFloating>
       </FormControl>
       <FormMessage />
@@ -409,22 +416,91 @@ export function ExampleForm() {
   render={({ field }) => (
     <FormItem>
       <FormLabel>Phone</FormLabel>
-      <FormFloating icon={"+62"}>
-        <Input
-          type="text"
-          inputMode="numeric"
-          value={FormatPhone(field.value)}
-          onChange={(e) => {
-            field.onChange(SanitizeNumber(e.target.value));
-          }}
-        />
-      </FormFloating>
+      <FormControl>
+        <FormFloating icon={"+62"}>
+          <Input
+            type="text"
+            inputMode="numeric"
+            value={FormatPhone(field.value)}
+            onChange={(e) => {
+              field.onChange(SanitizeNumber(e.target.value));
+            }}
+          />
+        </FormFloating>
+      </FormControl>
       <FormMessage />
     </FormItem>
   )}
 />`}
         >
           <TextAndNumericField />
+        </ComponentCard>
+      </TabsContent>
+
+      <TabsContent value="Select and Radio" className="space-y-2">
+        <ComponentCard
+          title="Text and Number Field"
+          trigger={{ apiReference: "Input Radio" }}
+          apiReference={[
+            {
+              name: "radioItems",
+              type: "{ value: string; label?: string; icon?: ReactNode; checkedClassName?: string; }[]",
+            },
+            { name: "...props", type: `RadioGroupProps` },
+          ]}
+          exampleCode={`const selectAndRadioData = [
+  { value: "Spade", icon: <Spade /> },
+  { value: "Heart", icon: <Heart />, checkedClassName: "text-pink-500 border-pink-500" },
+  { value: "Diamond", icon: <Diamond />, checkedClassName: "text-sky-500 border-sky-500" },
+  { value: "Club", icon: <Club />, checkedClassName: "text-green-500 border-green-500" },
+];
+
+{/* Select */}
+<FormField
+  control={form.control}
+  name="select"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Select</FormLabel>
+      <Select value={field.value} onValueChange={field.onChange}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {selectAndRadioData.map((item, index) => (
+            <SelectItem key={index} value={item.value}>
+              {item.icon}
+              {item.value}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{/* Custom Radio */}
+<FormField
+  control={form.control}
+  name="radio"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Custom Radio</FormLabel>
+      <InputRadioGroup
+        defaultValue={field.value}
+        onValueChange={field.onChange}
+        className="grid grid-cols-2 md:flex md:grid-cols-4"
+        radioItems={selectAndRadioData}
+      />
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        >
+          <SelectAndRadioField />
         </ComponentCard>
       </TabsContent>
     </Tabs>

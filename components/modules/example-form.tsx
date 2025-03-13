@@ -35,6 +35,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -131,16 +132,18 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Numeric</FormLabel>
-                <FormFloating icon={"Rp."}>
-                  <Input
-                    type="text"
-                    inputMode="numeric"
-                    value={FormatNumeric(field.value)}
-                    onChange={(e) =>
-                      field.onChange(SanitizeNumber(e.target.value))
-                    }
-                  />
-                </FormFloating>
+                <FormControl>
+                  <FormFloating icon={"Rp."}>
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      value={FormatNumeric(field.value)}
+                      onChange={(e) =>
+                        field.onChange(SanitizeNumber(e.target.value))
+                      }
+                    />
+                  </FormFloating>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -153,16 +156,18 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone</FormLabel>
-                <FormFloating icon={"+62"}>
-                  <Input
-                    type="text"
-                    inputMode="numeric"
-                    value={FormatPhone(field.value)}
-                    onChange={(e) => {
-                      field.onChange(SanitizeNumber(e.target.value));
-                    }}
-                  />
-                </FormFloating>
+                <FormControl>
+                  <FormFloating icon={"+62"}>
+                    <Input
+                      type="text"
+                      inputMode="numeric"
+                      value={FormatPhone(field.value)}
+                      onChange={(e) => {
+                        field.onChange(SanitizeNumber(e.target.value));
+                      }}
+                    />
+                  </FormFloating>
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -203,16 +208,12 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Radio Group</FormLabel>
-
-                <FormControl>
-                  <InputRadioGroup
-                    defaultValue={field.value}
-                    onValueChange={field.onChange}
-                    className="grid grid-cols-2 md:flex md:grid-cols-4"
-                    radioItems={selectAndRadioData}
-                  />
-                </FormControl>
-
+                <InputRadioGroup
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                  className="grid grid-cols-2 md:flex md:grid-cols-4"
+                  radioItems={selectAndRadioData}
+                />
                 <FormMessage />
               </FormItem>
             )}
@@ -225,10 +226,7 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <InputDate selected={field.value} onSelect={field.onChange} />
-                </FormControl>
-
+                <InputDate selected={field.value} onSelect={field.onChange} />
                 <FormMessage />
               </FormItem>
             )}
@@ -274,7 +272,7 @@ export function TextAndNumericField() {
     <div className="flex flex-wrap justify-center gap-2">
       <ReplicaFormItem>
         <Label>Text</Label>
-        <Input type="text" placeholder="Enter your text" />
+        <Input type="text" placeholder="Enter some text" />
       </ReplicaFormItem>
 
       <ReplicaFormItem>
@@ -288,9 +286,9 @@ export function TextAndNumericField() {
       </ReplicaFormItem>
 
       <ReplicaFormItem>
-        <Label>With form floating</Label>
+        <Label>With Form Floating</Label>
         <FormFloating icon={<LockKeyhole />}>
-          <Input type="text" placeholder="Enter your text" />
+          <Input type="text" placeholder="Enter some text" />
         </FormFloating>
       </ReplicaFormItem>
 
@@ -304,6 +302,89 @@ export function TextAndNumericField() {
             onChange={(e) => setPhoneValue(SanitizeNumber(e.target.value))}
           />
         </FormFloating>
+      </ReplicaFormItem>
+    </div>
+  );
+}
+
+export function SelectAndRadioField() {
+  const [radioValue, setRadioValue] = useState<string>("Spade");
+
+  const selectAndRadioData = [
+    { value: "Spade", icon: <Spade /> },
+    {
+      value: "Heart",
+      icon: <Heart />,
+      checkedClassName: "text-pink-500 border-pink-500",
+    },
+    {
+      value: "Diamond",
+      icon: <Diamond />,
+      checkedClassName: "text-sky-500 border-sky-500",
+    },
+    {
+      value: "Club",
+      icon: <Club />,
+      checkedClassName: "text-green-500 border-green-500",
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      <ReplicaFormItem>
+        <Label>Select</Label>
+        <Select value="Spade">
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+
+          <SelectContent>
+            {selectAndRadioData.map((item, index) => (
+              <SelectItem key={index} value={item.value}>
+                {item.icon}
+                {item.value}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </ReplicaFormItem>
+
+      <ReplicaFormItem>
+        <Label>Radio</Label>
+        <RadioGroup
+          value={radioValue}
+          onValueChange={setRadioValue}
+          className="h-full flex-wrap items-center"
+        >
+          {selectAndRadioData.map((item) => (
+            <div key={item.value} className="flex items-center gap-2">
+              <RadioGroupItem id={item.value} value={item.value} />
+              <Label htmlFor={item.value}>{item.value}</Label>
+            </div>
+          ))}
+        </RadioGroup>
+      </ReplicaFormItem>
+
+      <ReplicaFormItem>
+        <Label>Custom Radio</Label>
+        <RadioGroup
+          defaultValue={radioValue}
+          onValueChange={setRadioValue}
+          className="flex-wrap"
+        >
+          {selectAndRadioData.map((item) => (
+            <RadioGroupItem
+              key={item.value}
+              value={item.value}
+              currentValue={radioValue}
+              checkedClassName={item.checkedClassName}
+              className="text-sm font-medium"
+            >
+              {item.icon}
+              {item.value}
+            </RadioGroupItem>
+          ))}
+        </RadioGroup>
       </ReplicaFormItem>
     </div>
   );

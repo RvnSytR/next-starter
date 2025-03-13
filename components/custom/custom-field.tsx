@@ -94,17 +94,19 @@ export function InputDate({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(!selected && "text-muted-foreground")}
-        >
-          <CalendarIcon />
-          {selected ? (
-            FormatDate(selected, "PPPP")
-          ) : (
-            <span>{label ?? labelContent.button.datePicker}</span>
-          )}
-        </Button>
+        <FormControl>
+          <Button
+            variant="outline"
+            className={cn(!selected && "text-muted-foreground")}
+          >
+            <CalendarIcon />
+            {selected ? (
+              FormatDate(selected, "PPPP")
+            ) : (
+              <span>{label ?? labelContent.button.datePicker}</span>
+            )}
+          </Button>
+        </FormControl>
       </PopoverTrigger>
 
       <PopoverContent className="size-fit p-0">
@@ -184,12 +186,14 @@ export function InputFile({
         className,
       )}
     >
-      <Input
-        type="file"
-        accept={fileType.join(", ")}
-        className="absolute size-full opacity-0"
-        {...props}
-      />
+      <FormControl>
+        <Input
+          type="file"
+          accept={fileType.join(", ")}
+          className="absolute size-full opacity-0"
+          {...props}
+        />
+      </FormControl>
 
       <div className="flex flex-col items-center gap-y-2 text-center">
         <CloudUpload className="size-6" />
