@@ -143,13 +143,22 @@ export function References() {
 
   return (
     <Tabs defaultValue="Custom Chart">
-      <TabsList>
-        <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
-        <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
-        <TabsTrigger value="Form Example">Form Example</TabsTrigger>
-        <TabsTrigger value="Text and Number">Text and Number</TabsTrigger>
-        <TabsTrigger value="Select and Radio">Select and Radio</TabsTrigger>
-      </TabsList>
+      <ScrollArea className="pb-4 lg:pb-0">
+        <TabsList>
+          <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
+          <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
+          <TabsTrigger value="Form Example">Form Example</TabsTrigger>
+          <TabsTrigger value="Text and Number">Text and Number</TabsTrigger>
+          <TabsTrigger value="Select and Radio">Select and Radio</TabsTrigger>
+          <TabsTrigger value="Date Picker" disabled>
+            Date Picker
+          </TabsTrigger>
+          <TabsTrigger value="File Input" disabled>
+            File Input
+          </TabsTrigger>
+        </TabsList>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
 
       <TabsContent value="Custom Chart" className="space-y-2">
         <ComponentCard
@@ -503,6 +512,9 @@ export function ExampleForm() {
           <SelectAndRadioField />
         </ComponentCard>
       </TabsContent>
+
+      <TabsContent value="Date Picker" className="space-y-2"></TabsContent>
+      <TabsContent value="File Input" className="space-y-2"></TabsContent>
     </Tabs>
   );
 }

@@ -48,7 +48,7 @@ function ReplicaFormItem({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-y-2 [&_svg:not([class*='size-'])]:size-4",
+        "flex w-full flex-col gap-y-2 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}
@@ -269,7 +269,7 @@ export function TextAndNumericField() {
   const [numericValue, setNumericValue] = useState<number>(0);
   const [phoneValue, setPhoneValue] = useState<number>(0);
   return (
-    <div className="flex flex-wrap justify-center gap-2">
+    <div className="flex flex-wrap justify-center gap-4">
       <ReplicaFormItem>
         <Label>Text</Label>
         <Input type="text" placeholder="Enter some text" />
@@ -330,10 +330,10 @@ export function SelectAndRadioField() {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-2">
+    <div className="grid w-full grid-cols-3 gap-4">
       <ReplicaFormItem>
         <Label>Select</Label>
-        <Select value="Spade">
+        <Select defaultValue="Spade">
           <SelectTrigger>
             <SelectValue />
           </SelectTrigger>
