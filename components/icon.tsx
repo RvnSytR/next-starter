@@ -46,7 +46,12 @@ function CustomLoader({
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const GoogleIcon = ({ ...props }: React.SVGAttributes<SVGSVGElement>) => {
+const GoogleIcon = ({
+  ...props
+}: Omit<
+  React.SVGAttributes<SVGSVGElement>,
+  "xmlns" | "x" | "y" | "height" | "width" | "viewBox"
+>) => {
   return (
     <svg {...svgProps} {...props}>
       <path

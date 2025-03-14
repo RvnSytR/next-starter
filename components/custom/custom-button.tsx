@@ -12,15 +12,18 @@ import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 // #region // * Types
-type FilteredLinkProps = Omit<LinkProps, keyof ButtonProps | "href">;
 type RequiredChildrenProps =
   | { text: string; icon?: ReactNode }
   | { text?: string; icon: ReactNode };
 
+type OptionalChildrenProps = Omit<
+  CustomButtonProps,
+  keyof RequiredChildrenProps
+> & { text?: string; icon?: ReactNode };
+
 export type CustomButtonProps = Omit<ButtonProps, "children"> &
-  FilteredLinkProps &
+  Partial<LinkProps> &
   RequiredChildrenProps & {
-    href?: string | URL;
     iconPosition?: "left" | "right";
     loading?: boolean;
     onClickLoading?: boolean;
@@ -28,12 +31,6 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     hideTextOnMobile?: boolean;
     customLoader?: ReactNode;
   };
-
-type OptionalChildrenProps = Omit<
-  CustomButtonProps,
-  keyof RequiredChildrenProps
-> & { text?: string; icon?: ReactNode };
-
 // #endregion
 
 export function CustomButton({
@@ -111,7 +108,7 @@ export function CustomButton({
       {...props}
     >
       {href ? (
-        <Link href={href} {...(props as FilteredLinkProps)}>
+        <Link href={href} {...(props as Omit<LinkProps, "href">)}>
           <ChildrenNode />
         </Link>
       ) : (
@@ -147,9 +144,9 @@ export function RefreshButton({
 }
 
 export function CopyButton({
+  value,
   icon = <Copy />,
   customLoader = <Check />,
-  value,
   ...props
 }: Omit<OptionalChildrenProps, "loading" | "onClick"> & { value: string }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);

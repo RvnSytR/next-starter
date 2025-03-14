@@ -81,9 +81,9 @@ export function ExampleForm() {
     text: z.string().min(1),
     numeric: z.number(),
     phone: z.number(),
+    date: z.date(),
     select: z.enum(card),
     radio: z.enum(card),
-    date: z.date(),
     file: zodFile.image,
   });
 
@@ -93,9 +93,9 @@ export function ExampleForm() {
       text: "Some Text",
       numeric: 100000,
       phone: 81234567890,
+      date: new Date(),
       select: "Spade",
       radio: "Spade",
-      date: new Date(),
     },
   });
 
@@ -107,7 +107,7 @@ export function ExampleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="grid grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-5">
           {/* Text */}
           <FormField
             control={form.control}
@@ -173,6 +173,19 @@ export function ExampleForm() {
             )}
           />
 
+          {/* Date */}
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Date</FormLabel>
+                <InputDate selected={field.value} onSelect={field.onChange} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           {/* Select */}
           <FormField
             control={form.control}
@@ -201,12 +214,12 @@ export function ExampleForm() {
             )}
           />
 
-          {/* Radio Group */}
+          {/* Custom Radio Group */}
           <FormField
             control={form.control}
             name="radio"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="col-span-3">
                 <FormLabel>Radio Group</FormLabel>
                 <InputRadioGroup
                   defaultValue={field.value}
@@ -219,14 +232,33 @@ export function ExampleForm() {
             )}
           />
 
-          {/* Date */}
+          {/* Radio Group */}
           <FormField
             control={form.control}
-            name="date"
+            name="radio"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <InputDate selected={field.value} onSelect={field.onChange} />
+              <FormItem className="col-span-2">
+                <FormLabel>Radio Group</FormLabel>
+
+                <RadioGroup
+                  defaultValue={field.value}
+                  onValueChange={field.onChange}
+                  className="size-full gap-4"
+                >
+                  {selectAndRadioData.map((item, index) => (
+                    <FormItem
+                      key={index}
+                      className="flex-row items-center space-x-2"
+                    >
+                      <FormControl>
+                        <RadioGroupItem value={item.value} />
+                      </FormControl>
+                      <FormLabel className="font-normal">
+                        {item.value}
+                      </FormLabel>
+                    </FormItem>
+                  ))}
+                </RadioGroup>
                 <FormMessage />
               </FormItem>
             )}
@@ -250,11 +282,14 @@ export function ExampleForm() {
         />
 
         <div className="flex gap-2">
+          {/* You can add a loading state to the submit button using CustomButton component, for example: */}
           <CustomButton
             type="submit"
             icon={<Save />}
             text={label.button.save}
+            // loading={isLoading}
           />
+
           <Button type="reset" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
             {label.button.reset}
