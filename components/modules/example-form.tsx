@@ -1,7 +1,7 @@
 "use client";
 
 import { label } from "@/lib/content";
-import { cn, FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
+import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -13,7 +13,6 @@ import {
   Save,
   Spade,
 } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -34,7 +33,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
@@ -43,18 +41,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
-function ReplicaFormItem({ className, ...props }: React.ComponentProps<"div">) {
-  return (
-    <div
-      className={cn(
-        "flex w-full flex-col gap-y-2 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
-      {...props}
-    />
-  );
-}
 
 export function ExampleForm() {
   const card = ["Spade", "Heart", "Diamond", "Club"] as const;
@@ -241,7 +227,7 @@ export function ExampleForm() {
                 <FormLabel>Radio Group</FormLabel>
 
                 <RadioGroup
-                  defaultValue={field.value}
+                  value={field.value}
                   onValueChange={field.onChange}
                   className="size-full gap-4"
                 >
@@ -297,130 +283,5 @@ export function ExampleForm() {
         </div>
       </form>
     </Form>
-  );
-}
-
-export function TextAndNumericField() {
-  const [numericValue, setNumericValue] = useState<number>(0);
-  const [phoneValue, setPhoneValue] = useState<number>(0);
-  return (
-    <div className="grid w-full gap-x-2 gap-y-4 lg:grid-cols-4">
-      <ReplicaFormItem>
-        <Label>Text</Label>
-        <Input type="text" placeholder="Enter some text" />
-      </ReplicaFormItem>
-
-      <ReplicaFormItem>
-        <Label>Numeric</Label>
-        <Input
-          type="text"
-          inputMode="numeric"
-          value={FormatNumeric(numericValue)}
-          onChange={(e) => setNumericValue(SanitizeNumber(e.target.value))}
-        />
-      </ReplicaFormItem>
-
-      <ReplicaFormItem>
-        <Label>With Form Floating</Label>
-        <FormFloating icon={<LockKeyhole />}>
-          <Input type="text" placeholder="Enter some text" />
-        </FormFloating>
-      </ReplicaFormItem>
-
-      <ReplicaFormItem>
-        <Label>Phone Input</Label>
-        <FormFloating icon="+62">
-          <Input
-            type="text"
-            inputMode="numeric"
-            value={FormatPhone(phoneValue)}
-            onChange={(e) => setPhoneValue(SanitizeNumber(e.target.value))}
-          />
-        </FormFloating>
-      </ReplicaFormItem>
-    </div>
-  );
-}
-
-export function SelectAndRadioField() {
-  const [radioValue, setRadioValue] = useState<string>("Spade");
-
-  const selectAndRadioData = [
-    { value: "Spade", icon: <Spade /> },
-    {
-      value: "Heart",
-      icon: <Heart />,
-      checkedClassName: "text-pink-500 border-pink-500",
-    },
-    {
-      value: "Diamond",
-      icon: <Diamond />,
-      checkedClassName: "text-sky-500 border-sky-500",
-    },
-    {
-      value: "Club",
-      icon: <Club />,
-      checkedClassName: "text-green-500 border-green-500",
-    },
-  ];
-
-  return (
-    <div className="grid w-full gap-x-2 gap-y-4 lg:grid-cols-3">
-      <ReplicaFormItem>
-        <Label>Select</Label>
-        <Select defaultValue="Spade">
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-
-          <SelectContent>
-            {selectAndRadioData.map((item, index) => (
-              <SelectItem key={index} value={item.value}>
-                {item.icon}
-                {item.value}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </ReplicaFormItem>
-
-      <ReplicaFormItem>
-        <Label>Radio</Label>
-        <RadioGroup
-          value={radioValue}
-          onValueChange={setRadioValue}
-          className="h-full flex-wrap items-center"
-        >
-          {selectAndRadioData.map((item) => (
-            <div key={item.value} className="flex items-center gap-2">
-              <RadioGroupItem id={item.value} value={item.value} />
-              <Label htmlFor={item.value}>{item.value}</Label>
-            </div>
-          ))}
-        </RadioGroup>
-      </ReplicaFormItem>
-
-      <ReplicaFormItem>
-        <Label>Custom Radio</Label>
-        <RadioGroup
-          defaultValue={radioValue}
-          onValueChange={setRadioValue}
-          className="grid grid-cols-2 lg:grid-cols-4"
-        >
-          {selectAndRadioData.map((item) => (
-            <RadioGroupItem
-              key={item.value}
-              value={item.value}
-              currentValue={radioValue}
-              checkedClassName={item.checkedClassName}
-              className="text-sm font-medium"
-            >
-              {item.icon}
-              {item.value}
-            </RadioGroupItem>
-          ))}
-        </RadioGroup>
-      </ReplicaFormItem>
-    </div>
   );
 }
