@@ -361,31 +361,6 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
           title="Form Example"
           code={`"use client";
 
-import { CustomButton } from "@/components/custom/custom-button";
-import {
-  FormFloating,
-  InputDate,
-  InputFile,
-  InputRadioGroup,
-} from "@/components/custom/custom-field";
-import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { label } from "@/lib/content";
 import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
@@ -402,6 +377,31 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { CustomButton } from "../custom/custom-button";
+import {
+  FormFloating,
+  InputDate,
+  InputFile,
+  InputRadioGroup,
+} from "../custom/custom-field";
+import { Button } from "../ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import { Input } from "../ui/input";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 export function ExampleForm() {
   const card = ["Spade", "Heart", "Diamond", "Club"] as const;
@@ -462,11 +462,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Text</FormLabel>
-                <FormControl>
-                  <FormFloating icon={<LockKeyhole />}>
+                <FormFloating icon={<LockKeyhole />}>
+                  <FormControl>
                     <Input type="text" {...field} />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
@@ -479,8 +479,8 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Numeric</FormLabel>
-                <FormControl>
-                  <FormFloating icon={"Rp."}>
+                <FormFloating icon={"Rp."}>
+                  <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
@@ -489,8 +489,8 @@ export function ExampleForm() {
                         field.onChange(SanitizeNumber(e.target.value))
                       }
                     />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
@@ -503,8 +503,8 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Phone</FormLabel>
-                <FormControl>
-                  <FormFloating icon={"+62"}>
+                <FormFloating icon={"+62"}>
+                  <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
@@ -513,8 +513,8 @@ export function ExampleForm() {
                         field.onChange(SanitizeNumber(e.target.value));
                       }}
                     />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
@@ -588,7 +588,7 @@ export function ExampleForm() {
                 <FormLabel className="label-required">Radio Group</FormLabel>
 
                 <RadioGroup
-                  defaultValue={field.value}
+                  value={field.value}
                   onValueChange={field.onChange}
                   className="size-full gap-4"
                 >
@@ -645,8 +645,7 @@ export function ExampleForm() {
       </form>
     </Form>
   );
-}
-`}
+}`}
         >
           <ExampleForm />
         </ComponentCard>

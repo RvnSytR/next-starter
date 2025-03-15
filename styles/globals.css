@@ -281,7 +281,7 @@
   }
 
   .label-required {
-    @apply after:ml-1 after:content-['*'];
+    @apply after:text-primary data-[error=true]:after:text-destructive after:ml-1 after:content-['*'];
   }
 
   .skeleton {

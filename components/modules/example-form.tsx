@@ -101,11 +101,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Text</FormLabel>
-                <FormControl>
-                  <FormFloating icon={<LockKeyhole />}>
+                <FormFloating icon={<LockKeyhole />}>
+                  <FormControl>
                     <Input type="text" {...field} />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
@@ -118,8 +118,8 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Numeric</FormLabel>
-                <FormControl>
-                  <FormFloating icon={"Rp."}>
+                <FormFloating icon={"Rp."}>
+                  <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
@@ -128,8 +128,8 @@ export function ExampleForm() {
                         field.onChange(SanitizeNumber(e.target.value))
                       }
                     />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
@@ -142,8 +142,8 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Phone</FormLabel>
-                <FormControl>
-                  <FormFloating icon={"+62"}>
+                <FormFloating icon={"+62"}>
+                  <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
@@ -152,8 +152,8 @@ export function ExampleForm() {
                         field.onChange(SanitizeNumber(e.target.value));
                       }}
                     />
-                  </FormFloating>
-                </FormControl>
+                  </FormControl>
+                </FormFloating>
                 <FormMessage />
               </FormItem>
             )}
