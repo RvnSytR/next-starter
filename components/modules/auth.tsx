@@ -483,7 +483,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
+        <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
           <FormField
             control={form.control}
             name="email"
@@ -589,12 +589,12 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
+        <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
           <FormField
             control={form.control}
             name="currentPassword"
             render={({ field }) => (
-              <FormItem className="basis-1/2">
+              <FormItem>
                 <FormLabel>Current Password</FormLabel>
                 <FormControl>
                   <Input
@@ -612,7 +612,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
             control={form.control}
             name="newPassword"
             render={({ field }) => (
-              <FormItem className="basis-1/2">
+              <FormItem>
                 <FormLabel>New Password</FormLabel>
                 <FormControl>
                   <Input
@@ -630,7 +630,7 @@ export function ChangePasswordForm({ id_user }: { id_user: string }) {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <FormItem className="basis-1/2">
+              <FormItem>
                 <FormLabel>Confirm Password</FormLabel>
                 <FormControl>
                   <Input
