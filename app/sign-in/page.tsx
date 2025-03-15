@@ -31,9 +31,7 @@ export default function Page() {
 
         <CardContent className="flex flex-col gap-y-4">
           <Separator />
-
           <SignInForm />
-
           <Separator />
         </CardContent>
 

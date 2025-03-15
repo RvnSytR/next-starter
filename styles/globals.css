@@ -276,12 +276,12 @@
 }
 
 @layer base {
-  .desc {
-    @apply text-sm;
+  .link {
+    @apply after:bg-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
   }
 
-  .link {
-    @apply text-muted-foreground hover:text-foreground w-fit cursor-pointer underline-offset-4 hover:underline;
+  .label-required {
+    @apply after:ml-1 after:content-['*'];
   }
 
   .skeleton {

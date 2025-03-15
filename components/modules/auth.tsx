@@ -77,8 +77,6 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
-const { user: dialogUser } = dialog;
-
 export function SignOutButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -215,14 +213,14 @@ export function CreateUserDialog() {
       <DialogTrigger asChild>
         <Button size={isMobile ? "default" : "sm"} variant="outline">
           <Plus />
-          {dialogUser.create.trigger}
+          {dialog.user.create.trigger}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialogUser.create.title}</DialogTitle>
-          <DialogDescription>{dialogUser.create.desc}</DialogDescription>
+          <DialogTitle>{dialog.user.create.title}</DialogTitle>
+          <DialogDescription>{dialog.user.create.desc}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -328,14 +326,14 @@ function ApproveUserDialog({
           disabled={isDisable}
         >
           <CircleCheckBig />
-          {dialogUser.approve.trigger}
+          {dialog.user.approve.trigger}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialogUser.approve.title(username)}</DialogTitle>
-          <DialogDescription>{dialogUser.approve.desc}</DialogDescription>
+          <DialogTitle>{dialog.user.approve.title(username)}</DialogTitle>
+          <DialogDescription>{dialog.user.approve.desc}</DialogDescription>
         </DialogHeader>
 
         <div className="flex w-full flex-col gap-y-4">
@@ -421,17 +419,17 @@ function DeleteUserDialog({
           disabled={isLoading}
         >
           <Trash2 />
-          {dialogUser.delete.trigger}
+          {dialog.user.delete.trigger}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            {dialogUser.delete.title(username)}
+            {dialog.user.delete.title(username)}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {dialogUser.delete.desc}
+            {dialog.user.delete.desc}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

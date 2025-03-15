@@ -461,7 +461,7 @@ export function ExampleForm() {
             name="text"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Text</FormLabel>
+                <FormLabel className="label-required">Text</FormLabel>
                 <FormControl>
                   <FormFloating icon={<LockKeyhole />}>
                     <Input type="text" {...field} />
@@ -478,7 +478,7 @@ export function ExampleForm() {
             name="numeric"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Numeric</FormLabel>
+                <FormLabel className="label-required">Numeric</FormLabel>
                 <FormControl>
                   <FormFloating icon={"Rp."}>
                     <Input
@@ -502,7 +502,7 @@ export function ExampleForm() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone</FormLabel>
+                <FormLabel className="label-required">Phone</FormLabel>
                 <FormControl>
                   <FormFloating icon={"+62"}>
                     <Input
@@ -526,7 +526,7 @@ export function ExampleForm() {
             name="date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date</FormLabel>
+                <FormLabel className="label-required">Date</FormLabel>
                 <InputDate selected={field.value} onSelect={field.onChange} />
                 <FormMessage />
               </FormItem>
@@ -539,7 +539,7 @@ export function ExampleForm() {
             name="select"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Select</FormLabel>
+                <FormLabel className="label-required">Select</FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
@@ -567,7 +567,7 @@ export function ExampleForm() {
             name="radio"
             render={({ field }) => (
               <FormItem className="col-span-3">
-                <FormLabel>Radio Group</FormLabel>
+                <FormLabel className="label-required">Radio Group</FormLabel>
                 <InputRadioGroup
                   defaultValue={field.value}
                   onValueChange={field.onChange}
@@ -585,7 +585,7 @@ export function ExampleForm() {
             name="radio"
             render={({ field }) => (
               <FormItem className="col-span-2">
-                <FormLabel>Radio Group</FormLabel>
+                <FormLabel className="label-required">Radio Group</FormLabel>
 
                 <RadioGroup
                   defaultValue={field.value}
@@ -618,7 +618,7 @@ export function ExampleForm() {
           name="file"
           render={({ field: { onChange, ...restField } }) => (
             <FormItem>
-              <FormLabel>File</FormLabel>
+              <FormLabel className="label-required">File</FormLabel>
               <InputFile
                 onChange={(e) => onChange(e.target.files)}
                 {...restField}

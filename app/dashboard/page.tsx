@@ -10,7 +10,7 @@ export default async function Page() {
     <Section currentPage={GetCurrentPage(path.protected)}>
       <div className="space-y-1">
         <SectionTitle text="Section Title" />
-        <p className="desc">Section Description</p>
+        <span className="text-sm">Section Description</span>
       </div>
 
       <SectionLabel>Hello From Dashboard!</SectionLabel>
