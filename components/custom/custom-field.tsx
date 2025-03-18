@@ -47,7 +47,6 @@ export function FormFloating({
 
 export function InputRadioGroup({
   defaultValue,
-  className,
   radioItems,
   ...props
 }: RadioGroupProps & {
@@ -59,11 +58,7 @@ export function InputRadioGroup({
   }[];
 }) {
   return (
-    <RadioGroup
-      defaultValue={defaultValue}
-      className={cn("flex-wrap", className)}
-      {...props}
-    >
+    <RadioGroup defaultValue={defaultValue} {...props}>
       {radioItems.map((item) => (
         <FormItem key={item.value} className="grow">
           <FormControl>

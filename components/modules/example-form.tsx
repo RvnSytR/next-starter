@@ -93,7 +93,7 @@ export function ExampleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="grid grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-5">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           {/* Text */}
           <FormField
             control={form.control}
@@ -199,7 +199,9 @@ export function ExampleForm() {
               </FormItem>
             )}
           />
+        </div>
 
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           {/* Custom Radio Group */}
           <FormField
             control={form.control}
@@ -223,13 +225,13 @@ export function ExampleForm() {
             control={form.control}
             name="radio"
             render={({ field }) => (
-              <FormItem className="col-span-2">
+              <FormItem>
                 <FormLabel className="label-required">Radio Group</FormLabel>
 
                 <RadioGroup
                   value={field.value}
                   onValueChange={field.onChange}
-                  className="size-full gap-4"
+                  className="size-full"
                 >
                   {selectAndRadioData.map((item, index) => (
                     <FormItem

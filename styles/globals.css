@@ -271,7 +271,7 @@
   }
 
   form {
-    @apply flex w-full flex-col gap-y-4;
+    @apply flex grow flex-col gap-y-4;
   }
 }
 

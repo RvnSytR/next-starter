@@ -23,6 +23,124 @@ import {
 } from "../ui/table";
 import { ExampleForm } from "./example-form";
 
+function ComponentCard({
+  title,
+  importCode,
+  code,
+  apiReference,
+  detailProps,
+  children,
+}: {
+  title: string;
+  importCode?: string;
+  code: string;
+  apiReference?: { name: string; type: string; def?: string }[];
+  detailProps?: string;
+  children: ReactNode;
+}) {
+  const copyButtonCn = "absolute top-2 right-2";
+  const codeCn =
+    "bg-muted/50 relative rounded-xl p-4 font-mono text-sm  break-all whitespace-pre";
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+
+      <CardContent>
+        <Tabs defaultValue="Preview" className="gap-4">
+          <ScrollArea className="pb-4 lg:pb-0">
+            <TabsList>
+              <TabsTrigger value="Preview">Preview</TabsTrigger>
+              <TabsTrigger value="Code">Code</TabsTrigger>
+              <TabsTrigger value="API Reference" disabled={!!!apiReference}>
+                API Reference
+              </TabsTrigger>
+              <TabsTrigger value="Detail Props" disabled={!!!detailProps}>
+                Detail Props
+              </TabsTrigger>
+            </TabsList>
+            <ScrollBar orientation="horizontal" />
+          </ScrollArea>
+
+          <TabsContent value="Preview" className="flex justify-center">
+            {children}
+          </TabsContent>
+
+          <TabsContent value="Code" className="space-y-2">
+            {importCode && (
+              <ScrollArea className={codeCn}>
+                <CopyButton
+                  size="iconsm"
+                  variant="ghost"
+                  className={copyButtonCn}
+                  value={importCode}
+                />
+                {importCode}
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
+            )}
+
+            <ScrollArea className={codeCn}>
+              <CopyButton
+                size="iconsm"
+                variant="ghost"
+                className={copyButtonCn}
+                value={code}
+              />
+              {code}
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </TabsContent>
+
+          <TabsContent value="API Reference">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Prop</TableHead>
+                  <TableHead>Type</TableHead>
+                  <TableHead>Default</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {apiReference &&
+                  apiReference.map(({ name, type, def }, index) => (
+                    <TableRow key={index}>
+                      <TableCell>
+                        <code className="bg-sky-500/20 text-sky-500">
+                          {name}
+                        </code>
+                      </TableCell>
+                      <TableCell>
+                        <code>{type}</code>
+                      </TableCell>
+                      <TableCell>
+                        <code>{def ?? "-"}</code>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TabsContent>
+
+          <TabsContent value="Detail Props">
+            <ScrollArea className={codeCn}>
+              <CopyButton
+                size="iconsm"
+                variant="ghost"
+                className={copyButtonCn}
+                value={detailProps ?? ""}
+              />
+              {detailProps}
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
+  );
+}
+
 export function References() {
   const pieChartData = [
     { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
@@ -44,121 +162,6 @@ export function References() {
   const areaAndPieChartConfig = {
     key1: { label: "Desktop", color: "var(--color-chart-1)" },
     key2: { label: "Mobile", color: "var(--color-chart-2)" },
-  };
-
-  const ComponentCard = ({
-    title,
-    importCode,
-    code,
-    apiReference,
-    detailProps,
-    children,
-  }: {
-    title: string;
-    importCode?: string;
-    code: string;
-    apiReference?: { name: string; type: string; def?: string }[];
-    detailProps?: string;
-    children: ReactNode;
-  }) => {
-    const copyButtonCn = "absolute top-2 right-2";
-    const codeCn =
-      "bg-muted relative rounded-xl p-4 font-mono text-sm break-all whitespace-pre";
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>{title}</CardTitle>
-        </CardHeader>
-
-        <CardContent>
-          <Tabs defaultValue="Preview" className="gap-4">
-            <ScrollArea className="pb-4 lg:pb-0">
-              <TabsList>
-                <TabsTrigger value="Preview">Preview</TabsTrigger>
-                <TabsTrigger value="Code">Code</TabsTrigger>
-                <TabsTrigger value="API Reference" disabled={!!!apiReference}>
-                  API Reference
-                </TabsTrigger>
-                <TabsTrigger value="Detail Props" disabled={!!!detailProps}>
-                  Detail Props
-                </TabsTrigger>
-              </TabsList>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-
-            <TabsContent value="Preview" className="flex justify-center">
-              {children}
-            </TabsContent>
-
-            <TabsContent value="Code" className="space-y-2">
-              {importCode && (
-                <div className={codeCn}>
-                  <CopyButton
-                    size="iconsm"
-                    variant="ghost"
-                    className={copyButtonCn}
-                    value={importCode}
-                  />
-                  {importCode}
-                </div>
-              )}
-
-              <div className={codeCn}>
-                <CopyButton
-                  size="iconsm"
-                  variant="ghost"
-                  className={copyButtonCn}
-                  value={code}
-                />
-                {code}
-              </div>
-            </TabsContent>
-
-            <TabsContent value="API Reference">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Prop</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Default</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {apiReference &&
-                    apiReference.map(({ name, type, def }, index) => (
-                      <TableRow key={index}>
-                        <TableCell>
-                          <code className="bg-sky-500/20 text-sky-500">
-                            {name}
-                          </code>
-                        </TableCell>
-                        <TableCell>
-                          <code>{type}</code>
-                        </TableCell>
-                        <TableCell>
-                          <code>{def ?? "-"}</code>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                </TableBody>
-              </Table>
-            </TabsContent>
-
-            <TabsContent value="Detail Props">
-              <div className={codeCn}>
-                <CopyButton
-                  size="iconsm"
-                  variant="ghost"
-                  className={copyButtonCn}
-                  value={detailProps ?? ""}
-                />
-                {detailProps}
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    );
   };
 
   return (
@@ -303,7 +306,7 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     customLoader?: ReactNode;
   };`}
         >
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             <CustomButton icon={<Sparkles />} text="Custom Button" />
             <CustomButton text="On Click Loading" onClickLoading />
             <CustomButton
@@ -454,7 +457,7 @@ export function ExampleForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
-        <div className="grid grid-cols-1 gap-x-2 gap-y-4 lg:grid-cols-5">
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           {/* Text */}
           <FormField
             control={form.control}
@@ -560,7 +563,9 @@ export function ExampleForm() {
               </FormItem>
             )}
           />
+        </div>
 
+        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           {/* Custom Radio Group */}
           <FormField
             control={form.control}
@@ -584,13 +589,13 @@ export function ExampleForm() {
             control={form.control}
             name="radio"
             render={({ field }) => (
-              <FormItem className="col-span-2">
+              <FormItem>
                 <FormLabel className="label-required">Radio Group</FormLabel>
 
                 <RadioGroup
                   value={field.value}
                   onValueChange={field.onChange}
-                  className="size-full gap-4"
+                  className="size-full"
                 >
                   {selectAndRadioData.map((item, index) => (
                     <FormItem
