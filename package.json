@@ -51,7 +51,7 @@
     "recharts": "^2.15.1",
     "sharp": "^0.33.5",
     "sonner": "^1.7.4",
-    "tailwind-merge": "^3.0.1",
+    "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.2"
   },
@@ -62,7 +62,6 @@
     "@types/node": "^20.17.19",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "drizzle-kit": "^0.18.1",
     "eslint": "^9.21.0",
     "eslint-config-next": "^15.1.7",
     "postcss": "^8.5.3",

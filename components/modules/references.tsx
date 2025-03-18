@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
+import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import {
   Table,
@@ -72,7 +73,7 @@ function ComponentCard({
               <ScrollArea className={codeCn}>
                 <CopyButton
                   size="iconsm"
-                  variant="ghost"
+                  variant="outline"
                   className={copyButtonCn}
                   value={importCode}
                 />
@@ -84,7 +85,7 @@ function ComponentCard({
             <ScrollArea className={codeCn}>
               <CopyButton
                 size="iconsm"
-                variant="ghost"
+                variant="outline"
                 className={copyButtonCn}
                 value={code}
               />
@@ -127,7 +128,7 @@ function ComponentCard({
             <ScrollArea className={codeCn}>
               <CopyButton
                 size="iconsm"
-                variant="ghost"
+                variant="outline"
                 className={copyButtonCn}
                 value={detailProps ?? ""}
               />
@@ -264,6 +265,51 @@ export function References() {
       </TabsContent>
 
       <TabsContent value="Custom Button" className="space-y-2">
+        <ComponentCard
+          title="Button Variant"
+          code={`<Button>Default</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+
+<Button variant="success">Success</Button>
+<Button variant="outline_success">Outline Success</Button>
+<Button variant="ghost_success">Ghost Success</Button>
+
+<Button variant="warning">Warning</Button>
+<Button variant="outline_warning">Outline Warning</Button>
+<Button variant="ghost_warning">Ghost Warning</Button>
+
+<Button variant="destructive">Destructive</Button>
+<Button variant="outline_destructive">Outline Destructive</Button>
+<Button variant="ghost_destructive">Ghost Destructive</Button>`}
+        >
+          <div className="space-y-4">
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button>Default</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="ghost">Ghost</Button>
+              <Button variant="link">Link</Button>
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-2">
+              <Button variant="success">Success</Button>
+              <Button variant="outline_success">Outline Success</Button>
+              <Button variant="ghost_success">Ghost Success</Button>
+
+              <Button variant="warning">Warning</Button>
+              <Button variant="outline_warning">Outline Warning</Button>
+              <Button variant="ghost_warning">Ghost Warning</Button>
+
+              <Button variant="destructive">Destructive</Button>
+              <Button variant="outline_destructive">Outline Destructive</Button>
+              <Button variant="ghost_destructive">Ghost Destructive</Button>
+            </div>
+          </div>
+        </ComponentCard>
+
         <ComponentCard
           title="Custom Button"
           apiReference={[
