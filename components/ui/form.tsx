@@ -7,12 +7,12 @@ import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
 import {
   Controller,
-  ControllerProps,
-  FieldPath,
-  FieldValues,
   FormProvider,
   useFormContext,
   useFormState,
+  type ControllerProps,
+  type FieldPath,
+  type FieldValues,
 } from "react-hook-form";
 
 const Form = FormProvider;
@@ -138,7 +138,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
 
 function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message) : props.children;
+  const body = error ? String(error?.message ?? "") : props.children;
   if (!body) return null;
 
   return (

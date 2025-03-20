@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowRight, FlaskConical, Sparkles } from "lucide-react";
 import { ReactNode } from "react";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import {
@@ -265,6 +266,39 @@ export function References() {
       </TabsContent>
 
       <TabsContent value="Custom Button" className="space-y-2">
+        <ComponentCard
+          title="Badge Variant"
+          code={`<Badge>Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="outline">Outline</Badge>
+
+<Badge variant="success">Success</Badge>
+<Badge variant="outline_success">Outline Success</Badge>
+
+<Badge variant="warning">Warning</Badge>
+<Badge variant="outline_warning">Outline Warning</Badge>
+
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline_destructive">Outline Destructive</Badge>`}
+        >
+          <div className="space-y-4">
+            <div className="flex flex-wrap justify-center gap-2">
+              <Badge>Default</Badge>
+              <Badge variant="secondary">Secondary</Badge>
+              <Badge variant="outline">Outline</Badge>
+
+              <Badge variant="success">Success</Badge>
+              <Badge variant="outline_success">Outline Success</Badge>
+
+              <Badge variant="warning">Warning</Badge>
+              <Badge variant="outline_warning">Outline Warning</Badge>
+
+              <Badge variant="destructive">Destructive</Badge>
+              <Badge variant="outline_destructive">Outline Destructive</Badge>
+            </div>
+          </div>
+        </ComponentCard>
+
         <ComponentCard
           title="Button Variant"
           code={`<Button>Default</Button>
