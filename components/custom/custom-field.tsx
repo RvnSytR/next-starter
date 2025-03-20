@@ -21,6 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
+const { byte: maxFileSizeByByte, mb: maxFileSizeByMb } = MaxFileSize;
 export type CheckboxPopoverProps = {
   id: string;
   state: string[];
@@ -66,7 +67,6 @@ export function InputRadioGroup({
               value={item.value}
               currentValue={defaultValue}
               checkedClassName={item.checkedClassName}
-              className="text-sm font-medium"
             >
               {item.icon}
               {item.label ?? item.value}
@@ -164,7 +164,7 @@ export function InputDateRange({
 export function InputFile({
   value,
   accept = "img",
-  maxFileSize = MaxFileSize.mb,
+  maxFileSize = maxFileSizeByMb,
   className,
   placeholder,
   ...props
@@ -176,8 +176,10 @@ export function InputFile({
   const fileType = accept === "img" ? imgType : docType;
   return (
     <div
+      tabIndex={0}
       className={cn(
-        "border-input hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-4 rounded-md border border-dashed px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer",
+        "border-input dark:bg-input/30 hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-6 rounded-md border border-dashed bg-transparent px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer",
+        "focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
         className,
       )}
     >
@@ -186,16 +188,17 @@ export function InputFile({
           type="file"
           accept={fileType.join(", ")}
           className="absolute size-full opacity-0"
+          tabIndex={-1}
           {...props}
         />
       </FormControl>
 
-      <div className="flex flex-col items-center gap-y-2 text-center">
+      <div className="flex flex-col items-center gap-y-1">
         <CloudUpload className="size-6" />
-        <span className="text-sm font-medium">
+        <span className="text-sm">
           {placeholder ?? label.button.fileInput.placeholder}
         </span>
-        <small className="text-muted-foreground">
+        <small className="text-muted-foreground font-normal">
           {label.button.fileInput.size(maxFileSize)}
         </small>
       </div>
@@ -204,7 +207,11 @@ export function InputFile({
         <ul className="text-center">
           {Array.from(value).map((file, index) => (
             <li key={index}>
-              <small>
+              <small
+                className={cn(
+                  file.size > maxFileSizeByByte && "text-destructive",
+                )}
+              >
                 <span className="font-medium">{file.name}</span>
                 {` - ${FormatToMegabyte(file.size).toFixed(2)} MB`}
               </small>

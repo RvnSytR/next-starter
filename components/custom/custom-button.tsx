@@ -44,10 +44,10 @@ export function CustomButton({
   customLoader = <CustomLoader customType="circle" />,
   href,
   type = "button",
+  size = "default",
   variant,
   asChild = false,
   disabled = false,
-  size,
   className,
   onClick,
   ...props
@@ -96,7 +96,13 @@ export function CustomButton({
         inSidebar &&
           (sidebarMenuButtonVariants({
             size:
-              size === "iconlg" ? "lg" : size === "iconsm" ? "sm" : "default",
+              size === "icon"
+                ? "default"
+                : size === "iconlg"
+                  ? "lg"
+                  : size === "iconsm"
+                    ? "sm"
+                    : size,
           }),
           buttonVariants({ variant: variant })),
         className,

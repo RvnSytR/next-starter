@@ -77,7 +77,7 @@ import { Label } from "../ui/label";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
-export function SignOutButton() {
+export function SignOutButton({ className }: { className?: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -101,6 +101,7 @@ export function SignOutButton() {
           },
         });
       }}
+      className={className}
       inSidebar
     />
   );

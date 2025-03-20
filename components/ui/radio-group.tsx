@@ -37,7 +37,7 @@ function RadioGroupItem({
       className={cn(
         "border-input focus-visible:border-ring focus-visible:ring-ring/50 border shadow-xs transition-[border,color,box-shadow] outline-none hover:cursor-pointer focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
         children
-          ? "text-muted-foreground flex h-9 items-center justify-center gap-2 rounded-md px-4"
+          ? "dark:bg-input/30 text-foreground flex h-9 items-center justify-center gap-2 rounded-md bg-transparent px-4 text-sm"
           : "text-primary aspect-square size-4 shrink-0 rounded-full",
 
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40",

@@ -54,6 +54,7 @@ export function AppSidebar({
 
         <SidebarFooter>
           <Secondary />
+          <SidebarSeparator />
           <Footer />
         </SidebarFooter>
 
@@ -77,7 +78,7 @@ function Head({ username, email }: { username: string; email: string }) {
         </AvatarFallback>
       </Avatar>
 
-      <div className="grid truncate leading-tight [&_span]:truncate">
+      <div className="grid [&_span]:truncate">
         <span className="text-sm font-semibold">{username}</span>
         <span className="text-xs">{email}</span>
       </div>
@@ -166,9 +167,8 @@ function Secondary() {
 function Footer() {
   return (
     <SidebarMenu>
-      <SidebarMenuItem className="flex h-12 flex-col justify-between">
-        <SidebarSeparator />
-        <SignOutButton />
+      <SidebarMenuItem>
+        <SignOutButton className="w-full" />
       </SidebarMenuItem>
     </SidebarMenu>
   );
