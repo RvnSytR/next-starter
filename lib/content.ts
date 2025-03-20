@@ -3,7 +3,6 @@ import { Capitalize } from "./utils";
 const currentYear = new Date().getFullYear();
 
 const title = { primary: "Project Title", description: "Project Description" };
-const keyword = ["web application", "next starter"];
 
 const color = { primary: "#81F5FF" };
 const image = {};
@@ -136,4 +135,4 @@ const label = {
   },
 };
 
-export { color, dialog, image, keyword, label, page, title };
+export { color, dialog, image, label, page, title };
