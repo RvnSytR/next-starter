@@ -19,9 +19,7 @@ export const docType = [
 
 export const zodFile = {
   image: z
-    // .instanceof(FileList)
-    .unknown()
-    .transform((value) => value as FileList)
+    .instanceof(FileList)
     .refine(
       (files) => Array.from(files).every((file) => imgType.includes(file.type)),
       { message: "Invalid image file type" },
@@ -33,9 +31,7 @@ export const zodFile = {
     ),
 
   document: z
-    // .instanceof(FileList)
-    .unknown()
-    .transform((value) => value as FileList)
+    .instanceof(FileList)
     .refine(
       (files) => Array.from(files).every((file) => docType.includes(file.type)),
       { message: "Invalid document file type" },
