@@ -15,17 +15,19 @@ const badgeVariants = cva(
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
 
         success:
-          "border-transparent bg-success text-success-foreground [a&]:hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/70",
-        outline_success: "border-success text-success [a&]:hover:bg-success/10",
+          "border-transparent bg-success text-white [a&]:hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/70",
+        outline_success:
+          "text-success border-success [a&]:border-success/30 [a&]:hover:border-success [a&]:dark:bg-success/5 [a&]:dark:hover:bg-success/20",
 
         warning:
-          "border-transparent bg-warning text-warning-foreground [a&]:hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40 dark:bg-warning/70",
-        outline_warning: "border-warning text-warning [a&]:hover:bg-warning/10",
+          "border-transparent bg-warning text-white [a&]:hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40 dark:bg-warning/70",
+        outline_warning:
+          "text-warning border-warning [a&]:border-warning/30 [a&]:hover:border-warning [a&]:dark:bg-warning/5 [a&]:dark:hover:bg-warning/20",
 
         destructive:
-          "border-transparent bg-destructive text-destructive-foreground [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/70",
+          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/70",
         outline_destructive:
-          "border-destructive text-destructive [a&]:hover:bg-destructive/10",
+          "text-destructive border-destructive [a&]:border-destructive/30 [a&]:hover:border-destructive [a&]:dark:bg-destructive/5 [a&]:dark:hover:bg-destructive/20",
       },
     },
     defaultVariants: { variant: "default" },
