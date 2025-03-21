@@ -442,6 +442,7 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
       <TabsContent value="Form Example" className="space-y-2">
         <ComponentCard
           title="Form Example"
+          detailProps={`export type Media = "all" | "image" | "document" | "archive" | "audio" | "video";`}
           code={`"use client";
 
 import { label } from "@/lib/content";
@@ -514,7 +515,7 @@ export function ExampleForm() {
     date: z.date(),
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile.image,
+    file: zodFile("image"),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -526,6 +527,7 @@ export function ExampleForm() {
       date: new Date(),
       select: "Spade",
       radio: "Spade",
+      file: [],
     },
   });
 
@@ -701,13 +703,10 @@ export function ExampleForm() {
         <FormField
           control={form.control}
           name="file"
-          render={({ field: { onChange, ...restField } }) => (
+          render={({ field }) => (
             <FormItem>
-              <FormLabel>File</FormLabel>
-              <InputFile
-                onChange={(e) => onChange(e.target.files)}
-                {...restField}
-              />
+              <FormLabel>File *</FormLabel>
+              <InputFile accept="image" {...field} />
               <FormMessage />
             </FormItem>
           )}

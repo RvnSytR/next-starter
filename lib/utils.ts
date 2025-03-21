@@ -2,8 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
-
-export const maxFileSize = { mb: 1, byte: FormatToByte(1) };
+import { maxFileSize } from "./media";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -37,7 +36,7 @@ export function GetRandomColor(withHash?: boolean) {
 
 // #region // * Formater
 export function FormatToByte(mb: number) {
-  return mb * 1000 * 1000;
+  return mb * 1024 * 1024;
 }
 
 export function FormatToMegabyte(byte: number) {
@@ -45,7 +44,7 @@ export function FormatToMegabyte(byte: number) {
 }
 
 export function Capitalize(str: string) {
-  return String(str).charAt(0).toUpperCase() + String(str).slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 export function SanitizeNumber(str: string): number {
@@ -73,7 +72,6 @@ export function FormatPhone(num: string | number): string {
 
   return formatted;
 }
-
 // #endregion
 
 // #region // * Date
@@ -123,7 +121,7 @@ async function GetFilesAsURL(files: File[] | null) {
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
-    if (item.size > maxFileSize.byte)
+    if (item.size > maxFileSize.image.byte)
       throw new Error("Ukuran File Terlalu Besar!");
     results.push(await ReadFileAsURL(item));
   }

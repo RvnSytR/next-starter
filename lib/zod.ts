@@ -1,47 +1,26 @@
 import { role, user } from "@/server/db/schema";
 import { createSelectSchema } from "drizzle-zod";
 import { z } from "zod";
-import { maxFileSize } from "./utils";
+import { maxFileSize, type Media, media } from "./media";
+import { Capitalize } from "./utils";
 
-export const imgType = [
-  "image/png",
-  "image/jpg",
-  "image/jpeg",
-  "image/gif",
-  "image/svg+xml",
-];
-
-export const docType = [
-  "application/pdf",
-  "application/vnd.ms-excel",
-  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-];
-
-export const zodFile = {
-  image: z
-    .instanceof(FileList)
+export const zodFile = (mediaType: Media) =>
+  z
+    .instanceof(File)
+    .array()
+    .nonempty({ message: `At least one ${mediaType} file is required` })
     .refine(
-      (files) => Array.from(files).every((file) => imgType.includes(file.type)),
-      { message: "Invalid image file type" },
+      (files) =>
+        files.every((file) => media[mediaType].type.includes(file.type)),
+      { message: `Invalid ${mediaType} file type` },
     )
     .refine(
       (files) =>
-        Array.from(files).every((file) => file.size <= maxFileSize.byte),
-      { message: `Image size should not exceed ${maxFileSize.mb} MB` },
-    ),
-
-  document: z
-    .instanceof(FileList)
-    .refine(
-      (files) => Array.from(files).every((file) => docType.includes(file.type)),
-      { message: "Invalid document file type" },
-    )
-    .refine(
-      (files) =>
-        Array.from(files).every((file) => file.size <= maxFileSize.byte),
-      { message: `Document size should not exceed ${maxFileSize.mb} MB` },
-    ),
-};
+        files.every((file) => file.size <= maxFileSize[mediaType].byte),
+      {
+        message: `${Capitalize(mediaType)} size should not exceed ${maxFileSize[mediaType].mb} MB`,
+      },
+    );
 
 export const zodUser = createSelectSchema(user, {
   role: z.enum(role, { required_error: "Please select a user role." }),

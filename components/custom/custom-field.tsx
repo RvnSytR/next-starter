@@ -1,12 +1,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { label, label as labelContent } from "@/lib/content";
-import {
-  cn,
-  FormatDate,
-  FormatToMegabyte,
-  maxFileSize as MaxFileSize,
-} from "@/lib/utils";
-import { docType, imgType } from "@/lib/zod";
+import { maxFileSize, Media, media } from "@/lib/media";
+import { cn, FormatDate, FormatToByte, FormatToMegabyte } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
 import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
 import type { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
@@ -21,7 +16,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 
-const { byte: maxFileSizeByByte, mb: maxFileSizeByMb } = MaxFileSize;
 export type CheckboxPopoverProps = {
   id: string;
   state: string[];
@@ -163,17 +157,26 @@ export function InputDateRange({
 
 export function InputFile({
   value,
-  accept = "img",
-  maxFileSize = maxFileSizeByMb,
+  onChange,
+  accept = "all",
+  maxFileSize: size,
   className,
   placeholder,
   ...props
-}: Omit<ComponentProps<"input">, "Type" | "value" | "accept"> & {
-  value: FileList;
-  accept?: "img" | "doc";
+}: Omit<
+  ComponentProps<"input">,
+  "type" | "value" | "onChange" | "accept" | "tabIndex"
+> & {
+  value: File[];
+  onChange: (files: File[]) => void;
+  accept?: Media | "all";
   maxFileSize?: number;
 }) {
-  const fileType = accept === "img" ? imgType : docType;
+  const fileMedia = media[accept];
+  const fileSize = size
+    ? { mb: size, byte: FormatToByte(size) }
+    : maxFileSize[accept];
+
   return (
     <div
       tabIndex={0}
@@ -186,30 +189,44 @@ export function InputFile({
       <FormControl>
         <Input
           type="file"
-          accept={fileType.join(", ")}
-          className="absolute size-full opacity-0"
           tabIndex={-1}
+          className="absolute size-full opacity-0"
+          accept={fileMedia.type.join(", ")}
+          onChange={(e) => {
+            const fileList = e.target.files;
+            if (fileList) onChange(Array.from(fileList).map((file) => file));
+          }}
           {...props}
         />
       </FormControl>
 
-      <div className="flex flex-col items-center gap-y-1">
+      <div className="flex flex-col items-center gap-y-1 text-sm">
         <CloudUpload className="size-6" />
-        <span className="text-sm">
+
+        <span className="font-medium">
           {placeholder ?? label.button.fileInput.placeholder}
         </span>
+
         <small className="text-muted-foreground font-normal">
-          {label.button.fileInput.size(maxFileSize)}
+          {label.button.fileInput.size(fileSize.mb)}
         </small>
+
+        {fileMedia.extensions.length > 0 && (
+          <small className="text-muted-foreground text-xs font-normal">
+            {`( ${fileMedia.extensions.join(" ")} )`}
+          </small>
+        )}
       </div>
 
       {value && value.length > 0 ? (
         <ul className="text-center">
-          {Array.from(value).map((file, index) => (
+          {value.map((file, index) => (
             <li key={index}>
               <small
                 className={cn(
-                  file.size > maxFileSizeByByte && "text-destructive",
+                  (file.size > fileSize.byte ||
+                    !fileMedia.type.includes(file.type)) &&
+                    "text-destructive",
                 )}
               >
                 <span className="font-medium">{file.name}</span>

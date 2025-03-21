@@ -70,7 +70,7 @@ export function ExampleForm() {
     date: z.date(),
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile.image,
+    file: zodFile("image"),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -82,6 +82,7 @@ export function ExampleForm() {
       date: new Date(),
       select: "Spade",
       radio: "Spade",
+      file: [],
     },
   });
 
@@ -257,13 +258,10 @@ export function ExampleForm() {
         <FormField
           control={form.control}
           name="file"
-          render={({ field: { onChange, ...restField } }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>File *</FormLabel>
-              <InputFile
-                onChange={(e) => onChange(e.target.files)}
-                {...restField}
-              />
+              <InputFile accept="image" {...field} />
               <FormMessage />
             </FormItem>
           )}
