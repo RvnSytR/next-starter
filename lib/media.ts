@@ -53,8 +53,8 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
   },
 
   audio: {
-    type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/mp4", "audio/x-flac"],
-    extensions: [".mp3", ".wav", ".ogg", ".mp4", ".flac"],
+    type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/x-flac"],
+    extensions: [".mp3", ".wav", ".ogg", ".flac"],
   },
 
   video: {

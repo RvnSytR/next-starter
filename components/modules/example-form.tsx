@@ -143,7 +143,7 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone *</FormLabel>
-                <FormFloating icon={"+62"}>
+                <FormFloating icon={"+62"} extraPadding>
                   <FormControl>
                     <Input
                       type="text"

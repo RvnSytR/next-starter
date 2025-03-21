@@ -26,14 +26,27 @@ export type CheckboxPopoverProps = {
 
 export function FormFloating({
   icon,
+  extraPadding = false,
   className,
   children,
   ...props
-}: ComponentProps<"div"> & { icon: ReactNode }) {
+}: ComponentProps<"div"> & {
+  icon: ReactNode;
+  extraPadding?: boolean;
+}) {
   return (
-    <div className={cn("relative h-fit [&_input]:pl-12", className)} {...props}>
-      <div className="absolute inset-y-0 flex w-12 items-center justify-center">
-        <small className="text-muted-foreground font-normal">{icon}</small>
+    <div
+      className={cn(
+        "relative h-fit [&_input]:pl-9 [&_svg:not([class*='size-'])]:size-4",
+        extraPadding ? "[&_input]:pl-11" : "[&_input]:pl-9",
+        className,
+      )}
+      {...props}
+    >
+      <div className="absolute inset-y-0 flex items-center justify-center pl-3 text-center">
+        <small className="text-muted-foreground font-normal">
+          {typeof icon === "string" ? icon.slice(0, 3) : icon}
+        </small>
       </div>
       {children}
     </div>
