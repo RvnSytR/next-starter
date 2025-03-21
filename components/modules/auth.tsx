@@ -320,12 +320,7 @@ function ApproveUserDialog({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost_success"
-          className="grow justify-start"
-          disabled={isDisable}
-        >
+        <Button size="sm" variant="ghost_success" disabled={isDisable}>
           <CircleCheckBig />
           {dialog.user.approve.trigger}
         </Button>
@@ -413,12 +408,7 @@ function DeleteUserDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost_destructive"
-          className="grow justify-start"
-          disabled={isLoading}
-        >
+        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
           <Trash2 />
           {dialog.user.delete.trigger}
         </Button>

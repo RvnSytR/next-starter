@@ -52,7 +52,6 @@
     "sharp": "^0.33.5",
     "sonner": "^1.7.4",
     "tailwind-merge": "^3.0.2",
-    "tw-animate-css": "^1.2.4",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -69,6 +68,7 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^4.0.8",
+    "tailwindcss-animate": "^1.0.7",
     "tailwindcss-animated": "^2.0.0",
     "tsx": "^4.19.3",
     "typescript": "^5.7.3"
