@@ -1,12 +1,13 @@
 import { label } from "@/lib/content";
 import type { ActionResponse } from "@/server/action";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
 
 export function ToastAction(
   action: Promise<ActionResponse>,
   data: {
-    loading?: React.ReactNode;
-    success: (res: ActionResponse) => React.ReactNode;
+    loading?: ReactNode;
+    success: (res: ActionResponse) => ReactNode;
     error?: () => void;
   },
 ) {

@@ -24,8 +24,5 @@ const user = mysqlTable("user", {
 type UserCredentials = Omit<typeof user.$inferSelect, "password">;
 //#endregion
 
-export { role };
-export type { Role };
-
-export { user };
-export type { UserCredentials };
+export { role, user };
+export type { Role, UserCredentials };

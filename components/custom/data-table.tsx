@@ -31,9 +31,14 @@ import {
   CheckboxPopover,
   FormFloating,
 } from "../custom/custom-field";
-import { SectionTitle } from "../layout/section";
 import { Button, buttonVariants } from "../ui/button";
-import { Card, CardContent, CardDescription, CardHeader } from "../ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -272,9 +277,9 @@ export function DataTable<TData, TValue>({
 
   return (
     <Card>
-      <CardHeader className="gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1">
-          <SectionTitle text={title} />
+      <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-1.5">
+          <CardTitle>{title}</CardTitle>
           <CardDescription>{desc}</CardDescription>
         </div>
 

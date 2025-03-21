@@ -33,7 +33,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { userColumn } from "../custom/column";
 import { CustomButton } from "../custom/custom-button";
-import { type FacetedFilter, DataTable } from "../custom/data-table";
+import { DataTable, type FacetedFilter } from "../custom/data-table";
 import { ToastAction } from "../custom/toast-action";
 import {
   AlertDialog,
@@ -112,7 +112,6 @@ export function SignInForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodUser.pick({ email: true, password: true });
-
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: { email: "", password: "" },
@@ -184,12 +183,7 @@ export function CreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const schema = zodUser.pick({
-    email: true,
-    username: true,
-    password: true,
-  });
-
+  const schema = zodUser.pick({ email: true, username: true, password: true });
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: { email: "", username: "", password: "" },
@@ -309,7 +303,7 @@ function ApproveUserDialog({
   const [isDisable, setIsDisable] = useState<boolean>(false);
   const [role, setRole] = useState<UpdateRoles>("user");
 
-  const handler = async () => {
+  const handler = () => {
     setIsDisable(true);
     ToastAction(ApproveUser(id_user, username, role), {
       success: ({ message }) => message,
@@ -442,12 +436,7 @@ export function ChangeProfileForm({ data }: { data: UserCredentials }) {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser.pick({
-    email: true,
-    role: true,
-    username: true,
-  });
-
+  const schema = zodUser.pick({ email: true, role: true, username: true });
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
