@@ -1,10 +1,6 @@
 import type { NextConfig } from "next";
 import { maxFileSize } from "./lib/media";
 
-const bucketName = process.env.S3_BUCKET_NAME;
-if (!bucketName)
-  throw new Error("Environment variable S3_BUCKET_NAME is not set");
-
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -12,7 +8,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         port: "",
         pathname: "/*",
-        hostname: `${bucketName}.s3.nevaobjects.id`,
+        hostname: `${process.env.S3_BUCKET_NAME || ""}.s3.nevaobjects.id`,
       },
     ],
   },

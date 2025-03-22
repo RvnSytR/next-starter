@@ -2,7 +2,7 @@ import { CustomButton } from "@/components/custom/custom-button";
 import { ThemeToggle } from "@/components/custom/theme";
 import { References } from "@/components/modules/references";
 import { Separator } from "@/components/ui/separator";
-import { LayoutDashboard } from "lucide-react";
+import { FlaskConical, LayoutDashboard } from "lucide-react";
 
 // export const metadata: Metadata = { title: "Current Page" };
 
@@ -16,6 +16,13 @@ export default function Page() {
           icon={<LayoutDashboard />}
           variant="outline"
           text="Go To Dashboard"
+          onClickLoading
+        />
+        <CustomButton
+          href="/coverage"
+          icon={<FlaskConical />}
+          variant="outline"
+          text="Go To Testing Page"
           onClickLoading
         />
       </div>
