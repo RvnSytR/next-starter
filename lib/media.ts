@@ -1,20 +1,17 @@
 import { FormatToByte } from "./utils";
 
-export type Media =
-  | "all"
-  | "image"
-  | "document"
-  | "archive"
-  | "audio"
-  | "video";
+export type Media = "all" | "image" | "document";
+// | "archive"
+// | "audio"
+// | "video";
 
 export const maxFileSize: Record<Media, { mb: number; byte: number }> = {
   all: { mb: 2, byte: FormatToByte(2) },
   image: { mb: 2, byte: FormatToByte(2) },
   document: { mb: 2, byte: FormatToByte(2) },
-  archive: { mb: 20, byte: FormatToByte(20) },
-  audio: { mb: 10, byte: FormatToByte(10) },
-  video: { mb: 50, byte: FormatToByte(50) },
+  // archive: { mb: 20, byte: FormatToByte(20) },
+  // audio: { mb: 10, byte: FormatToByte(10) },
+  // video: { mb: 10, byte: FormatToByte(50) },
 };
 
 export const media: Record<Media, { type: string[]; extensions: string[] }> = {
@@ -42,29 +39,29 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
     extensions: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"],
   },
 
-  archive: {
-    type: [
-      "application/zip",
-      "application/x-zip-compressed",
-      "application/x-rar-compressed",
-      "application/x-7z-compressed",
-    ],
-    extensions: [".zip", ".rar", ".7z"],
-  },
+  // archive: {
+  //   type: [
+  //     "application/zip",
+  //     "application/x-zip-compressed",
+  //     "application/x-rar-compressed",
+  //     "application/x-7z-compressed",
+  //   ],
+  //   extensions: [".zip", ".rar", ".7z"],
+  // },
 
-  audio: {
-    type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/x-flac"],
-    extensions: [".mp3", ".wav", ".ogg", ".flac"],
-  },
+  // audio: {
+  //   type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/x-flac"],
+  //   extensions: [".mp3", ".wav", ".ogg", ".flac"],
+  // },
 
-  video: {
-    type: [
-      "video/mp4",
-      "video/x-msvideo",
-      "video/x-matroska",
-      "video/ogg",
-      "video/webm",
-    ],
-    extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
-  },
+  // video: {
+  //   type: [
+  //     "video/mp4",
+  //     "video/x-msvideo",
+  //     "video/x-matroska",
+  //     "video/ogg",
+  //     "video/webm",
+  //   ],
+  //   extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
+  // },
 };
