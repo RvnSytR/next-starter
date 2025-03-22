@@ -1,5 +1,3 @@
-import { Capitalize } from "./utils";
-
 const currentYear = new Date().getFullYear();
 
 const title = { primary: "Project Title", description: "Project Description" };
@@ -9,10 +7,10 @@ const image = {};
 
 const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
-  copyright: `Copyright © ${currentYear}. Project Maker. All rights reserved.`,
+  copyright: `Copyright © ${currentYear}. Project Maker.\nAll rights reserved.`,
 
   signIn: {
-    title: `${title.primary}`,
+    title: `Welcome to ${title.primary}`,
     subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
   },
 
@@ -75,43 +73,13 @@ const label = {
       signIn: (username: string) =>
         `Signed in successfully, Welcome ${username}!`,
       signOut: "Signed out successfully!",
-
-      user: {
-        create: "User created successfully!",
-
-        approve: (name: string, role: string) =>
-          `${name} has been successfully approved as ${Capitalize(role)}.`,
-
-        update: {
-          profile: "Profile updated successfully, Please sign in again!",
-          password: "Password updated successfully, Please sign in again!",
-        },
-
-        delete: (name: string) => `${name} has been successfully deleted!`,
-      },
     },
 
     error: {
       catch: "Uh-oh! Something went wrong. Please try again later.",
-
       file: {
         required: (f: string) => `Please upload ${f}!`,
         upload: "An error occurred while uploading the file!",
-      },
-
-      signIn: {
-        notFound: "This account is not registered!",
-        emailOrPassword: "Incorrect email or password!",
-        pending:
-          "Your account is still in the approval queue. Please wait for admin confirmation.",
-      },
-
-      user: {
-        notFound: "User not found!",
-        email: "This email is already registered!",
-        password: "Incorrect password!",
-        samePassword:
-          "The new password cannot be the same as the current password!",
       },
     },
   },
