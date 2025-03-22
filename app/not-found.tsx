@@ -1,4 +1,5 @@
 import { CustomButton } from "@/components/custom/custom-button";
+import { Home } from "lucide-react";
 
 export default function NotFound() {
   return (
@@ -17,9 +18,10 @@ export default function NotFound() {
         <CustomButton
           href="/"
           size="lg"
-          variant="outline"
-          className="hover:border-primary h-16 gap-4 rounded-full border-4 px-8 text-xl font-bold [&_svg]:size-5"
+          variant="ghost"
+          className="hover:border-primary h-12 rounded-full border-4 font-semibold"
           text="Go To Main Page"
+          icon={<Home />}
           onClickLoading
         />
       </div>
