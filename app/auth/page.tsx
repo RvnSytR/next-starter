@@ -1,5 +1,5 @@
 import { SectionTitle } from "@/components/layout/section";
-import { AnimatedGridPattern } from "@/components/magicui/animated-grid-pattern";
+import { GridPattern } from "@/components/magicui/grid-pattern";
 import {
   SignInForm,
   SignOnGithubButton,
@@ -24,9 +24,9 @@ export const metadata: Metadata = { title: GetCurrentPage(path.auth, true) };
 export default function Page() {
   return (
     <main className="relative flex min-h-dvh items-center justify-center">
-      <AnimatedGridPattern className="animate-fade fill-input/25 stroke-input/25 z-[-1]" />
+      <GridPattern className="stroke-input/50 z-[-1]" />
 
-      <div className="container flex justify-center">
+      <div className="container flex justify-center py-8">
         <Card className="w-full md:w-md">
           <CardHeader className="text-center">
             <CardTitle>

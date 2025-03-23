@@ -1,11 +1,11 @@
 "use client";
 
-import { signIn, signOut } from "@/lib/auth-client";
+import { signIn, signOut, signUp } from "@/lib/auth-client";
 import { label } from "@/lib/content";
 import { path } from "@/lib/menu";
 import { zodAuth } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { KeyRound, LogOut, Mail } from "lucide-react";
+import { KeyRound, LogOut, Mail, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -179,22 +179,34 @@ export function SignUpForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodAuth.pick({
-    email: true,
-    password: true,
-    rememberMe: true,
-  });
+  const schema = zodAuth
+    .pick({
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+      isAgree: true,
+    })
+    .refine((sc) => sc.password === sc.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { email: "", password: "", rememberMe: false },
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
   });
 
   const formHandler = async (data: z.infer<typeof schema>) => {
-    await signIn.email(data, {
+    await signUp.email(data, {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
-        toast.success(label.toast.success.signIn(data?.user.name));
+        toast.success(label.toast.success.signUp(data?.user.name));
         // router.push(path.protected);
         setIsLoading(false);
         router.refresh();
@@ -209,6 +221,26 @@ export function SignUpForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username *</FormLabel>
+              <FormFloating icon={<UserRound />}>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Enter your Username"
+                    {...field}
+                  />
+                </FormControl>
+              </FormFloating>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
         <FormField
           control={form.control}
           name="email"
@@ -249,20 +281,48 @@ export function SignUpForm() {
           )}
         />
 
-        {/* I agree to the Terms of Service and Privacy Policy. */}
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm Password *</FormLabel>
+              <FormFloating icon={<KeyRound />}>
+                <FormControl>
+                  <Input
+                    type="password"
+                    placeholder="Confirm your Password"
+                    {...field}
+                  />
+                </FormControl>
+              </FormFloating>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
-          name="rememberMe"
+          name="isAgree"
           render={({ field }) => (
-            <FormItem className="flex-row gap-2">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Remember me</FormLabel>
+            <FormItem>
+              <div className="flex gap-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+
+                <FormLabel className="flex flex-col items-start gap-y-1">
+                  <span>Accept terms and conditions</span>
+                  <small className="text-muted-foreground text-xs font-normal">
+                    I agree to the Terms of Service and Privacy Policy.
+                  </small>
+                </FormLabel>
+              </div>
+
+              <FormMessage />
             </FormItem>
           )}
         />

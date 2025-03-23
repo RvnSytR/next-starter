@@ -1,6 +1,7 @@
 import { db } from "@/server/db/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { headers } from "next/headers";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "mysql" }),
@@ -12,3 +13,6 @@ export const auth = betterAuth({
     },
   },
 });
+
+export const getSession = async () =>
+  await auth.api.getSession({ headers: await headers() });

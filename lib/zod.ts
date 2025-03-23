@@ -23,33 +23,46 @@ export const zodFile = (mediaType: Media) =>
 export const zodAuth = z.object({
   name: z
     .string({
-      required_error: "Name is required",
-      invalid_type_error: "Name must be a string",
+      required_error: "Please enter your name.",
+      invalid_type_error: "Name must be a valid text or string.",
     })
     .trim()
     .min(1, "Name cannot be empty."),
 
   email: z
-    .string()
-    .email("Invalid email address.")
+    .string({
+      required_error: "Email is required.",
+      invalid_type_error: "Email must be a valid text.",
+    })
     .trim()
+    .email("Please enter a valid email address.")
     .min(1, "Email cannot be empty.")
-    .max(255, "Email is too long."),
+    .max(255, "Email is too long. Maximum 255 characters allowed."),
 
   password: z
     .string({
-      required_error: "Password is required",
-      invalid_type_error: "Password must be a string",
+      required_error: "Password is required.",
+      invalid_type_error: "Password must be a valid text or string.",
     })
     .trim()
     .min(1, "Password cannot be empty.")
-    .min(8, "Password must be at least 8 characters long."),
+    .min(8, "Password must be at least 8 characters long.")
+    .max(128, "Password is too long. Maximum 128 characters allowed."),
 
-  rememberMe: z.boolean({ invalid_type_error: "isActive must be a boolean" }),
+  confirmPassword: z
+    .string({
+      required_error: "Please confirm your password.",
+      invalid_type_error: "Confirm Password must be a valid text or string.",
+    })
+    .min(1, "Confirm Password cannot be empty."),
+
+  rememberMe: z.boolean({
+    invalid_type_error: "Remember Me must be a boolean value.",
+  }),
 
   isAgree: z.literal(true, {
     required_error:
       "You must agree to the Terms of Service and Privacy Policy.",
-    invalid_type_error: "Is aggree must be true",
+    invalid_type_error: "Agreement is required to proceed.",
   }),
 });

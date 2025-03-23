@@ -63,12 +63,7 @@ export function AnimatedGridPattern({
   const updateSquarePosition = (id: number) => {
     setSquares((currentSquares) =>
       currentSquares.map((sq) =>
-        sq.id === id
-          ? {
-              ...sq,
-              pos: getPos(),
-            }
-          : sq,
+        sq.id === id ? { ...sq, pos: getPos() } : sq,
       ),
     );
   };
@@ -92,9 +87,7 @@ export function AnimatedGridPattern({
       }
     });
 
-    if (containerRef.current) {
-      resizeObserver.observe(containerRef.current);
-    }
+    if (containerRef.current) resizeObserver.observe(containerRef.current);
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
