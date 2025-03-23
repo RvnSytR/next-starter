@@ -28,12 +28,14 @@ export const zodAuth = z.object({
     })
     .trim()
     .min(1, "Name cannot be empty."),
+
   email: z
     .string()
     .email("Invalid email address.")
     .trim()
     .min(1, "Email cannot be empty.")
     .max(255, "Email is too long."),
+
   password: z
     .string({
       required_error: "Password is required",
@@ -42,5 +44,12 @@ export const zodAuth = z.object({
     .trim()
     .min(1, "Password cannot be empty.")
     .min(8, "Password must be at least 8 characters long."),
+
   rememberMe: z.boolean({ invalid_type_error: "isActive must be a boolean" }),
+
+  isAgree: z.literal(true, {
+    required_error:
+      "You must agree to the Terms of Service and Privacy Policy.",
+    invalid_type_error: "Is aggree must be true",
+  }),
 });

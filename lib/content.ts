@@ -9,8 +9,8 @@ const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
   copyright: `Copyright © ${currentYear}. Project Maker.\nAll rights reserved.`,
 
-  signIn: {
-    title: `Welcome to ${title.primary}`,
+  auth: {
+    title: title.primary,
     subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
   },
 
@@ -85,7 +85,9 @@ const label = {
   },
 
   button: {
-    signIn: `Sign in to ${title.primary}`,
+    signIn: "Sign In",
+    signUp: "Create Account",
+    signOn: (social: string) => `Continue with ${social}`,
     signOut: "Sign out",
     refresh: "Refresh",
 

@@ -1,4 +1,3 @@
-import type { Role } from "@/server/db/schema";
 import {
   type LucideIcon,
   CircleHelp,
@@ -23,7 +22,7 @@ type MenuBody = {
 };
 
 const path = {
-  signIn: "/sign-in",
+  auth: "/auth",
   protected: "/dashboard",
   account: "/dashboard/account",
 };

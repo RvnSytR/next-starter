@@ -267,6 +267,6 @@
 
 @layer base {
   .link {
-    @apply after:bg-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-0 after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
+    @apply after:bg-primary hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
   }
 }
