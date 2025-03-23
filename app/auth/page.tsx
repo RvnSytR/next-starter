@@ -24,13 +24,13 @@ export const metadata: Metadata = { title: GetCurrentPage(path.auth, true) };
 export default function Page() {
   return (
     <main className="relative flex min-h-dvh items-center justify-center">
-      <GridPattern className="stroke-input/50 z-[-1]" />
+      <GridPattern className="stroke-input/50 animate-fade z-[-1]" />
 
       <div className="container flex justify-center py-8">
         <Card className="w-full md:w-md">
           <CardHeader className="text-center">
-            <CardTitle>
-              <Link href="/" className="flex items-center justify-center gap-2">
+            <CardTitle className="mx-auto">
+              <Link href="/">
                 <SectionTitle text={page.auth.title} />
               </Link>
             </CardTitle>

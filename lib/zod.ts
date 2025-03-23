@@ -60,9 +60,12 @@ export const zodAuth = z.object({
     invalid_type_error: "Remember Me must be a boolean value.",
   }),
 
-  isAgree: z.literal(true, {
-    required_error:
-      "You must agree to the Terms of Service and Privacy Policy.",
-    invalid_type_error: "Agreement is required to proceed.",
-  }),
+  isAgree: z
+    .boolean({
+      required_error: "Agreement is required",
+      invalid_type_error: "Agreement must be a boolean value.",
+    })
+    .refine((value) => value === true, {
+      message: "You must agree to the Terms of Service and Privacy Policy.",
+    }),
 });

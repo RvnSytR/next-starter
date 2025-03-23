@@ -1,6 +1,6 @@
 "use client";
 
-import { signIn, signOut, signUp } from "@/lib/auth-client";
+import { authClient } from "@/lib/auth-client";
 import { label } from "@/lib/content";
 import { path } from "@/lib/menu";
 import { zodAuth } from "@/lib/zod";
@@ -36,7 +36,7 @@ export function SignOutButton() {
       loading={isLoading}
       //   inSidebar
       onClick={() =>
-        signOut({
+        authClient.signOut({
           fetchOptions: {
             onRequest: () => setIsLoading(true),
             onSuccess: () => {
@@ -63,7 +63,7 @@ export function SignOnGithubButton() {
       icon={<CustomIcon customType="github" />}
       text={label.button.signOn("Github")}
       onClick={async () => {
-        await signIn.social({
+        await authClient.signIn.social({
           provider: "github",
           callbackURL: path.protected,
           errorCallbackURL: "/error",
@@ -91,7 +91,7 @@ export function SignInForm() {
   });
 
   const formHandler = async (data: z.infer<typeof schema>) => {
-    await signIn.email(data, {
+    await authClient.signIn.email(data, {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signIn(data?.user.name));
@@ -199,11 +199,12 @@ export function SignUpForm() {
       email: "",
       password: "",
       confirmPassword: "",
+      isAgree: false,
     },
   });
 
   const formHandler = async (data: z.infer<typeof schema>) => {
-    await signUp.email(data, {
+    await authClient.signUp.email(data, {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signUp(data?.user.name));

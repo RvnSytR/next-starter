@@ -1,6 +1,7 @@
 import { db } from "@/server/db/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin } from "better-auth/plugins";
 import { headers } from "next/headers";
 
 export const auth = betterAuth({
@@ -12,6 +13,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
+  plugins: [admin()],
 });
 
 export const getSession = async () =>
