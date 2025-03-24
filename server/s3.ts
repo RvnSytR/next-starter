@@ -9,10 +9,10 @@ import {
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 const BUCKET = process.env.S3_BUCKET_NAME!;
-const REGION = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
+const region = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
 
 const s3 = new S3Client({
-  region: REGION.jakarta,
+  region: region.jakarta,
   endpoint: process.env.S3_ENDPOINT!,
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY!,

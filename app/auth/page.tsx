@@ -15,11 +15,10 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { page } from "@/lib/content";
-import { GetCurrentPage, path } from "@/lib/menu";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: GetCurrentPage(path.auth, true) };
+export const metadata: Metadata = { title: page.metadata("Get Started") };
 
 export default function Page() {
   return (

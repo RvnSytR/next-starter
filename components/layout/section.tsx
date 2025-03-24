@@ -9,7 +9,6 @@ import {
   DynamicBreadcrumbProps,
 } from "../custom/dynamic-breadcrumb";
 import { ThemeToggle } from "../custom/theme";
-import { CustomLoader, iconSize } from "../icon";
 import { Separator } from "../ui/separator";
 
 export function Section({
@@ -90,17 +89,5 @@ export function SectionNotFound({
         />
       </SectionLabel>
     </Section>
-  );
-}
-
-export function LayoutSkeleton() {
-  return (
-    <SidebarInset>
-      <ThemeToggle className="m-4" />
-
-      <SectionLabel>
-        <CustomLoader size={iconSize.lg} />
-      </SectionLabel>
-    </SidebarInset>
   );
 }

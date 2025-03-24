@@ -34,7 +34,8 @@ export function SignOutButton() {
       variant="outline_destructive"
       text={label.button.signOut}
       loading={isLoading}
-      //   inSidebar
+      className="w-full"
+      inSidebar
       onClick={() =>
         authClient.signOut({
           fetchOptions: {
@@ -95,9 +96,7 @@ export function SignInForm() {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signIn(data?.user.name));
-        // router.push(path.protected);
-        setIsLoading(false);
-        router.refresh();
+        router.push(path.protected);
       },
       onError: ({ error }) => {
         setIsLoading(false);

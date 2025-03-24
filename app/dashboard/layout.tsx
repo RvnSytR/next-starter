@@ -1,6 +1,8 @@
-import { AppSidebar } from "@/components/layout/app-sidebar";
+import { AppSidebar } from "@/components/layout/sidebar-app";
+import { getSession, userRoles } from "@/lib/auth";
 import { GetCurrentPage, path } from "@/lib/menu";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: GetCurrentPage(path.protected, true),
@@ -9,8 +11,12 @@ export const metadata: Metadata = {
 export default async function DashboardLayout({
   children,
 }: Readonly<React.ComponentProps<"div">>) {
+  const session = await getSession();
+  if (!session) return notFound();
+  const { role, ...rest } = session.user;
+
   return (
-    <AppSidebar role={role} {...userProps}>
+    <AppSidebar role={role ?? userRoles[0]} {...rest}>
       {children}
     </AppSidebar>
   );

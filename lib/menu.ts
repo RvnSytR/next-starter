@@ -6,10 +6,11 @@ import {
   Settings,
   UserRound,
 } from "lucide-react";
+import type { AdminRoles, UserRoles } from "./auth";
 import { label, page } from "./content";
 
+type MenuRole = UserRoles | AdminRoles | "all";
 type MenuProps = { section: string; body: MenuBody[] };
-type MenuRole = Exclude<Role, "pending"> | "all";
 type SubMenuProps = { subLabel: string; elementId: string }[];
 
 type MenuBody = {
@@ -24,7 +25,6 @@ type MenuBody = {
 const path = {
   auth: "/auth",
   protected: "/dashboard",
-  account: "/dashboard/account",
 };
 
 const menu: MenuProps[] = [
@@ -38,7 +38,7 @@ const menu: MenuProps[] = [
         icon: LayoutDashboard,
       },
       {
-        href: path.account,
+        href: `${path.protected}/account`,
         label: "User Management",
         role: ["all"],
         icon: UserRound,
@@ -69,40 +69,42 @@ const secondaryMenu: MenuBody[] = [
 
 function GetMenu(
   path: string,
-  withoutIcon?: boolean,
+  withoutIcon: boolean = false,
 ): MenuBody | Omit<MenuBody, "icon"> | null {
-  const allMenu = Object.values(menu).flatMap((item) => item.body);
-
-  const [result] = allMenu
+  const [result] = Object.values(menu)
+    .flatMap((item) => item.body)
     .map((item) => {
-      if (withoutIcon) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { icon, ...rest } = item;
-        return rest;
-      }
-      return item;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { icon, ...rest } = item;
+      if (withoutIcon) return rest;
+      else return item;
     })
     .filter((item) => item.href === path);
-
   return result ?? null;
 }
 
-function GetMenuByRole(role: MenuRole) {
+function GetMenuByRole(role: string): MenuProps[] {
   return menu
-    .map((section) => {
-      const filteredBody = section.body.filter(
-        (item) => item.role.includes(role) || item.role.includes("all"),
+    .map(({ section, body }) => {
+      const filteredBody = body.filter(
+        (item) =>
+          item.role.includes(role as MenuRole) || item.role.includes("all"),
       );
 
-      if (filteredBody.length) {
-        return { section: section.section, body: filteredBody } as MenuProps;
-      } else return null;
+      if (filteredBody.length > 0) return { section, body: filteredBody };
+      else return null;
     })
     .filter((section) => section !== null);
 }
 
-function GetCurrentPage(path: string, metadata?: boolean) {
-  const currentPage = GetMenu(path)?.label;
+function GetCurrentPage(
+  currentPath: string,
+  metadata: boolean = false,
+  isProtected: boolean = false,
+) {
+  const currentPage = GetMenu(
+    isProtected ? `${path.protected}${currentPath}` : currentPath,
+  )?.label;
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.metadata(currentPage) : currentPage;
 }

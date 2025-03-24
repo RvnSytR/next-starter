@@ -1,5 +1,5 @@
+import { User } from "@/lib/auth";
 import { GetMenuByRole, secondaryMenu } from "@/lib/menu";
-import type { Role } from "@/server/db/schema";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
@@ -26,25 +26,20 @@ import {
 import {
   ClientSidebarCollapsible,
   ClientSidebarMenuButton,
-} from "./client-sidebar";
+} from "./sidebar-client";
 
-type SidebarData = {
-  username: string;
-  email: string;
-  role: Exclude<Role, "pending">;
-};
+type SidebarData = Pick<User, "name" | "email"> & { role: string };
 
 export function AppSidebar({
-  username,
-  email,
   role,
   children,
+  ...props
 }: SidebarData & React.ComponentProps<"div">) {
   return (
     <SidebarProvider>
       <Sidebar variant="inset" collapsible="icon">
         <SidebarHeader>
-          <Head username={username} email={email} />
+          <Head {...props} />
           <SidebarSeparator />
         </SidebarHeader>
 
@@ -66,7 +61,7 @@ export function AppSidebar({
   );
 }
 
-function Head({ username, email }: { username: string; email: string }) {
+function Head({ name, email }: Pick<SidebarData, "name" | "email">) {
   return (
     <SidebarMenuButton
       size="lg"
@@ -74,12 +69,12 @@ function Head({ username, email }: { username: string; email: string }) {
     >
       <Avatar className="rounded-md">
         <AvatarFallback className="rounded-md">
-          {username.slice(0, 2)}
+          {name.slice(0, 2)}
         </AvatarFallback>
       </Avatar>
 
       <div className="grid [&_span]:truncate">
-        <span className="text-sm font-semibold">{username}</span>
+        <span className="text-sm font-semibold">{name}</span>
         <span className="text-xs">{email}</span>
       </div>
     </SidebarMenuButton>
@@ -87,9 +82,7 @@ function Head({ username, email }: { username: string; email: string }) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  const menu = GetMenuByRole(role);
-
-  return menu.map((item, index) => (
+  return GetMenuByRole(role).map((item, index) => (
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
 
@@ -168,7 +161,7 @@ function Footer() {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <SignOutButton className="w-full" />
+        <SignOutButton />
       </SidebarMenuItem>
     </SidebarMenu>
   );

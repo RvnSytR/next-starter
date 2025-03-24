@@ -8,7 +8,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { CustomLoader } from "../icon";
-import { Button, ButtonProps, buttonVariants } from "../ui/button";
+import { Button, ButtonProps } from "../ui/button";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 // #region // * Types
@@ -94,7 +94,7 @@ export function CustomButton({
       className={cn(
         "shrink-0 truncate",
         inSidebar &&
-          (sidebarMenuButtonVariants({
+          sidebarMenuButtonVariants({
             size:
               size === "icon"
                 ? "default"
@@ -104,7 +104,6 @@ export function CustomButton({
                     ? "sm"
                     : size,
           }),
-          buttonVariants({ variant: variant })),
         className,
       )}
       onClick={async (e) => {
