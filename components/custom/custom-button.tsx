@@ -8,7 +8,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { CustomLoader } from "../icon";
-import { Button, ButtonProps } from "../ui/button";
+import { Button, ButtonProps, buttonVariants } from "../ui/button";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 // #region // * Types
@@ -103,7 +103,8 @@ export function CustomButton({
                   : size === "iconsm"
                     ? "sm"
                     : size,
-          }),
+          }) &&
+          buttonVariants({ variant: variant }),
         className,
       )}
       onClick={async (e) => {
