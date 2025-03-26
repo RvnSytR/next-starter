@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { maxFileSize, type Media, media } from "./media";
-import { Capitalize } from "./utils";
+import { capitalize } from "./utils";
 
 export const zodFile = (mediaType: Media) =>
   z
@@ -16,7 +16,7 @@ export const zodFile = (mediaType: Media) =>
       (files) =>
         files.every((file) => file.size <= maxFileSize[mediaType].byte),
       {
-        message: `${Capitalize(mediaType)} size should not exceed ${maxFileSize[mediaType].mb} MB`,
+        message: `${capitalize(mediaType)} size should not exceed ${maxFileSize[mediaType].mb} MB`,
       },
     );
 

@@ -7,7 +7,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { label } from "@/lib/content";
-import { GetMenu } from "@/lib/menu";
+import { getMenu } from "@/lib/menu";
 import Link from "next/link";
 import { Fragment } from "react";
 
@@ -24,7 +24,7 @@ export function DynamicBreadcrumb({
     <Breadcrumb>
       <BreadcrumbList className="flex-nowrap">
         {breadcrumbArr?.map((item, index) => {
-          const menu = typeof item === "string" ? GetMenu(item, true) : item;
+          const menu = typeof item === "string" ? getMenu(item, true) : item;
           const content = menu ? (
             <BreadcrumbLink asChild>
               <Link href={menu.href}>{menu.label}</Link>

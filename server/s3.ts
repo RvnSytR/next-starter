@@ -1,5 +1,6 @@
 "use server";
 
+import { env } from "@/lib/env";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -8,24 +9,24 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const BUCKET = process.env.S3_BUCKET_NAME!;
+const BUCKET = env.S3_BUCKET_NAME;
 const region = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
 
 const s3 = new S3Client({
   region: region.jakarta,
-  endpoint: process.env.S3_ENDPOINT!,
+  endpoint: env.S3_ENDPOINT,
   credentials: {
-    accessKeyId: process.env.S3_ACCESS_KEY!,
-    secretAccessKey: process.env.S3_SECRET_KEY!,
+    accessKeyId: env.S3_ACCESS_KEY,
+    secretAccessKey: env.S3_SECRET_KEY,
   },
 });
 
-export async function GetFilePreSignedUrl(key: string) {
+export async function getFilePreSignedUrl(key: string) {
   const command = new GetObjectCommand({ Bucket: BUCKET, Key: key });
-  return await getSignedUrl(s3, command, { expiresIn: 60 });
+  return await getSignedUrl(s3, command);
 }
 
-export async function UploadFile(
+export async function uploadFile(
   formData: FormData,
   name?: string,
   options?: { contentType?: string },
@@ -45,7 +46,7 @@ export async function UploadFile(
   return { key: key, res: res };
 }
 
-export async function DeleteFile(key: string) {
+export async function deleteFile(key: string) {
   const command = new DeleteObjectCommand({ Bucket: BUCKET, Key: key });
   return await s3.send(command);
 }

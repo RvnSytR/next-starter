@@ -1,7 +1,7 @@
 "use client";
 
 import { label } from "@/lib/content";
-import { FormatNumeric, FormatPhone, SanitizeNumber } from "@/lib/utils";
+import { formatNumeric, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -124,9 +124,9 @@ export function ExampleForm() {
                     <Input
                       type="text"
                       inputMode="numeric"
-                      value={FormatNumeric(field.value)}
+                      value={formatNumeric(field.value)}
                       onChange={(e) =>
-                        field.onChange(SanitizeNumber(e.target.value))
+                        field.onChange(sanitizeNumber(e.target.value))
                       }
                     />
                   </FormControl>
@@ -148,9 +148,9 @@ export function ExampleForm() {
                     <Input
                       type="text"
                       inputMode="numeric"
-                      value={FormatPhone(field.value)}
+                      value={formatPhone(field.value)}
                       onChange={(e) => {
-                        field.onChange(SanitizeNumber(e.target.value));
+                        field.onChange(sanitizeNumber(e.target.value));
                       }}
                     />
                   </FormControl>

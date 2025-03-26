@@ -1,5 +1,5 @@
 import { User } from "@/lib/auth";
-import { GetMenuByRole, secondaryMenu } from "@/lib/menu";
+import { getMenuByRole, secondaryMenu } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
@@ -30,7 +30,7 @@ import {
 
 type SidebarData = Pick<User, "name" | "email"> & { role: string };
 
-export function AppSidebar({
+export function SidebarApp({
   role,
   children,
   ...props
@@ -82,7 +82,7 @@ function Head({ name, email }: Pick<SidebarData, "name" | "email">) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  return GetMenuByRole(role).map((item, index) => (
+  return getMenuByRole(role).map((item, index) => (
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
 

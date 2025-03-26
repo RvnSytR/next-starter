@@ -1,4 +1,4 @@
-import { GetMenu, path } from "@/lib/menu";
+import { getMenu, path } from "@/lib/menu";
 import { NextRequest, NextResponse } from "next/server";
 import { authClient } from "./lib/auth-client";
 
@@ -18,7 +18,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(path.protected, req.url));
   }
 
-  const menu = GetMenu(pathname, true);
+  const menu = getMenu(pathname, true);
   if (menu && !menu.role.some((r) => r === "all" || r === data?.user.role)) {
     return NextResponse.rewrite(new URL("/404", req.url));
   }

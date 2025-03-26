@@ -8,12 +8,12 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export function Delay(seconds: number) {
+export function delay(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
 // #region // * Get Random Things
-export function GetRandomString(length: number) {
+export function getRandomString(length: number) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
@@ -24,7 +24,7 @@ export function GetRandomString(length: number) {
   return result as string;
 }
 
-export function GetRandomColor(withHash?: boolean) {
+export function getRandomColor(withHash?: boolean) {
   const letters = "0123456789ABCDEF";
   let color = withHash ? "#" : "";
   for (let i = 0; i < 6; i++) {
@@ -35,31 +35,31 @@ export function GetRandomColor(withHash?: boolean) {
 // #endregion
 
 // #region // * Formater
-export function FormatToByte(mb: number) {
+export function formatToByte(mb: number) {
   return mb * 1024 * 1024;
 }
 
-export function FormatToMegabyte(byte: number) {
+export function formatToMegabyte(byte: number) {
   return byte / 1000 / 1000;
 }
 
-export function Capitalize(str: string) {
+export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function SanitizeNumber(str: string): number {
+export function sanitizeNumber(str: string): number {
   return Number(str.replace(/[^\d]/g, "") || "0");
 }
 
-export function FormatNumeric(
+export function formatNumeric(
   num: string | number,
   prefix: string = "",
 ): string {
-  return `${prefix}${new Intl.NumberFormat("id-ID").format(SanitizeNumber(String(num)))}`;
+  return `${prefix}${new Intl.NumberFormat("id-ID").format(sanitizeNumber(String(num)))}`;
 }
 
-export function FormatPhone(num: string | number): string {
-  const phoneStr = String(SanitizeNumber(String(num)));
+export function formatPhone(num: string | number): string {
+  const phoneStr = String(sanitizeNumber(String(num)));
   if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
 
@@ -75,15 +75,15 @@ export function FormatPhone(num: string | number): string {
 // #endregion
 
 // #region // * Date
-export function FormatDate(date: Date, formatStr: string) {
+export function formatDate(date: Date, formatStr: string) {
   return format(date, formatStr, { locale: id });
 }
 
-export function IsDateInRange(from: Date, to: Date, date: Date) {
+export function isDateInRange(from: Date, to: Date, date: Date) {
   return isBefore(from, date) && isAfter(to, date);
 }
 
-export function CalculateAge(birthDate: Date): number | string {
+export function calculateAge(birthDate: Date): number | string {
   const today = new Date();
 
   if (isNaN(birthDate.getTime())) {
@@ -107,7 +107,7 @@ export function CalculateAge(birthDate: Date): number | string {
 // #endregion
 
 // #region // TODO Image Reader
-function ReadFileAsURL(file: File): Promise<string> {
+function readFileAsURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onloadend = () => resolve(reader.result as string);
@@ -116,22 +116,22 @@ function ReadFileAsURL(file: File): Promise<string> {
   });
 }
 
-async function GetFilesAsURL(files: File[] | null) {
+async function getFilesAsURL(files: File[] | null) {
   if (!files || !files.every((file) => file.type.startsWith("image/")))
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
     if (item.size > maxFileSize.image.byte)
       throw new Error("Ukuran File Terlalu Besar!");
-    results.push(await ReadFileAsURL(item));
+    results.push(await readFileAsURL(item));
   }
   return results;
 }
 
-export async function FileOnChangeAsURL(
+export async function fileOnChangeAsURL(
   event: React.ChangeEvent<HTMLInputElement>,
 ) {
   if (!event.target.files) return [];
-  return await GetFilesAsURL(Array.from(event.target.files));
+  return await getFilesAsURL(Array.from(event.target.files));
 }
 // #endregion

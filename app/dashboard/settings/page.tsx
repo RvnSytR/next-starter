@@ -1,14 +1,14 @@
 import { Section } from "@/components/layout/section";
-import { GetCurrentPage } from "@/lib/menu";
+import { getCurrentPage } from "@/lib/menu";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: GetCurrentPage("/settings", true, true),
+  title: getCurrentPage("/settings", true, true),
 };
 
 export default async function Page() {
   return (
-    <Section currentPage={GetCurrentPage("/settings", false, true)}>
+    <Section currentPage={getCurrentPage("/settings", false, true)}>
       <p>Profile Thing</p>
     </Section>
   );

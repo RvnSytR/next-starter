@@ -1,13 +1,14 @@
 import { Section } from "@/components/layout/section";
-import { GetCurrentPage } from "@/lib/menu";
+import { env } from "@/lib/env";
+import { getCurrentPage } from "@/lib/menu";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: GetCurrentPage("/account", true, true),
+  title: getCurrentPage("/account", true, true),
 };
 
 export default async function Page() {
-  const res = "Hello World";
+  const res = env.MYSQL_HOST;
 
   // const facetedFilter = [
   //   {
@@ -22,7 +23,7 @@ export default async function Page() {
   // ];
 
   return (
-    <Section currentPage={GetCurrentPage("/account", false, true)}>
+    <Section currentPage={getCurrentPage("/account", false, true)}>
       {/* <UserDataTable
         data={data}
         currentIdUser={session.user.id_user}

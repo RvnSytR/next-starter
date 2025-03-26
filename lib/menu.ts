@@ -64,7 +64,7 @@ const secondaryMenu: MenuBody[] = [
   { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
 ];
 
-function GetMenu(
+function getMenu(
   path: string,
   withoutIcon: boolean = false,
 ): MenuBody | Omit<MenuBody, "icon"> | null {
@@ -80,7 +80,7 @@ function GetMenu(
   return result ?? null;
 }
 
-function GetMenuByRole(role: string): MenuProps[] {
+function getMenuByRole(role: string): MenuProps[] {
   return menu
     .map(({ section, body }) => {
       const filteredBody = body.filter(
@@ -94,16 +94,16 @@ function GetMenuByRole(role: string): MenuProps[] {
     .filter((section) => section !== null);
 }
 
-function GetCurrentPage(
+function getCurrentPage(
   currentPath: string,
   metadata: boolean = false,
   isProtected: boolean = false,
 ) {
-  const currentPage = GetMenu(
+  const currentPage = getMenu(
     isProtected ? `${path.protected}${currentPath}` : currentPath,
   )?.label;
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 
-export { GetCurrentPage, GetMenu, GetMenuByRole, path, secondaryMenu };
+export { getCurrentPage, getMenu, getMenuByRole, path, secondaryMenu };

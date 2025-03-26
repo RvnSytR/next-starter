@@ -2,7 +2,7 @@
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import { label } from "@/lib/content";
-import { cn, Delay } from "@/lib/utils";
+import { cn, delay } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
@@ -140,7 +140,7 @@ export function RefreshButton({
       loading={isLoading}
       onClick={async () => {
         setIsLoading(true);
-        await Delay(0.5);
+        await delay(0.5);
         router.refresh();
         setIsLoading(false);
       }}
@@ -164,7 +164,7 @@ export function CopyButton({
       onClick={async () => {
         setIsLoading(true);
         navigator.clipboard.writeText(value);
-        await Delay(1);
+        await delay(1);
         setIsLoading(false);
       }}
       {...props}

@@ -1,4 +1,4 @@
-import { FormatToByte } from "./utils";
+import { formatToByte } from "./utils";
 
 export type Media = "all" | "image" | "document";
 // | "archive"
@@ -6,12 +6,12 @@ export type Media = "all" | "image" | "document";
 // | "video";
 
 export const maxFileSize: Record<Media, { mb: number; byte: number }> = {
-  all: { mb: 2, byte: FormatToByte(2) },
-  image: { mb: 2, byte: FormatToByte(2) },
-  document: { mb: 2, byte: FormatToByte(2) },
-  // archive: { mb: 20, byte: FormatToByte(20) },
-  // audio: { mb: 10, byte: FormatToByte(10) },
-  // video: { mb: 10, byte: FormatToByte(50) },
+  all: { mb: 2, byte: formatToByte(2) },
+  image: { mb: 2, byte: formatToByte(2) },
+  document: { mb: 2, byte: formatToByte(2) },
+  // archive: { mb: 20, byte: formatToByte(20) },
+  // audio: { mb: 10, byte: formatToByte(10) },
+  // video: { mb: 10, byte: formatToByte(50) },
 };
 
 export const media: Record<Media, { type: string[]; extensions: string[] }> = {

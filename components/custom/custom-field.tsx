@@ -1,7 +1,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { label, label as labelContent } from "@/lib/content";
 import { maxFileSize, Media, media } from "@/lib/media";
-import { cn, FormatDate, FormatToByte, FormatToMegabyte } from "@/lib/utils";
+import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
 import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
 import type { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
@@ -103,7 +103,7 @@ export function InputDate({
           >
             <CalendarIcon />
             {selected ? (
-              FormatDate(selected, "PPPP")
+              formatDate(selected, "PPPP")
             ) : (
               <span>{label ?? labelContent.button.datePicker}</span>
             )}
@@ -143,9 +143,9 @@ export function InputDateRange({
           <CalendarIcon />
           {selected?.from ? (
             selected.to ? (
-              `${FormatDate(selected.from, "PPP")} - ${FormatDate(selected.to, "PPP")}`
+              `${formatDate(selected.from, "PPP")} - ${formatDate(selected.to, "PPP")}`
             ) : (
-              FormatDate(selected.from, "PPP")
+              formatDate(selected.from, "PPP")
             )
           ) : (
             <span>{label ?? labelContent.button.datePicker}</span>
@@ -187,7 +187,7 @@ export function InputFile({
 }) {
   const fileMedia = media[accept];
   const fileSize = size
-    ? { mb: size, byte: FormatToByte(size) }
+    ? { mb: size, byte: formatToByte(size) }
     : maxFileSize[accept];
 
   return (
@@ -243,7 +243,7 @@ export function InputFile({
                 )}
               >
                 <span className="font-medium">{file.name}</span>
-                {` - ${FormatToMegabyte(file.size).toFixed(2)} MB`}
+                {` - ${formatToMegabyte(file.size).toFixed(2)} MB`}
               </small>
             </li>
           ))}

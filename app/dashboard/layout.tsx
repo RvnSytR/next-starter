@@ -1,12 +1,12 @@
-import { AppSidebar } from "@/components/layout/sidebar-app";
+import { SidebarApp } from "@/components/layout/sidebar-app";
 import { userRoles } from "@/lib/auth";
-import { GetCurrentPage, path } from "@/lib/menu";
+import { getCurrentPage, path } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: GetCurrentPage(path.protected, true),
+  title: getCurrentPage(path.protected, true),
 };
 
 export default async function DashboardLayout({
@@ -17,8 +17,8 @@ export default async function DashboardLayout({
   const { role, ...rest } = session.user;
 
   return (
-    <AppSidebar role={role ?? userRoles[0]} {...rest}>
+    <SidebarApp role={role ?? userRoles[0]} {...rest}>
       {children}
-    </AppSidebar>
+    </SidebarApp>
   );
 }
