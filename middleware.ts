@@ -1,25 +1,37 @@
 import { getMenu, path } from "@/lib/menu";
 import { NextRequest, NextResponse } from "next/server";
-import { authClient } from "./lib/auth-client";
+import { Session, User } from "./lib/auth";
+import { env } from "./lib/env";
+
+type StoredSession = { session: Session; user: User } | null;
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
-  const { data, error } = await authClient.getSession({
-    fetchOptions: { headers: req.headers },
-  });
+  const storedSession = await fetch(
+    `${env.BETTER_AUTH_URL}/api/auth/get-session`,
+    {
+      method: "GET",
+      headers: req.headers,
+    },
+  )
+    .then((res) => res.json() as Promise<StoredSession>)
+    .catch(() => null);
 
-  if (error) console.error("Error fetching session: ", error);
-  if (!data && !pathname.startsWith(path.auth)) {
+  if (!storedSession && !pathname.startsWith(path.auth)) {
     console.warn("No user data found in session.");
     return NextResponse.redirect(new URL(path.auth, req.url));
   }
 
-  if (data && pathname.startsWith(path.auth)) {
+  if (storedSession && pathname.startsWith(path.auth)) {
     return NextResponse.redirect(new URL(path.protected, req.url));
   }
 
   const menu = getMenu(pathname, true);
-  if (menu && !menu.role.some((r) => r === "all" || r === data?.user.role)) {
+  if (
+    (!menu && !pathname.startsWith(path.auth)) ||
+    (menu &&
+      !menu.role.some((r) => r === "all" || r === storedSession?.user.role))
+  ) {
     return NextResponse.rewrite(new URL("/404", req.url));
   }
 

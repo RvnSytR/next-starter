@@ -3,6 +3,7 @@
 import { authClient } from "@/lib/auth-client";
 import { label } from "@/lib/content";
 import { path } from "@/lib/menu";
+import { cn } from "@/lib/utils";
 import { zodAuth } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { KeyRound, LogOut, Mail, UserRound } from "lucide-react";
@@ -24,6 +25,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 export function SignOutButton() {
   const router = useRouter();
@@ -34,8 +36,7 @@ export function SignOutButton() {
       variant="outline_destructive"
       text={label.button.signOut}
       loading={isLoading}
-      className="w-full"
-      inSidebar
+      className={cn(sidebarMenuButtonVariants(), "hover:text-destructive")}
       onClick={() =>
         authClient.signOut({
           fetchOptions: {
@@ -204,9 +205,7 @@ export function SignUpForm() {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signUp(data?.user.name));
-        // router.push(path.protected);
-        setIsLoading(false);
-        router.refresh();
+        router.push(path.protected);
       },
       onError: ({ error }) => {
         setIsLoading(false);

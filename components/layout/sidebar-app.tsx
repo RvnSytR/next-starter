@@ -3,7 +3,7 @@ import { getMenuByRole, secondaryMenu } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -28,7 +28,7 @@ import {
   ClientSidebarMenuButton,
 } from "./sidebar-client";
 
-type SidebarData = Pick<User, "name" | "email"> & { role: string };
+type SidebarData = Pick<User, "name" | "email" | "image"> & { role: string };
 
 export function SidebarApp({
   role,
@@ -61,13 +61,14 @@ export function SidebarApp({
   );
 }
 
-function Head({ name, email }: Pick<SidebarData, "name" | "email">) {
+function Head({ name, email, image }: Omit<SidebarData, "role">) {
   return (
     <SidebarMenuButton
       size="lg"
       className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
     >
       <Avatar className="rounded-md">
+        {image && <AvatarImage className="rounded-md" src={image} />}
         <AvatarFallback className="rounded-md">
           {name.slice(0, 2)}
         </AvatarFallback>
@@ -88,12 +89,12 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
       <SidebarMenu>
         {item.body.map((bodyItem, bodyIndex) => {
-          const { href, label, isDisable, subMenu } = bodyItem;
+          const { href, label, disabled, subMenu } = bodyItem;
           return (
             <ClientSidebarCollapsible
               key={bodyIndex}
               pathname={href}
-              disabled={isDisable}
+              disabled={disabled}
               asChild
             >
               <SidebarMenuItem>
@@ -120,7 +121,10 @@ function Content({ role }: Pick<SidebarData, "role">) {
                       <SidebarMenuSub>
                         {subMenu.map((subItem, subIndex) => (
                           <SidebarMenuSubItem key={subIndex}>
-                            <SidebarMenuSubButton asChild>
+                            <SidebarMenuSubButton
+                              className={subItem.className}
+                              asChild
+                            >
                               <Link href={`${href}/#${subItem.elementId}`}>
                                 {subItem.subLabel}
                               </Link>

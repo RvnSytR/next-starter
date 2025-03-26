@@ -33,7 +33,6 @@
     "@radix-ui/react-toggle-group": "^1.1.2",
     "@radix-ui/react-tooltip": "^1.1.8",
     "@tanstack/react-table": "^8.21.2",
-    "bcrypt": "^5.1.1",
     "better-auth": "^1.2.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -58,9 +57,8 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.0",
     "@tailwindcss/postcss": "^4.0.8",
-    "@types/bcrypt": "^5.0.2",
     "@types/node": "^20.17.19",
-    "@types/react": "^19.0.10",
+    "@types/react": "^19.0.12",
     "@types/react-dom": "^19.0.4",
     "drizzle-kit": "^0.30.5",
     "eslint": "^9.21.0",

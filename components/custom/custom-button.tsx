@@ -8,8 +8,7 @@ import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
 import { Fragment, useEffect, useState, type ReactNode } from "react";
 import { CustomLoader } from "../icon";
-import { Button, ButtonProps, buttonVariants } from "../ui/button";
-import { sidebarMenuButtonVariants } from "../ui/sidebar";
+import { Button, ButtonProps } from "../ui/button";
 
 // #region // * Types
 type RequiredChildrenProps =
@@ -27,7 +26,6 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     iconPosition?: "left" | "right";
     loading?: boolean;
     onClickLoading?: boolean;
-    inSidebar?: boolean;
     hideTextOnMobile?: boolean;
     customLoader?: ReactNode;
   };
@@ -39,7 +37,6 @@ export function CustomButton({
   iconPosition = "left",
   loading = false,
   onClickLoading = false,
-  inSidebar = false,
   hideTextOnMobile = false,
   customLoader = <CustomLoader customType="circle" />,
   href,
@@ -91,22 +88,7 @@ export function CustomButton({
               : "icon"
           : size
       }
-      className={cn(
-        "shrink-0 truncate",
-        inSidebar &&
-          sidebarMenuButtonVariants({
-            size:
-              size === "icon"
-                ? "default"
-                : size === "iconlg"
-                  ? "lg"
-                  : size === "iconsm"
-                    ? "sm"
-                    : size,
-          }) &&
-          buttonVariants({ variant: variant }),
-        className,
-      )}
+      className={cn("shrink-0 truncate", className)}
       onClick={async (e) => {
         if (onClickLoading) setIsLoading(true);
         if (onClick) onClick(e);

@@ -1,10 +1,9 @@
 "use client";
 
-import { UserCredentials } from "@/server/db/schema";
 import { ColumnDef } from "@tanstack/react-table";
+import { User } from "better-auth";
 import { format } from "date-fns";
 import { ArrowUpDown } from "lucide-react";
-import { Badge } from "../ui/badge";
 import { type ButtonProps, Button } from "../ui/button";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
@@ -16,7 +15,7 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-export const userColumn: ColumnDef<UserCredentials>[] = [
+export const userColumn: ColumnDef<User>[] = [
   {
     accessorKey: "number",
     header: "No",
@@ -24,7 +23,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "user ID",
+    accessorKey: "id",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -32,7 +31,7 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         User ID
       </HeaderButton>
     ),
-    cell: ({ row }) => row.original.id_user.slice(0, 5) + "...",
+    cell: ({ row }) => row.original.id.slice(0, 5) + "...",
   },
   {
     accessorKey: "email",
@@ -46,39 +45,39 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
     cell: ({ row }) => row.original.email,
   },
   {
-    accessorKey: "username",
+    accessorKey: "name",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Username
+        Name
       </HeaderButton>
     ),
-    cell: ({ row }) => row.original.username,
+    cell: ({ row }) => row.original.name,
   },
-  {
-    accessorKey: "role",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Role
-      </HeaderButton>
-    ),
-    cell: ({ row }) => (
-      <Badge
-        variant={
-          row.original.role !== "pending"
-            ? "outline_success"
-            : "outline_warning"
-        }
-        className="capitalize"
-      >
-        {row.original.role}
-      </Badge>
-    ),
-    filterFn: (row, id, value) => value.includes(row.getValue(id)),
-  },
+  // {
+  //   accessorKey: "role",
+  //   header: ({ column }) => (
+  //     <HeaderButton
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+  //     >
+  //       Role
+  //     </HeaderButton>
+  //   ),
+  //   cell: ({ row }) => (
+  //     <Badge
+  //       variant={
+  //         row.original.role !== "pending"
+  //           ? "outline_success"
+  //           : "outline_warning"
+  //       }
+  //       className="capitalize"
+  //     >
+  //       {row.original.role}
+  //     </Badge>
+  //   ),
+  //   filterFn: (row, id, value) => value.includes(row.getValue(id)),
+  // },
   {
     accessorKey: "last sign in at",
     header: ({ column }) => (
@@ -89,14 +88,11 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) =>
-      row.original.last_signin_at
-        ? format(row.original.last_signin_at, "PPPp")
-        : null,
+      row.original.updatedAt ? format(row.original.updatedAt, "PPPp") : null,
     sortingFn: (a, b) => {
-      const { last_signin_at: aLog } = a.original;
-      const { last_signin_at: bLog } = b.original;
+      const { updatedAt: aLog } = a.original;
+      const { updatedAt: bLog } = b.original;
       if (aLog && bLog) return aLog.getTime() - bLog.getTime();
-
       if (!aLog) return 1;
       else return -1;
     },
@@ -110,8 +106,8 @@ export const userColumn: ColumnDef<UserCredentials>[] = [
         Registration At
       </HeaderButton>
     ),
-    cell: ({ row }) => format(row.original.created_at, "PPPp"),
+    cell: ({ row }) => format(row.original.createdAt, "PPPp"),
     sortingFn: (a, b) =>
-      a.original.created_at.getTime() - b.original.created_at.getTime(),
+      a.original.createdAt.getTime() - b.original.createdAt.getTime(),
   },
 ];

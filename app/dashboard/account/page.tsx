@@ -1,5 +1,4 @@
 import { Section } from "@/components/layout/section";
-import { env } from "@/lib/env";
 import { getCurrentPage } from "@/lib/menu";
 import { Metadata } from "next";
 
@@ -8,8 +7,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const res = env.MYSQL_HOST;
-
   // const facetedFilter = [
   //   {
   //     id: "role",
@@ -29,8 +26,7 @@ export default async function Page() {
         currentIdUser={session.user.id_user}
         facetedFilter={facetedFilter}
       /> */}
-
-      <p>{JSON.stringify(res, null, 2)}</p>
+      <p>User List</p>
     </Section>
   );
 }

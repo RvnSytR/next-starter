@@ -1,5 +1,4 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
-import { userRoles } from "@/lib/auth";
 import { getCurrentPage, path } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
@@ -13,11 +12,10 @@ export default async function DashboardLayout({
   children,
 }: Readonly<React.ComponentProps<"div">>) {
   const session = await getSession();
-  if (!session) return notFound();
+  if (!session?.user?.role) return notFound();
   const { role, ...rest } = session.user;
-
   return (
-    <SidebarApp role={role ?? userRoles[0]} {...rest}>
+    <SidebarApp role={role} {...rest}>
       {children}
     </SidebarApp>
   );

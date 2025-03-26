@@ -25,7 +25,8 @@ const auth = betterAuth({
   plugins: [nextCookies(), openAPI(), admin({ adminRoles: [...adminRoles] })],
 });
 
+type Session = typeof auth.$Infer.Session.session;
 type User = typeof auth.$Infer.Session.user;
 
 export { adminRoles, auth, userRoles };
-export type { AdminRoles, User, UserRoles };
+export type { AdminRoles, Session, User, UserRoles };

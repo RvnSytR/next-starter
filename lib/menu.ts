@@ -3,22 +3,25 @@ import {
   CircleHelp,
   ExternalLink,
   LayoutDashboard,
-  Settings,
   UserRound,
+  UsersRound,
 } from "lucide-react";
 import type { AdminRoles, UserRoles } from "./auth";
 import { label, page } from "./content";
 
 type MenuRole = UserRoles | AdminRoles | "all";
 type MenuProps = { section: string; body: MenuBody[] };
-type SubMenuProps = { subLabel: string; elementId: string }[];
-
+type SubMenuProps = {
+  subLabel: string;
+  elementId: string;
+  className?: string;
+}[];
 type MenuBody = {
   href: string;
   label: string;
   role: MenuRole[];
   icon?: LucideIcon;
-  isDisable?: boolean;
+  disabled?: boolean;
   subMenu?: SubMenuProps;
 };
 
@@ -38,21 +41,26 @@ const menu: MenuProps[] = [
         href: `${path.protected}/account`,
         label: "User Management",
         role: ["admin"],
-        icon: UserRound,
+        icon: UsersRound,
       },
     ],
   },
   {
-    section: "Lainnya",
+    section: "Settings",
     body: [
       {
-        href: `${path.protected}/settings`,
-        label: "Settings",
+        href: `${path.protected}/profile`,
+        label: "My Profile",
         role: ["all"],
-        icon: Settings,
+        icon: UserRound,
         subMenu: [
-          { subLabel: "Change Profile", elementId: "changeProfile" },
+          { subLabel: "Personal Information", elementId: "personal" },
           { subLabel: "Change Password", elementId: "changePassword" },
+          {
+            subLabel: "Danger Zone",
+            elementId: "dangerZone",
+            className: "text-destructive hover:text-destructive",
+          },
         ],
       },
     ],
@@ -64,6 +72,7 @@ const secondaryMenu: MenuBody[] = [
   { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
 ];
 
+// #region // * Get Menu
 function getMenu(
   path: string,
   withoutIcon: boolean = false,
@@ -105,5 +114,6 @@ function getCurrentPage(
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.metadata(currentPage) : currentPage;
 }
+// #endregion
 
 export { getCurrentPage, getMenu, getMenuByRole, path, secondaryMenu };

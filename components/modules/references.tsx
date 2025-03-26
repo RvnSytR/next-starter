@@ -352,7 +352,6 @@ export function References() {
             { name: "iconPosition", type: `"left" | "right"`, def: `"left"` },
             { name: "loading", type: "boolean", def: "false" },
             { name: "onClickLoading", type: "boolean", def: "false" },
-            { name: "inSidebar", type: "boolean", def: "false" },
             { name: "hideTextOnMobile", type: "boolean", def: "false" },
             { name: "customLoader", type: "ReactNode", def: "LoaderCircle" },
             { name: "href", type: "string | URL" },
@@ -381,7 +380,6 @@ export type CustomButtonProps = Omit<ButtonProps, "children"> &
     iconPosition?: "left" | "right";
     loading?: boolean;
     onClickLoading?: boolean;
-    inSidebar?: boolean;
     hideTextOnMobile?: boolean;
     customLoader?: ReactNode;
   };`}
