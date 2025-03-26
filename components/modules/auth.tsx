@@ -42,9 +42,7 @@ export function SignOutButton() {
             onRequest: () => setIsLoading(true),
             onSuccess: () => {
               toast.success(label.toast.success.signOut);
-              // router.push(path.signIn);
-              setIsLoading(false);
-              router.refresh();
+              router.push(path.auth);
             },
             onError: ({ error }) => {
               setIsLoading(false);
@@ -67,8 +65,7 @@ export function SignOnGithubButton() {
         await authClient.signIn.social({
           provider: "github",
           callbackURL: path.protected,
-          errorCallbackURL: "/error",
-          newUserCallbackURL: "/welcome",
+          errorCallbackURL: path.auth,
         });
       }}
       onClickLoading

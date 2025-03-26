@@ -1,13 +1,29 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { GetMenu, path } from "@/lib/menu";
+import { NextRequest, NextResponse } from "next/server";
+import { authClient } from "./lib/auth-client";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function middleware(req: NextRequest) {
-  try {
-    return NextResponse.next();
-  } catch (e) {
-    console.error("Middleware error: ", e);
-    return NextResponse.redirect(new URL("/error", origin));
+  const { pathname } = req.nextUrl;
+  const { data, error } = await authClient.getSession({
+    fetchOptions: { headers: req.headers },
+  });
+
+  if (error) console.error("Error fetching session: ", error);
+  if (!data && pathname.startsWith(path.auth)) {
+    console.warn("No user data found in session.");
+    return NextResponse.redirect(new URL(path.auth, req.url));
   }
+
+  if (data && pathname.startsWith(path.auth)) {
+    return NextResponse.redirect(new URL(path.protected, req.url));
+  }
+
+  const menu = GetMenu(pathname, true);
+  if (menu && !menu.role.some((r) => r === "all" || r === data?.user.role)) {
+    return NextResponse.rewrite(new URL("/404", req.url));
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {

@@ -1,6 +1,7 @@
 import { AppSidebar } from "@/components/layout/sidebar-app";
-import { getSession, userRoles } from "@/lib/auth";
+import { userRoles } from "@/lib/auth";
 import { GetCurrentPage, path } from "@/lib/menu";
+import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

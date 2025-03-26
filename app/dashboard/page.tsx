@@ -3,11 +3,11 @@ import {
   SectionLabel,
   SectionTitle,
 } from "@/components/layout/section";
-import { getSession } from "@/lib/auth";
 import { GetCurrentPage, path } from "@/lib/menu";
+import { getSession } from "@/server/auth-action";
 
 export default async function Page() {
-  const session = await getSession();
+  const data = await getSession();
 
   return (
     <Section currentPage={GetCurrentPage(path.protected)}>
@@ -17,7 +17,7 @@ export default async function Page() {
       </div>
 
       <SectionLabel className="text-left">
-        <p>{JSON.stringify(session, null, 2)}</p>
+        <p>{JSON.stringify(data, null, 2)}</p>
       </SectionLabel>
     </Section>
   );

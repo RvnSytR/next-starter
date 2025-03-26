@@ -1,5 +1,4 @@
 import { Section } from "@/components/layout/section";
-import { authClient } from "@/lib/auth-client";
 import { GetCurrentPage } from "@/lib/menu";
 import { Metadata } from "next";
 
@@ -8,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const users = await authClient.admin.listUsers({ query: { limit: 10 } });
+  const res = "Hello World";
 
   // const facetedFilter = [
   //   {
@@ -30,7 +29,7 @@ export default async function Page() {
         facetedFilter={facetedFilter}
       /> */}
 
-      <p>{JSON.stringify(users, null, 2)}</p>
+      <p>{JSON.stringify(res, null, 2)}</p>
     </Section>
   );
 }

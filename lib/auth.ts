@@ -1,8 +1,8 @@
 import { db } from "@/server/db/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin } from "better-auth/plugins";
-import { headers } from "next/headers";
+import { nextCookies } from "better-auth/next-js";
+import { admin, openAPI } from "better-auth/plugins";
 
 // Any role that isn't in the adminRoles list, even if they have the permission, will not be considered an admin.
 // https://www.better-auth.com/docs/plugins/admin#admin-roles
@@ -21,13 +21,10 @@ const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  plugins: [admin({ adminRoles: [...adminRoles] })],
+  plugins: [nextCookies(), openAPI(), admin({ adminRoles: [...adminRoles] })],
 });
-
-const getSession = async () =>
-  await auth.api.getSession({ headers: await headers() });
 
 type User = typeof auth.$Infer.Session.user;
 
-export { adminRoles, auth, getSession, userRoles };
+export { adminRoles, auth, userRoles };
 export type { AdminRoles, User, UserRoles };

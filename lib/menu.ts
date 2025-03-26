@@ -22,10 +22,7 @@ type MenuBody = {
   subMenu?: SubMenuProps;
 };
 
-const path = {
-  auth: "/auth",
-  protected: "/dashboard",
-};
+const path = { auth: "/auth", protected: "/dashboard" };
 
 const menu: MenuProps[] = [
   {
@@ -40,7 +37,7 @@ const menu: MenuProps[] = [
       {
         href: `${path.protected}/account`,
         label: "User Management",
-        role: ["all"],
+        role: ["admin"],
         icon: UserRound,
       },
     ],
