@@ -9,7 +9,7 @@ export async function middleware(req: NextRequest) {
   });
 
   if (error) console.error("Error fetching session: ", error);
-  if (!data && pathname.startsWith(path.auth)) {
+  if (!data && !pathname.startsWith(path.auth)) {
     console.warn("No user data found in session.");
     return NextResponse.redirect(new URL(path.auth, req.url));
   }
