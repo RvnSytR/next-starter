@@ -54,11 +54,14 @@ const menu: MenuProps[] = [
         role: ["all"],
         icon: UserRound,
         subMenu: [
-          { subLabel: "Personal Information", elementId: "personal" },
-          { subLabel: "Change Password", elementId: "changePassword" },
+          {
+            subLabel: "Personal Information",
+            elementId: "personal-information",
+          },
+          { subLabel: "Change Password", elementId: "change-password" },
           {
             subLabel: "Danger Zone",
-            elementId: "dangerZone",
+            elementId: "danger-zone",
             className: "text-destructive hover:text-destructive",
           },
         ],

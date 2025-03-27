@@ -21,6 +21,9 @@ export const zodFile = (mediaType: Media) =>
     );
 
 export const zodAuth = z.object({
+  id: z.string(),
+  role: z.string().nullable().optional(),
+
   name: z
     .string({
       required_error: "Please enter your name.",

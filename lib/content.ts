@@ -75,6 +75,8 @@ const label = {
       signUp: (username: string) =>
         `Your account has been registered successfully, Welcome ${username}!`,
       signOut: "Signed out successfully!",
+
+      updateProfile: "Profile updated successfully!",
     },
 
     error: {
