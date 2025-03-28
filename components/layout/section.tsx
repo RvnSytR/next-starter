@@ -1,5 +1,5 @@
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { path } from "@/lib/menu";
+import { route } from "@/lib/menu";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
@@ -56,7 +56,7 @@ export function SectionNotFound({
         <p>Page Not Found</p>
 
         <CustomButton
-          href={path.protected}
+          href={route.protected}
           variant="outline"
           className="mt-4 rounded-full"
           icon={<LayoutDashboard />}

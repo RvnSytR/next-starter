@@ -61,8 +61,8 @@ const dialog = {
 
 const label = {
   error: {
-    protectedPath: "Protected path invalid!",
-    breadcrumb: "Menu path invalid!",
+    protectedPath: "Protected route invalid!",
+    breadcrumb: "Menu route invalid!",
     parsedNumber: "Parsed number invalid!",
   },
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { path } from "@/lib/menu";
+import { route } from "@/lib/menu";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { usePathname } from "next/navigation";
 import { ComponentProps, useEffect, useState } from "react";
@@ -14,13 +14,14 @@ import {
 function IsActivePath(pathname: string): boolean {
   const currentPathname = usePathname();
 
-  const trimProtectedPath = (p: string) => p.replace(path.protected, "").trim();
+  const trimProtectedPath = (p: string) =>
+    p.replace(route.protected, "").trim();
 
   const trimmedCurrentPath = trimProtectedPath(currentPathname);
   const trimmedPath = trimProtectedPath(pathname);
 
   const isRootPath =
-    currentPathname === path.protected && currentPathname === pathname;
+    currentPathname === route.protected && currentPathname === pathname;
   const isTrimmedPath =
     !!trimmedPath && trimmedCurrentPath.startsWith(trimmedPath);
 

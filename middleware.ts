@@ -1,4 +1,4 @@
-import { getMenu, path } from "@/lib/menu";
+import { getMenu, route } from "@/lib/menu";
 import { NextRequest, NextResponse } from "next/server";
 import { Session, User } from "./lib/auth";
 
@@ -16,18 +16,18 @@ export async function middleware(req: NextRequest) {
     .then((res) => res.json() as Promise<StoredSession>)
     .catch(() => null);
 
-  if (!storedSession && !pathname.startsWith(path.auth)) {
+  if (!storedSession && !pathname.startsWith(route.auth)) {
     console.warn("No user data found in session.");
-    return NextResponse.redirect(new URL(path.auth, req.url));
+    return NextResponse.redirect(new URL(route.auth, req.url));
   }
 
-  if (storedSession && pathname.startsWith(path.auth)) {
-    return NextResponse.redirect(new URL(path.protected, req.url));
+  if (storedSession && pathname.startsWith(route.auth)) {
+    return NextResponse.redirect(new URL(route.protected, req.url));
   }
 
   const menu = getMenu(pathname, true);
   if (
-    (!menu && !pathname.startsWith(path.auth)) ||
+    (!menu && !pathname.startsWith(route.auth)) ||
     (menu &&
       !menu.role.some((r) => r === "all" || r === storedSession?.user.role))
   ) {

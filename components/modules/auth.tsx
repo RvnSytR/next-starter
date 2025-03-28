@@ -3,7 +3,7 @@
 import { User } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { label } from "@/lib/content";
-import { path } from "@/lib/menu";
+import { route } from "@/lib/menu";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,7 +67,7 @@ export function SignOutButton() {
             onRequest: () => setIsLoading(true),
             onSuccess: () => {
               toast.success(label.toast.success.signOut);
-              router.push(path.auth);
+              router.push(route.auth);
             },
             onError: ({ error }) => {
               setIsLoading(false);
@@ -89,8 +89,8 @@ export function SignOnGithubButton() {
       onClick={async () => {
         await authClient.signIn.social({
           provider: "github",
-          callbackURL: path.protected,
-          errorCallbackURL: path.auth,
+          callbackURL: route.protected,
+          errorCallbackURL: route.auth,
         });
       }}
       onClickLoading
@@ -118,7 +118,7 @@ export function SignInForm() {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signIn(data?.user.name));
-        router.push(path.protected);
+        router.push(route.protected);
       },
       onError: ({ error }) => {
         setIsLoading(false);
@@ -229,7 +229,7 @@ export function SignUpForm() {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.signUp(data?.user.name));
-        router.push(path.protected);
+        router.push(route.protected);
       },
       onError: ({ error }) => {
         setIsLoading(false);
@@ -457,6 +457,22 @@ export function PersonalInformation({ id, name, email, role }: User) {
 
             <FormField
               control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address *</FormLabel>
+                  <FormFloating icon={<Mail />}>
+                    <FormControl>
+                      <Input type="text" disabled {...field} />
+                    </FormControl>
+                  </FormFloating>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
@@ -468,22 +484,6 @@ export function PersonalInformation({ id, name, email, role }: User) {
                         placeholder="Enter your Name"
                         {...field}
                       />
-                    </FormControl>
-                  </FormFloating>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
-                  <FormFloating icon={<Mail />}>
-                    <FormControl>
-                      <Input type="text" disabled {...field} />
                     </FormControl>
                   </FormFloating>
                   <FormMessage />

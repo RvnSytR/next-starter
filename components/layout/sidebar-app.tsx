@@ -1,5 +1,5 @@
 import { User } from "@/lib/auth";
-import { footerSidebarMenu, getMenuByRole, path } from "@/lib/menu";
+import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
@@ -64,7 +64,7 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
       className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
       asChild
     >
-      <Link href={`${path.protected}/profile`}>
+      <Link href={`${route.protected}/profile`}>
         <Avatar className="rounded-md">
           {image && <AvatarImage className="rounded-md" src={image} />}
           <AvatarFallback className="rounded-md">

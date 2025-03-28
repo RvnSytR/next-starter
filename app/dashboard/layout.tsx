@@ -1,11 +1,11 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
-import { getCurrentPage, path } from "@/lib/menu";
+import { getCurrentPage, route } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: getCurrentPage(path.protected, true),
+  title: getCurrentPage(route.protected, true),
 };
 
 export default async function DashboardLayout({

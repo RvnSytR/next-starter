@@ -25,20 +25,20 @@ type MenuBody = {
   subMenu?: SubMenuProps;
 };
 
-const path = { auth: "/auth", protected: "/dashboard" };
+const route = { auth: "/auth", protected: "/dashboard" };
 
 const sidebarMenu: MenuProps[] = [
   {
     section: "General",
     body: [
       {
-        href: path.protected,
+        href: route.protected,
         label: "Dashboard",
         role: ["all"],
         icon: LayoutDashboard,
       },
       {
-        href: `${path.protected}/account`,
+        href: `${route.protected}/account`,
         label: "User Management",
         role: ["admin"],
         icon: UsersRound,
@@ -49,7 +49,7 @@ const sidebarMenu: MenuProps[] = [
     section: "Settings",
     body: [
       {
-        href: `${path.protected}/profile`,
+        href: `${route.protected}/profile`,
         label: "My Profile",
         role: ["all"],
         icon: UserRound,
@@ -112,11 +112,11 @@ function getCurrentPage(
   isProtected: boolean = false,
 ) {
   const currentPage = getMenu(
-    isProtected ? `${path.protected}${currentPath}` : currentPath,
+    isProtected ? `${route.protected}${currentPath}` : currentPath,
   )?.label;
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 // #endregion
 
-export { footerSidebarMenu, getCurrentPage, getMenu, getMenuByRole, path };
+export { footerSidebarMenu, getCurrentPage, getMenu, getMenuByRole, route };
