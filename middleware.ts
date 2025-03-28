@@ -1,14 +1,13 @@
 import { getMenu, path } from "@/lib/menu";
 import { NextRequest, NextResponse } from "next/server";
 import { Session, User } from "./lib/auth";
-import { env } from "./lib/env";
 
 type StoredSession = { session: Session; user: User } | null;
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const storedSession = await fetch(
-    `${env.BETTER_AUTH_URL}/api/auth/get-session`,
+    `${process.env.BETTER_AUTH_URL}/api/auth/get-session`,
     {
       method: "GET",
       headers: req.headers,

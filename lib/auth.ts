@@ -3,7 +3,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin, openAPI } from "better-auth/plugins";
-import { env } from "./env";
 
 // Any role that isn't in the adminRoles list, even if they have the permission, will not be considered an admin.
 // https://www.better-auth.com/docs/plugins/admin#admin-roles
@@ -14,12 +13,12 @@ const userRoles = ["user"] as const;
 type UserRoles = (typeof userRoles)[number];
 
 const auth = betterAuth({
-  database: drizzleAdapter(db, { provider: "mysql" }),
+  database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: { enabled: true },
   socialProviders: {
     github: {
-      clientId: env.GITHUB_CLIENT_ID!,
-      clientSecret: env.GITHUB_CLIENT_SECRET!,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
   plugins: [nextCookies(), openAPI(), admin({ adminRoles: [...adminRoles] })],

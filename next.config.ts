@@ -1,5 +1,4 @@
 import type { NextConfig } from "next";
-import { env } from "./lib/env";
 import { maxFileSize } from "./lib/media";
 
 const nextConfig: NextConfig = {
@@ -9,7 +8,7 @@ const nextConfig: NextConfig = {
         protocol: "https",
         port: "",
         pathname: "/*",
-        hostname: `${env.S3_BUCKET_NAME}.s3.nevaobjects.id`,
+        hostname: `${process.env.S3_BUCKET_NAME}.s3.nevaobjects.id`,
       },
     ],
   },
