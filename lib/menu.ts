@@ -27,7 +27,7 @@ type MenuBody = {
 
 const path = { auth: "/auth", protected: "/dashboard" };
 
-const menu: MenuProps[] = [
+const sidebarMenu: MenuProps[] = [
   {
     section: "General",
     body: [
@@ -70,7 +70,7 @@ const menu: MenuProps[] = [
   },
 ];
 
-const secondaryMenu: MenuBody[] = [
+const footerSidebarMenu: MenuBody[] = [
   { href: "/", label: "Homepage", role: ["all"], icon: ExternalLink },
   { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
 ];
@@ -80,7 +80,7 @@ function getMenu(
   path: string,
   withoutIcon: boolean = false,
 ): MenuBody | Omit<MenuBody, "icon"> | null {
-  const [result] = Object.values(menu)
+  const [result] = Object.values(sidebarMenu)
     .flatMap((item) => item.body)
     .map((item) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -93,7 +93,7 @@ function getMenu(
 }
 
 function getMenuByRole(role: string): MenuProps[] {
-  return menu
+  return sidebarMenu
     .map(({ section, body }) => {
       const filteredBody = body.filter(
         (item) =>
@@ -119,4 +119,4 @@ function getCurrentPage(
 }
 // #endregion
 
-export { getCurrentPage, getMenu, getMenuByRole, path, secondaryMenu };
+export { footerSidebarMenu, getCurrentPage, getMenu, getMenuByRole, path };

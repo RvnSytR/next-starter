@@ -1,5 +1,5 @@
 import { User } from "@/lib/auth";
-import { getMenuByRole, secondaryMenu } from "@/lib/menu";
+import { footerSidebarMenu, getMenuByRole, path } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
@@ -23,10 +23,7 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "../ui/sidebar";
-import {
-  ClientSidebarCollapsible,
-  ClientSidebarMenuButton,
-} from "./sidebar-client";
+import { CSCollapsible, CSMenuButton } from "./sidebar-client";
 
 type SidebarData = Pick<User, "name" | "email" | "image"> & { role: string };
 
@@ -37,19 +34,18 @@ export function SidebarApp({
 }: SidebarData & React.ComponentProps<"div">) {
   return (
     <SidebarProvider>
-      <Sidebar variant="inset" collapsible="icon">
+      <Sidebar collapsible="icon">
         <SidebarHeader>
           <Head {...props} />
-          <SidebarSeparator />
         </SidebarHeader>
+
+        <SidebarSeparator />
 
         <SidebarContent>
           <Content role={role} />
         </SidebarContent>
 
         <SidebarFooter>
-          <Secondary />
-          <SidebarSeparator />
           <Footer />
         </SidebarFooter>
 
@@ -66,18 +62,21 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
     <SidebarMenuButton
       size="lg"
       className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
+      asChild
     >
-      <Avatar className="rounded-md">
-        {image && <AvatarImage className="rounded-md" src={image} />}
-        <AvatarFallback className="rounded-md">
-          {name.slice(0, 2)}
-        </AvatarFallback>
-      </Avatar>
+      <Link href={`${path.protected}/profile`}>
+        <Avatar className="rounded-md">
+          {image && <AvatarImage className="rounded-md" src={image} />}
+          <AvatarFallback className="rounded-md">
+            {name.slice(0, 2)}
+          </AvatarFallback>
+        </Avatar>
 
-      <div className="grid [&_span]:truncate">
-        <span className="text-sm font-semibold">{name}</span>
-        <span className="text-xs">{email}</span>
-      </div>
+        <div className="grid [&_span]:truncate">
+          <span className="text-sm font-semibold">{name}</span>
+          <span className="text-xs">{email}</span>
+        </div>
+      </Link>
     </SidebarMenuButton>
   );
 }
@@ -91,23 +90,19 @@ function Content({ role }: Pick<SidebarData, "role">) {
         {item.body.map((bodyItem, bodyIndex) => {
           const { href, label, disabled, subMenu } = bodyItem;
           return (
-            <ClientSidebarCollapsible
+            <CSCollapsible
               key={bodyIndex}
               pathname={href}
               disabled={disabled}
               asChild
             >
               <SidebarMenuItem>
-                <ClientSidebarMenuButton
-                  pathname={href}
-                  tooltip={label}
-                  asChild
-                >
+                <CSMenuButton pathname={href} tooltip={label} asChild>
                   <Link href={href}>
                     {bodyItem.icon && <bodyItem.icon />}
                     {label}
                   </Link>
-                </ClientSidebarMenuButton>
+                </CSMenuButton>
 
                 {subMenu && (
                   <>
@@ -136,7 +131,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                   </>
                 )}
               </SidebarMenuItem>
-            </ClientSidebarCollapsible>
+            </CSCollapsible>
           );
         })}
       </SidebarMenu>
@@ -144,10 +139,10 @@ function Content({ role }: Pick<SidebarData, "role">) {
   ));
 }
 
-function Secondary() {
+function Footer() {
   return (
-    <SidebarMenu>
-      {secondaryMenu.map((item, index) => (
+    <SidebarMenu className="gap-2">
+      {footerSidebarMenu.map((item, index) => (
         <SidebarMenuItem key={index}>
           <SidebarMenuButton size="sm" tooltip={item.label} asChild>
             <Link href={item.href}>
@@ -157,15 +152,13 @@ function Secondary() {
           </SidebarMenuButton>
         </SidebarMenuItem>
       ))}
-    </SidebarMenu>
-  );
-}
 
-function Footer() {
-  return (
-    <SidebarMenu>
+      <SidebarSeparator />
+
       <SidebarMenuItem>
-        <SignOutButton />
+        <SidebarMenuButton tooltip="Sign Out" asChild>
+          <SignOutButton />
+        </SidebarMenuButton>
       </SidebarMenuItem>
     </SidebarMenu>
   );

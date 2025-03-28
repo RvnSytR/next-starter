@@ -1,4 +1,4 @@
-import { Section, SectionTitle } from "@/components/layout/section";
+import { Section, SectionNotFound } from "@/components/layout/section";
 import { PersonalInformation, ProfilePicture } from "@/components/modules/auth";
 
 import { getCurrentPage } from "@/lib/menu";
@@ -12,12 +12,9 @@ export const metadata: Metadata = {
 export default async function Page() {
   const currentPage = getCurrentPage("/profile", false, true);
   const session = await getSession();
-  if (!session) return;
-
+  if (!session) return <SectionNotFound />;
   return (
     <Section currentPage={currentPage}>
-      <SectionTitle text={currentPage} />
-
       <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
         <ProfilePicture {...session.user} />
         <PersonalInformation {...session.user} />

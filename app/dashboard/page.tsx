@@ -1,8 +1,4 @@
-import {
-  Section,
-  SectionLabel,
-  SectionTitle,
-} from "@/components/layout/section";
+import { Section, SectionLabel } from "@/components/layout/section";
 import { getCurrentPage, path } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";
 
@@ -11,11 +7,6 @@ export default async function Page() {
 
   return (
     <Section currentPage={getCurrentPage(path.protected)}>
-      <div className="space-y-1">
-        <SectionTitle text="Section Title" />
-        <span className="text-sm">Section Description</span>
-      </div>
-
       <SectionLabel className="text-left">
         <p>{JSON.stringify(data, null, 2)}</p>
       </SectionLabel>

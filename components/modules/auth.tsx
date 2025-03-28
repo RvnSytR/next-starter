@@ -54,10 +54,13 @@ export function SignOutButton() {
   return (
     <CustomButton
       icon={<LogOut />}
-      variant="outline_destructive"
+      variant="ghost_destructive"
       text={label.button.signOut}
       loading={isLoading}
-      className={cn(sidebarMenuButtonVariants(), "hover:text-destructive")}
+      className={cn(
+        sidebarMenuButtonVariants({ size: "sm" }),
+        "hover:text-destructive justify-start",
+      )}
       onClick={() =>
         authClient.signOut({
           fetchOptions: {

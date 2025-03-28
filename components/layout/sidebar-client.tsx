@@ -3,7 +3,7 @@
 import { path } from "@/lib/menu";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { Collapsible } from "../ui/collapsible";
 import {
   SidebarMenuButton,
@@ -27,9 +27,9 @@ function IsActivePath(pathname: string): boolean {
   return isRootPath || isTrimmedPath;
 }
 
-export function ClientSidebarMenuButton({
+// ? CS = Client Sidebar
+export function CSMenuButton({
   pathname,
-  children,
   ...props
 }: Omit<SidebarMenuButtonProps, "onClick" | "isActive"> & {
   pathname: string;
@@ -41,17 +41,14 @@ export function ClientSidebarMenuButton({
       onClick={() => isMobile && toggleSidebar()}
       isActive={IsActivePath(pathname)}
       {...props}
-    >
-      {children}
-    </SidebarMenuButton>
+    />
   );
 }
 
-export function ClientSidebarCollapsible({
+export function CSCollapsible({
   pathname,
-  children,
   ...props
-}: React.ComponentProps<typeof CollapsiblePrimitive.Root> & {
+}: ComponentProps<typeof CollapsiblePrimitive.Root> & {
   pathname: string;
 }) {
   const isActive = IsActivePath(pathname);
@@ -61,9 +58,5 @@ export function ClientSidebarCollapsible({
     if (isActive) setIsOpen(true);
   }, [isActive]);
 
-  return (
-    <Collapsible open={isOpen} onOpenChange={setIsOpen} {...props}>
-      {children}
-    </Collapsible>
-  );
+  return <Collapsible open={isOpen} onOpenChange={setIsOpen} {...props} />;
 }
