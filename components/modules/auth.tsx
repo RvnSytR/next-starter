@@ -98,6 +98,7 @@ export function SignOnGithubButton() {
   );
 }
 
+// TODO bug : first sign in (no session data)
 export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -357,7 +358,7 @@ export function SignUpForm() {
   );
 }
 
-// TODO
+// TODO form and upload
 export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
   return (
     <Card className="lg:aspect-square">
@@ -535,3 +536,7 @@ export function PersonalInformation({ id, name, email, role }: User) {
     </Form>
   );
 }
+
+// TODO change password
+// TODO revoke session
+// TODO danger zone

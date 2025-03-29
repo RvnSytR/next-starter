@@ -29,7 +29,7 @@ export default function Page() {
         />
 
         <CustomButton
-          href="/coverage"
+          href="/test"
           icon={<FlaskConical />}
           variant="outline"
           text="Go To Testing Page"
