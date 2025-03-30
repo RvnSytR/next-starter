@@ -5,7 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { route } from "@/lib/menu";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth, zodFile } from "@/lib/zod";
+import { zodAuth } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   KeyRound,
@@ -362,26 +362,26 @@ export function SignUpForm() {
 
 // TODO form and upload pic
 export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
-  const router = useRouter();
-  const schema = zodFile("image");
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-  });
+  // const router = useRouter();
+  // const schema = zodFile("image");
+  // const form = useForm<z.infer<typeof schema>>({
+  //   resolver: zodResolver(schema),
+  // });
 
-  const deleteHandler = async (formData: z.infer<typeof schema>) => {
-    await authClient.updateUser(
-      { image: null },
-      {
-        onSuccess: () => {
-          toast.success(label.toast.success.profile.update);
-          router.refresh();
-        },
-        onError: ({ error }) => {
-          toast.error(error.message);
-        },
-      },
-    );
-  };
+  // const deleteHandler = async (formData: z.infer<typeof schema>) => {
+  //   await authClient.updateUser(
+  //     { image: null },
+  //     {
+  //       onSuccess: () => {
+  //         toast.success(label.toast.success.profile.update);
+  //         router.refresh();
+  //       },
+  //       onError: ({ error }) => {
+  //         toast.error(error.message);
+  //       },
+  //     },
+  //   );
+  // };
 
   return (
     <div className="flex items-center gap-x-4">
