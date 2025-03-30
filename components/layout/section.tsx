@@ -12,9 +12,10 @@ import { ThemeToggle } from "../custom/theme";
 import { Separator } from "../ui/separator";
 
 export function Section({
+  className,
   children,
   ...props
-}: DynamicBreadcrumbProps & { children?: ReactNode }) {
+}: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
   return (
     <SidebarInset className="gap-y-4 py-4">
       <header className="flex items-center justify-between gap-x-2 px-4">
@@ -29,7 +30,9 @@ export function Section({
 
       <Separator />
 
-      <main className="flex grow flex-col gap-y-4 px-4">{children}</main>
+      <main className={cn("flex grow flex-col gap-y-4 px-4", className)}>
+        {children}
+      </main>
     </SidebarInset>
   );
 }

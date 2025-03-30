@@ -8,12 +8,10 @@ import { capitalize, cn } from "@/lib/utils";
 import { zodAuth } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  IdCard,
   KeyRound,
   LockKeyholeOpen,
   LogOut,
   Mail,
-  Pencil,
   RotateCcw,
   Save,
   UserRound,
@@ -27,15 +25,8 @@ import { CustomButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
 import { CustomIcon } from "../icon";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
+import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import {
   Form,
@@ -46,6 +37,8 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Separator } from "../ui/separator";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
 
 export function SignOutButton() {
@@ -66,7 +59,7 @@ export function SignOutButton() {
           fetchOptions: {
             onRequest: () => setIsLoading(true),
             onSuccess: () => {
-              toast.success(label.toast.success.signOut);
+              toast.success(label.toast.success.user.signOut);
               router.push(route.auth);
             },
             onError: ({ error }) => {
@@ -98,7 +91,6 @@ export function SignOnGithubButton() {
   );
 }
 
-// TODO bug : first sign in (no session data)
 export function SignInForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -118,8 +110,8 @@ export function SignInForm() {
     await authClient.signIn.email(formData, {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
-        toast.success(label.toast.success.signIn(data?.user.name));
-        router.push(route.protected);
+        toast.success(label.toast.success.user.signIn(data?.user.name));
+        setInterval(() => router.push(route.protected), 0);
       },
       onError: ({ error }) => {
         setIsLoading(false);
@@ -229,8 +221,8 @@ export function SignUpForm() {
     await authClient.signUp.email(formData, {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
-        toast.success(label.toast.success.signUp(data?.user.name));
-        router.push(route.protected);
+        toast.success(label.toast.success.user.signUp(data?.user.name));
+        setInterval(() => router.push(route.protected), 0);
       },
       onError: ({ error }) => {
         setIsLoading(false);
@@ -361,43 +353,33 @@ export function SignUpForm() {
 // TODO form and upload
 export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
   return (
-    <Card className="lg:aspect-square">
-      <CardHeader>
-        <CardTitle>Profile Picture</CardTitle>
-      </CardHeader>
+    <div className="flex items-center gap-x-4">
+      <Avatar className="size-24">
+        {image && <AvatarImage src={image} />}
+        <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+      </Avatar>
 
-      <CardContent className="flex grow items-center justify-center">
-        <div className="group relative rounded-full *:hover:cursor-pointer">
-          <Avatar className="size-42 *:transition-[scale] *:group-hover:scale-110 lg:size-48">
-            {image && <AvatarImage src={image} />}
-            <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-          </Avatar>
-
-          <Badge
-            variant="outline"
-            className="bg-card absolute right-0 bottom-2 border-2 py-1"
-          >
-            <Pencil />
-            <small className="font-medium">Edit</small>
-          </Badge>
+      <div className="flex flex-col gap-y-2">
+        <Label>Profile Picture</Label>
+        <div className="flex gap-x-2">
+          <Button type="button" size="sm" variant="outline">
+            Upload Avatar
+          </Button>
+          <Button type="button" size="sm" variant="outline_destructive">
+            Remove
+          </Button>
         </div>
-      </CardContent>
-
-      <CardFooter />
-    </Card>
+      </div>
+    </div>
   );
 }
 
-export function PersonalInformation({ id, name, email, role }: User) {
+export function PersonalInformation({ name, email, role, image }: User) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodAuth
-    .pick({ id: true, name: true, email: true, role: true })
-    .refine((sc) => sc.id === id.slice(0, 5), {
-      message: "Invalid ID",
-      path: ["id"],
-    })
+    .pick({ name: true, email: true, role: true })
     .refine((sc) => sc.email === email, {
       message: "Invalid email",
       path: ["email"],
@@ -406,7 +388,6 @@ export function PersonalInformation({ id, name, email, role }: User) {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      id: id.slice(0, 5),
       name: name,
       email: email,
       role: role ? capitalize(role) : null,
@@ -419,7 +400,8 @@ export function PersonalInformation({ id, name, email, role }: User) {
       {
         onRequest: () => setIsLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.updateProfile);
+          toast.success(label.toast.success.user.updateProfile);
+          router.refresh();
         },
         onError: ({ error }) => {
           toast.error(error.message);
@@ -428,110 +410,87 @@ export function PersonalInformation({ id, name, email, role }: User) {
     );
 
     setIsLoading(false);
-    router.refresh();
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <Card id="personal-information" className="grow scroll-m-4">
-          <CardHeader>
-            <CardTitle>Personal Information</CardTitle>
-          </CardHeader>
+      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-6">
+        <CardContent className="flex flex-col gap-y-4">
+          <ProfilePicture name={name} image={image} />
 
-          <CardContent className="my-auto grid gap-x-2 gap-y-4 lg:grid-cols-2">
-            <FormField
-              control={form.control}
-              name="id"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>User ID *</FormLabel>
-                  <FormFloating icon={<IdCard />}>
-                    <FormControl>
-                      <Input type="password" disabled {...field} />
-                    </FormControl>
-                  </FormFloating>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username *</FormLabel>
+                <FormFloating icon={<UserRound />}>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      placeholder="Enter your Name"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
-                  <FormFloating icon={<Mail />}>
-                    <FormControl>
-                      <Input type="text" disabled {...field} />
-                    </FormControl>
-                  </FormFloating>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email Address *</FormLabel>
+                <FormFloating icon={<Mail />}>
+                  <FormControl>
+                    <Input type="text" disabled {...field} />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username *</FormLabel>
-                  <FormFloating icon={<UserRound />}>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="Enter your Name"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormFloating>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field: { value, ...restField } }) => (
+              <FormItem>
+                <FormLabel>Status *</FormLabel>
+                <FormFloating icon={<LockKeyholeOpen />}>
+                  <FormControl>
+                    <Input
+                      type="text"
+                      value={value ?? undefined}
+                      disabled
+                      {...restField}
+                    />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
 
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field: { value, ...restField } }) => (
-                <FormItem>
-                  <FormLabel>Status *</FormLabel>
-                  <FormFloating icon={<LockKeyholeOpen />}>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        value={value ?? undefined}
-                        disabled
-                        {...restField}
-                      />
-                    </FormControl>
-                  </FormFloating>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
+        <Separator />
 
-          <CardFooter className="gap-x-2">
-            <CustomButton
-              type="submit"
-              loading={isLoading}
-              icon={<Save />}
-              text={label.button.save}
-            />
+        <CardFooter className="gap-x-2">
+          <CustomButton
+            type="submit"
+            loading={isLoading}
+            icon={<Save />}
+            text={label.button.update}
+          />
 
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => form.reset()}
-            >
-              <RotateCcw />
-              {label.button.reset}
-            </Button>
-          </CardFooter>
-        </Card>
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            <RotateCcw />
+            {label.button.reset}
+          </Button>
+        </CardFooter>
       </form>
     </Form>
   );

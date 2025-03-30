@@ -8,10 +8,7 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const storedSession = await fetch(
     `${process.env.BETTER_AUTH_URL}/api/auth/get-session`,
-    {
-      method: "GET",
-      headers: req.headers,
-    },
+    { method: "GET", headers: req.headers },
   )
     .then((res) => res.json() as Promise<StoredSession>)
     .catch(() => null);

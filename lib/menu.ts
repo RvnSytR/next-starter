@@ -59,6 +59,7 @@ const sidebarMenu: MenuProps[] = [
             elementId: "personal-information",
           },
           { subLabel: "Change Password", elementId: "change-password" },
+          { subLabel: "Sign In Information", elementId: "signIn-information" },
           {
             subLabel: "Danger Zone",
             elementId: "danger-zone",

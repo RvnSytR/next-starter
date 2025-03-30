@@ -20,17 +20,25 @@ const page = {
       "A comprehensive overview of all registered users, providing their essential details and management actions.",
   },
 
-  settings: {
+  profile: {
     profile: {
-      title: "Change Profile",
-      subtitle:
-        "To apply profile changes, you'll need to sign in again. Please review your updates carefully before proceeding.",
+      title: "Personal Information",
+      subtitle: `Manage your ${title.primary} profile.`,
     },
 
     password: {
       title: "Change Password",
-      subtitle:
-        "For security reasons, you'll be required to log in again after updating your password. Ensure your new password is accurate before confirming.",
+      subtitle: "Ensure your new password is accurate before confirming.",
+    },
+
+    signInInformation: {
+      title: "Sign In Information",
+      subtitle: "Description or something.",
+    },
+
+    dangerZone: {
+      title: "Danger Zone",
+      subtitle: "Be carefull, account deletion cannot be undone.",
     },
   },
 };
@@ -70,13 +78,15 @@ const label = {
     loading: { default: "Please wait a moment..." },
 
     success: {
-      signIn: (username: string) =>
-        `Signed in successfully, Welcome ${username}!`,
-      signUp: (username: string) =>
-        `Your account has been registered successfully, Welcome ${username}!`,
-      signOut: "Signed out successfully!",
+      user: {
+        signIn: (username: string) =>
+          `Signed in successfully, Welcome ${username}!`,
+        signUp: (username: string) =>
+          `Your account has been registered successfully, Welcome ${username}!`,
+        signOut: "Signed out successfully!",
 
-      updateProfile: "Profile updated successfully!",
+        updateProfile: "Profile updated successfully!",
+      },
     },
 
     error: {
@@ -93,7 +103,6 @@ const label = {
     signUp: "Create Account",
     signOn: (social: string) => `Continue with ${social}`,
     signOut: "Sign out",
-    refresh: "Refresh",
 
     datePicker: "Pick a date",
     fileInput: {
@@ -104,6 +113,8 @@ const label = {
 
     save: "Save",
     confirm: "Confirm",
+    update: "Update",
+    refresh: "Refresh",
     reset: "Reset",
     back: "Back",
   },
