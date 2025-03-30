@@ -28,17 +28,18 @@ const page = {
 
     password: {
       title: "Change Password",
-      subtitle: "Ensure your new password is accurate before confirming.",
+      subtitle: "Make sure your new password is strong and secure.",
     },
 
-    signInInformation: {
-      title: "Sign In Information",
-      subtitle: "Description or something.",
+    activeSession: {
+      title: "Active Sessions",
+      subtitle: "Manage your logged-in devices and sessions.",
     },
 
-    dangerZone: {
-      title: "Danger Zone",
-      subtitle: "Be carefull, account deletion cannot be undone.",
+    deleteAccount: {
+      title: "Delete Account",
+      subtitle:
+        "Warning: Deleting your account is permanent and cannot be undone.",
     },
   },
 };
@@ -58,11 +59,25 @@ const dialog = {
       desc: "Approving this registration is a permanent action and cannot be undone. Once approved, this user will gain dashboard access. Ensure you have reviewed all necessary details before proceeding.",
     },
 
-    delete: {
-      trigger: "Delete",
+    remove: {
+      trigger: "Remove",
       title: (username: string) =>
-        `Are you sure, you want to delete ${username}?`,
-      desc: "Deleting this account is a permanent action and cannot be undone. Ensure you have reviewed all necessary details before proceeding.",
+        `Are you sure you want to remove ${username}?`,
+      desc: "This will permanently remove the account and all associated data. This action cannot be undone. Please proceed carefully.",
+    },
+  },
+
+  profile: {
+    removeAvatar: {
+      trigger: "Remove Avatar",
+      title: "Remove Profile Avatar",
+      desc: "Are you sure you want to remove your profile avatar? This action cannot be undone.",
+    },
+
+    deleteAccount: {
+      trigger: "Delete My Account",
+      title: "Are you sure you want to delete your account?",
+      desc: "Deleting your account will permanently remove all your associated data. This action cannot be undone. Are you sure you want to continue?",
     },
   },
 };
@@ -81,11 +96,14 @@ const label = {
       user: {
         signIn: (username: string) =>
           `Signed in successfully, Welcome ${username}!`,
-        signUp: (username: string) =>
-          `Your account has been registered successfully, Welcome ${username}!`,
+        signUp:
+          "Your account has been registered successfully! Please sign in to access your account.",
         signOut: "Signed out successfully!",
+      },
 
-        updateProfile: "Profile updated successfully!",
+      profile: {
+        update: "Your profile has been successfully updated!",
+        deleteAccount: "Your account has been successfully deleted. Goodbye!",
       },
     },
 
@@ -116,6 +134,7 @@ const label = {
     update: "Update",
     refresh: "Refresh",
     reset: "Reset",
+    cancel: "Cancel",
     back: "Back",
   },
 };

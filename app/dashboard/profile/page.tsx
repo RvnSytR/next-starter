@@ -1,7 +1,11 @@
 import { Section, SectionNotFound } from "@/components/layout/section";
-import { PersonalInformation } from "@/components/modules/auth";
+import {
+  DeleteMyAccountButton,
+  PersonalInformation,
+} from "@/components/modules/auth";
 import {
   Card,
+  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -42,26 +46,32 @@ export default async function Page() {
         <Separator />
       </Card>
 
-      <Card id="signIn-information" className="scroll-m-4 lg:w-xl">
+      <Card id="active-session" className="scroll-m-4 lg:w-xl">
         <CardHeader>
-          <CardTitle>{page.profile.signInInformation.title}</CardTitle>
+          <CardTitle>{page.profile.activeSession.title}</CardTitle>
           <CardDescription>
-            {page.profile.signInInformation.subtitle}
+            {page.profile.activeSession.subtitle}
           </CardDescription>
         </CardHeader>
 
         <Separator />
       </Card>
 
-      <Card id="danger-zone" className="scroll-m-4 lg:w-xl">
+      <Card id="delete-account" className="scroll-m-4 lg:w-xl">
         <CardHeader>
           <CardTitle className="text-destructive">
-            {page.profile.dangerZone.title}
+            {page.profile.deleteAccount.title}
           </CardTitle>
-          <CardDescription>{page.profile.dangerZone.subtitle}</CardDescription>
+          <CardDescription>
+            {page.profile.deleteAccount.subtitle}
+          </CardDescription>
         </CardHeader>
 
         <Separator />
+
+        <CardContent>
+          <DeleteMyAccountButton />
+        </CardContent>
       </Card>
     </Section>
   );

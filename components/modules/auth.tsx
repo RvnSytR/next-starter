@@ -2,10 +2,10 @@
 
 import { User } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { label } from "@/lib/content";
+import { dialog, label } from "@/lib/content";
 import { route } from "@/lib/menu";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth } from "@/lib/zod";
+import { zodAuth, zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   KeyRound,
@@ -14,6 +14,7 @@ import {
   Mail,
   RotateCcw,
   Save,
+  Trash2,
   UserRound,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,8 +25,19 @@ import { z } from "zod";
 import { CustomButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
 import { CustomIcon } from "../icon";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "../ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Button } from "../ui/button";
+import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import {
@@ -111,7 +123,7 @@ export function SignInForm() {
       onRequest: () => setIsLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.user.signIn(data?.user.name));
-        setInterval(() => router.push(route.protected), 0);
+        router.push(route.protected);
       },
       onError: ({ error }) => {
         setIsLoading(false);
@@ -190,7 +202,6 @@ export function SignInForm() {
 }
 
 export function SignUpForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodAuth
@@ -220,15 +231,14 @@ export function SignUpForm() {
   const formHandler = async (formData: z.infer<typeof schema>) => {
     await authClient.signUp.email(formData, {
       onRequest: () => setIsLoading(true),
-      onSuccess: ({ data }) => {
-        toast.success(label.toast.success.user.signUp(data?.user.name));
-        setInterval(() => router.push(route.protected), 0);
+      onSuccess: () => {
+        toast.success(label.toast.success.user.signUp);
       },
       onError: ({ error }) => {
-        setIsLoading(false);
         toast.error(error.message);
       },
     });
+    setIsLoading(false);
   };
 
   return (
@@ -350,8 +360,29 @@ export function SignUpForm() {
   );
 }
 
-// TODO form and upload
+// TODO form and upload pic
 export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
+  const router = useRouter();
+  const schema = zodFile("image");
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  });
+
+  const deleteHandler = async (formData: z.infer<typeof schema>) => {
+    await authClient.updateUser(
+      { image: null },
+      {
+        onSuccess: () => {
+          toast.success(label.toast.success.profile.update);
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
   return (
     <div className="flex items-center gap-x-4">
       <Avatar className="size-24">
@@ -365,6 +396,7 @@ export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
           <Button type="button" size="sm" variant="outline">
             Upload Avatar
           </Button>
+
           <Button type="button" size="sm" variant="outline_destructive">
             Remove
           </Button>
@@ -400,7 +432,7 @@ export function PersonalInformation({ name, email, role, image }: User) {
       {
         onRequest: () => setIsLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.user.updateProfile);
+          toast.success(label.toast.success.profile.update);
           router.refresh();
         },
         onError: ({ error }) => {
@@ -498,4 +530,53 @@ export function PersonalInformation({ name, email, role, image }: User) {
 
 // TODO change password
 // TODO revoke session
-// TODO danger zone
+
+export function DeleteMyAccountButton() {
+  const router = useRouter();
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline_destructive">
+          <Trash2 />
+          {dialog.profile.deleteAccount.trigger}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {dialog.profile.deleteAccount.title}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {dialog.profile.deleteAccount.desc}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
+            {label.button.cancel}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={async () =>
+              await authClient.deleteUser(
+                { callbackURL: route.auth },
+                {
+                  onSuccess: () => {
+                    toast.success(label.toast.success.profile.deleteAccount);
+                    router.push(route.auth);
+                  },
+                  onError: ({ error }) => {
+                    toast.error(error.message);
+                  },
+                },
+              )
+            }
+          >
+            {label.button.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}

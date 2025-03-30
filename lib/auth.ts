@@ -14,7 +14,7 @@ type UserRoles = (typeof userRoles)[number];
 
 const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg" }),
-  emailAndPassword: { enabled: true },
+  emailAndPassword: { enabled: true, autoSignIn: false },
   socialProviders: {
     github: {
       clientId: process.env.GITHUB_CLIENT_ID!,
@@ -22,6 +22,7 @@ const auth = betterAuth({
     },
   },
   plugins: [nextCookies(), openAPI(), admin({ adminRoles: [...adminRoles] })],
+  user: { deleteUser: { enabled: true } },
 });
 
 type Session = typeof auth.$Infer.Session.session;
