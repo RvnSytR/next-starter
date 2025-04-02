@@ -71,7 +71,7 @@ const dialog = {
     removeAvatar: {
       trigger: "Remove Avatar",
       title: "Remove Profile Avatar",
-      desc: "Are you sure you want to remove your profile avatar? This action cannot be undone.",
+      desc: "Are you sure you want to remove your profile avatar?",
     },
 
     deleteAccount: {
@@ -105,6 +105,10 @@ const label = {
         update: "Your profile has been successfully updated!",
         deleteAccount: "Your account has been successfully deleted. Goodbye!",
       },
+    },
+
+    info: {
+      profile: "No changes were made to your username.",
     },
 
     error: {
