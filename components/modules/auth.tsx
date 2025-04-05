@@ -3,9 +3,16 @@
 import { User } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
+import { media } from "@/lib/media";
 import { route } from "@/lib/menu";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth } from "@/lib/zod";
+import { zodAuth, zodFile } from "@/lib/zod";
+import {
+  deleteFile,
+  getFileKeyFromPublicUrl,
+  getFilePublicUrl,
+  uploadFile,
+} from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   KeyRound,
@@ -15,10 +22,11 @@ import {
   RotateCcw,
   Save,
   Trash2,
+  Upload,
   UserRound,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -360,46 +368,126 @@ export function SignUpForm() {
   );
 }
 
-// TODO form and upload pic
 export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
-  // const router = useRouter();
-  // const schema = zodFile("image");
-  // const form = useForm<z.infer<typeof schema>>({
-  //   resolver: zodResolver(schema),
-  // });
+  const router = useRouter();
+  const [isChange, setIsChange] = useState<boolean>(false);
+  const inputAvatarRef = useRef<HTMLInputElement>(null);
+  const schema = zodFile("image");
 
-  // const deleteHandler = async (formData: z.infer<typeof schema>) => {
-  //   await authClient.updateUser(
-  //     { image: null },
-  //     {
-  //       onSuccess: () => {
-  //         toast.success(label.toast.success.profile.update);
-  //         router.refresh();
-  //       },
-  //       onError: ({ error }) => {
-  //         toast.error(error.message);
-  //       },
-  //     },
-  //   );
-  // };
+  const deleteProfilePicture = async () => {
+    if (image) await deleteFile([await getFileKeyFromPublicUrl(image)]);
+  };
+
+  const changeHandler = async (fileList: FileList) => {
+    const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
+    if (!parseRes.success) return toast.error(parseRes.error.errors[0].message);
+
+    setIsChange(true);
+    await deleteProfilePicture();
+
+    const formData = new FormData();
+    formData.append("file", fileList[0]);
+
+    const [res] = await uploadFile({ formData: formData, ACL: "public-read" });
+    await authClient.updateUser(
+      { image: await getFilePublicUrl(res.key) },
+      {
+        onSuccess: () => {
+          setIsChange(false);
+          toast.success(label.toast.success.profile.update);
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          setIsChange(false);
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
+  const deleteHandler = async () => {
+    await deleteProfilePicture();
+    await authClient.updateUser(
+      { image: null },
+      {
+        onSuccess: () => {
+          toast.success(label.toast.success.profile.update);
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+  };
 
   return (
     <div className="flex items-center gap-x-4">
-      <Avatar className="size-24">
-        {image && <AvatarImage src={image} />}
+      <Avatar className="relative size-24">
+        {!!image && <AvatarImage src={image} className="object-cover" />}
         <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
+        <input
+          type="file"
+          ref={inputAvatarRef}
+          accept={media.image.type.join(", ")}
+          className="absolute hidden size-full rounded-full"
+          onChange={(e) => {
+            const fileList = e.currentTarget.files;
+            if (fileList) changeHandler(fileList);
+          }}
+        />
       </Avatar>
 
       <div className="flex flex-col gap-y-2">
         <Label>Profile Picture</Label>
         <div className="flex gap-x-2">
-          <Button type="button" size="sm" variant="outline">
-            Upload Avatar
-          </Button>
+          <CustomButton
+            type="button"
+            size="sm"
+            variant="outline"
+            loading={isChange}
+            onClick={() => inputAvatarRef.current?.click()}
+            icon={<Upload />}
+            text="Upload Avatar"
+          />
 
-          <Button type="button" size="sm" variant="outline_destructive">
-            Remove
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline_destructive"
+                disabled={!image || isChange}
+              >
+                Remove
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {dialog.profile.removeAvatar.title}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {dialog.profile.removeAvatar.desc}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel
+                  className={buttonVariants({ variant: "outline" })}
+                >
+                  {label.button.cancel}
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className={buttonVariants({ variant: "destructive" })}
+                  onClick={() => deleteHandler()}
+                >
+                  {label.button.confirm}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </div>
     </div>
@@ -427,8 +515,11 @@ export function PersonalInformation({ name, email, role, image }: User) {
   });
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
+    const newName = formData.name;
+    if (newName === name) return toast.info(label.toast.info.profile);
+
     await authClient.updateUser(
-      { name: formData.name },
+      { name: newName },
       {
         onRequest: () => setIsLoading(true),
         onSuccess: () => {
@@ -455,7 +546,7 @@ export function PersonalInformation({ name, email, role, image }: User) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username *</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
@@ -475,7 +566,7 @@ export function PersonalInformation({ name, email, role, image }: User) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address *</FormLabel>
+                <FormLabel>Email Address</FormLabel>
                 <FormFloating icon={<Mail />}>
                   <FormControl>
                     <Input type="text" disabled {...field} />
@@ -491,7 +582,7 @@ export function PersonalInformation({ name, email, role, image }: User) {
             name="role"
             render={({ field: { value, ...restField } }) => (
               <FormItem>
-                <FormLabel>Status *</FormLabel>
+                <FormLabel>Status</FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input

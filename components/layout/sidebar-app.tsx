@@ -66,7 +66,9 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
     >
       <Link href={`${route.protected}/profile`}>
         <Avatar className="rounded-md">
-          {image && <AvatarImage className="rounded-md" src={image} />}
+          {image && (
+            <AvatarImage className="rounded-md object-cover" src={image} />
+          )}
           <AvatarFallback className="rounded-md">
             {name.slice(0, 2)}
           </AvatarFallback>
