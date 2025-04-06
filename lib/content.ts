@@ -102,7 +102,8 @@ const label = {
       },
 
       profile: {
-        update: "Your profile has been successfully updated!",
+        update: (u: string) =>
+          `Your ${u.toLocaleLowerCase()} has been successfully updated!`,
         deleteAccount: "Your account has been successfully deleted. Goodbye!",
       },
     },

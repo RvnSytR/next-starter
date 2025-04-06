@@ -1,5 +1,6 @@
 import { Section, SectionNotFound } from "@/components/layout/section";
 import {
+  ChangePasswordForm,
   DeleteMyAccountButton,
   PersonalInformation,
 } from "@/components/modules/auth";
@@ -26,7 +27,10 @@ export default async function Page() {
   if (!session) return <SectionNotFound />;
   return (
     <Section currentPage={currentPage} className="items-center">
-      <Card id="personal-information" className="scroll-m-4 lg:w-xl">
+      <Card
+        id="personal-information"
+        className="w-full scroll-m-4 md:max-w-2xl"
+      >
         <CardHeader>
           <CardTitle>{page.profile.profile.title}</CardTitle>
           <CardDescription>{page.profile.profile.subtitle}</CardDescription>
@@ -37,16 +41,18 @@ export default async function Page() {
         <PersonalInformation {...session.user} />
       </Card>
 
-      <Card id="change-password" className="scroll-m-4 lg:w-xl">
+      <Card id="change-password" className="w-full scroll-m-4 md:max-w-2xl">
         <CardHeader>
           <CardTitle>{page.profile.password.title}</CardTitle>
           <CardDescription>{page.profile.password.subtitle}</CardDescription>
         </CardHeader>
 
         <Separator />
+
+        <ChangePasswordForm />
       </Card>
 
-      <Card id="active-session" className="scroll-m-4 lg:w-xl">
+      <Card id="active-session" className="w-full scroll-m-4 md:max-w-2xl">
         <CardHeader>
           <CardTitle>{page.profile.activeSession.title}</CardTitle>
           <CardDescription>
@@ -57,7 +63,7 @@ export default async function Page() {
         <Separator />
       </Card>
 
-      <Card id="delete-account" className="scroll-m-4 lg:w-xl">
+      <Card id="delete-account" className="w-full scroll-m-4 md:max-w-2xl">
         <CardHeader>
           <CardTitle className="text-destructive">
             {page.profile.deleteAccount.title}

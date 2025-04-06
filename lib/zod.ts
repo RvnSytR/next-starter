@@ -54,8 +54,8 @@ export const zodAuth = z.object({
 
   confirmPassword: z
     .string({
-      required_error: "Please confirm your password.",
-      invalid_type_error: "Confirm Password must be a valid text or string.",
+      required_error: "Please confirm your new password.",
+      invalid_type_error: "Password must be a valid text or string.",
     })
     .min(1, "Confirm Password cannot be empty."),
 

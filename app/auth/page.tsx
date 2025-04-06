@@ -22,7 +22,7 @@ export const metadata: Metadata = { title: page.metadata("Get Started") };
 export default function Page() {
   return (
     <main className="relative flex min-h-dvh items-center justify-center">
-      <GridPattern className="stroke-input/50 z-[-1]" />
+      <GridPattern className="stroke-input/25 z-[-1]" />
 
       <div className="container flex justify-center py-8">
         <Card className="w-full md:w-md">

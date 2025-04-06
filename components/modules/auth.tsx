@@ -16,6 +16,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   KeyRound,
+  LockKeyhole,
   LockKeyholeOpen,
   LogOut,
   Mail,
@@ -407,7 +408,7 @@ export function ProfilePicture({
       {
         onSuccess: () => {
           setIsChange(false);
-          toast.success(label.toast.success.profile.update);
+          toast.success(label.toast.success.profile.update("avatar"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -424,7 +425,7 @@ export function ProfilePicture({
       { image: null },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update);
+          toast.success(label.toast.success.profile.update("avatar"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -543,7 +544,7 @@ export function PersonalInformation({ ...props }: User) {
       {
         onRequest: () => setIsLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update);
+          toast.success(label.toast.success.profile.update("profile"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -639,7 +640,134 @@ export function PersonalInformation({ ...props }: User) {
   );
 }
 
-// TODO change password
+export function ChangePasswordForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = z
+    .object({
+      current: zodAuth.shape.password,
+      new: zodAuth.shape.password,
+      confirm: zodAuth.shape.confirmPassword,
+    })
+    .refine((sc) => sc.new === sc.confirm, {
+      message: "Passwords do not match",
+      path: ["confirm"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { current: "", new: "", confirm: "" },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    await authClient.changePassword(
+      {
+        currentPassword: formData.current,
+        newPassword: formData.new,
+        revokeOtherSessions: true,
+      },
+      {
+        onRequest: () => setIsLoading(true),
+        onSuccess: () => {
+          toast.success(label.toast.success.profile.update("password"));
+          form.reset();
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+
+    setIsLoading(false);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-6">
+        <CardContent className="flex flex-col gap-y-4">
+          <FormField
+            control={form.control}
+            name="current"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Current Password *</FormLabel>
+                <FormFloating icon={<LockKeyholeOpen />}>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your current password"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="new"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>New Password *</FormLabel>
+                <FormFloating icon={<LockKeyhole />}>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Enter your new password"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirm"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password *</FormLabel>
+                <FormFloating icon={<LockKeyhole />}>
+                  <FormControl>
+                    <Input
+                      type="password"
+                      placeholder="Confirm password"
+                      {...field}
+                    />
+                  </FormControl>
+                </FormFloating>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </CardContent>
+
+        <Separator />
+
+        <CardFooter className="gap-x-2">
+          <CustomButton
+            type="submit"
+            loading={isLoading}
+            icon={<Save />}
+            text={label.button.update}
+          />
+
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            <RotateCcw />
+            {label.button.reset}
+          </Button>
+        </CardFooter>
+      </form>
+    </Form>
+  );
+}
+
 // TODO revoke session
 
 export function DeleteMyAccountButton() {
