@@ -28,8 +28,8 @@ function IsActivePath(pathname: string): boolean {
   return isRootPath || isTrimmedPath;
 }
 
-// ? CS = Client Sidebar
-export function CSMenuButton({
+// ? SC = Sidebar Client
+export function SCMenuButton({
   pathname,
   ...props
 }: Omit<SidebarMenuButtonProps, "onClick" | "isActive"> & {
@@ -46,7 +46,7 @@ export function CSMenuButton({
   );
 }
 
-export function CSCollapsible({
+export function SCCollapsible({
   pathname,
   ...props
 }: ComponentProps<typeof CollapsiblePrimitive.Root> & {

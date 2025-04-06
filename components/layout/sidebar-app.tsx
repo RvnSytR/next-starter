@@ -3,7 +3,7 @@ import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton } from "../modules/auth";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -23,7 +23,7 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "../ui/sidebar";
-import { CSCollapsible, CSMenuButton } from "./sidebar-client";
+import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
 type SidebarData = Pick<User, "name" | "email" | "image"> & { role: string };
 
@@ -66,12 +66,13 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
     >
       <Link href={`${route.protected}/profile`}>
         <Avatar className="rounded-md">
-          {image && (
+          {image ? (
             <AvatarImage className="rounded-md object-cover" src={image} />
+          ) : (
+            <span className="bg-muted flex size-full items-center justify-center">
+              {name.slice(0, 2)}
+            </span>
           )}
-          <AvatarFallback className="rounded-md">
-            {name.slice(0, 2)}
-          </AvatarFallback>
         </Avatar>
 
         <div className="grid [&_span]:truncate">
@@ -92,19 +93,19 @@ function Content({ role }: Pick<SidebarData, "role">) {
         {item.body.map((bodyItem, bodyIndex) => {
           const { href, label, disabled, subMenu } = bodyItem;
           return (
-            <CSCollapsible
+            <SCCollapsible
               key={bodyIndex}
               pathname={href}
               disabled={disabled}
               asChild
             >
               <SidebarMenuItem>
-                <CSMenuButton pathname={href} tooltip={label} asChild>
+                <SCMenuButton pathname={href} tooltip={label} asChild>
                   <Link href={href}>
                     {bodyItem.icon && <bodyItem.icon />}
                     {label}
                   </Link>
-                </CSMenuButton>
+                </SCMenuButton>
 
                 {subMenu && (
                   <>
@@ -133,7 +134,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                   </>
                 )}
               </SidebarMenuItem>
-            </CSCollapsible>
+            </SCCollapsible>
           );
         })}
       </SidebarMenu>

@@ -44,7 +44,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarImage } from "../ui/avatar";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -368,7 +368,11 @@ export function SignUpForm() {
   );
 }
 
-export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
+export function ProfilePicture({
+  id,
+  name,
+  image,
+}: Pick<User, "id" | "name" | "image">) {
   const router = useRouter();
   const [isChange, setIsChange] = useState<boolean>(false);
   const inputAvatarRef = useRef<HTMLInputElement>(null);
@@ -383,14 +387,23 @@ export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
     if (!parseRes.success) return toast.error(parseRes.error.errors[0].message);
 
     setIsChange(true);
-    await deleteProfilePicture();
 
     const formData = new FormData();
-    formData.append("file", fileList[0]);
+    const file = fileList[0];
+    const fileKey = `${id}_${file.name}`;
+    const fileUrl = await getFilePublicUrl(fileKey);
 
-    const [res] = await uploadFile({ formData: formData, ACL: "public-read" });
+    formData.append(fileKey, file);
+    if (fileUrl !== image) await deleteProfilePicture();
+
+    await uploadFile({
+      formData: formData,
+      names: [fileKey],
+      nameAskey: true,
+      ACL: "public-read",
+    });
     await authClient.updateUser(
-      { image: await getFilePublicUrl(res.key) },
+      { image: fileUrl },
       {
         onSuccess: () => {
           setIsChange(false);
@@ -424,19 +437,25 @@ export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
   return (
     <div className="flex items-center gap-x-4">
       <Avatar className="relative size-24">
-        {!!image && <AvatarImage src={image} className="object-cover" />}
-        <AvatarFallback>{name.slice(0, 2)}</AvatarFallback>
-        <input
-          type="file"
-          ref={inputAvatarRef}
-          accept={media.image.type.join(", ")}
-          className="absolute hidden size-full rounded-full"
-          onChange={(e) => {
-            const fileList = e.currentTarget.files;
-            if (fileList) changeHandler(fileList);
-          }}
-        />
+        {image ? (
+          <AvatarImage src={image} className="object-cover" />
+        ) : (
+          <span className="bg-muted flex size-full items-center justify-center text-lg">
+            {name.slice(0, 2)}
+          </span>
+        )}
       </Avatar>
+
+      <input
+        type="file"
+        ref={inputAvatarRef}
+        accept={media.image.type.join(", ")}
+        className="hidden"
+        onChange={(e) => {
+          const fileList = e.currentTarget.files;
+          if (fileList) changeHandler(fileList);
+        }}
+      />
 
       <div className="flex flex-col gap-y-2">
         <Label>Profile Picture</Label>
@@ -494,10 +513,11 @@ export function ProfilePicture({ name, image }: Pick<User, "name" | "image">) {
   );
 }
 
-export function PersonalInformation({ name, email, role, image }: User) {
+export function PersonalInformation({ ...props }: User) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { name, email, role } = props;
   const schema = zodAuth
     .pick({ name: true, email: true, role: true })
     .refine((sc) => sc.email === email, {
@@ -539,7 +559,7 @@ export function PersonalInformation({ name, email, role, image }: User) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-6">
         <CardContent className="flex flex-col gap-y-4">
-          <ProfilePicture name={name} image={image} />
+          <ProfilePicture {...props} />
 
           <FormField
             control={form.control}

@@ -1,6 +1,6 @@
 "use server";
 
-import { media, Media } from "@/lib/media";
+import { media, type Media } from "@/lib/media";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -28,28 +28,28 @@ const s3 = new S3Client({
 
 export async function uploadFile({
   formData,
-  name = ["file"],
+  names,
+  nameAskey = false,
   contentType = "all",
-  Key = crypto.randomUUID(),
   ...props
-}: Omit<PutObjectCommandInput, "Bucket" | "Key" | "Body" | "ContentType"> & {
+}: Omit<PutObjectCommandInput, "Key" | "Bucket" | "Body" | "ContentType"> & {
   formData: FormData;
-  name?: string[];
+  names: string[];
+  nameAskey?: boolean;
   contentType?: Media;
-  Key?: string;
 }): Promise<{ key: string; res: PutObjectCommandOutput }[]> {
   return await Promise.all(
-    name.map(async (item) => {
-      const file = formData.get(item) as File;
-      const fileBuffer = Buffer.from(await file.arrayBuffer());
+    names.map(async (name) => {
+      const file = formData.get(name) as File;
+      const key = nameAskey ? name : file.name;
       return {
-        key: Key,
+        key: key,
         res: await s3.send(
           new PutObjectCommand({
+            Key: key,
             Bucket: S3_BUCKET_NAME,
-            Body: fileBuffer,
+            Body: Buffer.from(await file.arrayBuffer()),
             ContentType: media[contentType].type.join(", "),
-            Key: Key,
             ...props,
           }),
         ),
