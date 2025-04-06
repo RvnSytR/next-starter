@@ -11,11 +11,11 @@ const page = {
 
   auth: {
     title: title.primary,
-    subtitle: `Please enter your credentials to securely access ${title.primary} Dashboard.`,
+    subtitle: `Access the ${title.primary} Dashboard securely by entering your credentials.`,
   },
 
   account: {
-    title: "Users Overview",
+    title: "User Management",
     subtitle:
       "A comprehensive overview of all registered users, providing their essential details and management actions.",
   },
@@ -23,23 +23,24 @@ const page = {
   profile: {
     profile: {
       title: "Personal Information",
-      subtitle: `Manage your ${title.primary} profile.`,
+      subtitle: `Update and manage your ${title.primary} profile details.`,
     },
 
     password: {
       title: "Change Password",
-      subtitle: "Make sure your new password is strong and secure.",
+      subtitle: "Ensure your new password is strong and secure.",
     },
 
     activeSession: {
       title: "Active Sessions",
-      subtitle: "Manage your logged in devices and sessions in your account.",
+      subtitle:
+        "Review and manage devices and sessions currently logged into your account.",
     },
 
     deleteAccount: {
       title: "Delete Account",
       subtitle:
-        "Warning: Deleting your account is permanent and cannot be undone.",
+        "Caution: Deleting your account is permanent and cannot be undone.",
     },
   },
 };
@@ -47,23 +48,15 @@ const page = {
 const dialog = {
   user: {
     create: {
-      trigger: "Create New User",
+      trigger: "Create User",
       title: "Create New User",
       desc: "Create new user by entering their details. Make sure all required fields are filled correctly.",
     },
 
-    approve: {
-      trigger: "Approve",
-      title: (username: string) =>
-        `Are you sure you want to approve ${username}'s registration?`,
-      desc: "Approving this registration is a permanent action and cannot be undone. Once approved, this user will gain dashboard access. Ensure you have reviewed all necessary details before proceeding.",
-    },
-
     remove: {
       trigger: "Remove",
-      title: (username: string) =>
-        `Are you sure you want to remove ${username}?`,
-      desc: "This will permanently remove the account and all associated data. This action cannot be undone. Please proceed carefully.",
+      title: (username: string) => `Remove ${username}'s Account?`,
+      desc: "This will permanently delete the account and all associated data. This action cannot be undone. Please proceed carefully.",
     },
   },
 
@@ -86,51 +79,51 @@ const dialog = {
     },
 
     deleteAccount: {
-      trigger: "Delete My Account",
-      title: "Are you sure you want to delete your account?",
-      desc: "Deleting your account will permanently remove all your associated data. This action cannot be undone. Are you sure you want to continue?",
+      trigger: "Delete Account",
+      title: "Confirm Account Deletion",
+      desc: "Deleting your account will permanently remove all associated data. This action cannot be undone.",
     },
   },
 };
 
 const label = {
   error: {
-    protectedPath: "Protected route invalid!",
-    breadcrumb: "Menu route invalid!",
-    parsedNumber: "Parsed number invalid!",
+    protectedPath: "Invalid protected route!",
+    breadcrumb: "Invalid menu route!",
+    parsedNumber: "Invalid parsed number!",
   },
 
   toast: {
-    loading: { default: "Please wait a moment..." },
+    loading: { default: "Processing your request. Please wait..." },
 
     success: {
       user: {
         signIn: (username: string) =>
           `Signed in successfully, Welcome ${username}!`,
         signUp:
-          "Your account has been registered successfully! Please sign in to access your account.",
-        signOut: "Signed out successfully!",
+          "Your account has been registered successfully! Please sign in to continue.",
+        signOut: "Signed out successfully.",
       },
 
       profile: {
-        update: (u: string) =>
-          `Your ${u.toLocaleLowerCase()} has been successfully updated!`,
-        revokeSession: "The session has been successfully terminated!",
+        update: (field: string) =>
+          `Your ${field.toLowerCase()} has been updated successfully.`,
+        revokeSession: "The session has been terminated successfully.",
         revokeAllOtherSession:
-          "All other sessions has been successfully terminated!",
-        deleteAccount: "Your account has been successfully deleted. Goodbye!",
+          "All other sessions have been terminated successfully.",
+        deleteAccount: "Your account has been deleted successfully. Goodbye!",
       },
     },
 
     info: {
-      profile: "No changes were made to your username.",
+      profile: "No changes were made to your profile.",
     },
 
     error: {
-      catch: "Uh-oh! Something went wrong. Please try again later.",
+      catch: "Something went wrong. Please try again later.",
       file: {
-        required: (f: string) => `Please upload ${f}!`,
-        upload: "An error occurred while uploading the file!",
+        required: (fileType: string) => `Please upload a valid ${fileType}.`,
+        upload: "An error occurred while uploading the file. Please try again.",
       },
     },
   },
@@ -139,12 +132,12 @@ const label = {
     signIn: "Sign In",
     signUp: "Create Account",
     signOn: (social: string) => `Continue with ${social}`,
-    signOut: "Sign out",
+    signOut: "Sign Out",
 
-    datePicker: "Pick a date",
+    datePicker: "Pick a Date",
     fileInput: {
-      placeholder: "Drag & drop your file here, or Click to upload",
-      size: (mb: number) => `Max File Size: ${mb} MB`,
+      placeholder: "Drag & drop a file here, or click to upload",
+      size: (mb: number) => `Maximum File Size: ${mb} MB`,
       empty: "No file selected",
     },
 
