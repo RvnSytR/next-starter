@@ -1,8 +1,6 @@
-import { getMenu, route } from "@/lib/menu";
 import { NextRequest, NextResponse } from "next/server";
-import { Session, User } from "./lib/auth";
-
-type StoredSession = { session: Session; user: User } | null;
+import { Session } from "./lib/auth";
+import { getMenu, route } from "./lib/menu";
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
@@ -10,7 +8,7 @@ export async function middleware(req: NextRequest) {
     `${process.env.BETTER_AUTH_URL}/api/auth/get-session`,
     { method: "GET", headers: req.headers },
   )
-    .then((res) => res.json() as Promise<StoredSession>)
+    .then((res) => res.json() as Promise<Session | null>)
     .catch(() => null);
 
   if (!storedSession && !pathname.startsWith(route.auth)) {

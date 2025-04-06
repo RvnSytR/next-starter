@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@/lib/auth";
+import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { media } from "@/lib/media";
@@ -14,22 +14,32 @@ import {
   uploadFile,
 } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { formatDistanceToNow } from "date-fns";
 import {
+  Dot,
+  Gamepad2,
   KeyRound,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
   Mail,
+  MonitorSmartphone,
   RotateCcw,
   Save,
+  Smartphone,
+  Tablet,
   Trash2,
+  TriangleAlert,
+  TvMinimal,
   Upload,
   UserRound,
+  UsersRound,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { CustomButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
@@ -373,7 +383,7 @@ export function ProfilePicture({
   id,
   name,
   image,
-}: Pick<User, "id" | "name" | "image">) {
+}: Pick<Session["user"], "id" | "name" | "image">) {
   const router = useRouter();
   const [isChange, setIsChange] = useState<boolean>(false);
   const inputAvatarRef = useRef<HTMLInputElement>(null);
@@ -514,7 +524,7 @@ export function ProfilePicture({
   );
 }
 
-export function PersonalInformation({ ...props }: User) {
+export function PersonalInformation({ ...props }: Session["user"]) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -768,7 +778,149 @@ export function ChangePasswordForm() {
   );
 }
 
-// TODO revoke session
+export function ActiveSessionButton({
+  currentSessionId,
+  id,
+  updatedAt,
+  ipAddress,
+  userAgent,
+  token,
+}: Session["session"] & { currentSessionId: string }) {
+  const router = useRouter();
+  const isCurrentSession = currentSessionId === id;
+  const { title, desc } = dialog.profile.revokeSession;
+
+  const parseResult = new UAParser(userAgent!).getResult();
+  const { browser, os, device } = parseResult;
+
+  const DeviceIcons = {
+    mobile: Smartphone,
+    tablet: Tablet,
+    console: Gamepad2,
+    smarttv: TvMinimal,
+    wearable: MonitorSmartphone,
+    xr: MonitorSmartphone,
+    embedded: MonitorSmartphone,
+    other: MonitorSmartphone,
+  }[device.type ?? "other"];
+
+  const revokeSession = async () => {
+    await authClient.revokeSession(
+      { token },
+      {
+        onSuccess: () => {
+          toast.success(label.toast.success.profile.revokeSession);
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="flex items-center gap-x-2 rounded-md border p-2 shadow-xs">
+      <div className="flex grow items-center gap-x-2">
+        <div className="bg-muted aspect-square size-fit rounded-md p-2">
+          <DeviceIcons className="text-primary shrink-0" />
+        </div>
+
+        <div className="flex flex-col">
+          <small className="font-medium">{`${browser.name} on ${os.name}`}</small>
+
+          <div className="text-muted-foreground flex items-center">
+            <small
+              className={cn(
+                "font-normal",
+                isCurrentSession ? "order-3" : "order-1",
+              )}
+            >
+              {ipAddress}
+            </small>
+
+            <Dot className="order-2 shrink-0" />
+
+            {isCurrentSession ? (
+              <small className="text-success order-1 font-medium">
+                Current Session
+              </small>
+            ) : (
+              <small className="order-3 line-clamp-1 font-normal">
+                Last seen {formatDistanceToNow(updatedAt)} ago
+              </small>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {!isCurrentSession && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button size="iconsm" variant="outline">
+              <LogOut />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{title}</AlertDialogTitle>
+              <AlertDialogDescription>{desc}</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={() => revokeSession()}>
+                {label.button.confirm}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </div>
+  );
+}
+
+export function RevokeAllOtherSessionButton() {
+  const router = useRouter();
+  const { trigger, title, desc } = dialog.profile.revokeAllOtherSession;
+
+  const revokeAllOtherSession = async () => {
+    await authClient.revokeOtherSessions(
+      {},
+      {
+        onSuccess: () => {
+          toast.success(label.toast.success.profile.revokeAllOtherSession);
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline">
+          <UsersRound />
+          {trigger}
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogDescription>{desc}</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogAction onClick={() => revokeAllOtherSession()}>
+            {label.button.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
 
 export function DeleteMyAccountButton() {
   const router = useRouter();
@@ -783,7 +935,8 @@ export function DeleteMyAccountButton() {
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>
+          <AlertDialogTitle className="flex items-center gap-x-2">
+            <TriangleAlert />
             {dialog.profile.deleteAccount.title}
           </AlertDialogTitle>
           <AlertDialogDescription>

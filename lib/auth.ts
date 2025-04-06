@@ -2,7 +2,7 @@ import { db } from "@/server/db/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { admin, openAPI } from "better-auth/plugins";
+import { admin } from "better-auth/plugins";
 
 // Any role that isn't in the adminRoles list, even if they have the permission, will not be considered an admin.
 // https://www.better-auth.com/docs/plugins/admin#admin-roles
@@ -21,12 +21,14 @@ const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  plugins: [nextCookies(), openAPI(), admin({ adminRoles: [...adminRoles] })],
+  plugins: [nextCookies(), admin({ adminRoles: [...adminRoles] })],
   user: { deleteUser: { enabled: true } },
 });
 
-type Session = typeof auth.$Infer.Session.session;
-type User = typeof auth.$Infer.Session.user;
+type Session = {
+  session: typeof auth.$Infer.Session.session;
+  user: typeof auth.$Infer.Session.user;
+};
 
 export { adminRoles, auth, userRoles };
-export type { AdminRoles, Session, User, UserRoles };
+export type { AdminRoles, Session, UserRoles };

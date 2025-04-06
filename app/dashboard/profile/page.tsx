@@ -1,20 +1,23 @@
 import { Section, SectionNotFound } from "@/components/layout/section";
 import {
+  ActiveSessionButton,
   ChangePasswordForm,
   DeleteMyAccountButton,
   PersonalInformation,
+  RevokeAllOtherSessionButton,
 } from "@/components/modules/auth";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { page } from "@/lib/content";
 import { getCurrentPage } from "@/lib/menu";
-import { getSession } from "@/server/auth-action";
+import { getSession, getSessionList } from "@/server/auth-action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -25,6 +28,9 @@ export default async function Page() {
   const currentPage = getCurrentPage("/profile", false, true);
   const session = await getSession();
   if (!session) return <SectionNotFound />;
+
+  const sessionList = await getSessionList();
+
   return (
     <Section currentPage={currentPage} className="items-center">
       <Card
@@ -61,6 +67,22 @@ export default async function Page() {
         </CardHeader>
 
         <Separator />
+
+        <CardContent className="flex flex-col gap-y-2">
+          {sessionList.map((item, index) => (
+            <ActiveSessionButton
+              key={index}
+              currentSessionId={session.session.id}
+              {...item}
+            />
+          ))}
+        </CardContent>
+
+        <Separator />
+
+        <CardFooter>
+          <RevokeAllOtherSessionButton />
+        </CardFooter>
       </Card>
 
       <Card id="delete-account" className="w-full scroll-m-4 md:max-w-2xl">

@@ -9,7 +9,7 @@ import { FlaskConical, LayoutDashboard, LogIn } from "lucide-react";
 export default function Page() {
   return (
     <div className="container flex flex-col gap-y-4 py-8">
-      <div className="flex gap-2">
+      <div className="flex flex-wrap gap-2">
         <ThemeToggle size="icon" variant="outline" />
 
         <CustomButton

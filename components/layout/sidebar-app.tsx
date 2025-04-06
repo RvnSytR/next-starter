@@ -1,4 +1,4 @@
-import { User } from "@/lib/auth";
+import { Session } from "@/lib/auth";
 import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -25,7 +25,9 @@ import {
 } from "../ui/sidebar";
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
-type SidebarData = Pick<User, "name" | "email" | "image"> & { role: string };
+type SidebarData = Pick<Session["user"], "name" | "email" | "image"> & {
+  role: string;
+};
 
 export function SidebarApp({
   role,

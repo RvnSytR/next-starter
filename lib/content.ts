@@ -33,7 +33,7 @@ const page = {
 
     activeSession: {
       title: "Active Sessions",
-      subtitle: "Manage your logged-in devices and sessions.",
+      subtitle: "Manage your logged in devices and sessions in your account.",
     },
 
     deleteAccount: {
@@ -74,6 +74,17 @@ const dialog = {
       desc: "Are you sure you want to remove your profile avatar?",
     },
 
+    revokeSession: {
+      title: "Terminate Session",
+      desc: "Are you sure you want to terminate this active session? This will log the device out immediately.",
+    },
+
+    revokeAllOtherSession: {
+      trigger: "Terminate All Other Session",
+      title: "Terminate All Other Session",
+      desc: "Are you sure you want to terminate all other active session? This will log all the devices out immediately.",
+    },
+
     deleteAccount: {
       trigger: "Delete My Account",
       title: "Are you sure you want to delete your account?",
@@ -104,6 +115,9 @@ const label = {
       profile: {
         update: (u: string) =>
           `Your ${u.toLocaleLowerCase()} has been successfully updated!`,
+        revokeSession: "The session has been successfully terminated!",
+        revokeAllOtherSession:
+          "All other sessions has been successfully terminated!",
         deleteAccount: "Your account has been successfully deleted. Goodbye!",
       },
     },
