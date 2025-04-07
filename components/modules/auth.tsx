@@ -23,6 +23,7 @@ import {
   LockKeyholeOpen,
   LogOut,
   Mail,
+  MonitorOff,
   MonitorSmartphone,
   RotateCcw,
   Save,
@@ -31,9 +32,7 @@ import {
   Trash2,
   TriangleAlert,
   TvMinimal,
-  Upload,
   UserRound,
-  UsersRound,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -385,8 +384,9 @@ export function ProfilePicture({
   image,
 }: Pick<Session["user"], "id" | "name" | "image">) {
   const router = useRouter();
-  const [isChange, setIsChange] = useState<boolean>(false);
   const inputAvatarRef = useRef<HTMLInputElement>(null);
+  const [isChange, setIsChange] = useState<boolean>(false);
+  const [isRemoved, setIsRemoved] = useState<boolean>(false);
   const schema = zodFile("image");
 
   const deleteProfilePicture = async () => {
@@ -417,19 +417,21 @@ export function ProfilePicture({
       { image: fileUrl },
       {
         onSuccess: () => {
-          setIsChange(false);
           toast.success(label.toast.success.profile.update("avatar"));
           router.refresh();
         },
         onError: ({ error }) => {
-          setIsChange(false);
           toast.error(error.message);
         },
       },
     );
+
+    setIsChange(false);
   };
 
   const deleteHandler = async () => {
+    setIsRemoved(true);
+
     await deleteProfilePicture();
     await authClient.updateUser(
       { image: null },
@@ -443,6 +445,8 @@ export function ProfilePicture({
         },
       },
     );
+
+    setIsRemoved(false);
   };
 
   return (
@@ -476,21 +480,21 @@ export function ProfilePicture({
             size="sm"
             variant="outline"
             loading={isChange}
+            disabled={isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
-            icon={<Upload />}
             text="Upload Avatar"
           />
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button
+              <CustomButton
                 type="button"
                 size="sm"
                 variant="outline_destructive"
+                loading={isRemoved}
                 disabled={!image || isChange}
-              >
-                Remove
-              </Button>
+                text="Remove"
+              />
             </AlertDialogTrigger>
 
             <AlertDialogContent>
@@ -820,10 +824,10 @@ export function ActiveSessionButton({
   };
 
   return (
-    <div className="flex items-center gap-x-2 rounded-md border p-2 shadow-xs">
+    <div className="bg-card flex items-center gap-x-2 rounded-lg border p-2 shadow-xs">
       <div className="flex grow items-center gap-x-2">
-        <div className="bg-muted aspect-square size-fit rounded-md p-2">
-          <DeviceIcons className="text-primary shrink-0" />
+        <div className="bg-muted aspect-square size-fit rounded-lg p-2">
+          <DeviceIcons className="shrink-0" />
         </div>
 
         <div className="flex flex-col">
@@ -902,7 +906,7 @@ export function RevokeAllOtherSessionButton() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline">
-          <UsersRound />
+          <MonitorOff />
           {trigger}
         </Button>
       </AlertDialogTrigger>
