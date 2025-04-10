@@ -1,6 +1,6 @@
 import { CustomButton } from "@/components/custom/custom-button";
-import { ThemeToggle } from "@/components/custom/theme";
 import { References } from "@/components/modules/references";
+import { ThemeToggle } from "@/components/other/theme";
 import { Separator } from "@/components/ui/separator";
 import { FlaskConical, LayoutDashboard, LogIn } from "lucide-react";
 

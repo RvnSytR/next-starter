@@ -1,5 +1,6 @@
 import { Section } from "@/components/layout/section";
 import { getCurrentPage } from "@/lib/menu";
+import { getUserList } from "@/server/auth-action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  const data = await getUserList();
   // const facetedFilter = [
   //   {
   //     id: "role",
@@ -26,7 +28,7 @@ export default async function Page() {
         currentIdUser={session.user.id_user}
         facetedFilter={facetedFilter}
       /> */}
-      <p>User List</p>
+      <p>{JSON.stringify(data, null, 2)}</p>
     </Section>
   );
 }

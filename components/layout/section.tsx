@@ -6,9 +6,9 @@ import type { ComponentProps, ReactNode } from "react";
 import { CustomButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
-  DynamicBreadcrumbProps,
-} from "../custom/dynamic-breadcrumb";
-import { ThemeToggle } from "../custom/theme";
+  type DynamicBreadcrumbProps,
+} from "../other/dynamic-breadcrumb";
+import { ThemeToggle } from "../other/theme";
 import { Separator } from "../ui/separator";
 
 export function Section({
