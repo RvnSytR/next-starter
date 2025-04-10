@@ -14,6 +14,7 @@ import {
   uploadFile,
 } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
   Dot,
@@ -75,7 +76,7 @@ export function UserAvatar({
   image,
   name,
   className,
-}: Pick<Session["user"], "image" | "name"> & { className?: string }) {
+}: Pick<UserWithRole, "image" | "name"> & { className?: string }) {
   const fallbackName = name.slice(0, 2);
 
   return (
@@ -404,7 +405,7 @@ export function ProfilePicture({
   id,
   name,
   image,
-}: Pick<Session["user"], "id" | "name" | "image">) {
+}: Pick<UserWithRole, "id" | "name" | "image">) {
   const router = useRouter();
   const inputAvatarRef = useRef<HTMLInputElement>(null);
   const [isChange, setIsChange] = useState<boolean>(false);
@@ -543,7 +544,7 @@ export function ProfilePicture({
   );
 }
 
-export function PersonalInformation({ ...props }: Session["user"]) {
+export function PersonalInformation({ ...props }: UserWithRole) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
