@@ -1,9 +1,17 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { User } from "better-auth";
-import { format } from "date-fns";
-import { ArrowUpDown } from "lucide-react";
+import { filterFn } from "@/lib/filters";
+import { capitalize } from "@/lib/utils";
+import { createColumnHelper } from "@tanstack/react-table";
+import { UserWithRole } from "better-auth/plugins";
+import {
+  ArrowUpDown,
+  CircleDot,
+  Mail,
+  UserRound,
+  UserRoundCheck,
+} from "lucide-react";
+import { Badge } from "../ui/badge";
 import { type ButtonProps, Button } from "../ui/button";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
@@ -15,27 +23,16 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-// TODO
-export const userColumn: ColumnDef<User>[] = [
-  {
-    accessorKey: "number",
+const userColumnHelper = createColumnHelper<UserWithRole>();
+export const userColumn = [
+  userColumnHelper.display({
+    id: "number",
     header: "No",
     cell: ({ row }) => row.index + 1,
     enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        User ID
-      </HeaderButton>
-    ),
-    cell: ({ row }) => row.original.id.slice(0, 5) + "...",
-  },
-  {
-    accessorKey: "email",
+  }),
+  userColumnHelper.accessor((row) => row.email, {
+    id: "email",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -44,9 +41,15 @@ export const userColumn: ColumnDef<User>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => row.original.email,
-  },
-  {
-    accessorKey: "name",
+    filterFn: filterFn("text"),
+    meta: {
+      displayName: "Email",
+      type: "text",
+      icon: Mail,
+    },
+  }),
+  userColumnHelper.accessor((row) => row.name, {
+    id: "name",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -55,60 +58,79 @@ export const userColumn: ColumnDef<User>[] = [
       </HeaderButton>
     ),
     cell: ({ row }) => row.original.name,
-  },
-  // {
-  //   accessorKey: "role",
+    filterFn: filterFn("text"),
+    meta: {
+      displayName: "Name",
+      type: "text",
+      icon: UserRound,
+    },
+  }),
+  userColumnHelper.accessor((row) => row.role ?? "user", {
+    id: "role",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Role
+      </HeaderButton>
+    ),
+    cell: ({ row }) => (
+      <Badge variant="outline_success" className="capitalize">
+        {row.original.role}
+      </Badge>
+    ),
+    filterFn: filterFn("option"),
+    meta: {
+      displayName: "Status",
+      type: "option",
+      icon: CircleDot,
+      transformOptionFn(value) {
+        return {
+          value: value,
+          label: capitalize(value),
+          icon: value === "admin" ? UserRoundCheck : UserRound,
+        };
+      },
+    },
+  }),
+  // userColumnHelper.accessor((row) => row.updatedAt, {
+  //   id: "updatedAt",
   //   header: ({ column }) => (
   //     <HeaderButton
   //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
   //     >
-  //       Role
+  //       Updated At
   //     </HeaderButton>
   //   ),
-  //   cell: ({ row }) => (
-  //     <Badge
-  //       variant={
-  //         row.original.role !== "pending"
-  //           ? "outline_success"
-  //           : "outline_warning"
-  //       }
-  //       className="capitalize"
+  //   cell: ({ row }) =>
+  //     row.original.updatedAt
+  //       ? formatDate(row.original.updatedAt, "PPPp")
+  //       : null,
+  //   filterFn: filterFn("date"),
+  //   meta: {
+  //     displayName: "Updated At",
+  //     type: "date",
+  //     icon: CalendarClock,
+  //   },
+  // }),
+  // userColumnHelper.accessor((row) => row.createdAt, {
+  //   id: "createdAt",
+  //   header: ({ column }) => (
+  //     <HeaderButton
+  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
   //     >
-  //       {row.original.role}
-  //     </Badge>
+  //       Created At
+  //     </HeaderButton>
   //   ),
-  //   filterFn: (row, id, value) => value.includes(row.getValue(id)),
-  // },
-  {
-    accessorKey: "last sign in at",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Last Sign In At
-      </HeaderButton>
-    ),
-    cell: ({ row }) =>
-      row.original.updatedAt ? format(row.original.updatedAt, "PPPp") : null,
-    sortingFn: (a, b) => {
-      const { updatedAt: aLog } = a.original;
-      const { updatedAt: bLog } = b.original;
-      if (aLog && bLog) return aLog.getTime() - bLog.getTime();
-      if (!aLog) return 1;
-      else return -1;
-    },
-  },
-  {
-    accessorKey: "registration at",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Registration At
-      </HeaderButton>
-    ),
-    cell: ({ row }) => format(row.original.createdAt, "PPPp"),
-    sortingFn: (a, b) =>
-      a.original.createdAt.getTime() - b.original.createdAt.getTime(),
-  },
+  //   cell: ({ row }) =>
+  //     row.original.createdAt
+  //       ? formatDate(row.original.createdAt, "PPPp")
+  //       : null,
+  //   filterFn: filterFn("date"),
+  //   meta: {
+  //     displayName: "Created At",
+  //     type: "date",
+  //     icon: CalendarCheck2,
+  //   },
+  // }),
 ];

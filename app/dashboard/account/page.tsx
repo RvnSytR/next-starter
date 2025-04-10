@@ -1,4 +1,7 @@
+import { userColumn } from "@/components/data-table/column";
+import { DataTable } from "@/components/data-table/data-table";
 import { Section } from "@/components/layout/section";
+import { page } from "@/lib/content";
 import { getCurrentPage } from "@/lib/menu";
 import { getUserList } from "@/server/auth-action";
 import { Metadata } from "next";
@@ -9,26 +12,19 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const data = await getUserList();
-  // const facetedFilter = [
-  //   {
-  //     id: "role",
-  //     arr: [...userRoles, ...adminRoles].map((r) => {
-  //       return {
-  //         value: r,
-  //         length: users.filter((item) => item === r).length,
-  //       };
-  //     }),
-  //   },
-  // ];
 
   return (
-    <Section currentPage={getCurrentPage("/account", false, true)}>
-      {/* <UserDataTable
-        data={data}
-        currentIdUser={session.user.id_user}
-        facetedFilter={facetedFilter}
-      /> */}
-      <p>{JSON.stringify(data, null, 2)}</p>
+    <Section
+      currentPage={getCurrentPage("/account", false, true)}
+      className="items-center"
+    >
+      <DataTable
+        data={data.users}
+        columns={userColumn}
+        className="w-full lg:max-w-7xl"
+        withRefresh
+        {...page.account}
+      />
     </Section>
   );
 }

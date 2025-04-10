@@ -16,8 +16,7 @@ const page = {
 
   account: {
     title: "User Management",
-    subtitle:
-      "A comprehensive overview of all registered users, providing their essential details and management actions.",
+    subtitle: "Manage and view details of all registered users.",
   },
 
   profile: {

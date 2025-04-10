@@ -10,3 +10,10 @@ export async function getSession(head?: Headers) {
 export async function getSessionList() {
   return await auth.api.listSessions({ headers: await headers() });
 }
+
+export async function getUserList() {
+  return await auth.api.listUsers({
+    headers: await headers(),
+    query: { sortBy: "createdAt", sortDirection: "desc" },
+  });
+}

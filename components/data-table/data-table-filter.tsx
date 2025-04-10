@@ -276,7 +276,7 @@ export function FilterableColumn<TData>({
           {Icon && <Icon />}
           <span>{column.columnDef.meta?.displayName}</span>
         </div>
-        <ArrowRight className="size-4 opacity-0 group-aria-selected:opacity-100" />
+        <ArrowRight className="opacity-0 group-aria-selected:opacity-100" />
       </div>
     </CommandItem>
   );
@@ -890,11 +890,7 @@ export function FilterValueOptionDisplay<TData, TValue>({
       {hasOptionIcons &&
         take(selected, 3).map(({ value, icon }) => {
           const Icon = icon!;
-          return isValidElement(Icon) ? (
-            Icon
-          ) : (
-            <Icon key={value} className="size-4" />
-          );
+          return isValidElement(Icon) ? Icon : <Icon key={value} />;
         })}
       <span className={cn(hasOptionIcons && "ml-1.5")}>
         {selected.length} {pluralName}
@@ -971,7 +967,7 @@ export function FilterValueMultiOptionDisplay<TData, TValue>({
             return isValidElement(Icon) ? (
               cloneElement(Icon, { key: value })
             ) : (
-              <Icon key={value} className="size-4" />
+              <Icon key={value} />
             );
           })}
         </div>
@@ -1006,7 +1002,7 @@ export function FilterValueDateDisplay<TData, TValue>({
     : undefined;
 
   if (!filter) return null;
-  if (filter.values.length === 0) return <Ellipsis className="size-4" />;
+  if (filter.values.length === 0) return <Ellipsis />;
   if (filter.values.length === 1) {
     const value = filter.values[0];
 
@@ -1029,7 +1025,7 @@ export function FilterValueTextDisplay<TData, TValue>({
 
   if (!filter) return null;
   if (filter.values.length === 0 || filter.values[0].trim() === "")
-    return <Ellipsis className="size-4" />;
+    return <Ellipsis />;
 
   const value = filter.values[0];
 
@@ -1162,7 +1158,9 @@ export function FilterValueOptionController<TData, TValue>({
   const uniqueVals = uniq(columnVals);
 
   // If static options are provided, use them
-  if (columnMeta.options) options = columnMeta.options;
+  if (columnMeta.options) {
+    options = columnMeta.options;
+  }
   // No static options provided,
   // We should dynamically generate them based on the column data
   else if (columnMeta.transformOptionFn) {
@@ -1174,7 +1172,10 @@ export function FilterValueOptionController<TData, TValue>({
   }
 
   // Make sure the column data conforms to ColumnOption type
-  else if (isColumnOptionArray(uniqueVals)) options = uniqueVals;
+  else if (isColumnOptionArray(uniqueVals)) {
+    options = uniqueVals;
+  }
+
   // Invalid configuration
   else {
     throw new Error(
@@ -1410,26 +1411,31 @@ export function FilterValueMultiOptionController<
                 onSelect={() => {
                   handleOptionSelect(v.value, !checked);
                 }}
-                className="group flex items-center justify-between gap-1.5"
+                className="group flex items-center justify-between gap-2"
               >
-                <div className="flex items-center gap-1.5">
-                  <Checkbox
-                    checked={checked}
-                    className="opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100"
-                  />
-                  {v.icon && (isValidElement(v.icon) ? v.icon : <v.icon />)}
-                  <span>
-                    {v.label}
-                    <sup
+                <Checkbox checked={checked} />
+
+                {v.icon &&
+                  (isValidElement(v.icon) ? (
+                    v.icon
+                  ) : (
+                    <v.icon
                       className={cn(
-                        "text-muted-foreground ml-0.5 tracking-tight tabular-nums",
-                        count === 0 && "slashed-zero",
+                        checked ? "text-foreground" : "text-muted-foreground",
                       )}
-                    >
-                      {count < 100 ? count : "100+"}
-                    </sup>
-                  </span>
-                </div>
+                    />
+                  ))}
+
+                <span>{v.label}</span>
+
+                <span
+                  className={cn(
+                    "ml-auto tracking-tight",
+                    count === 0 && "slashed-zero",
+                  )}
+                >
+                  {count < 100 ? count : "100+"}
+                </span>
               </CommandItem>
             );
           })}
