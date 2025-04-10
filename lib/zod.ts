@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { maxFileSize, type Media, media } from "./media";
+import { maxFileSize, Media, media } from "./media";
 import { capitalize } from "./utils";
 
 export const zodFile = (mediaType: Media) =>

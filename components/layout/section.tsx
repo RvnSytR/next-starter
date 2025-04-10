@@ -2,11 +2,11 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { route } from "@/lib/menu";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
-import type { ComponentProps, ReactNode } from "react";
+import { ComponentProps, ReactNode } from "react";
 import { CustomButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
-  type DynamicBreadcrumbProps,
+  DynamicBreadcrumbProps,
 } from "../other/dynamic-breadcrumb";
 import { ThemeToggle } from "../other/theme";
 import { Separator } from "../ui/separator";

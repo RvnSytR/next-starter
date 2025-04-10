@@ -1,12 +1,12 @@
 import {
-  type LucideIcon,
   CircleHelp,
   ExternalLink,
   LayoutDashboard,
+  LucideIcon,
   UserRound,
   UsersRound,
 } from "lucide-react";
-import type { AdminRoles, UserRoles } from "./auth";
+import { AdminRoles, UserRoles } from "./auth";
 import { label, page } from "./content";
 
 type MenuRole = UserRoles | AdminRoles | "all";

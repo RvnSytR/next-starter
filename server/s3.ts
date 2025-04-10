@@ -1,6 +1,6 @@
 "use server";
 
-import { media, type Media } from "@/lib/media";
+import { media, Media } from "@/lib/media";
 import {
   DeleteObjectCommand,
   GetObjectCommand,

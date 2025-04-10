@@ -14,7 +14,7 @@ import {
   YAxis,
 } from "recharts";
 import {
-  type ChartConfig,
+  ChartConfig,
   ChartContainer,
   ChartLegend,
   ChartLegendContent,

@@ -7,8 +7,8 @@ import { ComponentProps, useEffect, useState } from "react";
 import { Collapsible } from "../ui/collapsible";
 import {
   SidebarMenuButton,
+  SidebarMenuButtonProps,
   useSidebar,
-  type SidebarMenuButtonProps,
 } from "../ui/sidebar";
 
 function IsActivePath(pathname: string): boolean {

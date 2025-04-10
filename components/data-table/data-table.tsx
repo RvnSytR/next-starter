@@ -2,9 +2,9 @@
 
 import { cn } from "@/lib/utils";
 import {
-  type Table as DataTableType,
   ColumnDef,
   ColumnFiltersState,
+  Table as DataTableType,
   SortingState,
   VisibilityState,
   flexRender,

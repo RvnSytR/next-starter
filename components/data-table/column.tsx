@@ -13,8 +13,9 @@ import {
   UserRound,
   UserRoundCheck,
 } from "lucide-react";
+import { UserAvatar } from "../modules/auth";
 import { Badge } from "../ui/badge";
-import { type ButtonProps, Button } from "../ui/button";
+import { Button, ButtonProps } from "../ui/button";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
   return (
@@ -32,6 +33,21 @@ export const userColumn = [
     header: "No",
     cell: ({ row }) => row.index + 1,
     enableHiding: false,
+  }),
+  userColumnHelper.accessor((row) => row.image, {
+    id: "image",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Email
+      </HeaderButton>
+    ),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <UserAvatar {...row.original} className="size-18" />
+      </div>
+    ),
   }),
   userColumnHelper.accessor((row) => row.email, {
     id: "email",
@@ -76,11 +92,17 @@ export const userColumn = [
         Role
       </HeaderButton>
     ),
-    cell: ({ row }) => (
-      <Badge variant="outline" className="capitalize">
-        {row.original.role}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const role = row.original.role!;
+      return (
+        <Badge
+          variant={role.includes("admin") ? "outline_success" : "outline"}
+          className="capitalize"
+        >
+          {role}
+        </Badge>
+      );
+    },
     filterFn: filterFn("option"),
     meta: {
       displayName: "Status",

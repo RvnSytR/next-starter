@@ -6,7 +6,7 @@ import { cn, delay } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import Link, { LinkProps } from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import { CustomLoader } from "../icon";
 import { Button, ButtonProps } from "../ui/button";
 

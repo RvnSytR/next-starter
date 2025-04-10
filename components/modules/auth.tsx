@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { media } from "@/lib/media";
@@ -14,6 +13,7 @@ import {
   uploadFile,
 } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Session } from "better-auth";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -82,14 +82,15 @@ export function UserAvatar({
   return (
     <Avatar className={className}>
       {image ? (
-        <AvatarImage className="rounded-md object-cover" src={image} />
+        <>
+          <AvatarImage className="rounded-md object-cover" src={image} />
+          <AvatarFallback>{fallbackName}</AvatarFallback>
+        </>
       ) : (
         <span className="bg-muted flex size-full items-center justify-center">
           {fallbackName}
         </span>
       )}
-
-      <AvatarFallback>{fallbackName}</AvatarFallback>
     </Avatar>
   );
 }
@@ -805,7 +806,7 @@ export function ActiveSessionButton({
   ipAddress,
   userAgent,
   token,
-}: Session["session"] & { currentSessionId: string }) {
+}: Session & { currentSessionId: string }) {
   const router = useRouter();
   const isCurrentSession = currentSessionId === id;
   const { title, desc } = dialog.profile.revokeSession;

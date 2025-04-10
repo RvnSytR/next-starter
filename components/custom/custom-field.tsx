@@ -3,10 +3,7 @@ import { maxFileSize, Media, media } from "@/lib/media";
 import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
-import type {
-  DayPickerRangeProps,
-  DayPickerSingleProps,
-} from "react-day-picker";
+import { DayPickerRangeProps, DayPickerSingleProps } from "react-day-picker";
 import { Button } from "../ui/button";
 import { Calendar } from "../ui/calendar";
 import { FormControl, FormItem } from "../ui/form";

@@ -1,9 +1,9 @@
 import { cn } from "@/lib/utils";
 import {
-  type LucideIcon,
-  type LucideProps,
   Loader,
   LoaderCircle,
+  LucideIcon,
+  LucideProps,
   RefreshCw,
 } from "lucide-react";
 

@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 import { maxFileSize } from "./lib/media";
 
 const nextConfig: NextConfig = {

@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/sonner";
 import { title } from "@/lib/content";
 import "@/styles/globals.css";
-import type { Metadata, Viewport } from "next";
+import { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
 import { Inter } from "next/font/google";
 

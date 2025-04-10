@@ -1,4 +1,4 @@
-import type {
+import {
   AccessorFn,
   Column,
   ColumnMeta,
@@ -15,7 +15,7 @@ import {
   isWithinInterval,
   startOfDay,
 } from "date-fns";
-import type { LucideIcon } from "lucide-react";
+import { LucideIcon } from "lucide-react";
 import { intersection, uniq } from "./array";
 
 export type ElementType<T> = T extends (infer U)[] ? U : T;

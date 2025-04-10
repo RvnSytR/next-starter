@@ -24,10 +24,11 @@ import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { take, uniq } from "@/lib/array";
-import type { ColumnOption, ElementType } from "@/lib/filters";
 import {
-  type ColumnDataType,
-  type FilterModel,
+  ColumnDataType,
+  ColumnOption,
+  ElementType,
+  FilterModel,
   createNumberRange,
   dateFilterDetails,
   determineNewOperator,
@@ -42,7 +43,7 @@ import {
   textFilterDetails,
 } from "@/lib/filters";
 import { cn, formatDate } from "@/lib/utils";
-import type { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
+import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import { isEqual } from "date-fns";
 import { ArrowRight, Ellipsis, Filter, FilterXIcon, X } from "lucide-react";
 import {
@@ -53,7 +54,7 @@ import {
   useRef,
   useState,
 } from "react";
-import type { DateRange } from "react-day-picker";
+import { DateRange } from "react-day-picker";
 
 export function DataTableFilter<TData, TValue>({
   table,
