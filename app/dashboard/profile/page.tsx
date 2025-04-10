@@ -73,7 +73,7 @@ export default async function Page() {
           {sessionList.map((item, index) => (
             <ActiveSessionButton
               key={index}
-              currentSessionId={rest.id}
+              currentSessionId={session.session.id}
               {...item}
             />
           ))}
