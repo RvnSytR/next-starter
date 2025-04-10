@@ -95,7 +95,7 @@ export const userColumn = [
       },
     },
   }),
-  userColumnHelper.accessor((row) => row.updatedAt.toISOString(), {
+  userColumnHelper.accessor((row) => row.updatedAt, {
     id: "updatedAt",
     header: ({ column }) => (
       <HeaderButton
@@ -115,7 +115,7 @@ export const userColumn = [
       icon: CalendarClock,
     },
   }),
-  userColumnHelper.accessor((row) => row.createdAt.toISOString(), {
+  userColumnHelper.accessor((row) => row.createdAt, {
     id: "createdAt",
     header: ({ column }) => (
       <HeaderButton

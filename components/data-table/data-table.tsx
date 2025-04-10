@@ -55,18 +55,19 @@ import {
 } from "./data-table-filter";
 
 type TableProps<TData> = { table: DataTableType<TData> };
-type DataTableProps<TData, TValue> = {
+type DataTableProps<TData> = {
   data: TData[];
-  columns: ColumnDef<TData, TValue>[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  columns: ColumnDef<TData, any>[];
 };
 
-type ToolBox = {
+type ToolBoxProps = {
   withRefresh?: boolean;
   searchPlaceholder?: string;
   children?: React.ReactNode;
 };
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData>({
   data,
   columns,
   title = "Data Table",
@@ -75,8 +76,8 @@ export function DataTable<TData, TValue>({
   noResult,
   className,
   ...props
-}: DataTableProps<TData, TValue> &
-  ToolBox & {
+}: DataTableProps<TData> &
+  ToolBoxProps & {
     title?: string;
     subtitle?: string;
     caption?: string;
@@ -214,7 +215,7 @@ function ToolBox<TData>({
   withRefresh = false,
   searchPlaceholder = "Search Something",
   children,
-}: TableProps<TData> & ToolBox) {
+}: TableProps<TData> & ToolBoxProps) {
   return (
     <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
