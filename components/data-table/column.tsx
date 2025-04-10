@@ -1,11 +1,13 @@
 "use client";
 
 import { filterFn } from "@/lib/filters";
-import { capitalize } from "@/lib/utils";
+import { capitalize, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
   ArrowUpDown,
+  CalendarCheck2,
+  CalendarClock,
   CircleDot,
   Mail,
   UserRound,
@@ -65,7 +67,7 @@ export const userColumn = [
       icon: UserRound,
     },
   }),
-  userColumnHelper.accessor((row) => row.role ?? "user", {
+  userColumnHelper.accessor((row) => row.role!, {
     id: "role",
     header: ({ column }) => (
       <HeaderButton
@@ -75,7 +77,7 @@ export const userColumn = [
       </HeaderButton>
     ),
     cell: ({ row }) => (
-      <Badge variant="outline_success" className="capitalize">
+      <Badge variant="outline" className="capitalize">
         {row.original.role}
       </Badge>
     ),
@@ -93,44 +95,44 @@ export const userColumn = [
       },
     },
   }),
-  // userColumnHelper.accessor((row) => row.updatedAt, {
-  //   id: "updatedAt",
-  //   header: ({ column }) => (
-  //     <HeaderButton
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       Updated At
-  //     </HeaderButton>
-  //   ),
-  //   cell: ({ row }) =>
-  //     row.original.updatedAt
-  //       ? formatDate(row.original.updatedAt, "PPPp")
-  //       : null,
-  //   filterFn: filterFn("date"),
-  //   meta: {
-  //     displayName: "Updated At",
-  //     type: "date",
-  //     icon: CalendarClock,
-  //   },
-  // }),
-  // userColumnHelper.accessor((row) => row.createdAt, {
-  //   id: "createdAt",
-  //   header: ({ column }) => (
-  //     <HeaderButton
-  //       onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-  //     >
-  //       Created At
-  //     </HeaderButton>
-  //   ),
-  //   cell: ({ row }) =>
-  //     row.original.createdAt
-  //       ? formatDate(row.original.createdAt, "PPPp")
-  //       : null,
-  //   filterFn: filterFn("date"),
-  //   meta: {
-  //     displayName: "Created At",
-  //     type: "date",
-  //     icon: CalendarCheck2,
-  //   },
-  // }),
+  userColumnHelper.accessor((row) => row.updatedAt.toISOString(), {
+    id: "updatedAt",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Updated At
+      </HeaderButton>
+    ),
+    cell: ({ row }) =>
+      row.original.updatedAt
+        ? formatDate(row.original.updatedAt, "PPPp")
+        : null,
+    filterFn: filterFn("date"),
+    meta: {
+      displayName: "Updated At",
+      type: "date",
+      icon: CalendarClock,
+    },
+  }),
+  userColumnHelper.accessor((row) => row.createdAt.toISOString(), {
+    id: "createdAt",
+    header: ({ column }) => (
+      <HeaderButton
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+      >
+        Created At
+      </HeaderButton>
+    ),
+    cell: ({ row }) =>
+      row.original.createdAt
+        ? formatDate(row.original.createdAt, "PPPp")
+        : null,
+    filterFn: filterFn("date"),
+    meta: {
+      displayName: "Created At",
+      type: "date",
+      icon: CalendarCheck2,
+    },
+  }),
 ];
