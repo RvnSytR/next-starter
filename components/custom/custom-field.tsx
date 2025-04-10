@@ -1,20 +1,18 @@
-import { useIsMobile } from "@/hooks/use-mobile";
 import { label, label as labelContent } from "@/lib/content";
 import { maxFileSize, Media, media } from "@/lib/media";
 import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
-import { Calendar as CalendarIcon, CloudUpload, Filter } from "lucide-react";
+import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
-import type { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
-import { Badge } from "../ui/badge";
-import { Button, ButtonProps, buttonVariants } from "../ui/button";
-import { Calendar, CalendarProps } from "../ui/calendar";
-import { Checkbox } from "../ui/checkbox";
+import type {
+  DayPickerRangeProps,
+  DayPickerSingleProps,
+} from "react-day-picker";
+import { Button } from "../ui/button";
+import { Calendar } from "../ui/calendar";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
-import { Separator } from "../ui/separator";
 
 export type CheckboxPopoverProps = {
   id: string;
@@ -87,12 +85,9 @@ export function InputRadioGroup({
 
 export function InputDate({
   selected,
-  onSelect,
   label,
   ...props
-}: Omit<Extract<CalendarProps, PropsSingleRequired>, "mode" | "required"> & {
-  label?: string;
-}) {
+}: Omit<DayPickerSingleProps, "mode"> & { label?: string }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -112,13 +107,7 @@ export function InputDate({
       </PopoverTrigger>
 
       <PopoverContent className="size-fit p-0">
-        <Calendar
-          mode="single"
-          selected={selected}
-          onSelect={onSelect}
-          required
-          {...props}
-        />
+        <Calendar mode="single" {...props} />
       </PopoverContent>
     </Popover>
   );
@@ -126,13 +115,10 @@ export function InputDate({
 
 export function InputDateRange({
   selected,
-  onSelect,
   numberOfMonths = 2,
   label,
   ...props
-}: Omit<Extract<CalendarProps, PropsRangeRequired>, "mode" | "required"> & {
-  label?: string;
-}) {
+}: Omit<DayPickerRangeProps, "mode"> & { label?: string }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -158,9 +144,7 @@ export function InputDateRange({
           mode="range"
           defaultMonth={selected?.from}
           selected={selected}
-          onSelect={onSelect}
           numberOfMonths={numberOfMonths}
-          required
           {...props}
         />
       </PopoverContent>
@@ -252,93 +236,5 @@ export function InputFile({
         <small>{label.button.fileInput.empty}</small>
       )}
     </div>
-  );
-}
-
-export function CheckboxPopover({
-  id,
-  icon,
-  state,
-  setState,
-  arr,
-  size = "sm",
-  variant = "outline",
-  className,
-}: CheckboxPopoverProps & Pick<ButtonProps, "size" | "variant" | "className">) {
-  const breakpoint = useIsMobile() ? 1 : 2;
-  const selectedState = new Set(state);
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          size={size}
-          variant={variant}
-          className={cn("w-full capitalize select-none lg:w-auto", className)}
-        >
-          {icon ?? <Filter />}
-          {id}
-          {selectedState.size > 0 && (
-            <>
-              <Separator orientation="vertical" className="h-4" />
-
-              <div className="space-x-1">
-                {selectedState.size > breakpoint ? (
-                  <Badge variant="secondary" className="rounded-sm px-1">
-                    {selectedState.size} selected
-                  </Badge>
-                ) : (
-                  Array.from(selectedState).map((item, index) => (
-                    <Badge
-                      key={index}
-                      variant="secondary"
-                      className="rounded px-1"
-                    >
-                      {item}
-                    </Badge>
-                  ))
-                )}
-              </div>
-            </>
-          )}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="flex w-fit flex-col gap-y-1 p-1">
-        {arr.map((item, index) => {
-          const { value, length: itemLength, icon } = item;
-          const cbId = `cb${value}`;
-          const isSelected = selectedState.has(value);
-
-          return (
-            <Label
-              htmlFor={cbId}
-              key={index}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "sm" }),
-                "justify-start gap-x-4 capitalize",
-              )}
-            >
-              <div className="flex gap-x-3">
-                <Checkbox
-                  id={cbId}
-                  checked={isSelected}
-                  onCheckedChange={() =>
-                    setState(() => {
-                      if (isSelected) selectedState.delete(value);
-                      else selectedState.add(value);
-                      return Array.from(selectedState);
-                    })
-                  }
-                />
-                {icon}
-                <small className="font-medium">{value}</small>
-              </div>
-
-              <small className="ml-auto font-medium">{itemLength}</small>
-            </Label>
-          );
-        })}
-      </PopoverContent>
-    </Popover>
   );
 }

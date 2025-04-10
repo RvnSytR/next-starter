@@ -2,8 +2,7 @@ import { Session } from "@/lib/auth";
 import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { SignOutButton } from "../modules/auth";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { SignOutButton, UserAvatar } from "../modules/auth";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -67,15 +66,7 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
       asChild
     >
       <Link href={`${route.protected}/profile`}>
-        <Avatar className="rounded-md">
-          {image ? (
-            <AvatarImage className="rounded-md object-cover" src={image} />
-          ) : (
-            <span className="bg-muted flex size-full items-center justify-center">
-              {name.slice(0, 2)}
-            </span>
-          )}
-        </Avatar>
+        <UserAvatar name={name} image={image} className="rounded-md" />
 
         <div className="grid [&_span]:truncate">
           <span className="text-sm font-semibold">{name}</span>

@@ -21,16 +21,12 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  FilterX,
   Search,
   Settings2,
 } from "lucide-react";
 import { useState } from "react";
-import {
-  type CheckboxPopoverProps,
-  CheckboxPopover,
-  FormFloating,
-} from "../custom/custom-field";
+import { RefreshButton } from "../custom/custom-button";
+import { FormFloating } from "../custom/custom-field";
 import { Button, buttonVariants } from "../ui/button";
 import {
   Card,
@@ -51,120 +47,222 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { RefreshButton } from "./custom-button";
+import {
+  ActiveFilters,
+  ActiveFiltersMobileContainer,
+  FilterActions,
+  FilterSelector,
+} from "./data-table-filter";
 
-// #region // * Types
 type TableProps<TData> = { table: DataTableType<TData> };
-
 type DataTableProps<TData, TValue> = {
   data: TData[];
   columns: ColumnDef<TData, TValue>[];
 };
 
-export type FacetedFilter = Pick<CheckboxPopoverProps, "id" | "arr" | "icon">;
-
 type ToolBox = {
   withRefresh?: boolean;
-  facetedFilter?: FacetedFilter[];
   searchPlaceholder?: string;
   children?: React.ReactNode;
 };
-// #endregion
 
-// #region // * Side Component
-function FacetedFilter<TData>({
-  table,
-  id,
+export function DataTable<TData, TValue>({
+  data,
+  columns,
+  title = "Data Table",
+  subtitle = "Data Table Description",
+  caption,
+  noResult,
+  className,
   ...props
-}: TableProps<TData> & FacetedFilter) {
-  const column = table.getColumn(id);
-  if (!column) throw new Error(`Column ${id} not found`);
+}: DataTableProps<TData, TValue> &
+  ToolBox & {
+    title?: string;
+    subtitle?: string;
+    caption?: string;
+    noResult?: string[];
+    className?: string;
+  }) {
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
+
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const table = useReactTable({
+    data,
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+
+    globalFilterFn: "includesString",
+    onGlobalFilterChange: setGlobalFilter,
+
+    onSortingChange: setSorting,
+    getSortedRowModel: getSortedRowModel(),
+
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
+
+    onColumnVisibilityChange: setColumnVisibility,
+
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
+
+    state: {
+      sorting,
+      globalFilter,
+      columnFilters,
+      columnVisibility,
+    },
+  });
+
+  const hasFilters = table.getState().columnFilters.length > 0;
+
   return (
-    <CheckboxPopover
-      id={id}
-      state={column.getFilterValue() as string[]}
-      setState={column.setFilterValue}
-      {...props}
-    />
+    <Card className={className}>
+      <CardHeader className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+        <div className="space-y-1.5">
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{subtitle}</CardDescription>
+        </div>
+
+        <ToolBox table={table} {...props} />
+      </CardHeader>
+
+      {hasFilters && (
+        <div className="border-t border-b px-6 py-2 shadow-xs">
+          <ActiveFiltersMobileContainer>
+            <FilterActions table={table} />
+            <ActiveFilters table={table} />
+          </ActiveFiltersMobileContainer>
+        </div>
+      )}
+
+      <CardContent className="space-y-4">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                    </TableHead>
+                  );
+                })}
+              </TableRow>
+            ))}
+          </TableHeader>
+
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-muted-foreground text-center whitespace-pre-line"
+                >
+                  {noResult
+                    ? noResult.map((item) => item + "\n")
+                    : "No results."}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+
+        <div
+          className={cn(
+            "mt-4 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-center",
+            caption ? "justify-between" : "justify-center",
+          )}
+        >
+          <small className="text-muted-foreground text-left font-medium lg:text-center">
+            {caption}
+          </small>
+
+          <Pagination table={table} />
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 
 function ToolBox<TData>({
   table,
-  withRefresh,
-  facetedFilter,
+  withRefresh = false,
   searchPlaceholder = "Search Something",
   children,
 }: TableProps<TData> & ToolBox) {
-  const columnFilter = table.getState().columnFilters;
-  const isFiltered = columnFilter.length > 0;
-
   return (
-    <div className="flex flex-col gap-2 lg:flex-row">
+    <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
 
-      {facetedFilter && isFiltered && (
-        <Button
-          size="sm"
-          variant="outline"
-          onClick={() => table.resetColumnFilters()}
-          className="order-2 border-dashed lg:order-1"
-        >
-          <FilterX />
-          Reset
-        </Button>
-      )}
+      <FilterSelector table={table} />
 
-      {facetedFilter && (
-        <div className="order-1 flex gap-2 lg:order-2">
-          {facetedFilter.map((props, index) => (
-            <FacetedFilter key={index} table={table} {...props} />
-          ))}
-        </div>
-      )}
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button size="sm" variant="outline">
+            <Settings2 />
+            View
+          </Button>
+        </PopoverTrigger>
 
-      <div className="order-4 flex grow gap-2">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="sm" variant="outline" className="shrink-0">
-              <Settings2 />
-              View
-            </Button>
-          </PopoverTrigger>
+        <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
+          {table
+            .getAllColumns()
+            .filter((column) => column.getCanHide())
+            .map((column, index) => {
+              const cbId = `cb${column.id}`;
+              return (
+                <Label
+                  key={index}
+                  htmlFor={cbId}
+                  className={cn(
+                    buttonVariants({ variant: "ghost", size: "sm" }),
+                    "items-center justify-start gap-x-2 p-2 capitalize",
+                  )}
+                >
+                  <Checkbox
+                    id={cbId}
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  />
 
-          <PopoverContent className="flex w-fit flex-col gap-y-1 p-2">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column, index) => {
-                const cbId = `cb${column.id}`;
-                return (
-                  <Label
-                    key={index}
-                    htmlFor={cbId}
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "sm" }),
-                      "justify-start p-2 capitalize",
-                    )}
-                  >
-                    <Checkbox
-                      id={cbId}
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                      className="data-[state=checked]:text-primary border-none shadow-none data-[state=checked]:border-none data-[state=checked]:bg-transparent"
-                    />
-                    <small className="font-medium">{column.id}</small>
-                  </Label>
-                );
-              })}
-          </PopoverContent>
-        </Popover>
+                  <small className="font-medium">{column.id}</small>
+                </Label>
+              );
+            })}
+        </PopoverContent>
+      </Popover>
 
+      <div className="flex gap-x-2">
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
 
-        <FormFloating icon={<Search />}>
+        <FormFloating icon={<Search />} className="grow">
           <Input
             type="search"
             placeholder={searchPlaceholder}
@@ -221,137 +319,5 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         <ChevronsRight />
       </Button>
     </div>
-  );
-}
-// #endregion
-
-export function DataTable<TData, TValue>({
-  data,
-  columns,
-  title = "Data Table",
-  desc = "Data Table Description",
-  caption,
-  label,
-  children,
-  ...props
-}: DataTableProps<TData, TValue> &
-  ToolBox & {
-    title?: string;
-    desc?: string;
-    caption?: string;
-    label?: string[];
-  }) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [globalFilter, setGlobalFilter] = useState<string>("");
-
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-
-    globalFilterFn: "includesString",
-    onGlobalFilterChange: setGlobalFilter,
-
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-
-    onColumnVisibilityChange: setColumnVisibility,
-
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-
-    state: {
-      sorting,
-      globalFilter,
-      columnFilters,
-      columnVisibility,
-    },
-  });
-
-  return (
-    <Card>
-      <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1.5">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{desc}</CardDescription>
-        </div>
-
-        <ToolBox table={table} {...props}>
-          {children}
-        </ToolBox>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-muted-foreground text-center whitespace-pre-line"
-                >
-                  {label ? label.map((item) => item + "\n") : "No results."}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-
-        <div
-          className={cn(
-            "mt-4 flex flex-col gap-2 lg:mt-0 lg:flex-row lg:items-center",
-            caption ? "justify-between" : "justify-center",
-          )}
-        >
-          <small className="text-muted-foreground text-left font-medium lg:text-center">
-            {caption}
-          </small>
-
-          <Pagination table={table} />
-        </div>
-      </CardContent>
-    </Card>
   );
 }

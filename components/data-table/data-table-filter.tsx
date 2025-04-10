@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -77,11 +77,12 @@ export function DataTableFilter<TData, TValue>({
   }
 
   return (
-    <div className="flex w-full items-start justify-between gap-2">
-      <div className="flex w-full flex-1 gap-2 md:flex-wrap">
+    <div className="flex items-center gap-2">
+      <div className="flex w-full flex-1 items-center gap-2 md:flex-wrap">
         <FilterSelector table={table} />
         <ActiveFilters table={table} />
       </div>
+
       <FilterActions table={table} />
     </div>
   );
@@ -168,8 +169,9 @@ export function FilterActions<TData>({ table }: { table: Table<TData> }) {
 
   return (
     <Button
-      className={cn("h-7 !px-2", !hasFilters && "hidden")}
-      variant="destructive"
+      size="sm"
+      variant="outline_destructive"
+      className={cn(!hasFilters && "hidden")}
       onClick={clearFilters}
     >
       <FilterXIcon />
@@ -189,7 +191,7 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
 
   const properties = table.getAllColumns().filter(isFilterableColumn);
 
-  const hasFilters = table.getState().columnFilters.length > 0;
+  // const hasFilters = table.getState().columnFilters.length > 0;
 
   useEffect(() => {
     if (property && inputRef) {
@@ -246,19 +248,12 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
       }}
     >
       <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn("h-7", hasFilters && "w-fit !px-2")}
-        >
-          <Filter className="size-4" />
-          {!hasFilters && <span>Filter</span>}
+        <Button size="sm" variant="outline">
+          <Filter /> Filter
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        side="bottom"
-        className="w-fit origin-(--radix-popover-content-transform-origin) p-0"
-      >
+
+      <PopoverContent className="w-fit origin-(--radix-popover-content-transform-origin) p-0">
         {content}
       </PopoverContent>
     </Popover>
@@ -273,12 +268,12 @@ export function FilterableColumn<TData>({
   table: Table<TData>;
   setProperty: (value: string) => void;
 }) {
-  const Icon = column.columnDef.meta?.icon ?? Filter;
+  const Icon = column.columnDef.meta?.icon;
   return (
     <CommandItem onSelect={() => setProperty(column.id)} className="group">
       <div className="flex w-full items-center justify-between">
         <div className="inline-flex items-center gap-1.5">
-          {<Icon strokeWidth={2.25} className="size-4" />}
+          {Icon && <Icon />}
           <span>{column.columnDef.meta?.displayName}</span>
         </div>
         <ArrowRight className="size-4 opacity-0 group-aria-selected:opacity-100" />
@@ -396,15 +391,14 @@ function renderFilter<TData, T extends ColumnDataType>(
   return (
     <div
       key={`filter-${filter.id}`}
-      className="border-border bg-background flex h-7 items-center rounded-2xl border text-xs shadow-xs"
+      className={cn(
+        buttonVariants({ size: "sm", variant: "outline" }),
+        "gap-0 px-0 text-xs",
+      )}
     >
       <FilterSubject meta={meta} />
       <Separator orientation="vertical" />
-      <FilterOperator
-        column={column}
-        columnMeta={meta}
-        filter={value} // Typed as FilterValue<T>
-      />
+      <FilterOperator column={column} columnMeta={meta} filter={value} />
       <Separator orientation="vertical" />
       <FilterValue
         id={filter.id}
@@ -414,11 +408,12 @@ function renderFilter<TData, T extends ColumnDataType>(
       />
       <Separator orientation="vertical" />
       <Button
+        size="iconsm"
         variant="ghost"
-        className="h-full w-7 rounded-none rounded-r-2xl text-xs"
+        className="rounded-none rounded-r-md"
         onClick={() => table.getColumn(filter.id)?.setFilterValue(undefined)}
       >
-        <X className="size-4 -translate-x-0.5" />
+        <X />
       </Button>
     </div>
   );
@@ -433,8 +428,8 @@ export function FilterSubject<TData>({
 }) {
   const hasIcon = !!meta?.icon;
   return (
-    <span className="flex items-center gap-1 px-2 font-medium whitespace-nowrap select-none">
-      {hasIcon && <meta.icon className="size-4 stroke-[2.25px]" />}
+    <span className="flex items-center gap-1.5 px-2 font-medium whitespace-nowrap select-none">
+      {hasIcon && <meta.icon />}
       <span>{meta.displayName}</span>
     </span>
   );
@@ -880,12 +875,7 @@ export function FilterValueOptionDisplay<TData, TValue>({
     const hasIcon = !!Icon;
     return (
       <span className="inline-flex items-center gap-1">
-        {hasIcon &&
-          (isValidElement(Icon) ? (
-            Icon
-          ) : (
-            <Icon className="text-primary size-4" />
-          ))}
+        {hasIcon && (isValidElement(Icon) ? Icon : <Icon />)}
         <span>{label}</span>
       </span>
     );
@@ -961,12 +951,7 @@ export function FilterValueMultiOptionDisplay<TData, TValue>({
     const hasIcon = !!Icon;
     return (
       <span className="inline-flex items-center gap-1.5">
-        {hasIcon &&
-          (isValidElement(Icon) ? (
-            Icon
-          ) : (
-            <Icon className="text-primary size-4" />
-          ))}
+        {hasIcon && (isValidElement(Icon) ? Icon : <Icon />)}
 
         <span>{label}</span>
       </span>
@@ -1177,10 +1162,7 @@ export function FilterValueOptionController<TData, TValue>({
   const uniqueVals = uniq(columnVals);
 
   // If static options are provided, use them
-  if (columnMeta.options) {
-    options = columnMeta.options;
-  }
-
+  if (columnMeta.options) options = columnMeta.options;
   // No static options provided,
   // We should dynamically generate them based on the column data
   else if (columnMeta.transformOptionFn) {
@@ -1192,10 +1174,7 @@ export function FilterValueOptionController<TData, TValue>({
   }
 
   // Make sure the column data conforms to ColumnOption type
-  else if (isColumnOptionArray(uniqueVals)) {
-    options = uniqueVals;
-  }
-
+  else if (isColumnOptionArray(uniqueVals)) options = uniqueVals;
   // Invalid configuration
   else {
     throw new Error(
@@ -1266,31 +1245,31 @@ export function FilterValueOptionController<TData, TValue>({
                 onSelect={() => {
                   handleOptionSelect(v.value, !checked);
                 }}
-                className="group flex items-center justify-between gap-1.5"
+                className="group flex items-center justify-between gap-2"
               >
-                <div className="flex items-center gap-1.5">
-                  <Checkbox
-                    checked={checked}
-                    className="opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100"
-                  />
-                  {v.icon &&
-                    (isValidElement(v.icon) ? (
-                      v.icon
-                    ) : (
-                      <v.icon className="text-primary size-4" />
-                    ))}
-                  <span>
-                    {v.label}
-                    <sup
+                <Checkbox checked={checked} />
+
+                {v.icon &&
+                  (isValidElement(v.icon) ? (
+                    v.icon
+                  ) : (
+                    <v.icon
                       className={cn(
-                        "text-muted-foreground ml-0.5 tracking-tight tabular-nums",
-                        count === 0 && "slashed-zero",
+                        checked ? "text-foreground" : "text-muted-foreground",
                       )}
-                    >
-                      {count < 100 ? count : "100+"}
-                    </sup>
-                  </span>
-                </div>
+                    />
+                  ))}
+
+                <span>{v.label}</span>
+
+                <span
+                  className={cn(
+                    "ml-auto tracking-tight",
+                    count === 0 && "slashed-zero",
+                  )}
+                >
+                  {count < 100 ? count : "100+"}
+                </span>
               </CommandItem>
             );
           })}
@@ -1438,12 +1417,7 @@ export function FilterValueMultiOptionController<
                     checked={checked}
                     className="opacity-0 group-hover:opacity-100 data-[state=checked]:opacity-100"
                   />
-                  {v.icon &&
-                    (isValidElement(v.icon) ? (
-                      v.icon
-                    ) : (
-                      <v.icon className="text-primary size-4" />
-                    ))}
+                  {v.icon && (isValidElement(v.icon) ? v.icon : <v.icon />)}
                   <span>
                     {v.label}
                     <sup

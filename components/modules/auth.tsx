@@ -54,7 +54,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
-import { Avatar, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -70,6 +70,28 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import { sidebarMenuButtonVariants } from "../ui/sidebar";
+
+export function UserAvatar({
+  image,
+  name,
+  className,
+}: Pick<Session["user"], "image" | "name"> & { className?: string }) {
+  const fallbackName = name.slice(0, 2);
+
+  return (
+    <Avatar className={className}>
+      {image ? (
+        <AvatarImage className="rounded-md object-cover" src={image} />
+      ) : (
+        <span className="bg-muted flex size-full items-center justify-center">
+          {fallbackName}
+        </span>
+      )}
+
+      <AvatarFallback>{fallbackName}</AvatarFallback>
+    </Avatar>
+  );
+}
 
 export function SignOutButton() {
   const router = useRouter();
@@ -387,6 +409,7 @@ export function ProfilePicture({
   const inputAvatarRef = useRef<HTMLInputElement>(null);
   const [isChange, setIsChange] = useState<boolean>(false);
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
+
   const schema = zodFile("image");
 
   const deleteProfilePicture = async () => {
@@ -451,15 +474,7 @@ export function ProfilePicture({
 
   return (
     <div className="flex items-center gap-x-4">
-      <Avatar className="relative size-24">
-        {image ? (
-          <AvatarImage src={image} className="object-cover" />
-        ) : (
-          <span className="bg-muted flex size-full items-center justify-center text-lg">
-            {name.slice(0, 2)}
-          </span>
-        )}
-      </Avatar>
+      <UserAvatar name={name} image={image} className="size-24" />
 
       <input
         type="file"
