@@ -1,5 +1,5 @@
+import { Session } from "@/lib/auth";
 import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
-import { UserWithRole } from "better-auth/plugins";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { SignOutButton, UserAvatar } from "../modules/auth";
@@ -24,7 +24,7 @@ import {
 } from "../ui/sidebar";
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
-type SidebarData = Pick<UserWithRole, "name" | "email" | "image"> & {
+type SidebarData = Pick<Session["user"], "name" | "email" | "image"> & {
   role: string;
 };
 

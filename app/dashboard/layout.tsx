@@ -12,7 +12,7 @@ export default async function DashboardLayout({
   children,
 }: Readonly<React.ComponentProps<"div">>) {
   const session = await getSession();
-  if (!session?.user?.role) return notFound();
+  if (!session?.user.role) return notFound();
   const { role, ...rest } = session.user;
   return (
     <SidebarApp role={role} {...rest}>

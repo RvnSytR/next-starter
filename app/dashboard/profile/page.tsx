@@ -27,8 +27,9 @@ export const metadata: Metadata = {
 export default async function Page() {
   const currentPage = getCurrentPage("/profile", false, true);
   const session = await getSession();
-  if (!session) return <SectionNotFound />;
+  if (!session?.user.role) return <SectionNotFound />;
 
+  const { role, ...rest } = session.user;
   const sessionList = await getSessionList();
 
   return (
@@ -44,7 +45,7 @@ export default async function Page() {
 
         <Separator />
 
-        <PersonalInformation {...session.user} />
+        <PersonalInformation role={role} {...rest} />
       </Card>
 
       <Card id="change-password" className="w-full scroll-m-4 md:max-w-2xl">
@@ -72,7 +73,7 @@ export default async function Page() {
           {sessionList.map((item, index) => (
             <ActiveSessionButton
               key={index}
-              currentSessionId={session.session.id}
+              currentSessionId={rest.id}
               {...item}
             />
           ))}

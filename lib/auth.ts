@@ -25,5 +25,10 @@ const auth = betterAuth({
   user: { deleteUser: { enabled: true } },
 });
 
+type Session = {
+  session: typeof auth.$Infer.Session.session;
+  user: typeof auth.$Infer.Session.user;
+};
+
 export { adminRoles, auth, userRoles };
-export type { AdminRoles, UserRoles };
+export type { AdminRoles, Session, UserRoles };

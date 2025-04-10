@@ -1,5 +1,6 @@
 "use client";
 
+import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { media } from "@/lib/media";
@@ -13,8 +14,6 @@ import {
   uploadFile,
 } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Session } from "better-auth";
-import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
   Dot,
@@ -76,7 +75,7 @@ export function UserAvatar({
   image,
   name,
   className,
-}: Pick<UserWithRole, "image" | "name"> & { className?: string }) {
+}: Pick<Session["user"], "image" | "name"> & { className?: string }) {
   const fallbackName = name.slice(0, 2);
 
   return (
@@ -406,7 +405,7 @@ export function ProfilePicture({
   id,
   name,
   image,
-}: Pick<UserWithRole, "id" | "name" | "image">) {
+}: Pick<Session["user"], "id" | "name" | "image">) {
   const router = useRouter();
   const inputAvatarRef = useRef<HTMLInputElement>(null);
   const [isChange, setIsChange] = useState<boolean>(false);
@@ -545,7 +544,9 @@ export function ProfilePicture({
   );
 }
 
-export function PersonalInformation({ ...props }: UserWithRole) {
+export function PersonalInformation({
+  ...props
+}: Pick<Session["user"], "id" | "name" | "email" | "role">) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -806,7 +807,7 @@ export function ActiveSessionButton({
   ipAddress,
   userAgent,
   token,
-}: Session & { currentSessionId: string }) {
+}: Session["session"] & { currentSessionId: string }) {
   const router = useRouter();
   const isCurrentSession = currentSessionId === id;
   const { title, desc } = dialog.profile.revokeSession;

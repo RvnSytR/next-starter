@@ -2,22 +2,14 @@ import { label, label as labelContent } from "@/lib/content";
 import { maxFileSize, Media, media } from "@/lib/media";
 import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
-import { ComponentProps, Dispatch, ReactNode, SetStateAction } from "react";
-import { DayPickerRangeProps, DayPickerSingleProps } from "react-day-picker";
+import { ComponentProps, ReactNode } from "react";
+import { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
 import { Button } from "../ui/button";
-import { Calendar } from "../ui/calendar";
+import { Calendar, CalendarProps } from "../ui/calendar";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
-
-export type CheckboxPopoverProps = {
-  id: string;
-  state: string[];
-  setState: Dispatch<SetStateAction<string[]>>;
-  icon?: ReactNode;
-  arr: { value: string; length: number; icon?: ReactNode }[];
-};
 
 export function FormFloating({
   icon,
@@ -84,7 +76,9 @@ export function InputDate({
   selected,
   label,
   ...props
-}: Omit<DayPickerSingleProps, "mode"> & { label?: string }) {
+}: Omit<Extract<CalendarProps, PropsSingleRequired>, "mode" | "required"> & {
+  label?: string;
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -104,7 +98,7 @@ export function InputDate({
       </PopoverTrigger>
 
       <PopoverContent className="size-fit p-0">
-        <Calendar mode="single" {...props} />
+        <Calendar mode="single" required selected={selected} {...props} />
       </PopoverContent>
     </Popover>
   );
@@ -115,7 +109,9 @@ export function InputDateRange({
   numberOfMonths = 2,
   label,
   ...props
-}: Omit<DayPickerRangeProps, "mode"> & { label?: string }) {
+}: Omit<Extract<CalendarProps, PropsRangeRequired>, "mode" | "required"> & {
+  label?: string;
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -139,8 +135,9 @@ export function InputDateRange({
       <PopoverContent className="size-fit p-0">
         <Calendar
           mode="range"
-          defaultMonth={selected?.from}
+          required
           selected={selected}
+          defaultMonth={selected?.from}
           numberOfMonths={numberOfMonths}
           {...props}
         />
