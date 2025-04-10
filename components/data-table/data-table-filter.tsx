@@ -41,9 +41,9 @@ import {
   optionFilterDetails,
   textFilterDetails,
 } from "@/lib/filters";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import type { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
-import { format, isEqual } from "date-fns";
+import { isEqual } from "date-fns";
 import { ArrowRight, Ellipsis, Filter, FilterXIcon, X } from "lucide-react";
 import {
   cloneElement,
@@ -984,14 +984,14 @@ function formatDateRange(start: Date, end: Date) {
   const sameYear = start.getFullYear() === end.getFullYear();
 
   if (sameMonth && sameYear) {
-    return `${format(start, "MMM d")} - ${format(end, "d, yyyy")}`;
+    return `${formatDate(start, "MMM d")} - ${formatDate(end, "d, yyyy")}`;
   }
 
   if (sameYear) {
-    return `${format(start, "MMM d")} - ${format(end, "MMM d, yyyy")}`;
+    return `${formatDate(start, "MMM d")} - ${formatDate(end, "MMM d, yyyy")}`;
   }
 
-  return `${format(start, "MMM d, yyyy")} - ${format(end, "MMM d, yyyy")}`;
+  return `${formatDate(start, "MMM d, yyyy")} - ${formatDate(end, "MMM d, yyyy")}`;
 }
 
 export function FilterValueDateDisplay<TData, TValue>({
@@ -1006,7 +1006,7 @@ export function FilterValueDateDisplay<TData, TValue>({
   if (filter.values.length === 1) {
     const value = filter.values[0];
 
-    const formattedDateStr = format(value, "MMM d, yyyy");
+    const formattedDateStr = formatDate(value, "MMM d, yyyy");
 
     return <span>{formattedDateStr}</span>;
   }
