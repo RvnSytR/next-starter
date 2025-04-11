@@ -140,9 +140,8 @@ const label = {
       empty: "No file selected",
     },
 
-    save: "Save",
+    save: "Save Changes",
     confirm: "Confirm",
-    update: "Update",
     refresh: "Refresh",
     reset: "Reset",
     cancel: "Cancel",

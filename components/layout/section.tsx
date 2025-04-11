@@ -9,6 +9,7 @@ import {
   DynamicBreadcrumbProps,
 } from "../other/dynamic-breadcrumb";
 import { ThemeToggle } from "../other/theme";
+import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
 export function Section({
@@ -17,8 +18,8 @@ export function Section({
   ...props
 }: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
   return (
-    <SidebarInset className="gap-y-4 py-4">
-      <header className="flex items-center justify-between gap-x-2 px-4">
+    <SidebarInset className="h-dvh">
+      <header className="flex items-center justify-between gap-x-2 border-b p-4 shadow-xs">
         <div className="flex items-center gap-x-2">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 h-6" />
@@ -28,11 +29,11 @@ export function Section({
         <ThemeToggle />
       </header>
 
-      <Separator />
-
-      <main className={cn("flex grow flex-col gap-y-4 px-4", className)}>
-        {children}
-      </main>
+      <ScrollArea className="grow overflow-hidden px-4">
+        <main className={cn("my-4 flex flex-col gap-y-4", className)}>
+          {children}
+        </main>
+      </ScrollArea>
     </SidebarInset>
   );
 }

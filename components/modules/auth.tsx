@@ -659,7 +659,7 @@ export function PersonalInformation({
             type="submit"
             loading={isLoading}
             icon={<Save />}
-            text={label.button.update}
+            text={label.button.save}
           />
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
@@ -787,7 +787,7 @@ export function ChangePasswordForm() {
             type="submit"
             loading={isLoading}
             icon={<Save />}
-            text={label.button.update}
+            text={label.button.save}
           />
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
