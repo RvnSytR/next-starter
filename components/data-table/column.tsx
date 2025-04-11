@@ -35,12 +35,12 @@ export const userColumn = [
     enableHiding: false,
   }),
   userColumnHelper.accessor((row) => row.image, {
-    id: "image",
+    id: "Profile Picture",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
-        Email
+        Profile Picture
       </HeaderButton>
     ),
     cell: ({ row }) => (
@@ -118,7 +118,7 @@ export const userColumn = [
     },
   }),
   userColumnHelper.accessor((row) => row.updatedAt, {
-    id: "updatedAt",
+    id: "Updated At",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -138,7 +138,7 @@ export const userColumn = [
     },
   }),
   userColumnHelper.accessor((row) => row.createdAt, {
-    id: "createdAt",
+    id: "Created At",
     header: ({ column }) => (
       <HeaderButton
         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}

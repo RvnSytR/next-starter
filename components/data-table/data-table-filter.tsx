@@ -1500,7 +1500,6 @@ export function FilterValueDateController<TData, TValue>({
         <CommandGroup>
           <div>
             <Calendar
-              initialFocus
               mode="range"
               defaultMonth={date?.from}
               selected={date}

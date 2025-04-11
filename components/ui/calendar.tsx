@@ -152,7 +152,7 @@ function Calendar({
     <DayPicker
       timeZone={timeZone}
       showOutsideDays={showOutsideDays}
-      className={cn("w-fit p-4 select-none", className)}
+      className={cn("w-fit p-2 select-none", className)}
       classNames={{
         months: _monthsClassName,
         month_caption: _monthCaptionClassName,

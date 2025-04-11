@@ -39,9 +39,8 @@ export function SidebarApp({
       <Sidebar collapsible="icon">
         <SidebarHeader>
           <Head {...props} />
+          <SidebarSeparator />
         </SidebarHeader>
-
-        <SidebarSeparator />
 
         <SidebarContent>
           <Content role={role} />
@@ -61,20 +60,24 @@ export function SidebarApp({
 
 function Head({ name, email, image }: Omit<SidebarData, "role">) {
   return (
-    <SidebarMenuButton
-      size="lg"
-      className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
-      asChild
-    >
-      <Link href={`${route.protected}/profile`}>
-        <UserAvatar name={name} image={image} className="rounded-md" />
+    <SidebarMenu>
+      <SidebarMenuItem>
+        <SidebarMenuButton
+          size="lg"
+          className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
+          asChild
+        >
+          <Link href={`${route.protected}/profile`}>
+            <UserAvatar name={name} image={image} className="rounded-md" />
 
-        <div className="grid [&_span]:truncate">
-          <span className="text-sm font-semibold">{name}</span>
-          <span className="text-xs">{email}</span>
-        </div>
-      </Link>
-    </SidebarMenuButton>
+            <div className="grid [&_span]:truncate">
+              <span className="text-sm font-semibold">{name}</span>
+              <span className="text-xs">{email}</span>
+            </div>
+          </Link>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
+    </SidebarMenu>
   );
 }
 
@@ -119,8 +122,12 @@ function Content({ role }: Pick<SidebarData, "role">) {
                               className={subItem.className}
                               asChild
                             >
-                              <Link href={`${href}/#${subItem.elementId}`}>
+                              <Link
+                                href={`${href}/#${subItem.elementId}`}
+                                className="flex justify-between"
+                              >
                                 {subItem.subLabel}
+                                <LinkLoader />
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
