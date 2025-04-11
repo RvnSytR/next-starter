@@ -1,5 +1,7 @@
-import { CustomButton } from "@/components/custom/custom-button";
+import { LinkLoader } from "@/components/custom/custom-button";
+import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
+import Link from "next/link";
 
 export default function NotFound() {
   return (
@@ -14,17 +16,17 @@ export default function NotFound() {
         </h1>
       </div>
 
-      <div className="animate-fade-up">
-        <CustomButton
-          href="/"
-          size="lg"
-          variant="ghost"
-          className="hover:border-primary h-12 rounded-full border-4 font-semibold"
-          text="Go To Main Page"
-          icon={<Home />}
-          onClickLoading
-        />
-      </div>
+      <Button
+        size="lg"
+        variant="ghost"
+        className="hover:border-primary animate-fade-up h-12 rounded-full border-4 font-semibold"
+        asChild
+      >
+        <Link href="/">
+          <LinkLoader defaultIcon={<Home />} />
+          Go To Main Page
+        </Link>
+      </Button>
     </main>
   );
 }

@@ -2,6 +2,7 @@ import { Session } from "@/lib/auth";
 import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { LinkLoader } from "../custom/custom-button";
 import { SignOutButton, UserAvatar } from "../modules/auth";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
@@ -95,7 +96,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
               <SidebarMenuItem>
                 <SCMenuButton pathname={href} tooltip={label} asChild>
                   <Link href={href}>
-                    {bodyItem.icon && <bodyItem.icon />}
+                    <LinkLoader
+                      defaultIcon={bodyItem.icon && <bodyItem.icon />}
+                    />
                     {label}
                   </Link>
                 </SCMenuButton>

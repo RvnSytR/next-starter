@@ -7,30 +7,29 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-type CustomLoaderProps = Omit<LucideProps, "ref"> &
-  React.RefAttributes<SVGSVGElement> & {
-    customType?: "circle" | "refresh" | "default";
-    animate?: boolean;
-  };
-
 export const iconSize = { sm: 12, base: 16, lg: 20 };
 
-export function CustomLoader({
-  customType = "default",
+type Spinner = "loader" | "circle" | "refresh";
+export function Spinner({
+  spinnerType = "circle",
   animate = true,
   className,
   ...props
-}: CustomLoaderProps) {
+}: Omit<LucideProps, "ref"> & {
+  spinnerType?: Spinner;
+  animate?: boolean;
+}) {
   const LoaderComponent = (
     {
+      loader: Loader,
       circle: LoaderCircle,
       refresh: RefreshCw,
-      default: Loader,
-    } satisfies Record<Extract<CustomLoaderProps, "customType">, LucideIcon>
-  )[customType];
+    } satisfies Record<Spinner, LucideIcon>
+  )[spinnerType];
 
   return (
     <LoaderComponent
+      aria-label="loading"
       className={cn(animate && "animate-infinite animate-spin", className)}
       {...props}
     />

@@ -16,7 +16,6 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { CustomButton } from "../custom/custom-button";
 import {
   FormFloating,
   InputDate,
@@ -268,13 +267,11 @@ export function ExampleForm() {
         />
 
         <div className="flex gap-2">
-          {/* You can add a loading state to the submit button using CustomButton component, for example: */}
-          <CustomButton
-            type="submit"
-            icon={<Save />}
-            text={label.button.save}
-            // loading={isLoading}
-          />
+          <Button type="submit">
+            {/* {loading ? <Spinner /> : <Save />} */}
+            <Save />
+            {label.button.save}
+          </Button>
 
           <Button type="reset" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />

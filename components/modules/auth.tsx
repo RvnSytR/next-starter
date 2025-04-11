@@ -40,9 +40,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
-import { CustomButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
-import { CustomIcon } from "../icon";
+import { CustomIcon, Spinner } from "../icon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -59,6 +58,14 @@ import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import {
   Form,
   FormControl,
   FormField,
@@ -69,7 +76,7 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
-import { sidebarMenuButtonVariants } from "../ui/sidebar";
+import { SidebarMenuButton } from "../ui/sidebar";
 
 export function UserAvatar({
   image,
@@ -83,7 +90,7 @@ export function UserAvatar({
       {image ? (
         <>
           <AvatarImage className="rounded-md object-cover" src={image} />
-          <AvatarFallback>{fallbackName}</AvatarFallback>
+          <AvatarFallback className="rounded-md">{fallbackName}</AvatarFallback>
         </>
       ) : (
         <span className="bg-muted flex size-full items-center justify-center">
@@ -96,57 +103,58 @@ export function UserAvatar({
 
 export function SignOutButton() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   return (
-    <CustomButton
-      icon={<LogOut />}
-      variant="ghost_destructive"
-      text={label.button.signOut}
-      loading={isLoading}
-      className={cn(
-        sidebarMenuButtonVariants({ size: "sm" }),
-        "hover:text-destructive justify-start",
-      )}
+    <SidebarMenuButton
+      size="sm"
+      className="text-destructive hover:text-destructive"
+      disabled={loading}
       onClick={() =>
         authClient.signOut({
           fetchOptions: {
-            onRequest: () => setIsLoading(true),
+            onRequest: () => setLoading(true),
             onSuccess: () => {
               toast.success(label.toast.success.user.signOut);
               router.push(route.auth);
             },
             onError: ({ error }) => {
-              setIsLoading(false);
+              setLoading(false);
               toast.error(error.message);
             },
           },
         })
       }
-    />
+    >
+      {loading ? <Spinner /> : <LogOut />}
+      {label.button.signOut}
+    </SidebarMenuButton>
   );
 }
 
 export function SignOnGithubButton() {
+  const [loading, setLoading] = useState<boolean>(false);
   return (
-    <CustomButton
+    <Button
       variant="outline"
-      icon={<CustomIcon customType="github" />}
-      text={label.button.signOn("Github")}
+      disabled={loading}
       onClick={async () => {
+        setLoading(true);
         await authClient.signIn.social({
           provider: "github",
           callbackURL: route.protected,
           errorCallbackURL: route.auth,
         });
       }}
-      onClickLoading
-    />
+    >
+      {loading ? <Spinner /> : <CustomIcon customType="github" />}
+      {label.button.signOn("Github")}
+    </Button>
   );
 }
 
 export function SignInForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const schema = zodAuth.pick({
     email: true,
@@ -161,13 +169,13 @@ export function SignInForm() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     await authClient.signIn.email(formData, {
-      onRequest: () => setIsLoading(true),
+      onRequest: () => setLoading(true),
       onSuccess: ({ data }) => {
         toast.success(label.toast.success.user.signIn(data?.user.name));
         router.push(route.protected);
       },
       onError: ({ error }) => {
-        setIsLoading(false);
+        setLoading(false);
         toast.error(error.message);
       },
     });
@@ -232,18 +240,17 @@ export function SignInForm() {
           )}
         />
 
-        <CustomButton
-          type="submit"
-          loading={isLoading}
-          text={label.button.signIn}
-        />
+        <Button type="submit" disabled={loading}>
+          {loading && <Spinner />}
+          {label.button.signIn}
+        </Button>
       </form>
     </Form>
   );
 }
 
 export function SignUpForm() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const schema = zodAuth
     .pick({
@@ -271,7 +278,7 @@ export function SignUpForm() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     await authClient.signUp.email(formData, {
-      onRequest: () => setIsLoading(true),
+      onRequest: () => setLoading(true),
       onSuccess: () => {
         toast.success(label.toast.success.user.signUp);
       },
@@ -279,7 +286,7 @@ export function SignUpForm() {
         toast.error(error.message);
       },
     });
-    setIsLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -391,11 +398,10 @@ export function SignUpForm() {
           )}
         />
 
-        <CustomButton
-          type="submit"
-          loading={isLoading}
-          text={label.button.signUp}
-        />
+        <Button type="submit" disabled={loading}>
+          {loading && <Spinner />}
+          {label.button.signUp}
+        </Button>
       </form>
     </Form>
   );
@@ -491,26 +497,28 @@ export function ProfilePicture({
       <div className="flex flex-col gap-y-2">
         <Label>Profile Picture</Label>
         <div className="flex gap-x-2">
-          <CustomButton
+          <Button
             type="button"
             size="sm"
             variant="outline"
-            loading={isChange}
-            disabled={isRemoved}
+            disabled={isChange || isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
-            text="Upload Avatar"
-          />
+          >
+            {isChange && <Spinner />}
+            Upload Avatar
+          </Button>
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <CustomButton
+              <Button
                 type="button"
                 size="sm"
                 variant="outline_destructive"
-                loading={isRemoved}
-                disabled={!image || isChange}
-                text="Remove"
-              />
+                disabled={!image || isChange || isRemoved}
+              >
+                {isRemoved && <Spinner />}
+                {isRemoved ? "Removing..." : "Remove"}
+              </Button>
             </AlertDialogTrigger>
 
             <AlertDialogContent>
@@ -548,7 +556,7 @@ export function PersonalInformation({
   ...props
 }: Pick<Session["user"], "id" | "name" | "email" | "role">) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { name, email, role } = props;
   const schema = zodAuth
@@ -574,7 +582,7 @@ export function PersonalInformation({
     await authClient.updateUser(
       { name: newName },
       {
-        onRequest: () => setIsLoading(true),
+        onRequest: () => setLoading(true),
         onSuccess: () => {
           toast.success(label.toast.success.profile.update("profile"));
           router.refresh();
@@ -585,7 +593,7 @@ export function PersonalInformation({
       },
     );
 
-    setIsLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -655,12 +663,10 @@ export function PersonalInformation({
         <Separator />
 
         <CardFooter className="gap-x-2">
-          <CustomButton
-            type="submit"
-            loading={isLoading}
-            icon={<Save />}
-            text={label.button.save}
-          />
+          <Button type="submit" disabled={loading}>
+            {loading ? <Spinner /> : <Save />}
+            {label.button.save}
+          </Button>
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
@@ -674,7 +680,7 @@ export function PersonalInformation({
 
 export function ChangePasswordForm() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const schema = z
     .object({
@@ -700,7 +706,7 @@ export function ChangePasswordForm() {
         revokeOtherSessions: true,
       },
       {
-        onRequest: () => setIsLoading(true),
+        onRequest: () => setLoading(true),
         onSuccess: () => {
           toast.success(label.toast.success.profile.update("password"));
           form.reset();
@@ -712,7 +718,7 @@ export function ChangePasswordForm() {
       },
     );
 
-    setIsLoading(false);
+    setLoading(false);
   };
 
   return (
@@ -783,12 +789,10 @@ export function ChangePasswordForm() {
         <Separator />
 
         <CardFooter className="gap-x-2">
-          <CustomButton
-            type="submit"
-            loading={isLoading}
-            icon={<Save />}
-            text={label.button.save}
-          />
+          <Button type="submit" disabled={loading}>
+            {loading ? <Spinner /> : <Save />}
+            {label.button.save}
+          </Button>
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
@@ -992,5 +996,26 @@ export function DeleteMyAccountButton() {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+  );
+}
+
+export function AdminCreateUserDialog() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">
+          Create New User
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Are you absolutely sure?</DialogTitle>
+          <DialogDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 }

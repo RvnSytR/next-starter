@@ -1,155 +1,69 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { label } from "@/lib/content";
-import { cn, delay } from "@/lib/utils";
+import { delay } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
-import Link, { LinkProps } from "next/link";
+import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
-import { Fragment, ReactNode, useEffect, useState } from "react";
-import { CustomLoader } from "../icon";
+import { ReactNode, useState } from "react";
+import { Spinner } from "../icon";
 import { Button, ButtonProps } from "../ui/button";
 
-// #region // * Types
-type RequiredChildrenProps =
-  | { text: string; icon?: ReactNode }
-  | { text?: string; icon: ReactNode };
+type LoadingIcon = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
 
-type OptionalChildrenProps = Omit<
-  CustomButtonProps,
-  keyof RequiredChildrenProps
-> & { text?: string; icon?: ReactNode };
-
-export type CustomButtonProps = Omit<ButtonProps, "children"> &
-  Partial<LinkProps> &
-  RequiredChildrenProps & {
-    iconPosition?: "left" | "right";
-    loading?: boolean;
-    onClickLoading?: boolean;
-    hideTextOnMobile?: boolean;
-    customLoader?: ReactNode;
-  };
-// #endregion
-
-export function CustomButton({
-  text,
-  icon,
-  iconPosition = "left",
-  loading = false,
-  onClickLoading = false,
-  hideTextOnMobile = false,
-  customLoader = <CustomLoader customType="circle" />,
-  href,
-  type = "button",
-  size = "default",
-  variant,
-  asChild = false,
-  disabled = false,
-  className,
-  onClick,
-  ...props
-}: CustomButtonProps) {
-  const isMobile = useIsMobile();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  useEffect(() => setIsLoading(loading), [loading]);
-
-  const ChildrenNode = () => {
-    const iconNode = isLoading ? customLoader : icon;
-    if (!text) return iconNode;
-
-    return (
-      <Fragment>
-        {iconPosition === "left" && iconNode}
-        <span
-          className={cn(
-            hideTextOnMobile && "hidden md:flex",
-            "group-data-[collapsible=icon]:hidden",
-          )}
-        >
-          {text}
-        </span>
-        {iconPosition === "right" && iconNode}
-      </Fragment>
-    );
-  };
-
-  return (
-    <Button
-      type={type}
-      variant={variant}
-      asChild={asChild || !!href}
-      disabled={disabled || isLoading}
-      size={
-        !text || (hideTextOnMobile && isMobile)
-          ? size === "lg" || size === "iconlg"
-            ? "iconlg"
-            : size === "sm" || size === "iconsm"
-              ? "iconsm"
-              : "icon"
-          : size
-      }
-      className={cn("shrink-0 truncate", className)}
-      onClick={async (e) => {
-        if (onClickLoading) setIsLoading(true);
-        if (onClick) onClick(e);
-      }}
-      {...props}
-    >
-      {href ? (
-        <Link href={href} {...(props as Omit<LinkProps, "href">)}>
-          <ChildrenNode />
-        </Link>
-      ) : (
-        <ChildrenNode />
-      )}
-    </Button>
-  );
+export function LinkLoader({
+  defaultIcon,
+  loadingIcon = <Spinner />,
+}: LoadingIcon) {
+  const { pending } = useLinkStatus();
+  return pending ? loadingIcon : defaultIcon;
 }
 
 export function RefreshButton({
   text = label.button.refresh,
-  icon = <CustomLoader customType="refresh" animate={false} />,
-  customLoader = <CustomLoader customType="refresh" />,
+  defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
+  loadingIcon = <Spinner spinnerType="refresh" />,
   ...props
-}: Omit<OptionalChildrenProps, "loading" | "onClick">) {
+}: Omit<ButtonProps, "onClick" | "children"> &
+  LoadingIcon & { text?: string }) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+
   return (
-    <CustomButton
-      text={text}
-      icon={icon}
-      customLoader={customLoader}
-      loading={isLoading}
+    <Button
       onClick={async () => {
-        setIsLoading(true);
+        setLoading(true);
         await delay(0.5);
         router.refresh();
-        setIsLoading(false);
+        setLoading(false);
       }}
       {...props}
-    />
+    >
+      {loading ? loadingIcon : defaultIcon}
+      {text}
+    </Button>
   );
 }
 
 export function CopyButton({
   value,
-  icon = <Copy />,
-  customLoader = <Check />,
+  defaultIcon = <Copy />,
+  loadingIcon = <Check />,
   ...props
-}: Omit<OptionalChildrenProps, "loading" | "onClick"> & { value: string }) {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+}: Omit<ButtonProps, "onClick" | "children"> &
+  LoadingIcon & { value: string }) {
+  const [loading, setLoading] = useState<boolean>(false);
   return (
-    <CustomButton
-      icon={icon}
-      customLoader={customLoader}
-      loading={isLoading}
+    <Button
       onClick={async () => {
-        setIsLoading(true);
+        setLoading(true);
         navigator.clipboard.writeText(value);
         await delay(1);
-        setIsLoading(false);
+        setLoading(false);
       }}
       {...props}
-    />
+    >
+      {loading ? loadingIcon : defaultIcon}
+    </Button>
   );
 }

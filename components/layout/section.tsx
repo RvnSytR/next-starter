@@ -2,13 +2,15 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { route } from "@/lib/menu";
 import { cn } from "@/lib/utils";
 import { LayoutDashboard } from "lucide-react";
+import Link from "next/link";
 import { ComponentProps, ReactNode } from "react";
-import { CustomButton } from "../custom/custom-button";
+import { LinkLoader } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "../other/dynamic-breadcrumb";
 import { ThemeToggle } from "../other/theme";
+import { Button } from "../ui/button";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 
@@ -59,14 +61,12 @@ export function SectionNotFound({
         <span className="text-9xl font-bold">404</span>
         <p>Page Not Found</p>
 
-        <CustomButton
-          href={route.protected}
-          variant="outline"
-          className="mt-4 rounded-full"
-          icon={<LayoutDashboard />}
-          text="Go To Main Page"
-          onClickLoading
-        />
+        <Button variant="outline" className="mt-4 rounded-full" asChild>
+          <Link href={route.protected}>
+            <LinkLoader defaultIcon={<LayoutDashboard />} />
+            Go To Main Page
+          </Link>
+        </Button>
       </SectionLabel>
     </Section>
   );
