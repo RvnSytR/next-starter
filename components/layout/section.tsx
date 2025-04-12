@@ -1,4 +1,4 @@
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { Home } from "lucide-react";
 import Link from "next/link";
@@ -18,8 +18,8 @@ export function Section({
   ...props
 }: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
   return (
-    <SidebarInset className="flex flex-col">
-      <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-sm">
+    <>
+      <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 h-6" />
@@ -29,10 +29,10 @@ export function Section({
         <ThemeToggle />
       </header>
 
-      <main className={cn("my-4 flex grow flex-col gap-y-4 px-4", className)}>
+      <main className={cn("z-20 my-4 flex flex-col gap-y-4 px-4", className)}>
         {children}
       </main>
-    </SidebarInset>
+    </>
   );
 }
 

@@ -36,7 +36,7 @@ export default async function Page() {
     <Section currentPage={currentPage} className="items-center">
       <Card
         id="personal-information"
-        className="w-full scroll-m-4 md:max-w-2xl"
+        className="w-full scroll-m-4 lg:max-w-2xl"
       >
         <CardHeader>
           <CardTitle>{page.profile.profile.title}</CardTitle>
@@ -48,7 +48,7 @@ export default async function Page() {
         <PersonalInformation role={role} {...rest} />
       </Card>
 
-      <Card id="change-password" className="w-full scroll-m-4 md:max-w-2xl">
+      <Card id="change-password" className="w-full scroll-m-4 lg:max-w-2xl">
         <CardHeader>
           <CardTitle>{page.profile.password.title}</CardTitle>
           <CardDescription>{page.profile.password.subtitle}</CardDescription>
@@ -59,7 +59,7 @@ export default async function Page() {
         <ChangePasswordForm />
       </Card>
 
-      <Card id="active-session" className="w-full scroll-m-4 md:max-w-2xl">
+      <Card id="active-session" className="w-full scroll-m-4 lg:max-w-2xl">
         <CardHeader>
           <CardTitle>{page.profile.activeSession.title}</CardTitle>
           <CardDescription>
@@ -86,7 +86,7 @@ export default async function Page() {
         </CardFooter>
       </Card>
 
-      <Card id="delete-account" className="w-full scroll-m-4 md:max-w-2xl">
+      <Card id="delete-account" className="w-full scroll-m-4 lg:max-w-2xl">
         <CardHeader>
           <CardTitle className="text-destructive">
             {page.profile.deleteAccount.title}

@@ -36,13 +36,7 @@ export const userColumn = [
   }),
   userColumnHelper.accessor((row) => row.image, {
     id: "Profile Picture",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Profile Picture
-      </HeaderButton>
-    ),
+    header: "Profile Picture",
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-18" />
