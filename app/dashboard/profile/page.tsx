@@ -1,4 +1,4 @@
-import { Section, SectionNotFound } from "@/components/layout/section";
+import { Section, SectionError } from "@/components/layout/section";
 import {
   ActiveSessionButton,
   ChangePasswordForm,
@@ -26,8 +26,8 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const currentPage = getCurrentPage("/profile", false, true);
-  const session = await getSession();
-  if (!session?.user.role) return <SectionNotFound />;
+  const session = (await getSession())!;
+  if (!session?.user.role) return <SectionError />;
 
   const { role, ...rest } = session.user;
   const sessionList = await getSessionList();

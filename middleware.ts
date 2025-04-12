@@ -20,7 +20,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(route.protected, req.url));
   }
 
-  const menu = getMenu(pathname, true);
+  const menu = getMenu(pathname);
   if (
     (!menu && !pathname.startsWith(route.auth)) ||
     (menu &&

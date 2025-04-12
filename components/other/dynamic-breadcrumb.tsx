@@ -24,7 +24,7 @@ export function DynamicBreadcrumb({
     <Breadcrumb>
       <BreadcrumbList className="flex-nowrap">
         {breadcrumbArr?.map((item, index) => {
-          const menu = typeof item === "string" ? getMenu(item, true) : item;
+          const menu = typeof item === "string" ? getMenu(item) : item;
           const content = menu ? (
             <BreadcrumbLink asChild>
               <Link href={menu.href}>{menu.label}</Link>

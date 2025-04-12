@@ -77,20 +77,24 @@ const footerSidebarMenu: MenuBody[] = [
 ];
 
 // #region // * Get Menu
-function getMenu(
-  path: string,
-  withoutIcon: boolean = false,
-): MenuBody | Omit<MenuBody, "icon"> | null {
+function getMenuBody(route: string): MenuBody | null {
   const [result] = Object.values(sidebarMenu)
     .flatMap((item) => item.body)
-    .map((item) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { icon, ...rest } = item;
-      if (withoutIcon) return rest;
-      else return item;
-    })
-    .filter((item) => item.href === path);
+    .map((item) => item)
+    .filter((item) => item.href === route);
   return result ?? null;
+}
+
+function getMenu(route: string): Omit<MenuBody, "icon"> | null {
+  const menuBody = getMenuBody(route);
+  if (!menuBody) return null;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { icon, ...restMenu } = menuBody;
+  return restMenu ?? null;
+}
+
+function getMenuIcon(route: string): LucideIcon | null {
+  return getMenuBody(route)?.icon ?? null;
 }
 
 function getMenuByRole(role: string): MenuProps[] {
@@ -108,16 +112,23 @@ function getMenuByRole(role: string): MenuProps[] {
 }
 
 function getCurrentPage(
-  currentPath: string,
+  currentRoute: string,
   metadata: boolean = false,
   isProtected: boolean = false,
 ) {
   const currentPage = getMenu(
-    isProtected ? `${route.protected}${currentPath}` : currentPath,
+    isProtected ? `${route.protected}${currentRoute}` : currentRoute,
   )?.label;
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.metadata(currentPage) : currentPage;
 }
 // #endregion
 
-export { footerSidebarMenu, getCurrentPage, getMenu, getMenuByRole, route };
+export {
+  footerSidebarMenu,
+  getCurrentPage,
+  getMenu,
+  getMenuByRole,
+  getMenuIcon,
+  route,
+};
