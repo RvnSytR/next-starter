@@ -157,7 +157,7 @@ function Footer() {
         <SidebarMenuItem key={index}>
           <SidebarMenuButton size="sm" tooltip={item.label} asChild>
             <Link href={item.href}>
-              {item.icon && <item.icon />}
+              <LinkLoader defaultIcon={item.icon && <item.icon />} />
               {item.label}
             </Link>
           </SidebarMenuButton>
