@@ -1,7 +1,7 @@
 "use client";
 
 import { label } from "@/lib/content";
-import { delay } from "@/lib/utils";
+import { cn, delay } from "@/lib/utils";
 import { Check, Copy } from "lucide-react";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
@@ -27,43 +27,49 @@ export function RefreshButton({
 }: Omit<ButtonProps, "onClick" | "children"> &
   LoadingIcon & { text?: string }) {
   const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
 
   return (
     <Button
       onClick={async () => {
-        setLoading(true);
+        setRefreshing(true);
         await delay(0.5);
         router.refresh();
-        setLoading(false);
+        setRefreshing(false);
       }}
       {...props}
     >
-      {loading ? loadingIcon : defaultIcon}
+      {refreshing ? loadingIcon : defaultIcon}
       {text}
     </Button>
   );
 }
 
 export function CopyButton({
+  size = "icon",
   value,
-  defaultIcon = <Copy />,
-  loadingIcon = <Check />,
   ...props
-}: Omit<ButtonProps, "onClick" | "children"> &
-  LoadingIcon & { value: string }) {
-  const [loading, setLoading] = useState<boolean>(false);
+}: Omit<ButtonProps, "onClick" | "children"> & { value: string }) {
+  const [copied, setCopied] = useState<boolean>(false);
   return (
     <Button
+      size={size}
       onClick={async () => {
-        setLoading(true);
+        setCopied(true);
         navigator.clipboard.writeText(value);
         await delay(1);
-        setLoading(false);
+        setCopied(false);
       }}
       {...props}
     >
-      {loading ? loadingIcon : defaultIcon}
+      <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
+      <Copy className={cn("transition", copied ? "scale-0" : "scale-100")} />
+      <Check
+        className={cn(
+          "absolute transition",
+          copied ? "scale-100" : "- scale-0",
+        )}
+      />
     </Button>
   );
 }
