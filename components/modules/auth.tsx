@@ -74,14 +74,6 @@ import {
   DialogTrigger,
 } from "../ui/dialog";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import {
   Form,
   FormControl,
   FormField,
@@ -91,6 +83,7 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 import { SidebarMenuButton } from "../ui/sidebar";
 
@@ -922,7 +915,7 @@ export function RevokeAllOtherSessionButton() {
   const router = useRouter();
   const { trigger, title, desc } = dialog.profile.revokeAllOtherSession;
 
-  const revokeAllOtherSession = async () => {
+  const handler = async () => {
     await authClient.revokeOtherSessions(
       {},
       {
@@ -952,7 +945,7 @@ export function RevokeAllOtherSessionButton() {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={() => revokeAllOtherSession()}>
+          <AlertDialogAction onClick={() => handler()}>
             {label.button.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
@@ -1034,44 +1027,43 @@ export function AdminAccountDataTable({
         }
 
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="iconsm" variant="ghost">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon" variant="ghost">
                 <EllipsisVertical />
               </Button>
-            </DropdownMenuTrigger>
+            </PopoverTrigger>
 
-            <DropdownMenuContent className="flex flex-col gap-y-0.5 [&_button]:justify-start">
-              <DropdownMenuLabel className="text-center">
-                {row.original.name}
-              </DropdownMenuLabel>
+            <PopoverContent
+              align="end"
+              className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
+            >
+              <div className="px-2 py-1 text-center">
+                <small className="font-medium">{row.original.name}</small>
+              </div>
 
-              <DropdownMenuSeparator />
+              <Separator />
 
-              <DropdownMenuItem asChild>
-                <AdminChangeUserRoleDialog {...row.original} />
-              </DropdownMenuItem>
+              <AdminChangeUserRoleDialog {...row.original} />
 
-              <DropdownMenuItem disabled>
+              <Button size="sm" variant="ghost" disabled>
                 <Layers2 />
                 Impersonate Session
-              </DropdownMenuItem>
+              </Button>
 
-              <DropdownMenuItem variant="destructive" disabled>
-                <MonitorOff className="text-warning" />
+              <Button size="sm" variant="ghost_destructive" disabled>
+                <MonitorOff />
                 Revoke Session
-              </DropdownMenuItem>
+              </Button>
 
-              <DropdownMenuItem variant="destructive" disabled>
+              <Button size="sm" variant="ghost_destructive" disabled>
                 <Ban />
                 Ban
-              </DropdownMenuItem>
+              </Button>
 
-              <DropdownMenuItem asChild>
-                <AdminRemoveUserDialog {...row.original} />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              <AdminRemoveUserDialog {...row.original} />
+            </PopoverContent>
+          </Popover>
         );
       },
     }),
@@ -1270,6 +1262,102 @@ export function AdminCreateUserDialog() {
   );
 }
 
+export function AdminChangeUserRoleDialog({
+  id,
+  name,
+  role,
+}: Pick<Session["user"], "id" | "name" | "role">) {
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const schema = zodAuth.pick({ role: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { role: role },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    const newRole = formData.role ?? userRoles[0];
+    if (newRole === role) return toast.info(label.toast.info.changeRole(name));
+
+    await authClient.admin.setRole(
+      { userId: id, role: newRole },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => {
+          setLoading(false);
+          toast.success(label.toast.success.user.changeRole(name, newRole));
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          setLoading(false);
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="ghost" disabled={loading}>
+          {loading ? <Spinner /> : <CircleFadingArrowUp />}
+          {dialog.user.changeRole.trigger}
+        </Button>
+      </DialogTrigger>
+
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{dialog.user.changeRole.title(name)}</DialogTitle>
+          <DialogDescription>
+            {dialog.user.changeRole.desc(name)}
+          </DialogDescription>
+        </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(formHandler)}>
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="col-span-3">
+                  <FormLabel>Change To</FormLabel>
+                  <InputRadioGroup
+                    defaultValue={field.value ?? userRoles[0]}
+                    onValueChange={field.onChange}
+                    className="flex gap-x-2"
+                    radioItems={[...userRoles, ...adminRoles].map((item) => {
+                      const Icon = roleIcon[item];
+                      return {
+                        icon: <Icon />,
+                        value: item,
+                        className: "capitalize",
+                      };
+                    })}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <DialogFooter className="gap-y-2">
+              <DialogClose className={buttonVariants({ variant: "outline" })}>
+                {label.button.cancel}
+              </DialogClose>
+
+              <Button type="submit" disabled={loading}>
+                {loading ? <Spinner /> : <CircleFadingArrowUp />}
+                {dialog.user.changeRole.trigger}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export function AdminRemoveUserDialog({
   id,
   name,
@@ -1327,106 +1415,6 @@ export function AdminRemoveUserDialog({
             {label.button.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
-
-export function AdminChangeUserRoleDialog({
-  id,
-  name,
-  role,
-}: Pick<Session["user"], "id" | "name" | "role">) {
-  const router = useRouter();
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const schema = zodAuth.pick({ role: true });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: { role: role },
-  });
-
-  const formHandler = async (formData: z.infer<typeof schema>) => {
-    const newRole = formData.role ?? userRoles[0];
-    if (newRole === role) return toast.info(label.toast.info.changeRole(name));
-
-    await authClient.admin.setRole(
-      { userId: id, role: newRole },
-      {
-        onRequest: () => setLoading(true),
-        onSuccess: () => {
-          setLoading(false);
-          toast.success(label.toast.success.user.changeRole(name, newRole));
-          router.refresh();
-        },
-        onError: ({ error }) => {
-          setLoading(false);
-          toast.error(error.message);
-        },
-      },
-    );
-  };
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost" disabled={loading}>
-          {loading ? <Spinner /> : <CircleFadingArrowUp />}
-          {dialog.user.changeRole.trigger}
-        </Button>
-      </AlertDialogTrigger>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>
-            {dialog.user.changeRole.title(name)}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {dialog.user.changeRole.desc(name)}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(formHandler)}>
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem className="col-span-3">
-                  <FormLabel>Change To</FormLabel>
-                  <InputRadioGroup
-                    defaultValue={field.value ?? userRoles[0]}
-                    onValueChange={field.onChange}
-                    className="flex gap-x-2"
-                    radioItems={[...userRoles, ...adminRoles].map((item) => {
-                      const Icon = roleIcon[item];
-                      return {
-                        icon: <Icon />,
-                        value: item,
-                        className: "capitalize",
-                      };
-                    })}
-                  />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <AlertDialogFooter className="gap-y-2">
-              <AlertDialogCancel
-                className={buttonVariants({ variant: "outline" })}
-              >
-                {label.button.cancel}
-              </AlertDialogCancel>
-
-              <AlertDialogAction type="submit" disabled={loading}>
-                {loading ? <Spinner /> : <CircleFadingArrowUp />}
-                {dialog.user.changeRole.trigger}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </form>
-        </Form>
       </AlertDialogContent>
     </AlertDialog>
   );

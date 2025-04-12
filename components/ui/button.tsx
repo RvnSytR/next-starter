@@ -22,21 +22,21 @@ const buttonVariants = cva(
         outline_success:
           "text-success border border-success/30 bg-background shadow-xs hover:border-success dark:bg-success/5 dark:hover:bg-success/20 focus-visible:border-success focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
         ghost_success:
-          "text-success hover:bg-success hover:text-white focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
+          "text-warning hover:bg-warning/10 dark:hover:bg-warning/20 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
 
         warning:
           "bg-warning text-white shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
         outline_warning:
           "text-warning border border-warning/30 bg-background shadow-xs hover:border-warning dark:bg-warning/5 dark:hover:bg-warning/20 focus-visible:border-warning focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
         ghost_warning:
-          "text-warning hover:bg-warning hover:text-white focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
+          "text-warning hover:bg-warning/10 dark:hover:bg-warning/20 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
 
         destructive:
           "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         outline_destructive:
           "text-destructive border border-destructive/30 bg-background shadow-xs hover:border-destructive dark:bg-destructive/5 dark:hover:bg-destructive/20 focus-visible:border-destructive focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         ghost_destructive:
-          "text-destructive hover:bg-destructive hover:text-white focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

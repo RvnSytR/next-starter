@@ -4,8 +4,8 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { deleteFile, getFileKeyFromPublicUrl } from "./s3";
 
-export async function getSession(head?: Headers) {
-  return await auth.api.getSession({ headers: head ?? (await headers()) });
+export async function getSession() {
+  return await auth.api.getSession({ headers: await headers() });
 }
 
 export async function getSessionList() {
