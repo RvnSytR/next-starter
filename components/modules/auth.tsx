@@ -14,11 +14,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
+  Ban,
   CircleFadingArrowUp,
   Dot,
   EllipsisVertical,
   Gamepad2,
   KeyRound,
+  Layers2,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
@@ -1039,7 +1041,7 @@ export function AdminAccountDataTable({
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent className="flex flex-col gap-y-0.5">
+            <DropdownMenuContent className="flex flex-col gap-y-0.5 [&_button]:justify-start">
               <DropdownMenuLabel className="text-center">
                 {row.original.name}
               </DropdownMenuLabel>
@@ -1048,6 +1050,21 @@ export function AdminAccountDataTable({
 
               <DropdownMenuItem asChild>
                 <AdminChangeUserRoleDialog {...row.original} />
+              </DropdownMenuItem>
+
+              <DropdownMenuItem disabled>
+                <Layers2 />
+                Impersonate Session
+              </DropdownMenuItem>
+
+              <DropdownMenuItem variant="destructive" disabled>
+                <MonitorOff className="text-warning" />
+                Revoke Session
+              </DropdownMenuItem>
+
+              <DropdownMenuItem variant="destructive" disabled>
+                <Ban />
+                Ban
               </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
@@ -1264,12 +1281,7 @@ export function AdminRemoveUserDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost_destructive"
-          className="justify-start"
-          disabled={loading}
-        >
+        <Button size="sm" variant="ghost_destructive" disabled={loading}>
           {loading ? <Spinner /> : <Trash2 />}
           {dialog.user.remove.trigger}
         </Button>
@@ -1359,12 +1371,7 @@ export function AdminChangeUserRoleDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          size="sm"
-          variant="ghost"
-          className="justify-start"
-          disabled={loading}
-        >
+        <Button size="sm" variant="ghost" disabled={loading}>
           {loading ? <Spinner /> : <CircleFadingArrowUp />}
           {dialog.user.changeRole.trigger}
         </Button>
