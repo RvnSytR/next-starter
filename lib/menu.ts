@@ -6,10 +6,10 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
-import { AdminRoles, UserRoles } from "./auth";
 import { label, page } from "./content";
+import { adminRoles, Role } from "./role";
 
-type MenuRole = UserRoles | AdminRoles | "all";
+type MenuRole = Role | "all";
 type MenuProps = { section: string; body: MenuBody[] };
 type SubMenuProps = {
   subLabel: string;
@@ -40,7 +40,7 @@ const sidebarMenu: MenuProps[] = [
       {
         href: `${route.protected}/account`,
         label: "User Management",
-        role: ["admin"],
+        role: [...adminRoles],
         icon: UsersRound,
       },
     ],

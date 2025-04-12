@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { media } from "@/lib/media";
 import { route } from "@/lib/menu";
+import { adminRoles, roleIcon, userRoles } from "@/lib/role";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
 import {
@@ -33,6 +34,7 @@ import {
   TriangleAlert,
   TvMinimal,
   UserRound,
+  UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -40,7 +42,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
-import { FormFloating } from "../custom/custom-field";
+import { FormFloating, InputRadioGroup } from "../custom/custom-field";
 import { CustomIcon, Spinner } from "../icon";
 import {
   AlertDialog,
@@ -59,8 +61,10 @@ import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -1000,21 +1004,191 @@ export function DeleteMyAccountButton() {
 }
 
 export function AdminCreateUserDialog() {
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const schema = zodAuth
+    .pick({
+      name: true,
+      email: true,
+      password: true,
+      confirmPassword: true,
+      role: true,
+    })
+    .refine((sc) => sc.password === sc.confirmPassword, {
+      message: "Passwords do not match",
+      path: ["confirmPassword"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+      role: userRoles[0],
+    },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    const { role, ...restData } = formData;
+
+    await authClient.admin.createUser(
+      { role: role ?? userRoles[0], ...restData },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => {
+          toast.success(label.toast.success.user.create(formData.name));
+          form.clearErrors();
+          form.reset();
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+      },
+    );
+
+    setLoading(false);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
-          Create New User
+          <UserRoundPlus />
+          {dialog.user.create.trigger}
         </Button>
       </DialogTrigger>
+
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>{dialog.user.create.title}</DialogTitle>
+          <DialogDescription>{dialog.user.create.desc}</DialogDescription>
         </DialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(formHandler)}>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username *</FormLabel>
+                  <FormFloating icon={<UserRound />}>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter your Username"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormFloating>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email Address *</FormLabel>
+                  <FormFloating icon={<Mail />}>
+                    <FormControl>
+                      <Input
+                        type="text"
+                        placeholder="Enter your Email Address"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormFloating>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password *</FormLabel>
+                  <FormFloating icon={<KeyRound />}>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Enter your Password"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormFloating>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password *</FormLabel>
+                  <FormFloating icon={<KeyRound />}>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Confirm your Password"
+                        {...field}
+                      />
+                    </FormControl>
+                  </FormFloating>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="col-span-3">
+                  <FormLabel>Radio Group *</FormLabel>
+                  <InputRadioGroup
+                    defaultValue={field.value ?? userRoles[0]}
+                    onValueChange={field.onChange}
+                    className="grid grid-cols-2 md:flex md:grid-cols-4"
+                    radioItems={[...userRoles, ...adminRoles].map((item) => {
+                      const Icon = roleIcon[item];
+                      return {
+                        icon: <Icon />,
+                        value: item,
+                        className: "capitalize",
+                      };
+                    })}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Separator />
+
+            <DialogFooter className="gap-y-2">
+              <DialogClose asChild>
+                <Button type="button" variant="outline">
+                  {label.button.back}
+                </Button>
+              </DialogClose>
+
+              <Button type="submit" disabled={loading}>
+                {loading ? <Spinner /> : <UserRoundPlus />}
+                {dialog.user.create.trigger}
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

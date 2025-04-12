@@ -1,6 +1,7 @@
 "use client";
 
 import { filterFn } from "@/lib/filters";
+import { adminRoles, Role, roleIcon } from "@/lib/role";
 import { capitalize, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
@@ -11,7 +12,6 @@ import {
   CircleDot,
   Mail,
   UserRound,
-  UserRoundCheck,
 } from "lucide-react";
 import { UserAvatar } from "../modules/auth";
 import { Badge } from "../ui/badge";
@@ -94,27 +94,28 @@ export const userColumn = [
     ),
     cell: ({ row }) => {
       const role = row.original.role!;
+      const isAdmin = adminRoles.find((r) => r === role);
+      const Icon = roleIcon[role as Role];
       return (
         <Badge
-          variant={role.includes("admin") ? "outline_success" : "outline"}
+          variant={isAdmin ? "outline_success" : "outline"}
           className="capitalize"
         >
+          <Icon />
           {role}
         </Badge>
       );
     },
     filterFn: filterFn("option"),
     meta: {
-      displayName: "Status",
+      displayName: "Role",
       type: "option",
       icon: CircleDot,
-      transformOptionFn(value) {
-        return {
-          value: value,
-          label: capitalize(value),
-          icon: value === "admin" ? UserRoundCheck : UserRound,
-        };
-      },
+      transformOptionFn: (value) => ({
+        value: value,
+        label: capitalize(value),
+        icon: roleIcon[value as Role],
+      }),
     },
   }),
   userColumnHelper.accessor((row) => row.updatedAt, {

@@ -3,16 +3,9 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin } from "better-auth/plugins";
+import { adminRoles } from "./role";
 
-// Any role that isn't in the adminRoles list, even if they have the permission, will not be considered an admin.
-// https://www.better-auth.com/docs/plugins/admin#admin-roles
-const adminRoles = ["admin"] as const;
-type AdminRoles = (typeof adminRoles)[number];
-
-const userRoles = ["user"] as const;
-type UserRoles = (typeof userRoles)[number];
-
-const auth = betterAuth({
+export const auth = betterAuth({
   database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: { enabled: true, autoSignIn: false },
   socialProviders: {
@@ -25,10 +18,7 @@ const auth = betterAuth({
   user: { deleteUser: { enabled: true } },
 });
 
-type Session = {
+export type Session = {
   session: typeof auth.$Infer.Session.session;
   user: typeof auth.$Infer.Session.user;
 };
-
-export { adminRoles, auth, userRoles };
-export type { AdminRoles, Session, UserRoles };

@@ -87,6 +87,7 @@ const dialog = {
 
 const label = {
   error: {
+    default: "Uh-oh, Something went wrong. Please try again later.",
     protectedPath: "Invalid protected route!",
     breadcrumb: "Invalid menu route!",
     parsedNumber: "Invalid parsed number!",
@@ -97,11 +98,12 @@ const label = {
 
     success: {
       user: {
-        signIn: (username: string) =>
-          `Signed in successfully, Welcome ${username}!`,
+        signIn: (name: string) => `Signed in successfully, Welcome ${name}!`,
         signUp:
           "Your account has been registered successfully! Please sign in to continue.",
         signOut: "Signed out successfully.",
+
+        create: (name: string) => `${name} created successfully!`,
       },
 
       profile: {

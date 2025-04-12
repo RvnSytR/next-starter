@@ -85,9 +85,9 @@ export function ExampleForm() {
     },
   });
 
-  const formHandler = async (data: z.infer<typeof schema>) => {
-    console.log(data.file);
-    toast(<p>{JSON.stringify(data, null, 2)}</p>);
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    console.log(formData.file);
+    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
   };
 
   return (

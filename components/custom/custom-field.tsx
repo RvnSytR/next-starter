@@ -49,6 +49,7 @@ export function InputRadioGroup({
     value: string;
     label?: string;
     icon?: ReactNode;
+    className?: string;
     checkedClassName?: string;
   }[];
 }) {
@@ -60,6 +61,7 @@ export function InputRadioGroup({
             <RadioGroupItem
               value={item.value}
               currentValue={defaultValue}
+              className={item.className}
               checkedClassName={item.checkedClassName}
             >
               {item.icon}
