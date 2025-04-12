@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
+  CircleFadingArrowUp,
   Dot,
   EllipsisVertical,
   Gamepad2,
@@ -594,16 +595,16 @@ export function PersonalInformation({
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
+          setLoading(false);
           toast.success(label.toast.success.profile.update("profile"));
           router.refresh();
         },
         onError: ({ error }) => {
+          setLoading(false);
           toast.error(error.message);
         },
       },
     );
-
-    setLoading(false);
   };
 
   return (
@@ -718,17 +719,17 @@ export function ChangePasswordForm() {
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update("password"));
+          setLoading(false);
           form.reset();
+          toast.success(label.toast.success.profile.update("password"));
           router.refresh();
         },
         onError: ({ error }) => {
+          setLoading(false);
           toast.error(error.message);
         },
       },
     );
-
-    setLoading(false);
   };
 
   return (
@@ -1038,12 +1039,16 @@ export function AdminAccountDataTable({
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent>
+            <DropdownMenuContent className="flex flex-col gap-y-0.5">
               <DropdownMenuLabel className="text-center">
                 {row.original.name}
               </DropdownMenuLabel>
 
               <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <AdminChangeUserRoleDialog {...row.original} />
+              </DropdownMenuItem>
 
               <DropdownMenuItem asChild>
                 <AdminRemoveUserDialog {...row.original} />
@@ -1088,23 +1093,22 @@ export function AdminCreateUserDialog() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     const { role, ...restData } = formData;
-
     await authClient.admin.createUser(
       { role: role ?? userRoles[0], ...restData },
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.user.create(formData.name));
+          setLoading(false);
           form.reset();
+          toast.success(label.toast.success.user.create(formData.name));
           router.refresh();
         },
         onError: ({ error }) => {
+          setLoading(false);
           toast.error(error.message);
         },
       },
     );
-
-    setLoading(false);
   };
 
   return (
@@ -1209,11 +1213,11 @@ export function AdminCreateUserDialog() {
               name="role"
               render={({ field }) => (
                 <FormItem className="col-span-3">
-                  <FormLabel>Radio Group *</FormLabel>
+                  <FormLabel>Role *</FormLabel>
                   <InputRadioGroup
                     defaultValue={field.value ?? userRoles[0]}
                     onValueChange={field.onChange}
-                    className="grid grid-cols-2 md:flex md:grid-cols-4"
+                    className="flex gap-x-2"
                     radioItems={[...userRoles, ...adminRoles].map((item) => {
                       const Icon = roleIcon[item];
                       return {
@@ -1227,6 +1231,7 @@ export function AdminCreateUserDialog() {
                 </FormItem>
               )}
             />
+
             <Separator />
 
             <DialogFooter className="gap-y-2">
@@ -1262,7 +1267,7 @@ export function AdminRemoveUserDialog({
         <Button
           size="sm"
           variant="ghost_destructive"
-          className="w-full justify-start"
+          className="justify-start"
           disabled={loading}
         >
           {loading ? <Spinner /> : <Trash2 />}
@@ -1277,7 +1282,7 @@ export function AdminRemoveUserDialog({
             {dialog.user.remove.title(name)}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {dialog.user.remove.desc}
+            {dialog.user.remove.desc(name)}
           </AlertDialogDescription>
         </AlertDialogHeader>
 
@@ -1285,6 +1290,7 @@ export function AdminRemoveUserDialog({
           <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
             {label.button.cancel}
           </AlertDialogCancel>
+
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={async () => {
@@ -1309,6 +1315,111 @@ export function AdminRemoveUserDialog({
             {label.button.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export function AdminChangeUserRoleDialog({
+  id,
+  name,
+  role,
+}: Pick<Session["user"], "id" | "name" | "role">) {
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const schema = zodAuth.pick({ role: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { role: role },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    const newRole = formData.role ?? userRoles[0];
+    if (newRole === role) return toast.info(label.toast.info.changeRole(name));
+
+    await authClient.admin.setRole(
+      { userId: id, role: newRole },
+      {
+        onRequest: () => setLoading(true),
+        onSuccess: () => {
+          setLoading(false);
+          toast.success(label.toast.success.user.changeRole(name, newRole));
+          router.refresh();
+        },
+        onError: ({ error }) => {
+          setLoading(false);
+          toast.error(error.message);
+        },
+      },
+    );
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="justify-start"
+          disabled={loading}
+        >
+          {loading ? <Spinner /> : <CircleFadingArrowUp />}
+          {dialog.user.changeRole.trigger}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>
+            {dialog.user.changeRole.title(name)}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {dialog.user.changeRole.desc(name)}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(formHandler)}>
+            <FormField
+              control={form.control}
+              name="role"
+              render={({ field }) => (
+                <FormItem className="col-span-3">
+                  <FormLabel>Change To</FormLabel>
+                  <InputRadioGroup
+                    defaultValue={field.value ?? userRoles[0]}
+                    onValueChange={field.onChange}
+                    className="flex gap-x-2"
+                    radioItems={[...userRoles, ...adminRoles].map((item) => {
+                      const Icon = roleIcon[item];
+                      return {
+                        icon: <Icon />,
+                        value: item,
+                        className: "capitalize",
+                      };
+                    })}
+                  />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <AlertDialogFooter className="gap-y-2">
+              <AlertDialogCancel
+                className={buttonVariants({ variant: "outline" })}
+              >
+                {label.button.cancel}
+              </AlertDialogCancel>
+
+              <AlertDialogAction type="submit" disabled={loading}>
+                {loading ? <Spinner /> : <CircleFadingArrowUp />}
+                {dialog.user.changeRole.trigger}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </form>
+        </Form>
       </AlertDialogContent>
     </AlertDialog>
   );

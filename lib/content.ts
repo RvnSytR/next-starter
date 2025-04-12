@@ -49,13 +49,21 @@ const dialog = {
     create: {
       trigger: "Create User",
       title: "Create New User",
-      desc: "Create new user by entering their details. Make sure all required fields are filled correctly.",
+      desc: "Create a new user by entering their details. Ensure all required fields are completed accurately.",
     },
 
     remove: {
       trigger: "Remove",
-      title: (username: string) => `Remove ${username}'s Account?`,
-      desc: "This will permanently delete the account and all associated data. This action cannot be undone. Please proceed carefully.",
+      title: (name: string) => `Remove ${name}'s Account?`,
+      desc: (name: string) =>
+        `This action will permanently delete the ${name}'s account and all associated data. Proceed with caution as this cannot be undone.`,
+    },
+
+    changeRole: {
+      trigger: "Change Role",
+      title: (name: string) => `Change ${name}'s Role?`,
+      desc: (name: string) =>
+        `Modify the ${name}'s role to update their permissions and access levels.`,
     },
   },
 
@@ -63,24 +71,24 @@ const dialog = {
     removeAvatar: {
       trigger: "Remove Avatar",
       title: "Remove Profile Avatar",
-      desc: "Are you sure you want to remove your profile avatar?",
+      desc: "Are you sure you want to remove your profile avatar? This action cannot be undone.",
     },
 
     revokeSession: {
       title: "Terminate Session",
-      desc: "Are you sure you want to terminate this active session? This will log the device out immediately.",
+      desc: "Are you sure you want to terminate this active session? The device will be logged out immediately.",
     },
 
     revokeAllOtherSession: {
-      trigger: "Terminate All Other Session",
-      title: "Terminate All Other Session",
-      desc: "Are you sure you want to terminate all other active session? This will log all the devices out immediately.",
+      trigger: "Terminate All Other Sessions",
+      title: "Terminate All Other Sessions",
+      desc: "Are you sure you want to terminate all other active sessions? All devices except the current one will be logged out immediately.",
     },
 
     deleteAccount: {
       trigger: "Delete Account",
       title: "Confirm Account Deletion",
-      desc: "Deleting your account will permanently remove all associated data. This action cannot be undone.",
+      desc: "Deleting your account will permanently remove all associated data. This action cannot be undone. Proceed with caution.",
     },
   },
 };
@@ -105,6 +113,8 @@ const label = {
 
         create: (name: string) => `${name} created successfully!`,
         remove: (name: string) => `${name} has been successfully removed!`,
+        changeRole: (name: string, role: string) =>
+          `${name}'s role has been successfully updated to ${role}!`,
       },
 
       profile: {
@@ -119,6 +129,7 @@ const label = {
 
     info: {
       profile: "No changes were made to your profile.",
+      changeRole: (name: string) => `No changes were made to ${name}'s role.`,
     },
 
     error: {
