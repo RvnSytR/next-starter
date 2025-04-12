@@ -104,6 +104,7 @@ const label = {
         signOut: "Signed out successfully.",
 
         create: (name: string) => `${name} created successfully!`,
+        remove: (name: string) => `${name} has been successfully removed!`,
       },
 
       profile: {

@@ -26,7 +26,7 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-const userColumnHelper = createColumnHelper<UserWithRole>();
+export const userColumnHelper = createColumnHelper<UserWithRole>();
 export const userColumn = [
   userColumnHelper.display({
     id: "number",

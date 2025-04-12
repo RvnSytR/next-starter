@@ -54,17 +54,24 @@ import {
   FilterSelector,
 } from "./data-table-filter";
 
-type TableProps<TData> = { table: DataTableType<TData> };
 type DataTableProps<TData> = {
-  data: TData[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   columns: ColumnDef<TData, any>[];
+  data: TData[];
 };
-
+type TableProps<TData> = { table: DataTableType<TData> };
 type ToolBoxProps = {
   withRefresh?: boolean;
   searchPlaceholder?: string;
   children?: React.ReactNode;
+};
+
+export type OtherDataTableProps = ToolBoxProps & {
+  title?: string;
+  subtitle?: string;
+  caption?: string;
+  noResult?: string[];
+  className?: string;
 };
 
 export function DataTable<TData>({
@@ -76,14 +83,7 @@ export function DataTable<TData>({
   noResult,
   className,
   ...props
-}: DataTableProps<TData> &
-  ToolBoxProps & {
-    title?: string;
-    subtitle?: string;
-    caption?: string;
-    noResult?: string[];
-    className?: string;
-  }) {
+}: DataTableProps<TData> & OtherDataTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 

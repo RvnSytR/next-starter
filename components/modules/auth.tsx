@@ -8,16 +8,14 @@ import { route } from "@/lib/menu";
 import { adminRoles, roleIcon, userRoles } from "@/lib/role";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
-import {
-  deleteFile,
-  getFileKeyFromPublicUrl,
-  getFilePublicUrl,
-  uploadFile,
-} from "@/server/s3";
+import { deleteProfilePicture } from "@/server/auth-action";
+import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
   Dot,
+  EllipsisVertical,
   Gamepad2,
   KeyRound,
   LockKeyhole,
@@ -44,6 +42,8 @@ import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { FormFloating, InputRadioGroup } from "../custom/custom-field";
 import { CustomIcon, Spinner } from "../custom/custom-icon";
+import { userColumn, userColumnHelper } from "../data-table/column";
+import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -56,6 +56,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -69,6 +70,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -284,6 +293,7 @@ export function SignUpForm() {
     await authClient.signUp.email(formData, {
       onRequest: () => setLoading(true),
       onSuccess: () => {
+        form.reset();
         toast.success(label.toast.success.user.signUp);
       },
       onError: ({ error }) => {
@@ -423,10 +433,6 @@ export function ProfilePicture({
 
   const schema = zodFile("image");
 
-  const deleteProfilePicture = async () => {
-    if (image) await deleteFile([await getFileKeyFromPublicUrl(image)]);
-  };
-
   const changeHandler = async (fileList: FileList) => {
     const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
     if (!parseRes.success) return toast.error(parseRes.error.errors[0].message);
@@ -439,7 +445,7 @@ export function ProfilePicture({
     const fileUrl = await getFilePublicUrl(fileKey);
 
     formData.append(fileKey, file);
-    if (fileUrl !== image) await deleteProfilePicture();
+    if (fileUrl !== image) await deleteProfilePicture(image);
 
     await uploadFile({
       formData: formData,
@@ -466,7 +472,7 @@ export function ProfilePicture({
   const deleteHandler = async () => {
     setIsRemoved(true);
 
-    await deleteProfilePicture();
+    await deleteProfilePicture(image);
     await authClient.updateUser(
       { image: null },
       {
@@ -558,7 +564,7 @@ export function ProfilePicture({
 
 export function PersonalInformation({
   ...props
-}: Pick<Session["user"], "id" | "name" | "email" | "role">) {
+}: Pick<Session["user"], "id" | "name" | "email" | "image" | "role">) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -952,7 +958,9 @@ export function RevokeAllOtherSessionButton() {
   );
 }
 
-export function DeleteMyAccountButton() {
+export function DeleteMyAccountButton({
+  image,
+}: Pick<Session["user"], "image">) {
   const router = useRouter();
   return (
     <AlertDialog>
@@ -980,7 +988,8 @@ export function DeleteMyAccountButton() {
           </AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
-            onClick={async () =>
+            onClick={async () => {
+              await deleteProfilePicture(image);
               await authClient.deleteUser(
                 { callbackURL: route.auth },
                 {
@@ -992,8 +1001,8 @@ export function DeleteMyAccountButton() {
                     toast.error(error.message);
                   },
                 },
-              )
-            }
+              );
+            }}
           >
             {label.button.confirm}
           </AlertDialogAction>
@@ -1001,6 +1010,52 @@ export function DeleteMyAccountButton() {
       </AlertDialogContent>
     </AlertDialog>
   );
+}
+
+export function AdminAccountDataTable({
+  data,
+  currentUser,
+  ...props
+}: OtherDataTableProps & {
+  data: UserWithRole[];
+  currentUser: Session["user"];
+}) {
+  const dataColumn = [
+    ...userColumn,
+    userColumnHelper.display({
+      id: "Action",
+      header: "Action",
+      cell: ({ row }) => {
+        if (row.original.id === currentUser.id) {
+          return <Badge variant="outline">Current User</Badge>;
+        }
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="iconsm" variant="ghost">
+                <EllipsisVertical />
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="text-center">
+                {row.original.name}
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <AdminRemoveUserDialog {...row.original} />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    }),
+  ];
+
+  return <DataTable data={data} columns={dataColumn} {...props} />;
 }
 
 export function AdminCreateUserDialog() {
@@ -1040,7 +1095,6 @@ export function AdminCreateUserDialog() {
         onRequest: () => setLoading(true),
         onSuccess: () => {
           toast.success(label.toast.success.user.create(formData.name));
-          form.clearErrors();
           form.reset();
           router.refresh();
         },
@@ -1178,7 +1232,7 @@ export function AdminCreateUserDialog() {
             <DialogFooter className="gap-y-2">
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  {label.button.back}
+                  {label.button.cancel}
                 </Button>
               </DialogClose>
 
@@ -1191,5 +1245,71 @@ export function AdminCreateUserDialog() {
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AdminRemoveUserDialog({
+  id,
+  name,
+  image,
+}: Pick<Session["user"], "id" | "name" | "image">) {
+  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          size="sm"
+          variant="ghost_destructive"
+          className="w-full justify-start"
+          disabled={loading}
+        >
+          {loading ? <Spinner /> : <Trash2 />}
+          {dialog.user.remove.trigger}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-x-2">
+            <TriangleAlert />
+            {dialog.user.remove.title(name)}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {dialog.user.remove.desc}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
+            {label.button.cancel}
+          </AlertDialogCancel>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={async () => {
+              setLoading(true);
+
+              await deleteProfilePicture(image);
+              await authClient.admin.removeUser(
+                { userId: id },
+                {
+                  onSuccess: () => {
+                    toast.success(label.toast.success.user.remove(name));
+                    router.refresh();
+                  },
+                  onError: ({ error }) => {
+                    setLoading(false);
+                    toast.error(error.message);
+                  },
+                },
+              );
+            }}
+          >
+            {label.button.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

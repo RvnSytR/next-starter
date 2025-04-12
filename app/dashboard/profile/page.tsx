@@ -25,15 +25,17 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const currentPage = getCurrentPage("/profile", false, true);
-  const session = (await getSession())!;
+  const session = await getSession();
   if (!session?.user.role) return <SectionError />;
 
   const { role, ...rest } = session.user;
   const sessionList = await getSessionList();
 
   return (
-    <Section currentPage={currentPage} className="items-center">
+    <Section
+      currentPage={getCurrentPage("/profile", false, true)}
+      className="items-center"
+    >
       <Card
         id="personal-information"
         className="w-full scroll-m-4 lg:max-w-2xl"
@@ -99,7 +101,7 @@ export default async function Page() {
         <Separator />
 
         <CardContent>
-          <DeleteMyAccountButton />
+          <DeleteMyAccountButton {...session.user} />
         </CardContent>
       </Card>
     </Section>

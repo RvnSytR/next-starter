@@ -1,10 +1,11 @@
-import { userColumn } from "@/components/data-table/column";
-import { DataTable } from "@/components/data-table/data-table";
-import { Section } from "@/components/layout/section";
-import { AdminCreateUserDialog } from "@/components/modules/auth";
+import { Section, SectionError } from "@/components/layout/section";
+import {
+  AdminAccountDataTable,
+  AdminCreateUserDialog,
+} from "@/components/modules/auth";
 import { page } from "@/lib/content";
 import { getCurrentPage } from "@/lib/menu";
-import { getUserList } from "@/server/auth-action";
+import { getSession, getUserList } from "@/server/auth-action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,6 +13,9 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+  const session = await getSession();
+  if (!session?.user.role) return <SectionError />;
+
   const data = await getUserList();
 
   return (
@@ -19,15 +23,15 @@ export default async function Page() {
       currentPage={getCurrentPage("/account", false, true)}
       className="items-center"
     >
-      <DataTable
+      <AdminAccountDataTable
+        currentUser={session.user}
         data={data.users}
-        columns={userColumn}
         className="w-full lg:max-w-7xl"
         withRefresh
         {...page.account}
       >
         <AdminCreateUserDialog />
-      </DataTable>
+      </AdminAccountDataTable>
     </Section>
   );
 }
