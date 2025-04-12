@@ -43,7 +43,7 @@ import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { FormFloating, InputRadioGroup } from "../custom/custom-field";
-import { CustomIcon, Spinner } from "../icon";
+import { CustomIcon, Spinner } from "../custom/custom-icon";
 import {
   AlertDialog,
   AlertDialogAction,
