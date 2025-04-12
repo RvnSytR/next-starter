@@ -1,10 +1,10 @@
 # Next.js Starter Template
 
-Personalized Next.js 15 starter template, designed to include the core tools and configurations I frequently use in most projects. It aims to streamline the setup process, saving time and effort by providing a solid foundation-so i can focus on building features rather than configuring the basics.
+Personalized Next.js 15 starter template, designed to include core tools and configurations I frequently use in most projects. It aims to streamline the setup process, saving time and effort by providing a solid foundation-so I can focus on building features rather than configuring the basics.
 
 ## Features
 
-- Ready-to-use styling and authentication.
+- Ready-to-use components, styling and authentication.
 - Database and S3 integration.
 
 ## Tech Stack
