@@ -43,18 +43,21 @@ export function SectionError({
   buttonIcon = <Home />,
   buttonText = "Go To Main Page",
   className,
+  children,
 }: {
   code?: number;
   message?: string;
   href?: string;
   buttonText?: string;
-  buttonIcon?: React.ReactNode;
+  buttonIcon?: ReactNode;
   className?: string;
+  children?: ReactNode;
 }) {
   return (
     <div
       className={cn(
         "flex grow flex-col items-center justify-center gap-y-6 md:gap-y-2",
+        "mask-radial-from-75% mask-alpha",
         className,
       )}
     >
@@ -76,6 +79,8 @@ export function SectionError({
           {buttonText}
         </Link>
       </Button>
+
+      {children}
     </div>
   );
 }
