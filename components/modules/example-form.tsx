@@ -118,7 +118,7 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Numeric *</FormLabel>
-                <FormFloating icon={"Rp."}>
+                <FormFloating icon="Rp.">
                   <FormControl>
                     <Input
                       type="text"
@@ -142,7 +142,7 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone *</FormLabel>
-                <FormFloating icon={"+62"} extraPadding>
+                <FormFloating icon="+62" extraPadding>
                   <FormControl>
                     <Input
                       type="text"
@@ -208,7 +208,7 @@ export function ExampleForm() {
             name="radio"
             render={({ field }) => (
               <FormItem className="col-span-3">
-                <FormLabel>Radio Group *</FormLabel>
+                <FormLabel>Custom Radio Group *</FormLabel>
                 <InputRadioGroup
                   defaultValue={field.value}
                   onValueChange={field.onChange}

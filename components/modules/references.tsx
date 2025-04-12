@@ -33,11 +33,11 @@ function ComponentCard({
   code: string;
   apiReference?: { name: string; type: string; def?: string }[];
   detailProps?: string;
-  children: ReactNode;
+  children?: ReactNode;
 }) {
   const copyButtonCn = "absolute top-2 right-2";
   const codeCn =
-    "bg-muted/50 relative rounded-xl p-4 font-mono text-sm  break-all whitespace-pre";
+    "bg-muted relative rounded-xl p-4 font-mono text-sm  break-all whitespace-pre";
   return (
     <Card>
       <CardHeader>
@@ -45,16 +45,15 @@ function ComponentCard({
       </CardHeader>
 
       <CardContent>
-        <Tabs defaultValue="Preview" className="gap-4">
+        <Tabs defaultValue={children ? "Preview" : "Code"} className="gap-4">
           <ScrollArea className="pb-4 lg:pb-0">
             <TabsList>
-              <TabsTrigger value="Preview">Preview</TabsTrigger>
-              <TabsTrigger value="Code">Code</TabsTrigger>
-              <TabsTrigger value="API Reference" disabled={!!!apiReference}>
-                API Reference
+              <TabsTrigger value="Preview" disabled={!children}>
+                Preview
               </TabsTrigger>
-              <TabsTrigger value="Detail Props" disabled={!!!detailProps}>
-                Detail Props
+              <TabsTrigger value="Code">Code</TabsTrigger>
+              <TabsTrigger value="API Reference" disabled={!apiReference}>
+                Props
               </TabsTrigger>
             </TabsList>
             <ScrollBar orientation="horizontal" />
@@ -163,10 +162,10 @@ export function References() {
 
   return (
     <Tabs defaultValue="Custom Chart">
-      <ScrollArea className="pb-4 lg:pb-0">
-        <TabsList>
+      <ScrollArea>
+        <TabsList className="min-w-full md:min-w-fit">
           <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
-          <TabsTrigger value="Custom Button">Custom Button</TabsTrigger>
+          <TabsTrigger value="Badge and Button">Badge and Button</TabsTrigger>
           <TabsTrigger value="Form Example">Form Example</TabsTrigger>
         </TabsList>
         <ScrollBar orientation="horizontal" />
@@ -260,9 +259,10 @@ export function References() {
         </ComponentCard>
       </TabsContent>
 
-      <TabsContent value="Custom Button" className="space-y-2">
+      <TabsContent value="Badge and Button" className="space-y-2">
         <ComponentCard
           title="Badge Variant"
+          importCode={`import { Badge } from "@/components/ui/badge";`}
           code={`<Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
 <Badge variant="outline">Outline</Badge>
@@ -296,6 +296,7 @@ export function References() {
 
         <ComponentCard
           title="Button Variant"
+          importCode={`import { Button } from "@/components/ui/button";`}
           code={`<Button>Default</Button>
 <Button variant="secondary">Secondary</Button>
 <Button variant="outline">Outline</Button>
@@ -342,12 +343,9 @@ export function References() {
         <ComponentCard
           title="Refresh Button"
           apiReference={[
-            { name: "text", type: "string", def: "label.button.refresh" },
-            { name: "icon", type: "ReactNode", def: "RefreshCw" },
-            { name: "customLoader", type: "ReactNode", def: "RefreshCw" },
             {
               name: "...props",
-              type: `Omit<OptionalChildrenProps, "loading" | "onClick">`,
+              type: `Omit<ButtonProps, "onClick" | "children">`,
             },
           ]}
           importCode={`import { RefreshButton } from "@/components/custom/custom-button";`}
@@ -360,11 +358,9 @@ export function References() {
           title="Copy Button"
           apiReference={[
             { name: "value", type: "string" },
-            { name: "icon", type: "ReactNode", def: "Copy" },
-            { name: "customLoader", type: "ReactNode", def: "Check" },
             {
               name: "...props",
-              type: `Omit<OptionalChildrenProps, "loading" | "onClick"> & { value: string }`,
+              type: `Omit<ButtonProps, "onClick" | "children">`,
             },
           ]}
           importCode={`import { CopyButton } from "@/components/custom/custom-button";`}
@@ -378,10 +374,245 @@ export function References() {
         <ComponentCard
           title="Form Example"
           detailProps={`export type Media = "all" | "image" | "document" | "archive" | "audio" | "video";`}
-          code="-"
+          importCode={`import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { label } from "@/lib/content";
+import { zodFile } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RotateCcw, Save } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";`}
+          code={`export function ExampleForm() {
+  const schema = z.object({
+    text: z.string().min(1),
+    numeric: z.number(),
+    phone: z.number(),
+    date: z.date(),
+    select: z.enum(["Spade", "Heart", "Diamond", "Club"]),
+    radio: z.enum(["Spade", "Heart", "Diamond", "Club"]),
+    file: zodFile("image"),
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      text: "Some Text",
+      numeric: 100000,
+      phone: 81234567890,
+      date: new Date(),
+      select: "Spade",
+      radio: "Spade",
+      file: [],
+    },
+  });
+
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    console.log(formData.file);
+    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        {/* Field Goes Here */}
+
+        <div className="flex gap-2">
+          <Button type="submit">
+            {/* {loading ? <Spinner /> : <Save />} */}
+            <Save />
+            {label.button.save}
+          </Button>
+
+          <Button type="reset" variant="outline" onClick={() => form.reset()}>
+            <RotateCcw />
+            {label.button.reset}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}`}
         >
           <ExampleForm />
         </ComponentCard>
+
+        <ComponentCard
+          title="Text Field"
+          code={`<FormField
+  control={form.control}
+  name="text"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Text *</FormLabel>
+      <FormFloating icon={<LockKeyhole />}>
+        <FormControl>
+          <Input type="text" {...field} />
+        </FormControl>
+      </FormFloating>
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="Numeric and Phone Field"
+          code={`{/* Numeric */}
+<FormField
+  control={form.control}
+  name="numeric"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Numeric *</FormLabel>
+      <FormFloating icon="Rp.">
+        <FormControl>
+          <Input
+            type="text"
+            inputMode="numeric"
+            value={formatNumeric(field.value)}
+            onChange={(e) =>
+              field.onChange(sanitizeNumber(e.target.value))
+            }
+          />
+        </FormControl>
+      </FormFloating>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+{/* Phone */}
+<FormField
+  control={form.control}
+  name="phone"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Phone *</FormLabel>
+      <FormFloating icon="+62" extraPadding>
+        <FormControl>
+          <Input
+            type="text"
+            inputMode="numeric"
+            value={formatPhone(field.value)}
+            onChange={(e) => {
+              field.onChange(sanitizeNumber(e.target.value));
+            }}
+          />
+        </FormControl>
+      </FormFloating>
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="Date Field"
+          code={`<FormField
+  control={form.control}
+  name="date"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Date *</FormLabel>
+      <InputDate selected={field.value} onSelect={field.onChange} />
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="Select Field"
+          code={`<FormField
+  control={form.control}
+  name="select"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Select *</FormLabel>
+      <Select value={field.value} onValueChange={field.onChange}>
+        <FormControl>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
+        </FormControl>
+        <SelectContent>
+          {selectAndRadioData.map((item, index) => (
+            <SelectItem key={index} value={item.value}>
+              {item.icon}
+              {item.value}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="Custom Radio Group Field"
+          code={`<FormField
+  control={form.control}
+  name="radio"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Radio Group *</FormLabel>
+      <InputRadioGroup
+        defaultValue={field.value}
+        onValueChange={field.onChange}
+        radioItems={selectAndRadioData}
+      />
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="Radio Group Field"
+          code={`<FormField
+  control={form.control}
+  name="radio"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Radio Group *</FormLabel>
+      <RadioGroup
+        value={field.value}
+        onValueChange={field.onChange}
+      >
+        {selectAndRadioData.map((item, index) => (
+          <FormItem key={index}>
+            <FormControl>
+              <RadioGroupItem value={item.value} />
+            </FormControl>
+            <FormLabel className="font-normal">
+              {item.value}
+            </FormLabel>
+          </FormItem>
+        ))}
+      </RadioGroup>
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
+
+        <ComponentCard
+          title="File Field"
+          code={`<FormField
+  control={form.control}
+  name="file"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>File *</FormLabel>
+      <InputFile accept="image" {...field} />
+      <FormMessage />
+    </FormItem>
+  )}
+/>`}
+        />
       </TabsContent>
     </Tabs>
   );
