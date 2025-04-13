@@ -3,7 +3,6 @@ import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { LinkLoader } from "../custom/custom-button";
-import { GridPattern } from "../magicui/grid-pattern";
 import { SignOutButton, UserAvatar } from "../modules/auth";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
@@ -13,7 +12,6 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -55,10 +53,7 @@ export function SidebarApp({
         <SidebarRail />
       </Sidebar>
 
-      <SidebarInset>
-        <GridPattern className="stroke-input/25 z-10" />
-        {children}
-      </SidebarInset>
+      {children}
     </SidebarProvider>
   );
 }

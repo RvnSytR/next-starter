@@ -18,21 +18,22 @@ const buttonVariants = cva(
         link: "relative no-underline after:bg-primary after:absolute after:bottom-1 after:h-[1px] after:w-2/4 after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100",
 
         success:
-          "bg-success text-white shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
+          "bg-success text-white shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60",
         outline_success:
           "text-success border border-success/30 bg-background shadow-xs hover:border-success dark:bg-success/5 dark:hover:bg-success/20 focus-visible:border-success focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
         ghost_success:
-          "text-warning hover:bg-warning/10 dark:hover:bg-warning/20 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
+          "text-success hover:bg-success/10 dark:hover:bg-success/20 focus-visible:ring-success/20 dark:focus-visible:ring-success/40",
 
         warning:
-          "bg-warning text-white shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
+          "bg-warning text-white shadow-xs hover:bg-warning/90 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40 dark:bg-warning/60",
         outline_warning:
           "text-warning border border-warning/30 bg-background shadow-xs hover:border-warning dark:bg-warning/5 dark:hover:bg-warning/20 focus-visible:border-warning focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
         ghost_warning:
           "text-warning hover:bg-warning/10 dark:hover:bg-warning/20 focus-visible:ring-warning/20 dark:focus-visible:ring-warning/40",
 
         destructive:
-          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
+          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+
         outline_destructive:
           "text-destructive border border-destructive/30 bg-background shadow-xs hover:border-destructive dark:bg-destructive/5 dark:hover:bg-destructive/20 focus-visible:border-destructive focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
         ghost_destructive:

@@ -29,7 +29,7 @@ export function Section({
         <ThemeToggle />
       </header>
 
-      <main className={cn("z-20 my-4 flex flex-col gap-y-4 px-4", className)}>
+      <main className={cn("z-10 my-4 flex flex-col gap-y-4 px-4", className)}>
         {children}
       </main>
     </>
@@ -61,7 +61,7 @@ export function SectionError({
         className,
       )}
     >
-      <div className="flex flex-col items-center gap-x-4 md:flex-row">
+      <div className="flex flex-col items-center gap-x-4 text-shadow-sm md:flex-row">
         <h1 className="animate-fade-right text-9xl">{code}</h1>
         <h1 className="animate-fade-left text-center leading-tight whitespace-pre-line lg:text-start">
           {message}
@@ -71,7 +71,7 @@ export function SectionError({
       <Button
         size="lg"
         variant="ghost"
-        className="hover:border-primary animate-fade-up h-12 rounded-full border-4 font-semibold"
+        className="hover:border-primary animate-fade-up h-12 rounded-full border-4 font-semibold shadow-sm"
         asChild
       >
         <Link href={href}>

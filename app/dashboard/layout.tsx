@@ -1,4 +1,6 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
+import { GridPattern } from "@/components/magicui/grid-pattern";
+import { SidebarInset } from "@/components/ui/sidebar";
 import { getCurrentPage, route } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
@@ -16,7 +18,10 @@ export default async function DashboardLayout({
   const { role, ...rest } = session.user;
   return (
     <SidebarApp role={role} {...rest}>
-      {children}
+      <SidebarInset>
+        <GridPattern className="stroke-input/25 z-0" />
+        {children}
+      </SidebarInset>
     </SidebarApp>
   );
 }
