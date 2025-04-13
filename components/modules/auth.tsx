@@ -1373,7 +1373,6 @@ export function AdminTerminateUserSessionDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-x-2">
-            <TriangleAlert />
             {dialog.user.revokeSession.title(name)}
           </AlertDialogTitle>
           <AlertDialogDescription>
