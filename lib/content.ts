@@ -49,21 +49,28 @@ const dialog = {
     create: {
       trigger: "Create User",
       title: "Create New User",
-      desc: "Create a new user by entering their details. Ensure all required fields are completed accurately.",
-    },
-
-    remove: {
-      trigger: "Remove",
-      title: (name: string) => `Remove ${name}'s Account?`,
-      desc: (name: string) =>
-        `This action will permanently delete the ${name}'s account and all associated data. Proceed with caution as this cannot be undone.`,
+      desc: "Create a new user by entering their details. Ensure all required fields are completed.",
     },
 
     changeRole: {
       trigger: "Change Role",
-      title: (name: string) => `Change ${name}'s Role?`,
+      title: (name: string) => `Change ${name}'s Role`,
       desc: (name: string) =>
-        `Modify the ${name}'s role to update their permissions and access levels.`,
+        `Changing ${name}'s role will update their permissions and access within the system. Are you sure you want to proceed?`,
+    },
+
+    revokeSession: {
+      trigger: "Terminate Sessions",
+      title: (name: string) => `Terminate All Active Sessions for ${name}`,
+      desc: (name: string) =>
+        `This will immediately sign out all active sessions for ${name}. Are you sure you want to proceed?`,
+    },
+
+    remove: {
+      trigger: "Remove User",
+      title: (name: string) => `Remove ${name}'s Account`,
+      desc: (name: string) =>
+        `This will permanently delete ${name}'s account and all associated data. Proceed with caution as this action cannot be undone.`,
     },
   },
 
@@ -71,23 +78,24 @@ const dialog = {
     removeAvatar: {
       trigger: "Remove Avatar",
       title: "Remove Profile Avatar",
-      desc: "Are you sure you want to remove your profile avatar? This action cannot be undone.",
+      desc: "This will remove your current profile avatar. Are you sure you want to proceed?",
     },
 
     revokeSession: {
-      title: "Terminate Session",
-      desc: "Are you sure you want to terminate this active session? The device will be logged out immediately.",
+      trigger: "Terminate Session",
+      title: "Terminate Active Session",
+      desc: "This will immediately sign out the selected device. Are you sure you want to proceed?",
     },
 
     revokeAllOtherSession: {
-      trigger: "Terminate All Other Sessions",
+      trigger: "Terminate Other Sessions",
       title: "Terminate All Other Sessions",
-      desc: "Are you sure you want to terminate all other active sessions? All devices except the current one will be logged out immediately.",
+      desc: "This will sign out all active sessions except the current one. Are you sure you want to proceed?",
     },
 
     deleteAccount: {
       trigger: "Delete Account",
-      title: "Confirm Account Deletion",
+      title: "Delete Your Account",
       desc: "Deleting your account will permanently remove all associated data. This action cannot be undone. Proceed with caution.",
     },
   },
@@ -112,9 +120,11 @@ const label = {
         signOut: "Signed out successfully.",
 
         create: (name: string) => `${name} created successfully!`,
-        remove: (name: string) => `${name} has been successfully removed!`,
         changeRole: (name: string, role: string) =>
           `${name}'s role has been successfully updated to ${role}!`,
+        revokeSession: (name: string) =>
+          `All ${name}'s sessions have been terminated successfully.`,
+        remove: (name: string) => `${name} has been successfully removed!`,
       },
 
       profile: {

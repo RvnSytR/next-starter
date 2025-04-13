@@ -1051,10 +1051,7 @@ export function AdminAccountDataTable({
                 Impersonate Session
               </Button>
 
-              <Button size="sm" variant="ghost_destructive" disabled>
-                <MonitorOff />
-                Revoke Session
-              </Button>
+              <AdminTerminateUserSessionDialog {...row.original} />
 
               <Button size="sm" variant="ghost_destructive" disabled>
                 <Ban />
@@ -1075,6 +1072,8 @@ export function AdminAccountDataTable({
 export function AdminCreateUserDialog() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+
+  const Icon = UserRoundPlus;
 
   const schema = zodAuth
     .pick({
@@ -1124,7 +1123,7 @@ export function AdminCreateUserDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button size="sm" variant="outline">
-          <UserRoundPlus />
+          <Icon />
           {dialog.user.create.trigger}
         </Button>
       </DialogTrigger>
@@ -1251,7 +1250,7 @@ export function AdminCreateUserDialog() {
               </DialogClose>
 
               <Button type="submit" disabled={loading}>
-                {loading ? <Spinner /> : <UserRoundPlus />}
+                {loading ? <Spinner /> : <Icon />}
                 {dialog.user.create.trigger}
               </Button>
             </DialogFooter>
@@ -1355,6 +1354,59 @@ export function AdminChangeUserRoleDialog({
         </Form>
       </DialogContent>
     </Dialog>
+  );
+}
+
+export function AdminTerminateUserSessionDialog({
+  id,
+  name,
+}: Pick<Session["user"], "id" | "name">) {
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size="sm" variant="ghost_destructive">
+          <MonitorOff />
+          {dialog.user.revokeSession.trigger}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-x-2">
+            <TriangleAlert />
+            {dialog.user.revokeSession.title(name)}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {dialog.user.revokeSession.desc(name)}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
+            {label.button.cancel}
+          </AlertDialogCancel>
+
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={async () => {
+              await authClient.admin.revokeUserSessions(
+                { userId: id },
+                {
+                  onSuccess: () => {
+                    toast.success(label.toast.success.user.revokeSession(name));
+                  },
+                  onError: ({ error }) => {
+                    toast.error(error.message);
+                  },
+                },
+              );
+            }}
+          >
+            {label.button.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }
 
