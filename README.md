@@ -41,11 +41,16 @@ Personalized Next.js 15 starter template, designed to include core tools and con
 
 ### Installation
 
-Clone the repository and install dependencies:
+Use this template and create new repository or clone the repository:
 
 ```sh
 git clone https://github.com/RvnSytR/next-starter
 cd next-starter
+```
+
+Install dependencies:
+
+```sh
 npm install
 ```
 
