@@ -69,3 +69,13 @@ Start the Next.js development server:
 ```sh
 npm run dev
 ```
+
+### Tips
+
+To avoid default imports for Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
+
+```json
+{
+  "typescript.preferences.autoImportFileExcludePatterns": ["@radix-ui"]
+}
+```
