@@ -61,7 +61,7 @@ export function SectionError({
         className,
       )}
     >
-      <div className="flex flex-col items-center gap-x-4 text-shadow-sm md:flex-row">
+      <div className="z-50 flex flex-col items-center gap-x-4 text-shadow-sm md:flex-row">
         <h1 className="animate-fade-right text-9xl">{code}</h1>
         <h1 className="animate-fade-left text-center leading-tight whitespace-pre-line lg:text-start">
           {message}
@@ -71,7 +71,7 @@ export function SectionError({
       <Button
         size="lg"
         variant="ghost"
-        className="hover:border-primary animate-fade-up h-12 rounded-full border-4 font-semibold shadow-sm"
+        className="hover:border-primary animate-fade-up z-50 h-12 rounded-full border-4 font-semibold shadow-sm"
         asChild
       >
         <Link href={href}>
