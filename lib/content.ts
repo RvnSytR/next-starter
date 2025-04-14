@@ -1,13 +1,10 @@
-const currentYear = new Date().getFullYear();
-
 const title = { primary: "Project Title", description: "Project Description" };
 
-const color = { primary: "#81F5FF" };
+const color = {};
 const image = {};
 
 const page = {
   metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
-  copyright: `Copyright © ${currentYear}. Project Maker.\nAll rights reserved.`,
 
   auth: {
     title: title.primary,

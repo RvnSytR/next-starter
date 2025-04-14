@@ -92,7 +92,7 @@ export const userColumn = [
       const Icon = roleIcon[role as Role];
       return (
         <Badge
-          variant={isAdmin ? "outline_success" : "outline"}
+          variant={isAdmin ? "outline_primary" : "outline"}
           className="capitalize"
         >
           <Icon />

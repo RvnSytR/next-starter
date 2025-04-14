@@ -22,7 +22,7 @@ export function Section({
       <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
           <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 h-6" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
 
@@ -82,5 +82,17 @@ export function SectionError({
 
       {children}
     </div>
+  );
+}
+
+export function SectionTagline() {
+  return (
+    <small className="text-muted-foreground">
+      {"Built by "}
+      <Link href="https://github.com/RvnSytR" className="link">
+        RvnS
+      </Link>
+      {" under heavy caffeine influence."}
+    </small>
   );
 }

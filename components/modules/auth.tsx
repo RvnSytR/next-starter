@@ -398,7 +398,7 @@ export function SignUpForm() {
                 <FormLabel className="flex flex-col items-start gap-y-1">
                   <span>Accept terms and conditions</span>
                   <small className="text-muted-foreground text-xs font-normal">
-                    I agree to the Terms of Service and Privacy Policy.
+                    I agree to the terms of service and privacy policy.
                   </small>
                 </FormLabel>
               </div>

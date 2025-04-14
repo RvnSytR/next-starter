@@ -1,3 +1,4 @@
+import { SectionTagline } from "@/components/layout/section";
 import { GridPattern } from "@/components/magicui/grid-pattern";
 import {
   SignInForm,
@@ -61,10 +62,8 @@ export default function Page() {
             <SignOnGithubButton />
           </CardContent>
 
-          <CardFooter>
-            <CardDescription className="mx-auto">
-              {page.copyright}
-            </CardDescription>
+          <CardFooter className="justify-center text-center">
+            <SectionTagline />
           </CardFooter>
         </Card>
       </div>
