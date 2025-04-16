@@ -26,7 +26,7 @@ type MenuBody = {
 
 const route = {
   auth: "/auth",
-  protected: "/dashboard",
+  protected: "/dashboard", // change to "/" if all the routes is protected
   other: [
     { href: "/hiddenFromMenu-route-1", role: [...userRoles] },
     { href: "/hiddenFromMenu-route-2", role: [...adminRoles] },
@@ -44,7 +44,7 @@ const sidebarMenu: MenuProps[] = [
         icon: LayoutDashboard,
       },
       {
-        href: `${route.protected}/account`,
+        href: setProtectedRoute("/account"),
         label: "User Management",
         role: [...adminRoles],
         icon: UsersRound,
@@ -55,7 +55,7 @@ const sidebarMenu: MenuProps[] = [
     section: "Settings",
     body: [
       {
-        href: `${route.protected}/profile`,
+        href: setProtectedRoute("/profile"),
         label: "My Profile",
         role: ["all"],
         icon: UserRound,
@@ -78,16 +78,20 @@ const sidebarMenu: MenuProps[] = [
 ];
 
 const footerSidebarMenu: MenuBody[] = [
-  { href: "/", label: "Homepage", role: ["all"], icon: ExternalLink },
+  { href: "/", label: "Home", role: ["all"], icon: ExternalLink },
   { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
 ];
 
 // #region // * Get Menu
+function setProtectedRoute(r: string) {
+  return route.protected === "/" ? r : `${route.protected}${r}`;
+}
+
 function getMenuBody(route: string): MenuBody | null {
   const [result] = Object.values(sidebarMenu)
     .flatMap((item) => item.body)
     .map((item) => item)
-    .filter((item) => item.href === route);
+    .filter((item) => route.startsWith(item.href));
   return result ?? null;
 }
 
@@ -137,5 +141,6 @@ export {
   getMenuByRole,
   getMenuIcon,
   route,
+  setProtectedRoute,
 };
 export type { MenuRole };
