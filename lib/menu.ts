@@ -7,25 +7,31 @@ import {
   UsersRound,
 } from "lucide-react";
 import { label, page } from "./content";
-import { adminRoles, Role } from "./role";
+import { adminRoles, Role, userRoles } from "./role";
 
 type MenuRole = Role | "all";
 type MenuProps = { section: string; body: MenuBody[] };
-type SubMenuProps = {
-  subLabel: string;
-  elementId: string;
-  className?: string;
-}[];
 type MenuBody = {
   href: string;
   label: string;
   role: MenuRole[];
   icon?: LucideIcon;
   disabled?: boolean;
-  subMenu?: SubMenuProps;
+  subMenu?: {
+    subLabel: string;
+    elementId: string;
+    className?: string;
+  }[];
 };
 
-const route = { auth: "/auth", protected: "/dashboard" };
+const route = {
+  auth: "/auth",
+  protected: "/dashboard",
+  other: [
+    { href: "/hiddenFromMenu-route-1", role: [...userRoles] },
+    { href: "/hiddenFromMenu-route-2", role: [...adminRoles] },
+  ] satisfies Pick<MenuBody, "href" | "role">[],
+};
 
 const sidebarMenu: MenuProps[] = [
   {
@@ -132,3 +138,4 @@ export {
   getMenuIcon,
   route,
 };
+export type { MenuRole };

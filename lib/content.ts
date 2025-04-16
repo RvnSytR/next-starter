@@ -107,7 +107,7 @@ const label = {
   },
 
   toast: {
-    loading: { default: "Processing your request. Please wait..." },
+    loading: { default: "Processing your request..." },
 
     success: {
       user: {
