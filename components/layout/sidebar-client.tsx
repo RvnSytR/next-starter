@@ -11,21 +11,22 @@ import {
   useSidebar,
 } from "../ui/sidebar";
 
-function IsActivePath(pathname: string): boolean {
+function IsActiveRoute(pathname: string): boolean {
   const currentPathname = usePathname();
+  const protectedRoute = route.protected;
 
-  const trimProtectedPath = (p: string) =>
-    p.replace(route.protected, "").trim();
+  const trimProtectedRoute = (p: string) =>
+    p.replace(protectedRoute, "").trim();
 
-  const trimmedCurrentPath = trimProtectedPath(currentPathname);
-  const trimmedPath = trimProtectedPath(pathname);
+  const trimmedCurrentRoute = trimProtectedRoute(currentPathname);
+  const trimmedRoute = trimProtectedRoute(pathname);
 
-  const isRootPath =
-    currentPathname === route.protected && currentPathname === pathname;
-  const isTrimmedPath =
-    !!trimmedPath && trimmedCurrentPath.startsWith(trimmedPath);
+  const isRootRoute =
+    currentPathname === protectedRoute && currentPathname === pathname;
+  const isTrimmedRoute =
+    !!trimmedRoute && trimmedCurrentRoute.startsWith(trimmedRoute);
 
-  return isRootPath || isTrimmedPath;
+  return isRootRoute || isTrimmedRoute;
 }
 
 // ? SC = Sidebar Client
@@ -40,7 +41,7 @@ export function SCMenuButton({
   return (
     <SidebarMenuButton
       onClick={() => isMobile && toggleSidebar()}
-      isActive={IsActivePath(pathname)}
+      isActive={IsActiveRoute(pathname)}
       {...props}
     />
   );
@@ -52,7 +53,7 @@ export function SCCollapsible({
 }: ComponentProps<typeof CollapsiblePrimitive.Root> & {
   pathname: string;
 }) {
-  const isActive = IsActivePath(pathname);
+  const isActive = IsActiveRoute(pathname);
   const [isOpen, setIsOpen] = useState(isActive);
 
   useEffect(() => {

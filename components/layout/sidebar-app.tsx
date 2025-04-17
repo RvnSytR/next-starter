@@ -1,5 +1,9 @@
 import { Session } from "@/lib/auth";
-import { footerSidebarMenu, getMenuByRole, route } from "@/lib/menu";
+import {
+  footerSidebarMenu,
+  getMenuByRole,
+  setProtectedRoute,
+} from "@/lib/menu";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { LinkLoader } from "../custom/custom-button";
@@ -67,7 +71,7 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
           className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
           asChild
         >
-          <Link href={`${route.protected}/profile`}>
+          <Link href={setProtectedRoute("/profile")}>
             <UserAvatar name={name} image={image} className="rounded-md" />
 
             <div className="grid [&_span]:truncate">
