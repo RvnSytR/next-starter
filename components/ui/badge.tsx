@@ -11,9 +11,9 @@ const badgeVariants = cva(
           "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
         secondary:
           "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+
         outline:
           "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
-
         outline_primary:
           "text-primary border-primary [a&]:border-primary/30 [a&]:hover:border-primary [a&]:dark:bg-primary/5 [a&]:dark:hover:bg-primary/20",
 
