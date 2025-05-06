@@ -91,18 +91,33 @@ export function UserAvatar({
   image,
   name,
   className,
-}: Pick<Session["user"], "image" | "name"> & { className?: string }) {
+  imageCn,
+  fallbackCn,
+}: Pick<Session["user"], "image" | "name"> & {
+  className?: string;
+  imageCn?: string;
+  fallbackCn?: string;
+}) {
   const fallbackName = name.slice(0, 2);
-
   return (
     <Avatar className={className}>
       {image ? (
         <>
-          <AvatarImage className="rounded-md object-cover" src={image} />
-          <AvatarFallback className="rounded-md">{fallbackName}</AvatarFallback>
+          <AvatarImage
+            className={cn("rounded-md object-cover", imageCn)}
+            src={image}
+          />
+          <AvatarFallback className={cn("rounded-md", fallbackCn)}>
+            {fallbackName}
+          </AvatarFallback>
         </>
       ) : (
-        <span className="bg-muted flex size-full items-center justify-center">
+        <span
+          className={cn(
+            "bg-muted flex size-full items-center justify-center transition-transform hover:scale-125",
+            fallbackCn,
+          )}
+        >
           {fallbackName}
         </span>
       )}
@@ -1227,9 +1242,9 @@ export function AdminCreateUserDialog() {
                     onValueChange={field.onChange}
                     className="flex gap-x-2"
                     radioItems={[...userRoles, ...adminRoles].map((item) => {
-                      const Icon = roleIcon[item];
+                      const RoleIcon = roleIcon[item];
                       return {
-                        icon: <Icon />,
+                        icon: <RoleIcon />,
                         value: item,
                         className: "capitalize",
                       };

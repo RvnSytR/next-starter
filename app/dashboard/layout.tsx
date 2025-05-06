@@ -19,7 +19,7 @@ export default async function DashboardLayout({
   return (
     <SidebarApp role={role} {...rest}>
       <SidebarInset>
-        <GridPattern className="stroke-input/25 z-0" />
+        <GridPattern className="stroke-accent/35 z-0" />
         {children}
       </SidebarInset>
     </SidebarApp>

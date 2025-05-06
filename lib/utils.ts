@@ -43,14 +43,6 @@ export function formatToMegabyte(byte: number) {
   return byte / 1000 / 1000;
 }
 
-export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-export function sanitizeNumber(str: string): number {
-  return Number(str.replace(/[^\d]/g, "") || "0");
-}
-
 export function formatNumeric(
   num: string | number,
   prefix: string = "",
@@ -72,6 +64,15 @@ export function formatPhone(num: string | number): string {
 
   return formatted;
 }
+
+export function capitalize(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export function sanitizeNumber(str: string): number {
+  return Number(str.replace(/[^\d]/g, "") || "0");
+}
+
 // #endregion
 
 // #region // * Date

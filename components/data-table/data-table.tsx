@@ -47,12 +47,6 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import {
-  ActiveFilters,
-  ActiveFiltersMobileContainer,
-  FilterActions,
-  FilterSelector,
-} from "./data-table-filter";
 
 type DataTableProps<TData> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -118,7 +112,7 @@ export function DataTable<TData>({
     },
   });
 
-  const hasFilters = table.getState().columnFilters.length > 0;
+  // const hasFilters = table.getState().columnFilters.length > 0;
 
   return (
     <Card className={className}>
@@ -131,14 +125,14 @@ export function DataTable<TData>({
         <ToolBox table={table} {...props} />
       </CardHeader>
 
-      {hasFilters && (
+      {/* {hasFilters && (
         <div className="border-t border-b px-6 py-2 shadow-xs">
           <ActiveFiltersMobileContainer>
             <FilterActions table={table} />
             <ActiveFilters table={table} />
           </ActiveFiltersMobileContainer>
         </div>
-      )}
+      )} */}
 
       <CardContent className="space-y-4">
         <Table>
@@ -220,7 +214,7 @@ function ToolBox<TData>({
     <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
 
-      <FilterSelector table={table} />
+      {/* <FilterSelector table={table} /> */}
 
       <Popover>
         <PopoverTrigger asChild>

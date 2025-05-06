@@ -1,8 +1,6 @@
 @import "tailwindcss";
-
 @plugin "tailwindcss-animate";
 @plugin "tailwindcss-animated";
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -210,7 +208,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50 scroll-smooth;
+    @apply border-border outline-ring/50;
   }
 
   body {
@@ -239,11 +237,11 @@
   }
 
   p {
-    @apply font-normal text-pretty whitespace-pre-wrap;
+    @apply text-pretty whitespace-pre-wrap;
   }
 
   small {
-    @apply text-sm leading-tight font-light;
+    @apply text-sm leading-tight;
   }
 
   blockquote {
