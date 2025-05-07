@@ -29,8 +29,8 @@ function ComponentCard({
   children,
 }: {
   title: string;
-  importCode?: string;
   code: string;
+  importCode?: string;
   apiReference?: { name: string; type: string; def?: string }[];
   detailProps?: string;
   children?: ReactNode;
@@ -371,69 +371,7 @@ export function References() {
       </TabsContent>
 
       <TabsContent value="Form Example" className="space-y-2">
-        <ComponentCard
-          title="Form Example"
-          detailProps={`export type Media = "all" | "image" | "document" | "archive" | "audio" | "video";`}
-          importCode={`import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { label } from "@/lib/content";
-import { zodFile } from "@/lib/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { RotateCcw, Save } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";`}
-          code={`export function ExampleForm() {
-  const schema = z.object({
-    text: z.string().min(1),
-    numeric: z.number(),
-    phone: z.number(),
-    date: z.date(),
-    select: z.enum(["Spade", "Heart", "Diamond", "Club"]),
-    radio: z.enum(["Spade", "Heart", "Diamond", "Club"]),
-    file: zodFile("image"),
-  });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      text: "Some Text",
-      numeric: 100000,
-      phone: 81234567890,
-      date: new Date(),
-      select: "Spade",
-      radio: "Spade",
-      file: [],
-    },
-  });
-
-  const formHandler = async (formData: z.infer<typeof schema>) => {
-    console.log(formData.file);
-    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        {/* Field Goes Here */}
-
-        <div className="flex gap-2">
-          <Button type="submit">
-            {/* {loading ? <Spinner /> : <Save />} */}
-            <Save />
-            {label.button.save.text}
-          </Button>
-
-          <Button type="reset" variant="outline" onClick={() => form.reset()}>
-            <RotateCcw />
-            {label.button.reset}
-          </Button>
-        </div>
-      </form>
-    </Form>
-  );
-}`}
-        >
+        <ComponentCard title="Form Example" code="-">
           <ExampleForm />
         </ComponentCard>
 

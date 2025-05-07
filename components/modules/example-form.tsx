@@ -92,7 +92,7 @@ export function ExampleForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
+      <form onSubmit={form.handleSubmit(formHandler)} className="w-full">
         <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
           {/* Text */}
           <FormField

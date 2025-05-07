@@ -78,7 +78,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
       <div
         data-slot="form-item"
         className={cn(
-          "grid gap-2 [&_svg:not([class*='size-'])]:size-4",
+          "grid grow gap-2 [&_svg:not([class*='size-'])]:size-4",
           className,
         )}
         {...props}

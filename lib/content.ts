@@ -9,7 +9,7 @@ const color = {};
 const image = {};
 
 const page = {
-  title: (currentPage: string) => `${metadata.title} | ${currentPage}`,
+  title: (currentPage: string) => `${currentPage} | ${metadata.title}`,
 
   auth: {
     title: metadata.title,
@@ -69,7 +69,6 @@ const dialog = {
     },
 
     remove: {
-      trigger: "Remove User",
       title: (name: string) => `Remove ${name}'s Account`,
       desc: (name: string) =>
         `This will permanently delete ${name}'s account and all associated data. Proceed with caution as this action cannot be undone.`,
@@ -78,7 +77,6 @@ const dialog = {
 
   profile: {
     removeAvatar: {
-      trigger: "Remove Avatar",
       title: "Remove Profile Avatar",
       desc: "This will remove your current profile avatar. Are you sure you want to proceed?",
     },

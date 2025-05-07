@@ -1266,7 +1266,7 @@ export function AdminCreateUserDialog() {
                     onValueChange={field.onChange}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -1383,7 +1383,7 @@ export function AdminChangeUserRoleDialog({
                     onValueChange={field.onChange}
                   >
                     <FormControl>
-                      <SelectTrigger className="w-full">
+                      <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -1488,13 +1488,14 @@ export function AdminRemoveUserDialog({
 }: Pick<Session["user"], "id" | "name" | "image">) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const { text, loading: loadingText } = label.button.remove;
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={loading}>
           {loading ? <Spinner /> : <Trash2 />}
-          {dialog.user.remove.trigger}
+          {loading ? loadingText : text}
         </Button>
       </AlertDialogTrigger>
 
@@ -1518,7 +1519,6 @@ export function AdminRemoveUserDialog({
             className={buttonVariants({ variant: "destructive" })}
             onClick={async () => {
               setLoading(true);
-
               await deleteProfilePicture(image);
               await authClient.admin.removeUser(
                 { userId: id },

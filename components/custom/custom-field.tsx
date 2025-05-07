@@ -31,7 +31,7 @@ export function FormFloating({
       {...props}
     >
       <div className="absolute inset-y-0 flex items-center justify-center pl-3 text-center">
-        <small className="text-muted-foreground font-normal">
+        <small className="text-muted-foreground">
           {typeof icon === "string" ? icon.slice(0, 3) : icon}
         </small>
       </div>
@@ -200,12 +200,12 @@ export function InputFile({
           {placeholder ?? label.button.fileInput.placeholder}
         </span>
 
-        <small className="text-muted-foreground font-normal">
+        <small className="text-muted-foreground">
           {label.button.fileInput.size(fileSize.mb)}
         </small>
 
         {fileMedia.extensions.length > 0 && (
-          <small className="text-muted-foreground text-xs font-normal">
+          <small className="text-muted-foreground text-xs">
             {`( ${fileMedia.extensions.join(" ")} )`}
           </small>
         )}
@@ -217,13 +217,13 @@ export function InputFile({
             <li key={index}>
               <small
                 className={cn(
+                  "font-medium",
                   (file.size > fileSize.byte ||
                     !fileMedia.type.includes(file.type)) &&
                     "text-destructive",
                 )}
               >
-                <span className="font-medium">{file.name}</span>
-                {` - ${formatToMegabyte(file.size).toFixed(2)} MB`}
+                {`${file.name} - ${formatToMegabyte(file.size).toFixed(2)} MB`}
               </small>
             </li>
           ))}
