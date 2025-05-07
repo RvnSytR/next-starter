@@ -2,10 +2,13 @@ import { db } from "@/server/db/config";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { admin } from "better-auth/plugins";
-import { adminRoles } from "./role";
+import { admin as adminPlugins } from "better-auth/plugins";
+import { metadata } from "./content";
+import { adminRoles, roles } from "./permission";
 
 export const auth = betterAuth({
+  appName: metadata.title,
+  user: { deleteUser: { enabled: true } },
   database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: { enabled: true, autoSignIn: false },
   socialProviders: {
@@ -14,11 +17,7 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  plugins: [nextCookies(), admin({ adminRoles: [...adminRoles] })],
-  user: { deleteUser: { enabled: true } },
+  plugins: [nextCookies(), adminPlugins({ roles, adminRoles })],
 });
 
-export type Session = {
-  session: typeof auth.$Infer.Session.session;
-  user: typeof auth.$Infer.Session.user;
-};
+export type Session = typeof auth.$Infer.Session;

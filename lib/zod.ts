@@ -2,6 +2,10 @@ import { z } from "zod";
 import { maxFileSize, Media, media } from "./media";
 import { capitalize } from "./utils";
 
+export const zodMessage = {
+  confirmPassword: "Passwords do not match.",
+};
+
 export const zodFile = (mediaType: Media) =>
   z
     .instanceof(File)

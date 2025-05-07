@@ -6,8 +6,8 @@ import { Check, Copy } from "lucide-react";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
+import { Spinner } from "../other/icon";
 import { Button, ButtonProps } from "../ui/button";
-import { Spinner } from "./custom-icon";
 
 type LoadingIcon = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
 

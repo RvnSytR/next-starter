@@ -7,9 +7,8 @@ import {
   RefreshCw,
 } from "lucide-react";
 
-export const iconSize = { sm: 12, base: 16, lg: 20 };
-
 type Spinner = "loader" | "circle" | "refresh";
+
 export function Spinner({
   spinnerType = "circle",
   animate = true,

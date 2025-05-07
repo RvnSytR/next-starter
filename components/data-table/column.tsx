@@ -1,9 +1,9 @@
 "use client";
 
-import { adminRoles, type Role, roleIcon } from "@/lib/role";
+import { adminRoles, Role, roleMetadata } from "@/lib/permission";
 import { formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
-import { type UserWithRole } from "better-auth/plugins";
+import { UserWithRole } from "better-auth/plugins";
 import { ArrowUpDown } from "lucide-react";
 import { UserAvatar } from "../modules/auth";
 import { Badge } from "../ui/badge";
@@ -30,7 +30,7 @@ export const userColumn = [
     id: "Profile Picture",
     header: "Profile Picture",
     cell: ({ row }) => (
-      <div className="flex justify-center p-4">
+      <div className="flex justify-center">
         <UserAvatar
           {...row.original}
           className="size-24"
@@ -84,16 +84,16 @@ export const userColumn = [
       </HeaderButton>
     ),
     cell: ({ row }) => {
-      const role = row.original.role!;
-      const isAdmin = adminRoles.find((r) => r === role);
-      const Icon = roleIcon[role as Role];
+      const role = row.original.role! as Role;
+      const isAdmin = adminRoles.includes(role);
+      const { displayName, icon: RoleIcon } = roleMetadata[role];
       return (
         <Badge
           variant={isAdmin ? "outline_primary" : "outline"}
           className="capitalize"
         >
-          <Icon />
-          {role}
+          <RoleIcon />
+          {displayName ?? role}
         </Badge>
       );
     },

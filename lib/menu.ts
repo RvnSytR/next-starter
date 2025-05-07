@@ -7,7 +7,7 @@ import {
   UsersRound,
 } from "lucide-react";
 import { label, page } from "./content";
-import { adminRoles, Role, userRoles } from "./role";
+import { adminRoles, Role, userRoles } from "./permission";
 
 type MenuRole = Role | "all";
 type MenuProps = { section: string; body: MenuBody[] };
@@ -28,8 +28,8 @@ const route = {
   auth: "/auth",
   protected: "/dashboard", // change to "/" if all the routes is protected
   other: [
-    { href: "/hiddenFromMenu-route-1", role: [...userRoles] },
-    { href: "/hiddenFromMenu-route-2", role: [...adminRoles] },
+    { href: "/hiddenFromMenu-route-1", role: userRoles },
+    { href: "/hiddenFromMenu-route-2", role: adminRoles },
   ] satisfies Pick<MenuBody, "href" | "role">[],
 };
 
@@ -130,7 +130,7 @@ function getCurrentPage(
     isProtected ? `${route.protected}${currentRoute}` : currentRoute,
   )?.label;
   if (!currentPage) return label.error.protectedPath;
-  return metadata ? page.metadata(currentPage) : currentPage;
+  return metadata ? page.title(currentPage) : currentPage;
 }
 // #endregion
 

@@ -5,9 +5,9 @@ import { authClient } from "@/lib/auth-client";
 import { dialog, label } from "@/lib/content";
 import { media } from "@/lib/media";
 import { route } from "@/lib/menu";
-import { adminRoles, roleIcon, userRoles } from "@/lib/role";
+import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth, zodFile } from "@/lib/zod";
+import { zodAuth, zodFile, zodMessage } from "@/lib/zod";
 import { deleteProfilePicture } from "@/server/auth-action";
 import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,6 @@ import {
   Dot,
   EllipsisVertical,
   Gamepad2,
-  KeyRound,
   Layers2,
   LockKeyhole,
   LockKeyholeOpen,
@@ -43,10 +42,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
-import { FormFloating, InputRadioGroup } from "../custom/custom-field";
-import { CustomIcon, Spinner } from "../custom/custom-icon";
+import { FormFloating } from "../custom/custom-field";
 import { userColumn, userColumnHelper } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
+import { CustomIcon, Spinner } from "../other/icon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -84,6 +83,13 @@ import {
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { Separator } from "../ui/separator";
 import { SidebarMenuButton } from "../ui/sidebar";
 
@@ -103,13 +109,8 @@ export function UserAvatar({
     <Avatar className={className}>
       {image ? (
         <>
-          <AvatarImage
-            className={cn("rounded-md object-cover", imageCn)}
-            src={image}
-          />
-          <AvatarFallback className={cn("rounded-md", fallbackCn)}>
-            {fallbackName}
-          </AvatarFallback>
+          <AvatarImage className={imageCn} src={image} />
+          <AvatarFallback className={fallbackCn}>{fallbackName}</AvatarFallback>
         </>
       ) : (
         <span
@@ -234,7 +235,7 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password *</FormLabel>
-              <FormFloating icon={<KeyRound />}>
+              <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -285,7 +286,7 @@ export function SignUpForm() {
       isAgree: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: "Passwords do not match",
+      message: zodMessage.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -363,7 +364,7 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password *</FormLabel>
-              <FormFloating icon={<KeyRound />}>
+              <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -383,7 +384,7 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirm Password *</FormLabel>
-              <FormFloating icon={<KeyRound />}>
+              <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -580,12 +581,7 @@ export function PersonalInformation({
   const [loading, setLoading] = useState<boolean>(false);
 
   const { name, email, role } = props;
-  const schema = zodAuth
-    .pick({ name: true, email: true, role: true })
-    .refine((sc) => sc.email === email, {
-      message: "Invalid email",
-      path: ["email"],
-    });
+  const schema = zodAuth.pick({ name: true, email: true, role: true });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -596,9 +592,9 @@ export function PersonalInformation({
     },
   });
 
-  const formHandler = async (formData: z.infer<typeof schema>) => {
-    const newName = formData.name;
-    if (newName === name) return toast.info(label.toast.info.profile);
+  const formHandler = async ({ name: newName }: z.infer<typeof schema>) => {
+    if (newName === name)
+      return toast.info(label.toast.info.noChanges("profile"));
 
     await authClient.updateUser(
       { name: newName },
@@ -710,7 +706,7 @@ export function ChangePasswordForm() {
       confirm: zodAuth.shape.confirmPassword,
     })
     .refine((sc) => sc.new === sc.confirm, {
-      message: "Passwords do not match",
+      message: zodMessage.confirmPassword,
       path: ["confirm"],
     });
 
@@ -1031,7 +1027,7 @@ export function AdminAccountDataTable({
   data: UserWithRole[];
   currentUser: Session["user"];
 }) {
-  const dataColumn = [
+  const columns = [
     ...userColumn,
     userColumnHelper.display({
       id: "Action",
@@ -1081,13 +1077,12 @@ export function AdminAccountDataTable({
     }),
   ];
 
-  return <DataTable data={data} columns={dataColumn} {...props} />;
+  return <DataTable data={data} columns={columns} {...props} />;
 }
 
 export function AdminCreateUserDialog() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-
   const Icon = UserRoundPlus;
 
   const schema = zodAuth
@@ -1099,7 +1094,7 @@ export function AdminCreateUserDialog() {
       role: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: "Passwords do not match",
+      message: zodMessage.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -1117,7 +1112,7 @@ export function AdminCreateUserDialog() {
   const formHandler = async (formData: z.infer<typeof schema>) => {
     const { role, ...restData } = formData;
     await authClient.admin.createUser(
-      { role: role ?? userRoles[0], ...restData },
+      { role: role as Role, ...restData },
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
@@ -1197,7 +1192,7 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password *</FormLabel>
-                  <FormFloating icon={<KeyRound />}>
+                  <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
@@ -1217,7 +1212,7 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Confirm Password *</FormLabel>
-                  <FormFloating icon={<KeyRound />}>
+                  <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
@@ -1235,21 +1230,35 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem className="col-span-3">
+                <FormItem>
                   <FormLabel>Role *</FormLabel>
-                  <InputRadioGroup
-                    defaultValue={field.value ?? userRoles[0]}
+                  <Select
+                    value={field.value as Role}
                     onValueChange={field.onChange}
-                    className="flex gap-x-2"
-                    radioItems={[...userRoles, ...adminRoles].map((item) => {
-                      const RoleIcon = roleIcon[item];
-                      return {
-                        icon: <RoleIcon />,
-                        value: item,
-                        className: "capitalize",
-                      };
-                    })}
-                  />
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {allRoles.map((item, index) => {
+                        const { displayName, icon: RoleIcon } =
+                          roleMetadata[item];
+                        return (
+                          <SelectItem
+                            key={index}
+                            value={item}
+                            className="capitalize"
+                          >
+                            <RoleIcon />
+                            {displayName ?? capitalize(item)}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -1257,7 +1266,7 @@ export function AdminCreateUserDialog() {
 
             <Separator />
 
-            <DialogFooter className="gap-y-2">
+            <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">
                   {label.button.cancel}
@@ -1292,8 +1301,9 @@ export function AdminChangeUserRoleDialog({
   });
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
-    const newRole = formData.role ?? userRoles[0];
-    if (newRole === role) return toast.info(label.toast.info.changeRole(name));
+    const newRole = formData.role as Role;
+    if (newRole === role)
+      return toast.info(label.toast.info.noChanges("role", name));
 
     await authClient.admin.setRole(
       { userId: id, role: newRole },
@@ -1335,27 +1345,43 @@ export function AdminChangeUserRoleDialog({
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem className="col-span-3">
-                  <FormLabel>Change To</FormLabel>
-                  <InputRadioGroup
-                    defaultValue={field.value ?? userRoles[0]}
+                <FormItem>
+                  <FormLabel>Role *</FormLabel>
+                  <Select
+                    value={field.value as Role}
                     onValueChange={field.onChange}
-                    className="flex gap-x-2"
-                    radioItems={[...userRoles, ...adminRoles].map((item) => {
-                      const Icon = roleIcon[item];
-                      return {
-                        icon: <Icon />,
-                        value: item,
-                        className: "capitalize",
-                      };
-                    })}
-                  />
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+
+                    <SelectContent>
+                      {allRoles.map((item, index) => {
+                        const { displayName, icon: RoleIcon } =
+                          roleMetadata[item];
+                        return (
+                          <SelectItem
+                            key={index}
+                            value={item}
+                            className="capitalize"
+                          >
+                            <RoleIcon />
+                            {displayName ?? capitalize(item)}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter className="gap-y-2">
+            <Separator />
+
+            <DialogFooter>
               <DialogClose className={buttonVariants({ variant: "outline" })}>
                 {label.button.cancel}
               </DialogClose>

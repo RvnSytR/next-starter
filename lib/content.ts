@@ -1,14 +1,19 @@
-const title = { primary: "Project Title", description: "Project Description" };
+const metadata = {
+  title: "Project Title",
+  description: "Project Description",
+  manifest: "/manifest.json",
+  keywords: ["web application", "next starter"],
+};
 
 const color = {};
 const image = {};
 
 const page = {
-  metadata: (currentPage: string) => `${title.primary} | ${currentPage}`,
+  title: (currentPage: string) => `${metadata.title} | ${currentPage}`,
 
   auth: {
-    title: title.primary,
-    subtitle: `Access the ${title.primary} Dashboard securely by entering your credentials.`,
+    title: metadata.title,
+    subtitle: `Access the ${metadata.title} Dashboard securely by entering your credentials.`,
   },
 
   account: {
@@ -19,7 +24,7 @@ const page = {
   profile: {
     profile: {
       title: "Personal Information",
-      subtitle: `Update and manage your ${title.primary} profile details.`,
+      subtitle: `Update and manage your ${metadata.title} profile details.`,
     },
 
     password: {
@@ -101,6 +106,8 @@ const dialog = {
 const label = {
   error: {
     default: "Uh-oh, Something went wrong. Please try again later.",
+    tooManyRequest: "Too many requests. Please try again later.",
+
     protectedPath: "Invalid protected route!",
     breadcrumb: "Invalid menu route!",
     parsedNumber: "Invalid parsed number!",
@@ -135,8 +142,8 @@ const label = {
     },
 
     info: {
-      profile: "No changes were made to your profile.",
-      changeRole: (name: string) => `No changes were made to ${name}'s role.`,
+      noChanges: (thing: string, name: string = "your") =>
+        `No changes were made to ${name} ${thing}.`,
     },
 
     error: {
@@ -170,4 +177,4 @@ const label = {
   },
 };
 
-export { color, dialog, image, label, page, title };
+export { color, dialog, image, label, metadata, page };
