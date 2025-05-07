@@ -270,7 +270,7 @@ export function ExampleForm() {
           <Button type="submit">
             {/* {loading ? <Spinner /> : <Save />} */}
             <Save />
-            {label.button.save}
+            {label.button.save.text}
           </Button>
 
           <Button type="reset" variant="outline" onClick={() => form.reset()}>

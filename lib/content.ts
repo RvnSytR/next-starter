@@ -156,10 +156,19 @@ const label = {
   },
 
   button: {
-    signIn: "Sign In",
-    signUp: "Create Account",
     signOn: (social: string) => `Continue with ${social}`,
-    signOut: "Sign Out",
+    signIn: {
+      text: "Sign In",
+      loading: "Signing in...",
+    },
+    signUp: {
+      text: "Create Account",
+      loading: "Creating account...",
+    },
+    signOut: {
+      text: "Sign Out",
+      loading: "Signing out...",
+    },
 
     datePicker: "Pick a Date",
     fileInput: {
@@ -168,9 +177,24 @@ const label = {
       empty: "No file selected",
     },
 
-    save: "Save Changes",
+    save: {
+      text: "Save Changes",
+      loading: "Saving changes...",
+    },
+    refresh: {
+      text: "Refresh",
+      loading: "Refreshing...",
+    },
+    upload: {
+      text: (file: string = "") => `Upload ${file}`,
+      loading: "Uploading...",
+    },
+    remove: {
+      text: "Remove",
+      loading: "Removing...",
+    },
+
     confirm: "Confirm",
-    refresh: "Refresh",
     reset: "Reset",
     cancel: "Cancel",
     back: "Back",

@@ -129,6 +129,7 @@ export function UserAvatar({
 export function SignOutButton() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const { text, loading: loadingText } = label.button.signOut;
   return (
     <SidebarMenuButton
       size="sm"
@@ -143,15 +144,15 @@ export function SignOutButton() {
               router.push(route.auth);
             },
             onError: ({ error }) => {
-              setLoading(false);
               toast.error(error.message);
+              setLoading(false);
             },
           },
         })
       }
     >
       {loading ? <Spinner /> : <LogOut />}
-      {label.button.signOut}
+      {loading ? loadingText : text}
     </SidebarMenuButton>
   );
 }
@@ -180,6 +181,7 @@ export function SignOnGithubButton() {
 export function SignInForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const { text, loading: loadingText } = label.button.signIn;
 
   const schema = zodAuth.pick({
     email: true,
@@ -200,8 +202,8 @@ export function SignInForm() {
         router.push(route.protected);
       },
       onError: ({ error }) => {
-        setLoading(false);
         toast.error(error.message);
+        setLoading(false);
       },
     });
   };
@@ -214,7 +216,7 @@ export function SignInForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address *</FormLabel>
+              <FormLabel className="label-required">Email Address</FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
@@ -234,7 +236,7 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password *</FormLabel>
+              <FormLabel className="label-required">Password</FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
@@ -253,7 +255,7 @@ export function SignInForm() {
           control={form.control}
           name="rememberMe"
           render={({ field }) => (
-            <FormItem className="flex-row gap-2">
+            <FormItem className="flex items-center gap-2">
               <FormControl>
                 <Checkbox
                   checked={field.value}
@@ -267,7 +269,7 @@ export function SignInForm() {
 
         <Button type="submit" disabled={loading}>
           {loading && <Spinner />}
-          {label.button.signIn}
+          {loading ? loadingText : text}
         </Button>
       </form>
     </Form>
@@ -276,6 +278,7 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const [loading, setLoading] = useState<boolean>(false);
+  const { text, loading: loadingText } = label.button.signIn;
 
   const schema = zodAuth
     .pick({
@@ -305,8 +308,8 @@ export function SignUpForm() {
     await authClient.signUp.email(formData, {
       onRequest: () => setLoading(true),
       onSuccess: () => {
-        form.reset();
         toast.success(label.toast.success.user.signUp);
+        form.reset();
       },
       onError: ({ error }) => {
         toast.error(error.message);
@@ -323,7 +326,7 @@ export function SignUpForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Username *</FormLabel>
+              <FormLabel className="label-required">Username</FormLabel>
               <FormFloating icon={<UserRound />}>
                 <FormControl>
                   <Input
@@ -343,7 +346,7 @@ export function SignUpForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email Address *</FormLabel>
+              <FormLabel className="label-required">Email Address</FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
@@ -363,7 +366,7 @@ export function SignUpForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password *</FormLabel>
+              <FormLabel className="label-required">Password</FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
@@ -383,7 +386,7 @@ export function SignUpForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password *</FormLabel>
+              <FormLabel className="label-required">Confirm Password</FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
@@ -426,7 +429,7 @@ export function SignUpForm() {
 
         <Button type="submit" disabled={loading}>
           {loading && <Spinner />}
-          {label.button.signUp}
+          {loading ? loadingText : text}
         </Button>
       </form>
     </Form>
@@ -444,6 +447,8 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const schema = zodFile("image");
+  const { text: uploadText, loading: uploadLoadingText } = label.button.upload;
+  const { text: removeText, loading: removeLoadingText } = label.button.remove;
 
   const changeHandler = async (fileList: FileList) => {
     const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
@@ -527,7 +532,7 @@ export function ProfilePicture({
             onClick={() => inputAvatarRef.current?.click()}
           >
             {isChange && <Spinner />}
-            Upload Avatar
+            {isChange ? uploadLoadingText : uploadText("avatar")}
           </Button>
 
           <AlertDialog>
@@ -539,7 +544,7 @@ export function ProfilePicture({
                 disabled={!image || isChange || isRemoved}
               >
                 {isRemoved && <Spinner />}
-                {isRemoved ? "Removing..." : "Remove"}
+                {isRemoved ? removeLoadingText : removeText}
               </Button>
             </AlertDialogTrigger>
 
@@ -581,6 +586,7 @@ export function PersonalInformation({
   const [loading, setLoading] = useState<boolean>(false);
 
   const { name, email, role } = props;
+  const { text, loading: loadingText } = label.button.save;
   const schema = zodAuth.pick({ name: true, email: true, role: true });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -601,13 +607,13 @@ export function PersonalInformation({
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          setLoading(false);
           toast.success(label.toast.success.profile.update("profile"));
+          setLoading(false);
           router.refresh();
         },
         onError: ({ error }) => {
-          setLoading(false);
           toast.error(error.message);
+          setLoading(false);
         },
       },
     );
@@ -624,7 +630,7 @@ export function PersonalInformation({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel className="label-required">Username</FormLabel>
                 <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
@@ -660,7 +666,7 @@ export function PersonalInformation({
             name="role"
             render={({ field: { value, ...restField } }) => (
               <FormItem>
-                <FormLabel>Status</FormLabel>
+                <FormLabel>Role</FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
@@ -682,7 +688,7 @@ export function PersonalInformation({
         <CardFooter className="gap-x-2">
           <Button type="submit" disabled={loading}>
             {loading ? <Spinner /> : <Save />}
-            {label.button.save}
+            {loading ? loadingText : text}
           </Button>
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
@@ -698,44 +704,43 @@ export function PersonalInformation({
 export function ChangePasswordForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const { text, loading: loadingText } = label.button.save;
 
   const schema = z
     .object({
-      current: zodAuth.shape.password,
-      new: zodAuth.shape.password,
-      confirm: zodAuth.shape.confirmPassword,
+      currentPassword: zodAuth.shape.password,
+      newPassword: zodAuth.shape.password,
+      confirmPassword: zodAuth.shape.confirmPassword,
+      revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
     })
-    .refine((sc) => sc.new === sc.confirm, {
+    .refine((sc) => sc.newPassword === sc.confirmPassword, {
       message: zodMessage.confirmPassword,
-      path: ["confirm"],
+      path: ["confirmPassword"],
     });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { current: "", new: "", confirm: "" },
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
   });
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
-    await authClient.changePassword(
-      {
-        currentPassword: formData.current,
-        newPassword: formData.new,
-        revokeOtherSessions: true,
+    await authClient.changePassword(formData, {
+      onRequest: () => setLoading(true),
+      onSuccess: () => {
+        toast.success(label.toast.success.profile.update("password"));
+        setLoading(false);
+        form.reset();
+        router.refresh();
       },
-      {
-        onRequest: () => setLoading(true),
-        onSuccess: () => {
-          setLoading(false);
-          form.reset();
-          toast.success(label.toast.success.profile.update("password"));
-          router.refresh();
-        },
-        onError: ({ error }) => {
-          setLoading(false);
-          toast.error(error.message);
-        },
+      onError: ({ error }) => {
+        toast.error(error.message);
+        setLoading(false);
       },
-    );
+    });
   };
 
   return (
@@ -744,10 +749,12 @@ export function ChangePasswordForm() {
         <CardContent className="flex flex-col gap-y-4">
           <FormField
             control={form.control}
-            name="current"
+            name="currentPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Current Password *</FormLabel>
+                <FormLabel className="label-required">
+                  Current Password
+                </FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
@@ -764,10 +771,10 @@ export function ChangePasswordForm() {
 
           <FormField
             control={form.control}
-            name="new"
+            name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>New Password *</FormLabel>
+                <FormLabel className="label-required">New Password</FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
@@ -784,10 +791,12 @@ export function ChangePasswordForm() {
 
           <FormField
             control={form.control}
-            name="confirm"
+            name="confirmPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Confirm Password *</FormLabel>
+                <FormLabel className="label-required">
+                  Confirm Password
+                </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
@@ -801,6 +810,22 @@ export function ChangePasswordForm() {
               </FormItem>
             )}
           />
+
+          <FormField
+            control={form.control}
+            name="revokeOtherSessions"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Sign out from other devices</FormLabel>
+              </FormItem>
+            )}
+          />
         </CardContent>
 
         <Separator />
@@ -808,7 +833,7 @@ export function ChangePasswordForm() {
         <CardFooter className="gap-x-2">
           <Button type="submit" disabled={loading}>
             {loading ? <Spinner /> : <Save />}
-            {label.button.save}
+            {loading ? loadingText : text}
           </Button>
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
@@ -1116,14 +1141,14 @@ export function AdminCreateUserDialog() {
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
+          toast.success(label.toast.success.user.create(formData.name));
           setLoading(false);
           form.reset();
-          toast.success(label.toast.success.user.create(formData.name));
           router.refresh();
         },
         onError: ({ error }) => {
-          setLoading(false);
           toast.error(error.message);
+          setLoading(false);
         },
       },
     );
@@ -1151,7 +1176,7 @@ export function AdminCreateUserDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username *</FormLabel>
+                  <FormLabel className="label-required">Username</FormLabel>
                   <FormFloating icon={<UserRound />}>
                     <FormControl>
                       <Input
@@ -1171,7 +1196,9 @@ export function AdminCreateUserDialog() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email Address *</FormLabel>
+                  <FormLabel className="label-required">
+                    Email Address
+                  </FormLabel>
                   <FormFloating icon={<Mail />}>
                     <FormControl>
                       <Input
@@ -1191,7 +1218,7 @@ export function AdminCreateUserDialog() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password *</FormLabel>
+                  <FormLabel className="label-required">Password</FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
@@ -1211,7 +1238,9 @@ export function AdminCreateUserDialog() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password *</FormLabel>
+                  <FormLabel className="label-required">
+                    Confirm Password
+                  </FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
@@ -1231,7 +1260,7 @@ export function AdminCreateUserDialog() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role *</FormLabel>
+                  <FormLabel className="label-required">Role</FormLabel>
                   <Select
                     value={field.value as Role}
                     onValueChange={field.onChange}
@@ -1292,6 +1321,7 @@ export function AdminChangeUserRoleDialog({
 }: Pick<Session["user"], "id" | "name" | "role">) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const schema = zodAuth.pick({ role: true });
 
@@ -1310,20 +1340,21 @@ export function AdminChangeUserRoleDialog({
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          setLoading(false);
           toast.success(label.toast.success.user.changeRole(name, newRole));
+          setLoading(false);
+          setIsOpen(false);
           router.refresh();
         },
         onError: ({ error }) => {
-          setLoading(false);
           toast.error(error.message);
+          setLoading(false);
         },
       },
     );
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button size="sm" variant="ghost" disabled={loading}>
           {loading ? <Spinner /> : <CircleFadingArrowUp />}
@@ -1346,7 +1377,7 @@ export function AdminChangeUserRoleDialog({
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Role *</FormLabel>
+                  <FormLabel className="label-required">Role</FormLabel>
                   <Select
                     value={field.value as Role}
                     onValueChange={field.onChange}
@@ -1497,8 +1528,8 @@ export function AdminRemoveUserDialog({
                     router.refresh();
                   },
                   onError: ({ error }) => {
-                    setLoading(false);
                     toast.error(error.message);
+                    setLoading(false);
                   },
                 },
               );

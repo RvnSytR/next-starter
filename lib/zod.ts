@@ -67,6 +67,10 @@ export const zodAuth = z.object({
     invalid_type_error: "Remember Me must be a boolean value.",
   }),
 
+  revokeOtherSessions: z.boolean({
+    invalid_type_error: "Sign out from other devices must be a boolean value.",
+  }),
+
   isAgree: z
     .boolean({
       required_error: "Agreement is required",

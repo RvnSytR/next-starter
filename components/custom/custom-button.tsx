@@ -20,12 +20,13 @@ export function LinkLoader({
 }
 
 export function RefreshButton({
-  text = label.button.refresh,
+  text = label.button.refresh.text,
+  loadingText = label.button.refresh.loading,
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
   ...props
 }: Omit<ButtonProps, "onClick" | "children"> &
-  LoadingIcon & { text?: string }) {
+  LoadingIcon & { text?: string; loadingText?: string }) {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -40,7 +41,7 @@ export function RefreshButton({
       {...props}
     >
       {refreshing ? loadingIcon : defaultIcon}
-      {text}
+      {refreshing ? loadingText : text}
     </Button>
   );
 }

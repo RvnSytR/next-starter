@@ -208,7 +208,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border outline-ring/50 scroll-smooth;
   }
 
   body {
@@ -260,5 +260,9 @@
 @layer base {
   .link {
     @apply after:bg-primary hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
+  }
+
+  .label-required {
+    @apply after:text-destructive after:content-['*'];
   }
 }

@@ -68,11 +68,17 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
       <SidebarMenuItem>
         <SidebarMenuButton
           size="lg"
-          className="group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
+          className="group/head-button group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
           asChild
         >
           <Link href={setProtectedRoute("/profile")}>
-            <UserAvatar name={name} image={image} className="rounded-md" />
+            <UserAvatar
+              name={name}
+              image={image}
+              className="rounded-md"
+              imageCn="group-hover/head-button:scale-125"
+              fallbackCn="group-hover/head-button:scale-125"
+            />
 
             <div className="grid [&_span]:truncate">
               <span className="text-sm font-semibold">{name}</span>
