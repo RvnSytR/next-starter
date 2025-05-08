@@ -1,10 +1,18 @@
 "use client";
 
+import { filterFn } from "@/lib/filters";
 import { adminRoles, Role, roleMetadata } from "@/lib/permission";
-import { formatDate } from "@/lib/utils";
+import { capitalize, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
-import { ArrowUpDown } from "lucide-react";
+import {
+  ArrowUpDown,
+  CalendarCheck2,
+  CalendarClock,
+  CircleDot,
+  Mail,
+  UserRound,
+} from "lucide-react";
 import { UserAvatar } from "../modules/auth";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps } from "../ui/button";
@@ -50,12 +58,12 @@ export const userColumn = [
       </HeaderButton>
     ),
     cell: ({ row }) => row.original.email,
-    // filterFn: filterFn("text"),
-    // meta: {
-    //   displayName: "Email",
-    //   type: "text",
-    //   icon: Mail,
-    // },
+    filterFn: filterFn("text"),
+    meta: {
+      displayName: "Email",
+      type: "text",
+      icon: Mail,
+    },
   }),
   userColumnHelper.accessor((row) => row.name, {
     id: "name",
@@ -67,12 +75,12 @@ export const userColumn = [
       </HeaderButton>
     ),
     cell: ({ row }) => row.original.name,
-    // filterFn: filterFn("text"),
-    // meta: {
-    //   displayName: "Name",
-    //   type: "text",
-    //   icon: UserRound,
-    // },
+    filterFn: filterFn("text"),
+    meta: {
+      displayName: "Name",
+      type: "text",
+      icon: UserRound,
+    },
   }),
   userColumnHelper.accessor((row) => row.role!, {
     id: "role",
@@ -97,17 +105,20 @@ export const userColumn = [
         </Badge>
       );
     },
-    // filterFn: filterFn("option"),
-    // meta: {
-    //   displayName: "Role",
-    //   type: "option",
-    //   icon: CircleDot,
-    //   transformOptionFn: (value) => ({
-    //     value: value,
-    //     label: capitalize(value),
-    //     icon: roleIcon[value as Role],
-    //   }),
-    // },
+    filterFn: filterFn("option"),
+    meta: {
+      displayName: "Role",
+      type: "option",
+      icon: CircleDot,
+      transformOptionFn: (value) => {
+        const { displayName, icon } = roleMetadata[value as Role];
+        return {
+          value: value,
+          label: displayName ?? capitalize(value),
+          icon: icon,
+        };
+      },
+    },
   }),
   userColumnHelper.accessor((row) => row.updatedAt, {
     id: "Updated At",
@@ -122,12 +133,12 @@ export const userColumn = [
       row.original.updatedAt
         ? formatDate(row.original.updatedAt, "PPPp")
         : null,
-    // filterFn: filterFn("date"),
-    // meta: {
-    //   displayName: "Updated At",
-    //   type: "date",
-    //   icon: CalendarClock,
-    // },
+    filterFn: filterFn("date"),
+    meta: {
+      displayName: "Updated At",
+      type: "date",
+      icon: CalendarClock,
+    },
   }),
   userColumnHelper.accessor((row) => row.createdAt, {
     id: "Created At",
@@ -142,11 +153,11 @@ export const userColumn = [
       row.original.createdAt
         ? formatDate(row.original.createdAt, "PPPp")
         : null,
-    // filterFn: filterFn("date"),
-    // meta: {
-    //   displayName: "Created At",
-    //   type: "date",
-    //   icon: CalendarCheck2,
-    // },
+    filterFn: filterFn("date"),
+    meta: {
+      displayName: "Created At",
+      type: "date",
+      icon: CalendarCheck2,
+    },
   }),
 ];

@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -47,6 +48,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Separator } from "../ui/separator";
 import {
   Table,
   TableBody,
@@ -55,6 +57,12 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import {
+  ActiveFilters,
+  ActiveFiltersMobileContainer,
+  FilterActions,
+  FilterSelector,
+} from "./data-table-filter";
 
 type DataTableProps<TData> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -129,7 +137,7 @@ export function DataTable<TData>({
     },
   });
 
-  // const hasFilters = table.getState().columnFilters.length > 0;
+  const hasFilters = table.getState().columnFilters.length > 0;
 
   return (
     <Card className={className}>
@@ -142,14 +150,13 @@ export function DataTable<TData>({
         <ToolBox table={table} {...props} />
       </CardHeader>
 
-      {/* {hasFilters && (
-        <div className="border-t border-b px-6 py-2 shadow-xs">
-          <ActiveFiltersMobileContainer>
-            <FilterActions table={table} />
-            <ActiveFilters table={table} />
-          </ActiveFiltersMobileContainer>
-        </div>
-      )} */}
+      {hasFilters && (
+        <ActiveFiltersMobileContainer>
+          <FilterActions table={table} />
+          <Separator orientation="vertical" className="h-4" />
+          <ActiveFilters table={table} />
+        </ActiveFiltersMobileContainer>
+      )}
 
       <CardContent>
         <Table>
@@ -205,12 +212,20 @@ export function DataTable<TData>({
         </Table>
       </CardContent>
 
-      <CardFooter className="flex items-center justify-between">
-        <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
+      <CardFooter className="flex flex-col items-center justify-between gap-4 md:flex-row">
+        <RowsPerPage
+          table={table}
+          rowsLimitArr={rowsLimitArr}
+          className="order-3 md:order-1"
+        />
 
-        {caption && <small className="text-muted-foreground">{caption}</small>}
+        {caption && (
+          <small className="text-muted-foreground order-1 md:order-2">
+            {caption}
+          </small>
+        )}
 
-        <Pagination table={table} />
+        <Pagination table={table} className="order-2 md:order-3" />
       </CardFooter>
     </Card>
   );
@@ -226,7 +241,7 @@ function ToolBox<TData>({
     <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
 
-      {/* <FilterSelector table={table} /> */}
+      <FilterSelector table={table} />
 
       <Popover>
         <PopoverTrigger asChild>
@@ -283,16 +298,22 @@ function ToolBox<TData>({
   );
 }
 
-function Pagination<TData>({ table }: TableProps<TData>) {
+function Pagination<TData>({
+  table,
+  className,
+}: TableProps<TData> & { className?: string }) {
+  const isMobile = useIsMobile();
   return (
-    <div className="flex items-center gap-x-4">
-      <Label>
+    <div
+      className={cn("flex flex-col items-center gap-4 md:flex-row", className)}
+    >
+      <Label className="order-2 md:order-1">
         {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
       </Label>
 
-      <div className="flex gap-x-1">
+      <div className="order-1 flex gap-x-1 md:order-2">
         <Button
-          size="iconsm"
+          size={isMobile ? "icon" : "iconsm"}
           variant="outline"
           onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
@@ -301,7 +322,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         </Button>
 
         <Button
-          size="iconsm"
+          size={isMobile ? "icon" : "iconsm"}
           variant="outline"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
@@ -310,7 +331,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         </Button>
 
         <Button
-          size="iconsm"
+          size={isMobile ? "icon" : "iconsm"}
           variant="outline"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
@@ -319,7 +340,7 @@ function Pagination<TData>({ table }: TableProps<TData>) {
         </Button>
 
         <Button
-          size="iconsm"
+          size={isMobile ? "icon" : "iconsm"}
           variant="outline"
           onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
@@ -334,10 +355,11 @@ function Pagination<TData>({ table }: TableProps<TData>) {
 function RowsPerPage<TData>({
   table,
   rowsLimitArr,
-}: TableProps<TData> & { rowsLimitArr: number[] }) {
+  className,
+}: TableProps<TData> & { rowsLimitArr: number[]; className?: string }) {
   return (
-    <div className="flex items-center gap-x-2">
-      <Label className="hidden md:flex">Rows per page</Label>
+    <div className={cn("flex items-center gap-x-2", className)}>
+      <Label>Rows per page</Label>
       <Select
         value={String(table.getState().pagination.pageSize)}
         onValueChange={(value) => {
