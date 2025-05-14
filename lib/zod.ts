@@ -1,28 +1,36 @@
 import { z } from "zod";
-import { maxFileSize, Media, media } from "./media";
+import { media, Media } from "./media";
 import { capitalize } from "./utils";
 
 export const zodMessage = {
   confirmPassword: "Passwords do not match.",
 };
 
-export const zodFile = (mediaType: Media) =>
-  z
+export const zodFile = (mediaType: Media) => {
+  const fileMedia = media[mediaType];
+  const mediaFileType = mediaType !== "all" ? mediaType : "file";
+
+  return z
     .instanceof(File)
     .array()
-    .nonempty({ message: `At least one ${mediaType} file is required` })
+    .nonempty({
+      message: `At least one ${mediaFileType} is required.`,
+    })
     .refine(
       (files) =>
-        files.every((file) => media[mediaType].type.includes(file.type)),
-      { message: `Invalid ${mediaType} file type` },
+        files.every(
+          ({ type }) =>
+            fileMedia.type.includes("*") || fileMedia.type.includes(type),
+        ),
+      { message: `Invalid ${mediaFileType} type.` },
     )
     .refine(
-      (files) =>
-        files.every((file) => file.size <= maxFileSize[mediaType].byte),
+      (files) => files.every((file) => file.size <= fileMedia.size.byte),
       {
-        message: `${capitalize(mediaType)} size should not exceed ${maxFileSize[mediaType].mb} MB`,
+        message: `${capitalize(mediaFileType)} size should not exceed ${fileMedia.size.mb} MB.`,
       },
     );
+};
 
 export const zodAuth = z.object({
   id: z.string(),

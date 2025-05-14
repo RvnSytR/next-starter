@@ -1,5 +1,5 @@
 import { label, label as labelContent } from "@/lib/content";
-import { maxFileSize, Media, media } from "@/lib/media";
+import { Media, media } from "@/lib/media";
 import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 import { ComponentProps, ReactNode } from "react";
@@ -168,13 +168,13 @@ export function InputFile({
   const fileMedia = media[accept];
   const fileSize = size
     ? { mb: size, byte: formatToByte(size) }
-    : maxFileSize[accept];
+    : fileMedia.size;
 
   return (
     <div
       tabIndex={0}
       className={cn(
-        "border-input dark:bg-input/30 hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-6 rounded-md border border-dashed bg-transparent px-4 py-8 shadow-xs transition-[border] *:hover:cursor-pointer",
+        "border-input dark:bg-input/30 hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-6 rounded-md border border-dashed bg-transparent px-4 py-8 shadow-xs transition-[border] hover:cursor-pointer",
         "focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
         className,
       )}
@@ -213,20 +213,20 @@ export function InputFile({
 
       {value && value.length > 0 ? (
         <ul className="text-center">
-          {value.map((file, index) => (
-            <li key={index}>
-              <small
-                className={cn(
-                  "font-medium",
-                  (file.size > fileSize.byte ||
-                    !fileMedia.type.includes(file.type)) &&
-                    "text-destructive",
-                )}
+          {value.map(({ size, type, name }, index) => {
+            const isInvalid =
+              size > fileSize.byte ||
+              (!fileMedia.type.includes("*") && !fileMedia.type.includes(type));
+
+            return (
+              <li
+                key={index}
+                className={cn("text-sm", isInvalid && "text-destructive")}
               >
-                {`${file.name} - ${formatToMegabyte(file.size).toFixed(2)} MB`}
-              </small>
-            </li>
-          ))}
+                {`${name} - ${formatToMegabyte(size).toFixed(2)} MB`}
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <small>{label.button.fileInput.empty}</small>

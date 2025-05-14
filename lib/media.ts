@@ -5,17 +5,15 @@ export type Media = "all" | "image" | "document";
 // | "audio"
 // | "video";
 
-export const maxFileSize: Record<Media, { mb: number; byte: number }> = {
-  all: { mb: 2, byte: formatToByte(2) },
-  image: { mb: 2, byte: formatToByte(2) },
-  document: { mb: 2, byte: formatToByte(2) },
-  // archive: { mb: 20, byte: formatToByte(20) },
-  // audio: { mb: 10, byte: formatToByte(10) },
-  // video: { mb: 10, byte: formatToByte(50) },
-};
-
-export const media: Record<Media, { type: string[]; extensions: string[] }> = {
-  all: { type: ["*"], extensions: [] },
+export const media: Record<
+  Media,
+  { type: string[]; extensions: string[]; size: { mb: number; byte: number } }
+> = {
+  all: {
+    type: ["*"],
+    extensions: [],
+    size: { mb: 2, byte: formatToByte(2) },
+  },
 
   image: {
     type: [
@@ -26,6 +24,7 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
       "image/webp",
     ],
     extensions: [".png", ".jpg", ".jpeg", ".svg", ".webp"],
+    size: { mb: 2, byte: formatToByte(2) },
   },
 
   document: {
@@ -37,6 +36,7 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     ],
     extensions: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"],
+    size: { mb: 2, byte: formatToByte(2) },
   },
 
   // archive: {
@@ -47,11 +47,13 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
   //     "application/x-7z-compressed",
   //   ],
   //   extensions: [".zip", ".rar", ".7z"],
+  //   size: { mb: 20, byte: formatToByte(20) },
   // },
 
   // audio: {
   //   type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/x-flac"],
   //   extensions: [".mp3", ".wav", ".ogg", ".flac"],
+  //   size: { mb: 10, byte: formatToByte(10) },
   // },
 
   // video: {
@@ -63,5 +65,6 @@ export const media: Record<Media, { type: string[]; extensions: string[] }> = {
   //     "video/webm",
   //   ],
   //   extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
+  //   size: { mb: 50, byte: formatToByte(50) },
   // },
 };

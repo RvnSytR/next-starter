@@ -115,37 +115,31 @@ const label = {
     loading: { default: "Processing your request..." },
 
     success: {
+      default: (
+        thing: string,
+        action: "created" | "updated" | "removed" | "terminated",
+        target: string = "Your",
+      ) => `${target} ${thing} has been ${action} successfully.`,
+
       user: {
         signIn: (name: string) => `Signed in successfully, Welcome ${name}!`,
         signUp:
           "Your account has been registered successfully! Please sign in to continue.",
         signOut: "Signed out successfully.",
-
-        create: (name: string) => `${name} created successfully!`,
         changeRole: (name: string, role: string) =>
           `${name}'s role has been successfully updated to ${role}!`,
         revokeSession: (name: string) =>
           `All ${name}'s sessions have been terminated successfully.`,
-        remove: (name: string) => `${name} has been successfully removed!`,
-      },
-
-      profile: {
-        update: (field: string) =>
-          `Your ${field.toLowerCase()} has been updated successfully.`,
-        revokeSession: "The session has been terminated successfully.",
-        revokeAllOtherSession:
-          "All other sessions have been terminated successfully.",
-        deleteAccount: "Your account has been deleted successfully. Goodbye!",
       },
     },
 
     info: {
-      noChanges: (thing: string, name: string = "your") =>
-        `No changes were made to ${name} ${thing}.`,
+      noChanges: (thing: string, target: string = "your") =>
+        `No changes were made to ${target} ${thing}.`,
     },
 
     error: {
-      catch: "Something went wrong. Please try again later.",
+      catch: "Uh-oh, Something went wrong. Please try again later.",
       file: {
         required: (fileType: string) => `Please upload a valid ${fileType}.`,
         upload: "An error occurred while uploading the file. Please try again.",

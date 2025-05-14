@@ -260,7 +260,7 @@ export function ExampleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel>File *</FormLabel>
-              <InputFile accept="image" {...field} />
+              <InputFile accept="image" multiple {...field} />
               <FormMessage />
             </FormItem>
           )}

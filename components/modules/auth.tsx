@@ -474,7 +474,7 @@ export function ProfilePicture({
       { image: fileUrl },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update("avatar"));
+          toast.success(label.toast.success.default("avatar", "updated"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -494,7 +494,7 @@ export function ProfilePicture({
       { image: null },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update("avatar"));
+          toast.success(label.toast.success.default("avatar", "removed"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -607,7 +607,7 @@ export function PersonalInformation({
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.profile.update("profile"));
+          toast.success(label.toast.success.default("profile", "updated"));
           setLoading(false);
           router.refresh();
         },
@@ -731,7 +731,7 @@ export function ChangePasswordForm() {
     await authClient.changePassword(formData, {
       onRequest: () => setLoading(true),
       onSuccess: () => {
-        toast.success(label.toast.success.profile.update("password"));
+        toast.success(label.toast.success.default("password", "updated"));
         setLoading(false);
         form.reset();
         router.refresh();
@@ -877,7 +877,9 @@ export function ActiveSessionButton({
       { token },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.profile.revokeSession);
+          toast.success(
+            label.toast.success.default("sessions", "terminated", "The"),
+          );
           router.refresh();
         },
         onError: ({ error }) => {
@@ -956,7 +958,9 @@ export function RevokeAllOtherSessionButton() {
       {},
       {
         onSuccess: () => {
-          toast.success(label.toast.success.profile.revokeAllOtherSession);
+          toast.success(
+            label.toast.success.default("other sessions", "terminated"),
+          );
           router.refresh();
         },
         onError: ({ error }) => {
@@ -1026,7 +1030,10 @@ export function DeleteMyAccountButton({
                 { callbackURL: route.auth },
                 {
                   onSuccess: () => {
-                    toast.success(label.toast.success.profile.deleteAccount);
+                    toast.success(
+                      label.toast.success.default("account", "removed") +
+                        " Goodbye!",
+                    );
                     router.push(route.auth);
                   },
                   onError: ({ error }) => {
@@ -1141,7 +1148,9 @@ export function AdminCreateUserDialog() {
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.user.create(formData.name));
+          toast.success(
+            label.toast.success.default("account", "created", formData.name),
+          );
           setLoading(false);
           form.reset();
           router.refresh();
@@ -1524,7 +1533,9 @@ export function AdminRemoveUserDialog({
                 { userId: id },
                 {
                   onSuccess: () => {
-                    toast.success(label.toast.success.user.remove(name));
+                    toast.success(
+                      label.toast.success.default("account", "removed", name),
+                    );
                     router.refresh();
                   },
                   onError: ({ error }) => {

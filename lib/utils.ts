@@ -2,7 +2,7 @@ import { ClassValue, clsx } from "clsx";
 import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
-import { maxFileSize } from "./media";
+import { media } from "./media";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -140,7 +140,7 @@ async function getFilesAsURL(files: File[] | null) {
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
-    if (item.size > maxFileSize.image.byte)
+    if (item.size > media.image.size.byte)
       throw new Error("Ukuran File Terlalu Besar!");
     results.push(await readFileAsURL(item));
   }

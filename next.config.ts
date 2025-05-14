@@ -1,10 +1,10 @@
 import { NextConfig } from "next";
-import { maxFileSize } from "./lib/media";
+import { media } from "./lib/media";
 
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: `${Math.max(...Object.values(maxFileSize).map(({ mb }) => mb))}mb`,
+      bodySizeLimit: `${Math.max(...Object.values(media).map(({ size }) => size.mb))}mb`,
     },
   },
 };

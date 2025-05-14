@@ -137,8 +137,6 @@ export function DataTable<TData>({
     },
   });
 
-  const hasFilters = table.getState().columnFilters.length > 0;
-
   return (
     <Card className={className}>
       <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
@@ -150,7 +148,7 @@ export function DataTable<TData>({
         <ToolBox table={table} {...props} />
       </CardHeader>
 
-      {hasFilters && (
+      {table.getState().columnFilters.length > 0 && (
         <ActiveFiltersMobileContainer>
           <FilterActions table={table} />
           <Separator orientation="vertical" className="h-4" />
