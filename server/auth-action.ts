@@ -4,23 +4,21 @@ import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { deleteFile, getFileKeyFromPublicUrl } from "./s3";
 
-const getHeader = async (header?: Headers) => header ?? (await headers());
-
 export async function getSession(header?: Headers) {
-  return await auth.api.getSession({ headers: await getHeader(header) });
+  return await auth.api.getSession({ headers: header ?? (await headers()) });
 }
 
 export async function getSessionList(header?: Headers) {
-  return await auth.api.listSessions({ headers: await getHeader(header) });
+  return await auth.api.listSessions({ headers: header ?? (await headers()) });
 }
 
 export async function getUserList(header?: Headers) {
   return await auth.api.listUsers({
-    headers: await getHeader(header),
+    headers: header ?? (await headers()),
     query: { sortBy: "createdAt", sortDirection: "desc" },
   });
 }
 
-export async function deleteProfilePicture(image: string | null | undefined) {
-  if (image) await deleteFile([await getFileKeyFromPublicUrl(image)]);
+export async function deleteProfilePicture(image: string) {
+  await deleteFile([await getFileKeyFromPublicUrl(image)]);
 }

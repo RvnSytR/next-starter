@@ -462,7 +462,7 @@ export function ProfilePicture({
     const fileUrl = await getFilePublicUrl(fileKey);
 
     formData.append(fileKey, file);
-    if (fileUrl !== image) await deleteProfilePicture(image);
+    if (image && fileUrl !== image) await deleteProfilePicture(image);
 
     await uploadFile({
       formData: formData,
@@ -489,7 +489,7 @@ export function ProfilePicture({
   const deleteHandler = async () => {
     setIsRemoved(true);
 
-    await deleteProfilePicture(image);
+    if (image) await deleteProfilePicture(image);
     await authClient.updateUser(
       { image: null },
       {
@@ -1025,7 +1025,7 @@ export function DeleteMyAccountButton({
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={async () => {
-              await deleteProfilePicture(image);
+              if (image) await deleteProfilePicture(image);
               await authClient.deleteUser(
                 { callbackURL: route.auth },
                 {
@@ -1528,7 +1528,7 @@ export function AdminRemoveUserDialog({
             className={buttonVariants({ variant: "destructive" })}
             onClick={async () => {
               setLoading(true);
-              await deleteProfilePicture(image);
+              if (image) await deleteProfilePicture(image);
               await authClient.admin.removeUser(
                 { userId: id },
                 {
