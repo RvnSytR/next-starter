@@ -148,18 +148,17 @@ function SidebarProvider({
 }
 
 function Sidebar({
-  side = "left",
   variant = "sidebar",
   collapsible = "offcanvas",
   className,
   children,
   ...props
 }: React.ComponentProps<"div"> & {
-  side?: "left" | "right";
   variant?: "sidebar" | "floating" | "inset";
   collapsible?: "offcanvas" | "icon" | "none";
 }) {
   const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
+  const side = isMobile ? "right" : "left";
 
   if (collapsible === "none") {
     return (
@@ -180,6 +179,7 @@ function Sidebar({
     return (
       <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
         <SheetContent
+          side={side}
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
@@ -189,7 +189,6 @@ function Sidebar({
               "--sidebar-width": SIDEBAR_WIDTH_MOBILE,
             } as React.CSSProperties
           }
-          side={side}
         >
           <SheetHeader className="sr-only">
             <SheetTitle>Sidebar</SheetTitle>

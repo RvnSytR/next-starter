@@ -112,7 +112,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                     <LinkLoader
                       defaultIcon={bodyItem.icon && <bodyItem.icon />}
                     />
-                    {label}
+                    <span className="line-clamp-1">{label}</span>
                   </Link>
                 </SCMenuButton>
 
@@ -136,7 +136,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
                                 href={`${href}/#${subItem.elementId}`}
                                 className="flex justify-between"
                               >
-                                {subItem.subLabel}
+                                <span className="line-clamp-1">
+                                  {subItem.subLabel}
+                                </span>
                                 <LinkLoader />
                               </Link>
                             </SidebarMenuSubButton>
