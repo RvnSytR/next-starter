@@ -228,16 +228,9 @@ export function ExampleForm() {
               <FormItem>
                 <FormLabel>Radio Group *</FormLabel>
 
-                <RadioGroup
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="size-full"
-                >
+                <RadioGroup value={field.value} onValueChange={field.onChange}>
                   {selectAndRadioData.map((item, index) => (
-                    <FormItem
-                      key={index}
-                      className="flex-row items-center space-x-2"
-                    >
+                    <FormItem key={index} className="flex items-center">
                       <FormControl>
                         <RadioGroupItem value={item.value} />
                       </FormControl>

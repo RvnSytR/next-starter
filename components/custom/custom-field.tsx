@@ -1,8 +1,15 @@
 import { label, label as labelContent } from "@/lib/content";
 import { Media, media } from "@/lib/media";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
-import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
-import { ComponentProps, ReactNode } from "react";
+import { Calendar as CalendarIcon, Dot, Trash2, Upload, X } from "lucide-react";
+import Image from "next/image";
+import {
+  ComponentProps,
+  DragEvent,
+  ReactNode,
+  useCallback,
+  useRef,
+} from "react";
 import { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
 import { Button } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
@@ -149,31 +156,60 @@ export function InputDateRange({
 }
 
 export function InputFile({
-  value,
+  value: files,
   onChange,
   accept = "all",
   maxFileSize: size,
   className,
   placeholder,
-  ...props
-}: Omit<
-  ComponentProps<"input">,
-  "type" | "value" | "onChange" | "accept" | "tabIndex"
-> & {
+  multiple = false,
+}: Pick<ComponentProps<"input">, "className" | "placeholder" | "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: Media | "all";
   maxFileSize?: number;
 }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
   const fileMedia = media[accept];
   const fileSize = size ? { mb: size, byte: toByte(size) } : fileMedia.size;
+  const isFiles = files.length > 0;
+  const Icon = fileMedia.icon;
+
+  const resetFiles = () => onChange([]);
+
+  const removeFile = (fileIndex: number) => {
+    const filteredFiles = files.filter((_, index) => index !== fileIndex);
+    onChange(filteredFiles);
+  };
+
+  const changeHandler = (fileList: FileList | null) => {
+    const newFileList = fileList;
+    if (newFileList) {
+      const newFiles = Array.from(newFileList);
+      if (isFiles) onChange([...files, ...newFiles]);
+      else onChange(newFiles.map((f) => f));
+    }
+  };
+
+  const handleDragEnterAndOver = useCallback((e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
+  const handleDragLeave = useCallback((e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+  }, []);
 
   return (
     <div
       tabIndex={0}
       className={cn(
-        "border-input dark:bg-input/30 hover:border-muted-foreground relative flex flex-col items-center justify-center gap-y-6 rounded-md border border-dashed bg-transparent px-4 py-8 shadow-xs transition-[border] hover:cursor-pointer",
+        "border-input dark:bg-input/30 relative rounded-md border border-dashed bg-transparent shadow-xs transition-[border]",
         "focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
+        !isFiles && "hover:border-muted-foreground hover:cursor-pointer",
         className,
       )}
     >
@@ -181,53 +217,149 @@ export function InputFile({
         <Input
           type="file"
           tabIndex={-1}
-          className="absolute size-full opacity-0"
+          ref={inputRef}
+          multiple={multiple}
           accept={fileMedia.type.join(", ")}
-          onChange={(e) => {
-            const fileList = e.target.files;
-            if (fileList) onChange(Array.from(fileList).map((file) => file));
-          }}
-          {...props}
+          className={cn(
+            "absolute size-full opacity-0",
+            isFiles ? "z-[-1]" : "z-0",
+          )}
+          onChange={({ target }) => changeHandler(target.files)}
         />
       </FormControl>
 
-      <div className="flex flex-col items-center gap-y-1 text-sm">
-        <CloudUpload className="size-6" />
+      {isFiles ? (
+        <div
+          onDragEnter={handleDragEnterAndOver}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragEnterAndOver}
+          onDrop={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            changeHandler(e.dataTransfer.files);
+          }}
+          className="flex flex-col gap-y-4 p-4"
+        >
+          <div className="flex items-center justify-between gap-x-2">
+            <h6>Total Files: {files.length}</h6>
 
-        <span className="font-medium">
-          {placeholder ?? label.button.fileInput.placeholder}
-        </span>
-
-        <small className="text-muted-foreground">
-          {label.button.fileInput.size(fileSize.mb)}
-        </small>
-
-        {fileMedia.extensions.length > 0 && (
-          <small className="text-muted-foreground text-xs">
-            {`( ${fileMedia.extensions.join(" ")} )`}
-          </small>
-        )}
-      </div>
-
-      {value && value.length > 0 ? (
-        <ul className="text-center">
-          {value.map(({ size, type, name }, index) => {
-            const isInvalid =
-              size > fileSize.byte ||
-              (!fileMedia.type.includes("*") && !fileMedia.type.includes(type));
-
-            return (
-              <li
-                key={index}
-                className={cn("text-sm", isInvalid && "text-destructive")}
+            <div className="flex gap-x-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8"
+                onClick={() => {
+                  if (inputRef.current) inputRef.current.click();
+                }}
               >
-                {`${name} - ${toMegabytes(size).toFixed(2)} MB`}
-              </li>
-            );
-          })}
-        </ul>
+                <Upload />
+                Add {accept === "all" ? "files" : accept}
+              </Button>
+              <Button
+                type="button"
+                variant="outline_destructive"
+                className="h-8"
+                onClick={resetFiles}
+              >
+                <Trash2 />
+                {label.button.remove.text} all
+              </Button>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              multiple
+                ? "grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6"
+                : "flex justify-center",
+            )}
+          >
+            {files.map((file, index) => {
+              const isImage = file.type.startsWith("image/");
+              const isInvalid =
+                file.size > fileSize.byte ||
+                (!fileMedia.type.includes("*") &&
+                  !fileMedia.type.includes(file.type));
+
+              return (
+                <div
+                  key={index}
+                  className={cn(
+                    "relative flex flex-col rounded-md border shadow-xs",
+                    !multiple && "max-w-1/2 md:max-w-1/4 lg:max-w-1/6",
+                    isInvalid && "border-destructive",
+                  )}
+                >
+                  <Button
+                    type="button"
+                    onClick={() => removeFile(index)}
+                    size="iconsm"
+                    variant="outline_destructive"
+                    className="bg-background/50 absolute -top-2.5 -right-2.5 size-6 rounded-full"
+                  >
+                    <X />
+                  </Button>
+
+                  {isImage ? (
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className="aspect-square size-full rounded-t-md object-cover"
+                      width={100}
+                      height={100}
+                    />
+                  ) : (
+                    <div className="bg-accent flex aspect-square size-full items-center justify-center">
+                      <div className="rounded-full border p-3">
+                        <Icon />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col gap-1 border-t p-3">
+                    <small
+                      className={cn(
+                        "truncate font-medium",
+                        isInvalid && "text-destructive",
+                      )}
+                    >
+                      {file.name}
+                    </small>
+                    <small
+                      className={cn(
+                        "truncate text-xs",
+                        isInvalid
+                          ? "text-destructive"
+                          : "text-muted-foreground",
+                      )}
+                    >
+                      {toMegabytes(file.size).toFixed(2)} MB
+                    </small>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
       ) : (
-        <small>{label.button.fileInput.empty}</small>
+        <div className="flex flex-col items-center gap-y-4 px-4 py-8">
+          <div className="rounded-full border p-3">
+            <Icon />
+          </div>
+
+          <div className="flex flex-col items-center gap-y-1 text-center">
+            <small className="font-medium">
+              {placeholder ?? label.button.fileInput.placeholder}
+            </small>
+
+            <small className="text-muted-foreground flex items-center text-xs">
+              {label.button.fileInput.size(fileSize.mb)}
+              <Dot />
+              {fileMedia.extensions.length > 0 &&
+                `( ${fileMedia.extensions.join(" ")} )`}
+            </small>
+          </div>
+        </div>
       )}
     </div>
   );

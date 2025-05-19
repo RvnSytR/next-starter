@@ -165,8 +165,7 @@ const label = {
     datePicker: "Pick a Date",
     fileInput: {
       placeholder: "Drag & drop a file here, or click to upload",
-      size: (mb: number) => `Maximum File Size: ${mb} MB`,
-      empty: "No file selected",
+      size: (mb: number) => `Up to ${mb} MB`,
     },
 
     save: {
