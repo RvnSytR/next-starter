@@ -22,7 +22,7 @@ type MenuBody = {
 };
 
 const route = {
-  auth: "/auth",
+  signIn: "/sign-in",
   protected: "/dashboard", // change to "/" if all the routes is protected
   other: [
     { href: "/hiddenFromMenu-route-1", role: userRoles },

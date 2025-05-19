@@ -1,5 +1,5 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
-import { GridPattern } from "@/components/magicui/grid-pattern";
+import { GridPattern } from "@/components/other-ui/grid-pattern";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { getCurrentPage, route } from "@/lib/menu";
 import { getSession } from "@/server/auth-action";

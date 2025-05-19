@@ -6,11 +6,11 @@ export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
   const sessionCookie = getSessionCookie(req);
 
-  if (!sessionCookie && !pathname.startsWith(route.auth)) {
-    return NextResponse.redirect(new URL(route.auth, req.url));
+  if (!sessionCookie && !pathname.startsWith(route.signIn)) {
+    return NextResponse.redirect(new URL(route.signIn, req.url));
   }
 
-  if (sessionCookie && pathname.startsWith(route.auth)) {
+  if (sessionCookie && pathname.startsWith(route.signIn)) {
     return NextResponse.redirect(new URL(route.protected, req.url));
   }
 
@@ -19,7 +19,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/auth",
+    "/sign-in",
     "/dashboard/:path*",
 
     // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher

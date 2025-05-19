@@ -141,7 +141,7 @@ export function SignOutButton() {
             onRequest: () => setLoading(true),
             onSuccess: () => {
               toast.success(label.toast.success.user.signOut);
-              router.push(route.auth);
+              router.push(route.signIn);
             },
             onError: ({ error }) => {
               toast.error(error.message);
@@ -168,7 +168,7 @@ export function SignOnGithubButton() {
         await authClient.signIn.social({
           provider: "github",
           callbackURL: route.protected,
-          errorCallbackURL: route.auth,
+          errorCallbackURL: route.signIn,
         });
       }}
     >
@@ -1027,14 +1027,14 @@ export function DeleteMyAccountButton({
             onClick={async () => {
               if (image) await deleteProfilePicture(image);
               await authClient.deleteUser(
-                { callbackURL: route.auth },
+                { callbackURL: route.signIn },
                 {
                   onSuccess: () => {
                     toast.success(
                       label.toast.success.default("account", "removed") +
                         " Goodbye!",
                     );
-                    router.push(route.auth);
+                    router.push(route.signIn);
                   },
                   onError: ({ error }) => {
                     toast.error(error.message);

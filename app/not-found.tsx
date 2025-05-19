@@ -1,5 +1,5 @@
 import { LinkLoader } from "@/components/custom/custom-button";
-import { GridPattern } from "@/components/magicui/grid-pattern";
+import { GridPattern } from "@/components/other-ui/grid-pattern";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
 import Link from "next/link";

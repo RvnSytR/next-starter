@@ -1,10 +1,10 @@
 import { SectionTagline } from "@/components/layout/section";
-import { GridPattern } from "@/components/magicui/grid-pattern";
 import {
   SignInForm,
   SignOnGithubButton,
   SignUpForm,
 } from "@/components/modules/auth";
+import { GridPattern } from "@/components/other-ui/grid-pattern";
 import {
   Card,
   CardContent,
@@ -20,10 +20,10 @@ import Link from "next/link";
 export default function Page() {
   return (
     <main className="relative flex min-h-dvh items-center justify-center">
-      <GridPattern className="stroke-input/25 z-[-1]" />
+      <GridPattern className="stroke-input/25 animate-fade z-[-1] delay-500" />
 
       <div className="container flex justify-center py-8">
-        <Card className="w-full md:w-md">
+        <Card className="animate-fade w-full md:w-md">
           <CardHeader className="text-center">
             <CardTitle className="mx-auto">
               <Link href="/">
