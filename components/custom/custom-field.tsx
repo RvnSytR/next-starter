@@ -1,6 +1,6 @@
 import { label, label as labelContent } from "@/lib/content";
 import { Media, media } from "@/lib/media";
-import { cn, formatDate, formatToByte, formatToMegabyte } from "@/lib/utils";
+import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, CloudUpload } from "lucide-react";
 import { ComponentProps, ReactNode } from "react";
 import { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
@@ -166,9 +166,7 @@ export function InputFile({
   maxFileSize?: number;
 }) {
   const fileMedia = media[accept];
-  const fileSize = size
-    ? { mb: size, byte: formatToByte(size) }
-    : fileMedia.size;
+  const fileSize = size ? { mb: size, byte: toByte(size) } : fileMedia.size;
 
   return (
     <div
@@ -223,7 +221,7 @@ export function InputFile({
                 key={index}
                 className={cn("text-sm", isInvalid && "text-destructive")}
               >
-                {`${name} - ${formatToMegabyte(size).toFixed(2)} MB`}
+                {`${name} - ${toMegabytes(size).toFixed(2)} MB`}
               </li>
             );
           })}

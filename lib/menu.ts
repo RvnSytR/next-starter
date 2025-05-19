@@ -11,17 +11,14 @@ import { adminRoles, Role, userRoles } from "./permission";
 
 type MenuRole = Role | "all";
 type MenuProps = { section: string; body: MenuBody[] };
+type MenuWithoutIconProps = Omit<MenuBody, "icon">;
 type MenuBody = {
   href: string;
-  label: string;
+  displayName: string;
   role: MenuRole[];
   icon?: LucideIcon;
   disabled?: boolean;
-  subMenu?: {
-    subLabel: string;
-    elementId: string;
-    className?: string;
-  }[];
+  subMenu?: { subLabel: string; className?: string }[];
 };
 
 const route = {
@@ -39,14 +36,14 @@ const sidebarMenu: MenuProps[] = [
     body: [
       {
         href: route.protected,
-        label: "Dashboard",
+        displayName: "Dashboard",
         role: ["all"],
         icon: LayoutDashboard,
       },
       {
         href: setProtectedRoute("/account"),
-        label: "User Management",
-        role: [...adminRoles],
+        displayName: "User Management",
+        role: adminRoles,
         icon: UsersRound,
       },
     ],
@@ -56,19 +53,15 @@ const sidebarMenu: MenuProps[] = [
     body: [
       {
         href: setProtectedRoute("/profile"),
-        label: "My Profile",
+        displayName: "My Profile",
         role: ["all"],
         icon: UserRound,
         subMenu: [
-          {
-            subLabel: "Personal Information",
-            elementId: "personal-information",
-          },
-          { subLabel: "Change Password", elementId: "change-password" },
-          { subLabel: "Active Session", elementId: "active-session" },
+          { subLabel: "Personal Information" },
+          { subLabel: "Change Password" },
+          { subLabel: "Active Session" },
           {
             subLabel: "Delete Account",
-            elementId: "delete-account",
             className: "text-destructive hover:text-destructive",
           },
         ],
@@ -77,9 +70,9 @@ const sidebarMenu: MenuProps[] = [
   },
 ];
 
-const footerSidebarMenu: MenuBody[] = [
-  { href: "/", label: "Home", role: ["all"], icon: ExternalLink },
-  { href: "/somewhere", label: "Help", role: ["all"], icon: CircleHelp },
+const footerSidebarMenu: Omit<MenuBody, "role" | "subMenu">[] = [
+  { href: "/", displayName: "Home", icon: ExternalLink },
+  { href: "/somewhere", displayName: "Help", icon: CircleHelp },
 ];
 
 // #region // * Get Menu
@@ -87,32 +80,28 @@ function setProtectedRoute(r: string) {
   return route.protected === "/" ? r : `${route.protected}${r}`;
 }
 
-function getMenuBody(route: string): MenuBody | null {
-  const [result] = Object.values(sidebarMenu)
-    .flatMap((item) => item.body)
+function getMenu(
+  route: string,
+  withIcon: boolean = false,
+): MenuBody | MenuWithoutIconProps | null {
+  const [menuBody] = Object.values(sidebarMenu)
+    .flatMap(({ body }) => body)
     .map((item) => item)
-    .filter((item) => route.startsWith(item.href));
-  return result ?? null;
-}
+    .filter(({ href }) => route === href);
 
-function getMenu(route: string): Omit<MenuBody, "icon"> | null {
-  const menuBody = getMenuBody(route);
   if (!menuBody) return null;
+
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { icon, ...restMenu } = menuBody;
-  return restMenu ?? null;
-}
-
-function getMenuIcon(route: string): LucideIcon | null {
-  return getMenuBody(route)?.icon ?? null;
+  return withIcon ? menuBody : restMenu;
 }
 
 function getMenuByRole(role: string): MenuProps[] {
   return sidebarMenu
     .map(({ section, body }) => {
       const filteredBody = body.filter(
-        (item) =>
-          item.role.includes(role as MenuRole) || item.role.includes("all"),
+        ({ role: menuRole }) =>
+          menuRole.includes(role as MenuRole) || menuRole.includes("all"),
       );
 
       if (filteredBody.length > 0) return { section, body: filteredBody };
@@ -121,14 +110,8 @@ function getMenuByRole(role: string): MenuProps[] {
     .filter((section) => section !== null);
 }
 
-function getCurrentPage(
-  currentRoute: string,
-  metadata: boolean = false,
-  isProtected: boolean = false,
-) {
-  const currentPage = getMenu(
-    isProtected ? `${route.protected}${currentRoute}` : currentRoute,
-  )?.label;
+function getCurrentPage(currentRoute: string, metadata: boolean = false) {
+  const currentPage = getMenu(currentRoute)?.displayName;
   if (!currentPage) return label.error.protectedPath;
   return metadata ? page.title(currentPage) : currentPage;
 }
@@ -139,8 +122,7 @@ export {
   getCurrentPage,
   getMenu,
   getMenuByRole,
-  getMenuIcon,
   route,
   setProtectedRoute,
 };
-export type { MenuRole };
+export type { MenuRole, MenuWithoutIconProps };

@@ -41,12 +41,8 @@ export const roleMetadata: Record<
   Role,
   { displayName?: string; icon: LucideIcon }
 > = {
-  user: {
-    icon: UserRound,
-  },
-  admin: {
-    icon: UserRoundCheck,
-  },
+  user: { icon: UserRound },
+  admin: { icon: UserRoundCheck },
   customRoleExample: {
     displayName: "Custom Role Example",
     icon: FlaskConical,

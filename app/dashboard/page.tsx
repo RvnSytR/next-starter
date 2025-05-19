@@ -1,13 +1,12 @@
 import { Section } from "@/components/layout/section";
-import { getCurrentPage, route } from "@/lib/menu";
-import { getSession } from "@/server/auth-action";
+import { checkRouteAccess } from "@/server/auth-action";
 
 export default async function Page() {
-  const data = await getSession();
+  const { session, menu } = await checkRouteAccess("/dashboard");
 
   return (
-    <Section currentPage={getCurrentPage(route.protected)}>
-      <p>{JSON.stringify(data, null, 2)}</p>
+    <Section currentPage={menu.displayName}>
+      <p>{JSON.stringify(session, null, 2)}</p>
     </Section>
   );
 }

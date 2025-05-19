@@ -53,12 +53,20 @@ export function getRandomColor(withHash?: boolean) {
 // #endregion
 
 // #region // * Formater
-export function formatToByte(mb: number) {
+export function toByte(mb: number) {
   return mb * 1024 * 1024;
 }
 
-export function formatToMegabyte(byte: number) {
-  return byte / 1000 / 1000;
+export function toMegabytes(byte: number) {
+  return byte / 1024 / 1024;
+}
+
+export function toKebabCase(str: string): string {
+  return str
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, "")
+    .replace(/\s+/g, "-");
 }
 
 export function formatNumeric(
@@ -84,7 +92,10 @@ export function formatPhone(num: string | number): string {
 }
 
 export function capitalize(str: string) {
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str
+    .split(" ")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(" ");
 }
 
 export function sanitizeNumber(str: string): number {

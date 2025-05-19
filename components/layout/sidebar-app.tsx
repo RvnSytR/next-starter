@@ -4,10 +4,12 @@ import {
   getMenuByRole,
   setProtectedRoute,
 } from "@/lib/menu";
+import { toKebabCase } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { LinkLoader } from "../custom/custom-button";
 import { SignOutButton, UserAvatar } from "../modules/auth";
+import { Spinner } from "../other/icon";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -29,15 +31,12 @@ import {
 } from "../ui/sidebar";
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
-type SidebarData = Pick<Session["user"], "name" | "email" | "image"> & {
-  role: string;
-};
+type SidebarData = Pick<Session["user"], "name" | "email" | "image" | "role">;
 
 export function SidebarApp({
-  role,
   children,
   ...props
-}: SidebarData & React.ComponentProps<"div">) {
+}: SidebarData & { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
@@ -47,7 +46,7 @@ export function SidebarApp({
         </SidebarHeader>
 
         <SidebarContent>
-          <Content role={role} />
+          <Content {...props} />
         </SidebarContent>
 
         <SidebarFooter>
@@ -92,13 +91,21 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
+  if (!role) {
+    return (
+      <SidebarGroup className="flex h-full items-center justify-center">
+        <Spinner />
+      </SidebarGroup>
+    );
+  }
+
   return getMenuByRole(role).map((item, index) => (
     <SidebarGroup key={index}>
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
 
       <SidebarMenu>
         {item.body.map((bodyItem, bodyIndex) => {
-          const { href, label, disabled, subMenu } = bodyItem;
+          const { href, displayName, disabled, subMenu } = bodyItem;
           return (
             <SCCollapsible
               key={bodyIndex}
@@ -107,12 +114,12 @@ function Content({ role }: Pick<SidebarData, "role">) {
               asChild
             >
               <SidebarMenuItem>
-                <SCMenuButton pathname={href} tooltip={label} asChild>
+                <SCMenuButton pathname={href} tooltip={displayName} asChild>
                   <Link href={href}>
                     <LinkLoader
                       defaultIcon={bodyItem.icon && <bodyItem.icon />}
                     />
-                    <span className="line-clamp-1">{label}</span>
+                    <span className="line-clamp-1">{displayName}</span>
                   </Link>
                 </SCMenuButton>
 
@@ -133,7 +140,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                               asChild
                             >
                               <Link
-                                href={`${href}/#${subItem.elementId}`}
+                                href={`${href}/#${toKebabCase(subItem.subLabel)}`}
                                 className="flex justify-between"
                               >
                                 <span className="line-clamp-1">
@@ -162,10 +169,10 @@ function Footer() {
     <SidebarMenu className="gap-2">
       {footerSidebarMenu.map((item, index) => (
         <SidebarMenuItem key={index}>
-          <SidebarMenuButton size="sm" tooltip={item.label} asChild>
+          <SidebarMenuButton size="sm" tooltip={item.displayName} asChild>
             <Link href={item.href}>
               <LinkLoader defaultIcon={item.icon && <item.icon />} />
-              {item.label}
+              {item.displayName}
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>

@@ -1,4 +1,4 @@
-import { formatToByte } from "./utils";
+import { toByte } from "./utils";
 
 export type Media = "all" | "image" | "document";
 // | "archive"
@@ -12,7 +12,7 @@ export const media: Record<
   all: {
     type: ["*"],
     extensions: [],
-    size: { mb: 2, byte: formatToByte(2) },
+    size: { mb: 2, byte: toByte(2) },
   },
 
   image: {
@@ -24,7 +24,7 @@ export const media: Record<
       "image/webp",
     ],
     extensions: [".png", ".jpg", ".jpeg", ".svg", ".webp"],
-    size: { mb: 2, byte: formatToByte(2) },
+    size: { mb: 2, byte: toByte(2) },
   },
 
   document: {
@@ -36,7 +36,7 @@ export const media: Record<
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     ],
     extensions: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"],
-    size: { mb: 2, byte: formatToByte(2) },
+    size: { mb: 2, byte: toByte(2) },
   },
 
   // archive: {
@@ -47,13 +47,13 @@ export const media: Record<
   //     "application/x-7z-compressed",
   //   ],
   //   extensions: [".zip", ".rar", ".7z"],
-  //   size: { mb: 20, byte: formatToByte(20) },
+  //   size: { mb: 20, byte: toByte(20) },
   // },
 
   // audio: {
   //   type: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/x-flac"],
   //   extensions: [".mp3", ".wav", ".ogg", ".flac"],
-  //   size: { mb: 10, byte: formatToByte(10) },
+  //   size: { mb: 10, byte: toByte(10) },
   // },
 
   // video: {
@@ -65,6 +65,6 @@ export const media: Record<
   //     "video/webm",
   //   ],
   //   extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
-  //   size: { mb: 50, byte: formatToByte(50) },
+  //   size: { mb: 50, byte: toByte(50) },
   // },
 };

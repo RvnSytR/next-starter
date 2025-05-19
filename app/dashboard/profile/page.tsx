@@ -1,4 +1,4 @@
-import { Section, SectionError } from "@/components/layout/section";
+import { Section } from "@/components/layout/section";
 import {
   ActiveSessionButton,
   ChangePasswordForm,
@@ -16,26 +16,23 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { page } from "@/lib/content";
-import { getCurrentPage } from "@/lib/menu";
-import { getSession, getSessionList } from "@/server/auth-action";
+import { getCurrentPage, setProtectedRoute } from "@/lib/menu";
+import { checkRouteAccess, getSessionList } from "@/server/auth-action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: getCurrentPage("/profile", true, true),
+  title: getCurrentPage(setProtectedRoute("/profile"), true),
 };
 
 export default async function Page() {
-  const session = await getSession();
-  if (!session?.user.role) return <SectionError />;
+  const { session, menu } = await checkRouteAccess(
+    setProtectedRoute("/profile"),
+  );
 
-  const { role, ...rest } = session.user;
   const sessionList = await getSessionList();
 
   return (
-    <Section
-      currentPage={getCurrentPage("/profile", false, true)}
-      className="items-center"
-    >
+    <Section currentPage={menu.displayName} className="items-center">
       <Card
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-2xl"
@@ -47,7 +44,7 @@ export default async function Page() {
 
         <Separator />
 
-        <PersonalInformation role={role} {...rest} />
+        <PersonalInformation {...session.user} />
       </Card>
 
       <Card id="change-password" className="w-full scroll-m-20 lg:max-w-2xl">

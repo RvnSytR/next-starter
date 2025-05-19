@@ -13,16 +13,15 @@ import {
 
 function IsActiveRoute(pathname: string): boolean {
   const currentPathname = usePathname();
-  const protectedRoute = route.protected;
 
   const trimProtectedRoute = (p: string) =>
-    p.replace(protectedRoute, "").trim();
+    p.replace(route.protected, "").trim();
 
   const trimmedCurrentRoute = trimProtectedRoute(currentPathname);
   const trimmedRoute = trimProtectedRoute(pathname);
 
   const isRootRoute =
-    currentPathname === protectedRoute && currentPathname === pathname;
+    currentPathname === route.protected && currentPathname === pathname;
   const isTrimmedRoute =
     !!trimmedRoute && trimmedCurrentRoute.startsWith(trimmedRoute);
 

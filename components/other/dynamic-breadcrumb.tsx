@@ -12,7 +12,7 @@ import Link from "next/link";
 import { Fragment } from "react";
 
 export type DynamicBreadcrumbProps = {
-  breadcrumbArr?: (string | { href: string; label: string })[];
+  breadcrumbArr?: (string | { href: string; displayName: string })[];
   currentPage: string;
 };
 
@@ -27,7 +27,7 @@ export function DynamicBreadcrumb({
           const menu = typeof item === "string" ? getMenu(item) : item;
           const content = menu ? (
             <BreadcrumbLink asChild>
-              <Link href={menu.href}>{menu.label}</Link>
+              <Link href={menu.href}>{menu.displayName}</Link>
             </BreadcrumbLink>
           ) : (
             <BreadcrumbPage className="text-destructive">
