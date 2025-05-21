@@ -5,7 +5,6 @@ const metadata = {
   keywords: ["web application", "next starter"],
 };
 
-const color = {};
 const image = {};
 
 const page = {
@@ -192,4 +191,4 @@ const label = {
   },
 };
 
-export { color, dialog, image, label, metadata, page };
+export { dialog, image, label, metadata, page };

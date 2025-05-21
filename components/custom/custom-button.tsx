@@ -2,19 +2,20 @@
 
 import { label } from "@/lib/content";
 import { cn, delay } from "@/lib/utils";
-import { Check, Copy } from "lucide-react";
+import { ArrowUp, Check, Copy } from "lucide-react";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
 import { ReactNode, useState } from "react";
 import { Spinner } from "../other/icon";
 import { Button, ButtonProps } from "../ui/button";
 
-type LoadingIcon = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
+type ActionProps = Omit<ButtonProps, "onClick" | "children">;
+type LoadingProps = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
 
 export function LinkLoader({
   defaultIcon,
   loadingIcon = <Spinner />,
-}: LoadingIcon) {
+}: LoadingProps) {
   const { pending } = useLinkStatus();
   return pending ? loadingIcon : defaultIcon;
 }
@@ -25,8 +26,7 @@ export function RefreshButton({
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
   ...props
-}: Omit<ButtonProps, "onClick" | "children"> &
-  LoadingIcon & { text?: string; loadingText?: string }) {
+}: ActionProps & LoadingProps & { text?: string; loadingText?: string }) {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
@@ -50,7 +50,7 @@ export function CopyButton({
   size = "icon",
   value,
   ...props
-}: Omit<ButtonProps, "onClick" | "children"> & { value: string }) {
+}: ActionProps & { value: string }) {
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <Button
@@ -71,6 +71,26 @@ export function CopyButton({
           copied ? "scale-100" : "- scale-0",
         )}
       />
+    </Button>
+  );
+}
+
+export function ScrollToTopButton({
+  size = "iconlg",
+  className,
+  ...props
+}: ActionProps) {
+  return (
+    <Button
+      size={size}
+      className={cn(
+        "fixed right-4 bottom-4 z-40 rounded-full lg:right-10 lg:bottom-8",
+        className,
+      )}
+      onClick={() => window.scrollTo(0, 0)}
+      {...props}
+    >
+      <ArrowUp />
     </Button>
   );
 }
