@@ -45,7 +45,7 @@ import { z } from "zod";
 import { FormFloating } from "../custom/custom-field";
 import { userColumn, userColumnHelper } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
-import { CustomIcon, Spinner } from "../other/icon";
+import { GithubIcon, Spinner } from "../other/icon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -172,7 +172,7 @@ export function SignOnGithubButton() {
         });
       }}
     >
-      {loading ? <Spinner /> : <CustomIcon customType="github" />}
+      {loading ? <Spinner /> : <GithubIcon />}
       {label.button.signOn("Github")}
     </Button>
   );

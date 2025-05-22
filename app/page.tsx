@@ -3,6 +3,7 @@ import { References } from "@/components/modules/references";
 import { ThemeToggle } from "@/components/other/theme";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { route } from "@/lib/menu";
 import { LayoutDashboard, LogIn } from "lucide-react";
 import Link from "next/link";
 
@@ -22,7 +23,7 @@ export default function Page() {
         </Button>
 
         <Button variant="outline" asChild>
-          <Link href="/auth">
+          <Link href={route.signIn}>
             <LinkLoader defaultIcon={<LogIn />} />
             Go To Login Page
           </Link>
