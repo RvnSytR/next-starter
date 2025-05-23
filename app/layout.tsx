@@ -18,7 +18,9 @@ export const viewport: Viewport = {
 
 export default function RootLayout({
   children,
-}: Readonly<React.ComponentProps<"div">>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={font.className}>
