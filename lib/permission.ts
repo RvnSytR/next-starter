@@ -39,12 +39,19 @@ export const userRoles: Role[] = allRoles.filter(
 
 export const roleMetadata: Record<
   Role,
-  { displayName?: string; icon: LucideIcon }
+  { displayName?: string; icon: LucideIcon; desc: string }
 > = {
-  user: { icon: UserRound },
-  admin: { icon: UserRoundCheck },
+  user: {
+    icon: UserRound,
+    desc: "Standard user with basic access and permissions.",
+  },
+  admin: {
+    icon: UserRoundCheck,
+    desc: "Administrator with full access and management capabilities.",
+  },
   customRoleExample: {
     displayName: "Custom Role Example",
     icon: FlaskConical,
+    desc: "A sample custom role for demonstration or testing purposes.",
   },
 };

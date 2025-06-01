@@ -16,6 +16,7 @@ import {
 import { UserAvatar } from "../modules/auth";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps } from "../ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
   return (
@@ -94,15 +95,20 @@ export const userColumn = [
     cell: ({ row }) => {
       const role = row.original.role! as Role;
       const isAdmin = adminRoles.includes(role);
-      const { displayName, icon: RoleIcon } = roleMetadata[role];
+      const { displayName, icon: RoleIcon, desc } = roleMetadata[role];
       return (
-        <Badge
-          variant={isAdmin ? "outline_primary" : "outline"}
-          className="capitalize"
-        >
-          <RoleIcon />
-          {displayName ?? role}
-        </Badge>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge
+              variant={isAdmin ? "outline_primary" : "outline"}
+              className="capitalize"
+            >
+              <RoleIcon />
+              {displayName ?? role}
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>{desc}</TooltipContent>
+        </Tooltip>
       );
     },
     filterFn: filterFn("option"),
