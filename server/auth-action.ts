@@ -27,7 +27,7 @@ export async function deleteProfilePicture(image: string) {
 
 export async function checkRouteAccess(route: string) {
   const menu = getMenu(route) as MenuWithoutIconProps;
-  if (!menu) return notFound();
+  if (!menu || menu.disabled) return notFound();
 
   const session = await getSession();
   if (!session?.user.role) return notFound();

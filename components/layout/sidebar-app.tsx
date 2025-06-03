@@ -104,61 +104,69 @@ function Content({ role }: Pick<SidebarData, "role">) {
       <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {item.body.map((bodyItem, bodyIndex) => {
-          const { href, displayName, disabled, subMenu } = bodyItem;
-          return (
-            <SCCollapsible
-              key={bodyIndex}
-              pathname={href}
-              disabled={disabled}
-              asChild
-            >
-              <SidebarMenuItem>
-                <SCMenuButton pathname={href} tooltip={displayName} asChild>
-                  <Link href={href}>
-                    <LinkLoader
-                      defaultIcon={bodyItem.icon && <bodyItem.icon />}
-                    />
+        {item.body.map(
+          (
+            { href, displayName, icon: ButtonIcon, disabled, subMenu },
+            bodyIndex,
+          ) => {
+            if (disabled) {
+              return (
+                <SidebarMenuItem key={bodyIndex}>
+                  <SidebarMenuButton disabled>
+                    {ButtonIcon && <ButtonIcon />}
                     <span className="line-clamp-1">{displayName}</span>
-                  </Link>
-                </SCMenuButton>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              );
+            }
 
-                {subMenu && (
-                  <>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuAction className="data-[state=open]:rotate-90">
-                        <ChevronRight />
-                      </SidebarMenuAction>
-                    </CollapsibleTrigger>
+            return (
+              <SCCollapsible key={bodyIndex} pathname={href} asChild>
+                <SidebarMenuItem>
+                  <SCMenuButton pathname={href} tooltip={displayName} asChild>
+                    <Link href={href}>
+                      <LinkLoader defaultIcon={ButtonIcon && <ButtonIcon />} />
+                      <span className="line-clamp-1">{displayName}</span>
+                    </Link>
+                  </SCMenuButton>
 
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {subMenu.map((subItem, subIndex) => (
-                          <SidebarMenuSubItem key={subIndex}>
-                            <SidebarMenuSubButton
-                              className={subItem.className}
-                              asChild
-                            >
-                              <Link
-                                href={`${href}/#${toKebabCase(subItem.subLabel)}`}
-                                className="flex justify-between"
+                  {subMenu && (
+                    <>
+                      <CollapsibleTrigger asChild>
+                        <SidebarMenuAction className="data-[state=open]:rotate-90">
+                          <ChevronRight />
+                        </SidebarMenuAction>
+                      </CollapsibleTrigger>
+
+                      <CollapsibleContent>
+                        <SidebarMenuSub>
+                          {subMenu.map((subItem, subIndex) => (
+                            <SidebarMenuSubItem key={subIndex}>
+                              <SidebarMenuSubButton
+                                className={subItem.className}
+                                asChild
                               >
-                                <span className="line-clamp-1">
-                                  {subItem.subLabel}
-                                </span>
-                                <LinkLoader />
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </>
-                )}
-              </SidebarMenuItem>
-            </SCCollapsible>
-          );
-        })}
+                                <Link
+                                  href={`${href}/#${toKebabCase(subItem.subLabel)}`}
+                                  className="flex justify-between"
+                                >
+                                  <span className="line-clamp-1">
+                                    {subItem.subLabel}
+                                  </span>
+                                  <LinkLoader />
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ))}
+                        </SidebarMenuSub>
+                      </CollapsibleContent>
+                    </>
+                  )}
+                </SidebarMenuItem>
+              </SCCollapsible>
+            );
+          },
+        )}
       </SidebarMenu>
     </SidebarGroup>
   ));
