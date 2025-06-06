@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/ui/sonner";
-import { metadata as meta } from "@/lib/content";
+import { appInfo } from "@/lib/const";
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
@@ -7,7 +7,13 @@ import { Inter } from "next/font/google";
 
 const font = Inter({ subsets: ["latin"], display: "swap" });
 
-export const metadata: Metadata = meta;
+export const metadata: Metadata = {
+  title: appInfo.name,
+  description: appInfo.description,
+  keywords: [...appInfo.keywords],
+  manifest: "/manifest.json",
+};
+
 export const viewport: Viewport = {
   minimumScale: 1,
   initialScale: 1,

@@ -14,7 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { page } from "@/lib/content";
+import { dashboardPage } from "@/lib/content";
 import Link from "next/link";
 
 export default function Page() {
@@ -27,10 +27,10 @@ export default function Page() {
           <CardHeader className="text-center">
             <CardTitle className="mx-auto">
               <Link href="/">
-                <h3>{page.auth.title}</h3>
+                <h3>{dashboardPage.auth.title}</h3>
               </Link>
             </CardTitle>
-            <CardDescription>{page.auth.subtitle}</CardDescription>
+            <CardDescription>{dashboardPage.auth.desc}</CardDescription>
           </CardHeader>
 
           <CardContent className="flex flex-col gap-y-4">

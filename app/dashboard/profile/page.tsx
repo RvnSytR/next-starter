@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { page } from "@/lib/content";
+import { dashboardPage } from "@/lib/content";
 import { getCurrentPage, setProtectedRoute } from "@/lib/menu";
 import { checkRouteAccess, getSessionList } from "@/server/auth-action";
 import { Metadata } from "next";
@@ -38,8 +38,8 @@ export default async function Page() {
         className="w-full scroll-m-20 lg:max-w-2xl"
       >
         <CardHeader>
-          <CardTitle>{page.profile.profile.title}</CardTitle>
-          <CardDescription>{page.profile.profile.subtitle}</CardDescription>
+          <CardTitle>{dashboardPage.profile.info.title}</CardTitle>
+          <CardDescription>{dashboardPage.profile.info.desc}</CardDescription>
         </CardHeader>
 
         <Separator />
@@ -49,8 +49,10 @@ export default async function Page() {
 
       <Card id="change-password" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
-          <CardTitle>{page.profile.password.title}</CardTitle>
-          <CardDescription>{page.profile.password.subtitle}</CardDescription>
+          <CardTitle>{dashboardPage.profile.password.title}</CardTitle>
+          <CardDescription>
+            {dashboardPage.profile.password.desc}
+          </CardDescription>
         </CardHeader>
 
         <Separator />
@@ -60,9 +62,9 @@ export default async function Page() {
 
       <Card id="active-session" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
-          <CardTitle>{page.profile.activeSession.title}</CardTitle>
+          <CardTitle>{dashboardPage.profile.activeSession.title}</CardTitle>
           <CardDescription>
-            {page.profile.activeSession.subtitle}
+            {dashboardPage.profile.activeSession.desc}
           </CardDescription>
         </CardHeader>
 
@@ -88,10 +90,10 @@ export default async function Page() {
       <Card id="delete-account" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
           <CardTitle className="text-destructive">
-            {page.profile.deleteAccount.title}
+            {dashboardPage.profile.deleteAccount.title}
           </CardTitle>
           <CardDescription>
-            {page.profile.deleteAccount.subtitle}
+            {dashboardPage.profile.deleteAccount.desc}
           </CardDescription>
         </CardHeader>
 

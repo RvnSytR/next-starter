@@ -1,4 +1,4 @@
-import { label, label as labelContent } from "@/lib/content";
+import { buttonText } from "@/lib/content";
 import { Media, media } from "@/lib/media";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Trash2, Upload, X } from "lucide-react";
@@ -13,6 +13,7 @@ import {
 import { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
 import { Button } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
+import { CardTitle } from "../ui/card";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -100,7 +101,7 @@ export function InputDate({
             {selected ? (
               formatDate(selected, "PPPP")
             ) : (
-              <span>{label ?? labelContent.button.datePicker}</span>
+              <span>{label ?? buttonText.datePicker}</span>
             )}
           </Button>
         </FormControl>
@@ -136,7 +137,7 @@ export function InputDateRange({
               formatDate(selected.from, "PPP")
             )
           ) : (
-            <span>{label ?? labelContent.button.datePicker}</span>
+            <span>{label ?? buttonText.datePicker}</span>
           )}
         </Button>
       </PopoverTrigger>
@@ -241,7 +242,7 @@ export function InputFile({
           className="flex flex-col gap-y-4 p-4"
         >
           <div className="flex items-center justify-between gap-x-2">
-            <h6>Total Files: {files.length}</h6>
+            <CardTitle>Total Files: {files.length}</CardTitle>
 
             <div className="flex gap-x-2">
               <Button
@@ -262,7 +263,7 @@ export function InputFile({
                 onClick={resetFiles}
               >
                 <Trash2 />
-                {label.button.remove.text} all
+                {buttonText.remove.text} all
               </Button>
             </div>
           </div>
@@ -349,11 +350,11 @@ export function InputFile({
 
           <div className="flex flex-col items-center gap-y-1 text-center">
             <small className="font-medium">
-              {placeholder ?? label.button.fileInput.placeholder}
+              {placeholder ?? buttonText.fileInput.placeholder}
             </small>
 
             <small className="text-muted-foreground flex items-center text-xs">
-              {label.button.fileInput.size(fileSize.mb)}
+              {buttonText.fileInput.size(fileSize.mb)}
               <Dot />
               {fileMedia.extensions.length > 0 &&
                 `( ${fileMedia.extensions.join(" ")} )`}

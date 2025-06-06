@@ -1,6 +1,6 @@
 "use client";
 
-import { label } from "@/lib/content";
+import { buttonText } from "@/lib/content";
 import { cn, delay } from "@/lib/utils";
 import { ArrowUp, Check, Copy } from "lucide-react";
 import { useLinkStatus } from "next/link";
@@ -21,8 +21,8 @@ export function LinkLoader({
 }
 
 export function RefreshButton({
-  text = label.button.refresh.text,
-  loadingText = label.button.refresh.loading,
+  text = buttonText.refresh.text,
+  loadingText = buttonText.refresh.loading,
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
   ...props

@@ -16,7 +16,7 @@ export default function Page() {
         <ThemeToggle size="icon" variant="outline" />
 
         <Button variant="outline" asChild>
-          <Link href="/dashboard">
+          <Link href={route.protected}>
             <LinkLoader defaultIcon={<LayoutDashboard />} />
             Go To Dashboard
           </Link>

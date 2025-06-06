@@ -2,7 +2,7 @@
 
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { dialog, label } from "@/lib/content";
+import { buttonText, dialog, toastMessage } from "@/lib/content";
 import { media } from "@/lib/media";
 import { route } from "@/lib/menu";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
@@ -129,7 +129,7 @@ export function UserAvatar({
 export function SignOutButton() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { text, loading: loadingText } = label.button.signOut;
+  const { text, loading: loadingText } = buttonText.signOut;
   return (
     <SidebarMenuButton
       size="sm"
@@ -140,7 +140,7 @@ export function SignOutButton() {
           fetchOptions: {
             onRequest: () => setLoading(true),
             onSuccess: () => {
-              toast.success(label.toast.success.user.signOut);
+              toast.success(toastMessage.user.signOut);
               router.push(route.signIn);
             },
             onError: ({ error }) => {
@@ -173,7 +173,7 @@ export function SignOnGithubButton() {
       }}
     >
       {loading ? <Spinner /> : <GithubIcon />}
-      {label.button.signOn("Github")}
+      {buttonText.signOn("Github")}
     </Button>
   );
 }
@@ -181,7 +181,7 @@ export function SignOnGithubButton() {
 export function SignInForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { text, loading: loadingText } = label.button.signIn;
+  const { text, loading: loadingText } = buttonText.signIn;
 
   const schema = zodAuth.pick({
     email: true,
@@ -198,7 +198,7 @@ export function SignInForm() {
     await authClient.signIn.email(formData, {
       onRequest: () => setLoading(true),
       onSuccess: ({ data }) => {
-        toast.success(label.toast.success.user.signIn(data?.user.name));
+        toast.success(toastMessage.user.signIn(data?.user.name));
         router.push(route.protected);
       },
       onError: ({ error }) => {
@@ -278,7 +278,7 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const [loading, setLoading] = useState<boolean>(false);
-  const { text, loading: loadingText } = label.button.signIn;
+  const { text, loading: loadingText } = buttonText.signIn;
 
   const schema = zodAuth
     .pick({
@@ -308,7 +308,7 @@ export function SignUpForm() {
     await authClient.signUp.email(formData, {
       onRequest: () => setLoading(true),
       onSuccess: () => {
-        toast.success(label.toast.success.user.signUp);
+        toast.success(toastMessage.user.signUp);
         form.reset();
       },
       onError: ({ error }) => {
@@ -447,8 +447,8 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const schema = zodFile("image");
-  const { text: uploadText, loading: uploadLoadingText } = label.button.upload;
-  const { text: removeText, loading: removeLoadingText } = label.button.remove;
+  const { text: uploadText, loading: uploadLoadingText } = buttonText.upload;
+  const { text: removeText, loading: removeLoadingText } = buttonText.remove;
 
   const changeHandler = async (fileList: FileList) => {
     const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
@@ -470,11 +470,12 @@ export function ProfilePicture({
       nameAskey: true,
       ACL: "public-read",
     });
+
     await authClient.updateUser(
       { image: fileUrl },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.default("avatar", "updated"));
+          toast.success(toastMessage.default.success("avatar", "updated"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -494,7 +495,7 @@ export function ProfilePicture({
       { image: null },
       {
         onSuccess: () => {
-          toast.success(label.toast.success.default("avatar", "removed"));
+          toast.success(toastMessage.default.success("avatar", "removed"));
           router.refresh();
         },
         onError: ({ error }) => {
@@ -562,13 +563,13 @@ export function ProfilePicture({
                 <AlertDialogCancel
                   className={buttonVariants({ variant: "outline" })}
                 >
-                  {label.button.cancel}
+                  {buttonText.cancel}
                 </AlertDialogCancel>
                 <AlertDialogAction
                   className={buttonVariants({ variant: "destructive" })}
                   onClick={() => deleteHandler()}
                 >
-                  {label.button.confirm}
+                  {buttonText.confirm}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -586,7 +587,7 @@ export function PersonalInformation({
   const [loading, setLoading] = useState<boolean>(false);
 
   const { name, email, role } = props;
-  const { text, loading: loadingText } = label.button.save;
+  const { text, loading: loadingText } = buttonText.save;
   const schema = zodAuth.pick({ name: true, email: true, role: true });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -599,15 +600,14 @@ export function PersonalInformation({
   });
 
   const formHandler = async ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name)
-      return toast.info(label.toast.info.noChanges("profile"));
+    if (newName === name) return toast.info(toastMessage.noChanges("profile"));
 
     await authClient.updateUser(
       { name: newName },
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.default("profile", "updated"));
+          toast.success(toastMessage.default.success("profile", "updated"));
           setLoading(false);
           router.refresh();
         },
@@ -693,7 +693,7 @@ export function PersonalInformation({
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
-            {label.button.reset}
+            {buttonText.reset}
           </Button>
         </CardFooter>
       </form>
@@ -704,7 +704,7 @@ export function PersonalInformation({
 export function ChangePasswordForm() {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { text, loading: loadingText } = label.button.save;
+  const { text, loading: loadingText } = buttonText.save;
 
   const schema = z
     .object({
@@ -731,7 +731,7 @@ export function ChangePasswordForm() {
     await authClient.changePassword(formData, {
       onRequest: () => setLoading(true),
       onSuccess: () => {
-        toast.success(label.toast.success.default("password", "updated"));
+        toast.success(toastMessage.default.success("password", "updated"));
         setLoading(false);
         form.reset();
         router.refresh();
@@ -838,7 +838,7 @@ export function ChangePasswordForm() {
 
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
-            {label.button.reset}
+            {buttonText.reset}
           </Button>
         </CardFooter>
       </form>
@@ -878,7 +878,7 @@ export function ActiveSessionButton({
       {
         onSuccess: () => {
           toast.success(
-            label.toast.success.default("sessions", "terminated", "The"),
+            toastMessage.default.success("sessions", "terminated", "The"),
           );
           router.refresh();
         },
@@ -939,7 +939,7 @@ export function ActiveSessionButton({
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction onClick={() => revokeSession()}>
-                {label.button.confirm}
+                {buttonText.confirm}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -959,7 +959,7 @@ export function RevokeAllOtherSessionButton() {
       {
         onSuccess: () => {
           toast.success(
-            label.toast.success.default("other sessions", "terminated"),
+            toastMessage.default.success("other sessions", "terminated"),
           );
           router.refresh();
         },
@@ -986,7 +986,7 @@ export function RevokeAllOtherSessionButton() {
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={() => handler()}>
-            {label.button.confirm}
+            {buttonText.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1020,7 +1020,7 @@ export function DeleteMyAccountButton({
 
         <AlertDialogFooter>
           <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {label.button.cancel}
+            {buttonText.cancel}
           </AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
@@ -1031,7 +1031,7 @@ export function DeleteMyAccountButton({
                 {
                   onSuccess: () => {
                     toast.success(
-                      label.toast.success.default("account", "removed") +
+                      toastMessage.default.success("account", "removed") +
                         " Goodbye!",
                     );
                     router.push(route.signIn);
@@ -1043,7 +1043,7 @@ export function DeleteMyAccountButton({
               );
             }}
           >
-            {label.button.confirm}
+            {buttonText.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1149,7 +1149,7 @@ export function AdminCreateUserDialog() {
         onRequest: () => setLoading(true),
         onSuccess: () => {
           toast.success(
-            label.toast.success.default("account", "created", formData.name),
+            toastMessage.default.success("account", "created", formData.name),
           );
           setLoading(false);
           form.reset();
@@ -1307,7 +1307,7 @@ export function AdminCreateUserDialog() {
             <DialogFooter>
               <DialogClose asChild>
                 <Button type="button" variant="outline">
-                  {label.button.cancel}
+                  {buttonText.cancel}
                 </Button>
               </DialogClose>
 
@@ -1342,14 +1342,14 @@ export function AdminChangeUserRoleDialog({
   const formHandler = async (formData: z.infer<typeof schema>) => {
     const newRole = formData.role as Role;
     if (newRole === role)
-      return toast.info(label.toast.info.noChanges("role", name));
+      return toast.info(toastMessage.noChanges("role", name));
 
     await authClient.admin.setRole(
       { userId: id, role: newRole },
       {
         onRequest: () => setLoading(true),
         onSuccess: () => {
-          toast.success(label.toast.success.user.changeRole(name, newRole));
+          toast.success(toastMessage.user.changeRole(name, newRole));
           setLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1423,7 +1423,7 @@ export function AdminChangeUserRoleDialog({
 
             <DialogFooter>
               <DialogClose className={buttonVariants({ variant: "outline" })}>
-                {label.button.cancel}
+                {buttonText.cancel}
               </DialogClose>
 
               <Button type="submit" disabled={loading}>
@@ -1463,7 +1463,7 @@ export function AdminTerminateUserSessionDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {label.button.cancel}
+            {buttonText.cancel}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -1473,7 +1473,7 @@ export function AdminTerminateUserSessionDialog({
                 { userId: id },
                 {
                   onSuccess: () => {
-                    toast.success(label.toast.success.user.revokeSession(name));
+                    toast.success(toastMessage.user.revokeSession(name));
                   },
                   onError: ({ error }) => {
                     toast.error(error.message);
@@ -1482,7 +1482,7 @@ export function AdminTerminateUserSessionDialog({
               );
             }}
           >
-            {label.button.confirm}
+            {buttonText.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1497,7 +1497,7 @@ export function AdminRemoveUserDialog({
 }: Pick<Session["user"], "id" | "name" | "image">) {
   const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
-  const { text, loading: loadingText } = label.button.remove;
+  const { text, loading: loadingText } = buttonText.remove;
 
   return (
     <AlertDialog>
@@ -1521,7 +1521,7 @@ export function AdminRemoveUserDialog({
 
         <AlertDialogFooter>
           <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {label.button.cancel}
+            {buttonText.cancel}
           </AlertDialogCancel>
 
           <AlertDialogAction
@@ -1534,7 +1534,7 @@ export function AdminRemoveUserDialog({
                 {
                   onSuccess: () => {
                     toast.success(
-                      label.toast.success.default("account", "removed", name),
+                      toastMessage.default.success("account", "removed", name),
                     );
                     router.refresh();
                   },
@@ -1546,7 +1546,7 @@ export function AdminRemoveUserDialog({
               );
             }}
           >
-            {label.button.confirm}
+            {buttonText.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -78,7 +78,7 @@ type ToolBoxProps = {
 
 export type OtherDataTableProps = ToolBoxProps & {
   title?: string;
-  subtitle?: string;
+  desc?: string;
   caption?: string;
   noResult?: string[];
   className?: string;
@@ -88,7 +88,7 @@ export function DataTable<TData>({
   data,
   columns,
   title = "Data Table",
-  subtitle = "Data Table Description",
+  desc = "Data Table Description",
   caption,
   noResult,
   className,
@@ -142,7 +142,7 @@ export function DataTable<TData>({
       <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-1">
           <CardTitle>{title}</CardTitle>
-          <CardDescription>{subtitle}</CardDescription>
+          <CardDescription>{desc}</CardDescription>
         </div>
 
         <ToolBox table={table} {...props} />

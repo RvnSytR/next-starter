@@ -6,7 +6,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { label } from "@/lib/content";
 import { getMenu } from "@/lib/menu";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -31,7 +30,7 @@ export function DynamicBreadcrumb({
             </BreadcrumbLink>
           ) : (
             <BreadcrumbPage className="text-destructive">
-              {label.error.breadcrumb}
+              Invalid route!
             </BreadcrumbPage>
           );
 

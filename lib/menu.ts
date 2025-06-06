@@ -6,7 +6,7 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
-import { label, page } from "./content";
+import { appInfo } from "./const";
 import { adminRoles, Role, userRoles } from "./permission";
 
 type MenuRole = Role | "all";
@@ -86,7 +86,6 @@ function getMenu(
 ): MenuBody | MenuWithoutIconProps | null {
   const [menuBody] = Object.values(sidebarMenu)
     .flatMap(({ body }) => body)
-    .map((item) => item)
     .filter(({ href }) => route === href);
 
   if (!menuBody) return null;
@@ -112,8 +111,8 @@ function getMenuByRole(role: string): MenuProps[] {
 
 function getCurrentPage(currentRoute: string, metadata: boolean = false) {
   const currentPage = getMenu(currentRoute)?.displayName;
-  if (!currentPage) return label.error.protectedPath;
-  return metadata ? page.title(currentPage) : currentPage;
+  if (!currentPage) return "Invalid route!";
+  return metadata ? ` | ${appInfo.name}` : currentPage;
 }
 // #endregion
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { label } from "@/lib/content";
+import { buttonText } from "@/lib/content";
 import { formatNumeric, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,7 +100,7 @@ export function ExampleForm() {
             name="text"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Text *</FormLabel>
+                <FormLabel className="label-required">Text</FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input type="text" {...field} />
@@ -117,7 +117,7 @@ export function ExampleForm() {
             name="numeric"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Numeric *</FormLabel>
+                <FormLabel className="label-required">Numeric</FormLabel>
                 <FormFloating icon="Rp.">
                   <FormControl>
                     <Input
@@ -141,7 +141,7 @@ export function ExampleForm() {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Phone *</FormLabel>
+                <FormLabel className="label-required">Phone</FormLabel>
                 <FormFloating icon="+62" extraPadding>
                   <FormControl>
                     <Input
@@ -165,7 +165,7 @@ export function ExampleForm() {
             name="date"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date *</FormLabel>
+                <FormLabel className="label-required">Date</FormLabel>
                 <InputDate selected={field.value} onSelect={field.onChange} />
                 <FormMessage />
               </FormItem>
@@ -178,7 +178,7 @@ export function ExampleForm() {
             name="select"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Select *</FormLabel>
+                <FormLabel className="label-required">Select</FormLabel>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
@@ -208,7 +208,9 @@ export function ExampleForm() {
             name="radio"
             render={({ field }) => (
               <FormItem className="col-span-3">
-                <FormLabel>Custom Radio Group *</FormLabel>
+                <FormLabel className="label-required">
+                  Custom Radio Group
+                </FormLabel>
                 <InputRadioGroup
                   defaultValue={field.value}
                   onValueChange={field.onChange}
@@ -226,7 +228,7 @@ export function ExampleForm() {
             name="radio"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Radio Group *</FormLabel>
+                <FormLabel className="label-required">Radio Group</FormLabel>
 
                 <RadioGroup value={field.value} onValueChange={field.onChange}>
                   {selectAndRadioData.map((item, index) => (
@@ -252,7 +254,7 @@ export function ExampleForm() {
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>File *</FormLabel>
+              <FormLabel className="label-required">File</FormLabel>
               <InputFile accept="image" multiple {...field} />
               <FormMessage />
             </FormItem>
@@ -263,12 +265,12 @@ export function ExampleForm() {
           <Button type="submit">
             {/* {loading ? <Spinner /> : <Save />} */}
             <Save />
-            {label.button.save.text}
+            {buttonText.save.text}
           </Button>
 
           <Button type="reset" variant="outline" onClick={() => form.reset()}>
             <RotateCcw />
-            {label.button.reset}
+            {buttonText.reset}
           </Button>
         </div>
       </form>
