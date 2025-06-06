@@ -1,14 +1,12 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
 import { GridPattern } from "@/components/other-ui/grid-pattern";
 import { SidebarInset } from "@/components/ui/sidebar";
-import { getCurrentPage, route } from "@/lib/menu";
+import { setTitle } from "@/lib/utils";
 import { getSession } from "@/server/auth-action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: getCurrentPage(route.protected, true),
-};
+export const metadata: Metadata = { title: setTitle("dashboard") };
 
 export default async function DashboardLayout({
   children,

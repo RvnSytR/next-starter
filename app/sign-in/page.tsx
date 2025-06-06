@@ -15,7 +15,11 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { dashboardPage } from "@/lib/content";
+import { setTitle } from "@/lib/utils";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = { title: setTitle("signIn") };
 
 export default function Page() {
   return (

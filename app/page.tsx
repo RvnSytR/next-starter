@@ -3,7 +3,7 @@ import { References } from "@/components/modules/references";
 import { ThemeToggle } from "@/components/other/theme";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { route } from "@/lib/menu";
+import { route } from "@/lib/const";
 import { LayoutDashboard, LogIn } from "lucide-react";
 import Link from "next/link";
 

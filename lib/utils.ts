@@ -2,7 +2,9 @@ import { ClassValue, clsx } from "clsx";
 import { format, isAfter, isBefore } from "date-fns";
 import { id } from "date-fns/locale";
 import { twMerge } from "tailwind-merge";
+import { appInfo, dashboardMenu, Menu, Route, routeMetadata } from "./const";
 import { media } from "./media";
+import { Role } from "./permission";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -12,7 +14,7 @@ export function delay(seconds: number) {
   return new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 }
 
-//#region // * Arrays
+//#region Arrays
 export function intersection<T>(a: T[], b: T[]): T[] {
   return a.filter((x) => b.includes(x));
 }
@@ -30,7 +32,32 @@ export function flatten<T>(a: T[][]): T[] {
 }
 // #endregion
 
-// #region // * Get Random Things
+// #region Setter
+export function setTitle(route: Route) {
+  return `${routeMetadata[route].displayName} | ${appInfo.name}`;
+}
+// #endregion
+
+// #region Getter
+export function getMenuByRole(
+  role: string,
+  menu: Menu[] = dashboardMenu,
+): Menu[] {
+  const res = menu.map(({ section, content }) => {
+    const filteredMenuContent = content.filter(({ route }) => {
+      const { role: routeRole } = routeMetadata[route];
+      return (
+        routeRole && (routeRole === "all" || routeRole.includes(role as Role))
+      );
+    });
+    if (filteredMenuContent.length <= 0) return null;
+    else return { section, content: filteredMenuContent } as Menu;
+  });
+  return res.filter((section) => section !== null);
+}
+// #endregion
+
+// #region Get Random Things
 export function getRandomString(length: number) {
   const characters =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -52,7 +79,7 @@ export function getRandomColor(withHash?: boolean) {
 }
 // #endregion
 
-// #region // * Formater
+// #region Formater
 export function toByte(mb: number) {
   return mb * 1024 * 1024;
 }
@@ -101,10 +128,9 @@ export function capitalize(str: string) {
 export function sanitizeNumber(str: string): number {
   return Number(str.replace(/[^\d]/g, "") || "0");
 }
-
 // #endregion
 
-// #region // * Date
+// #region Date
 export function formatDate(date: Date, formatStr: string) {
   return format(date, formatStr, { locale: id });
 }

@@ -1,7 +1,7 @@
 export const toastMessage = {
   default: {
-    loading: "Processing your request...",
-    error: "Uh-oh, Something went wrong. Please try again later.",
+    loading: "Almost there...",
+    error: "Uh-oh! Something went wrong. Please try again later.",
     success: (
       thing: string,
       action: "created" | "updated" | "removed" | "terminated",

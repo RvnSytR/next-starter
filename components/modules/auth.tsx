@@ -2,9 +2,9 @@
 
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
+import { route } from "@/lib/const";
 import { buttonText, dialog, toastMessage } from "@/lib/content";
 import { media } from "@/lib/media";
-import { route } from "@/lib/menu";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile, zodMessage } from "@/lib/zod";

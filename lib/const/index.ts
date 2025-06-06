@@ -1,3 +1,6 @@
+export * from "./menu";
+export * from "./route";
+
 export const appInfo = {
   name: "Project Title",
   description: "Project Description",

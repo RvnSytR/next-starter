@@ -1,6 +1,6 @@
 "use client";
 
-import { route } from "@/lib/menu";
+import { route } from "@/lib/const";
 import * as CollapsiblePrimitive from "@radix-ui/react-collapsible";
 import { usePathname } from "next/navigation";
 import { ComponentProps, useEffect, useState } from "react";

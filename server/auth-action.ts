@@ -1,7 +1,8 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { getMenu, MenuRole, MenuWithoutIconProps } from "@/lib/menu";
+import { Route, routeMetadata } from "@/lib/const";
+import { Role } from "@/lib/permission";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { deleteFile, getFileKeyFromPublicUrl } from "./s3";
@@ -10,7 +11,7 @@ export async function getSession() {
   return await auth.api.getSession({ headers: await headers() });
 }
 
-export async function getSessionList() {
+export async function getListSession() {
   return await auth.api.listSessions({ headers: await headers() });
 }
 
@@ -25,16 +26,16 @@ export async function deleteProfilePicture(image: string) {
   await deleteFile([await getFileKeyFromPublicUrl(image)]);
 }
 
-export async function checkRouteAccess(route: string) {
-  const menu = getMenu(route) as MenuWithoutIconProps;
-  if (!menu || menu.disabled) return notFound();
+export async function checkAndGetAuthorizedSession(route: Route) {
+  const currenRoute = routeMetadata[route];
+  if (!currenRoute.role) notFound();
 
   const session = await getSession();
-  if (!session?.user.role) return notFound();
+  if (!session?.user.role) notFound();
 
-  const isAllowed =
-    menu.role.includes("all") ||
-    menu.role.includes(session.user.role as MenuRole);
+  const role = currenRoute.role;
+  const isAllowed = role === "all" || role.includes(session.user.role as Role);
 
-  return isAllowed ? { session, menu } : notFound();
+  if (!isAllowed) notFound();
+  return { session, currenRoute };
 }

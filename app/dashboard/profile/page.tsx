@@ -16,23 +16,22 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { dashboardPage } from "@/lib/content";
-import { getCurrentPage, setProtectedRoute } from "@/lib/menu";
-import { checkRouteAccess, getSessionList } from "@/server/auth-action";
+import { setTitle } from "@/lib/utils";
+import {
+  checkAndGetAuthorizedSession,
+  getListSession,
+} from "@/server/auth-action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: getCurrentPage(setProtectedRoute("/profile"), true),
-};
+export const metadata: Metadata = { title: setTitle("profile") };
 
 export default async function Page() {
-  const { session, menu } = await checkRouteAccess(
-    setProtectedRoute("/profile"),
-  );
-
-  const sessionList = await getSessionList();
+  const { session, currenRoute } =
+    await checkAndGetAuthorizedSession("profile");
+  const sessionList = await getListSession();
 
   return (
-    <Section currentPage={menu.displayName} className="items-center">
+    <Section currentPage={currenRoute.displayName} className="items-center">
       <Card
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-2xl"

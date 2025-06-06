@@ -4,27 +4,25 @@ import {
   AdminCreateUserDialog,
 } from "@/components/modules/auth";
 import { dashboardPage } from "@/lib/content";
-import { getCurrentPage, setProtectedRoute } from "@/lib/menu";
-import { checkRouteAccess, getUserList } from "@/server/auth-action";
+import { setTitle } from "@/lib/utils";
+import {
+  checkAndGetAuthorizedSession,
+  getUserList,
+} from "@/server/auth-action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: getCurrentPage(setProtectedRoute("/account"), true),
-};
+export const metadata: Metadata = { title: setTitle("account") };
 
 export default async function Page() {
-  const { session, menu } = await checkRouteAccess(
-    setProtectedRoute("/account"),
-  );
-
+  const { session, currenRoute } =
+    await checkAndGetAuthorizedSession("account");
   const data = await getUserList();
 
   return (
-    <Section currentPage={menu.displayName} className="items-center">
+    <Section currentPage={currenRoute.displayName} className="items-center">
       <AdminAccountDataTable
         currentUser={session.user}
         data={data.users}
-        className="w-full lg:max-w-7xl"
         withRefresh
         {...dashboardPage.account}
       >

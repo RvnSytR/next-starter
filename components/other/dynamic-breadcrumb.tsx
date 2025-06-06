@@ -6,12 +6,12 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { getMenu } from "@/lib/menu";
+import { Route, routeMetadata } from "@/lib/const";
 import Link from "next/link";
 import { Fragment } from "react";
 
 export type DynamicBreadcrumbProps = {
-  breadcrumbArr?: (string | { href: string; displayName: string })[];
+  breadcrumbArr?: (Route | { path: string; displayName: string })[];
   currentPage: string;
 };
 
@@ -23,10 +23,10 @@ export function DynamicBreadcrumb({
     <Breadcrumb>
       <BreadcrumbList className="flex-nowrap">
         {breadcrumbArr?.map((item, index) => {
-          const menu = typeof item === "string" ? getMenu(item) : item;
+          const menu = typeof item === "string" ? routeMetadata[item] : item;
           const content = menu ? (
             <BreadcrumbLink asChild>
-              <Link href={menu.href}>{menu.displayName}</Link>
+              <Link href={menu.path}>{menu.displayName}</Link>
             </BreadcrumbLink>
           ) : (
             <BreadcrumbPage className="text-destructive">
