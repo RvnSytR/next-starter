@@ -5,10 +5,7 @@ import {
 } from "@/components/modules/auth";
 import { dashboardPage } from "@/lib/content";
 import { setTitle } from "@/lib/utils";
-import {
-  checkAndGetAuthorizedSession,
-  getUserList,
-} from "@/server/auth-action";
+import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: setTitle("account") };

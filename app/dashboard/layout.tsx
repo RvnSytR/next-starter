@@ -2,7 +2,7 @@ import { SidebarApp } from "@/components/layout/sidebar-app";
 import { GridPattern } from "@/components/other-ui/grid-pattern";
 import { SidebarInset } from "@/components/ui/sidebar";
 import { setTitle } from "@/lib/utils";
-import { getSession } from "@/server/auth-action";
+import { getSession } from "@/server/action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 

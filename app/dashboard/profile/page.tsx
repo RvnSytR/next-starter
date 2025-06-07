@@ -17,10 +17,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { dashboardPage } from "@/lib/content";
 import { setTitle } from "@/lib/utils";
-import {
-  checkAndGetAuthorizedSession,
-  getListSession,
-} from "@/server/auth-action";
+import { checkAndGetAuthorizedSession, getListSession } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: setTitle("profile") };

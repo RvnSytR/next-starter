@@ -8,7 +8,7 @@ import { media } from "@/lib/media";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile, zodMessage } from "@/lib/zod";
-import { deleteProfilePicture } from "@/server/auth-action";
+import { deleteProfilePicture } from "@/server/action";
 import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";

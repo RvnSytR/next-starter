@@ -5,7 +5,7 @@ import { Route, routeMetadata } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { deleteFile, getFileKeyFromPublicUrl } from "./s3";
+import { deleteFile, getFileKeyFromPublicUrl } from "../s3";
 
 export async function getSession() {
   return await auth.api.getSession({ headers: await headers() });

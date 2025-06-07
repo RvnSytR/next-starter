@@ -1,5 +1,5 @@
 import { Section } from "@/components/layout/section";
-import { checkAndGetAuthorizedSession } from "@/server/auth-action";
+import { checkAndGetAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
   const { session, currenRoute } =
