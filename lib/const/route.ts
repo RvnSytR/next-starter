@@ -1,5 +1,4 @@
 import { Role } from "../permission";
-import { setProtectedSubRoute } from "../utils";
 
 export type Route = "signIn" | "dashboard" | "account" | "profile";
 export type RouteMetadata = {
@@ -26,13 +25,13 @@ export const routeMetadata: Record<Route, RouteMetadata> = {
   },
 
   profile: {
-    path: setProtectedSubRoute("profile"),
+    path: `${route.protected}/profile`,
     displayName: "My Profile",
     role: "all",
   },
 
   account: {
-    path: setProtectedSubRoute("account"),
+    path: `${route.protected}/account`,
     displayName: "Users",
     role: ["admin"],
   },
