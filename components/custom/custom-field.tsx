@@ -263,7 +263,7 @@ export function InputFile({
                 onClick={resetFiles}
               >
                 <Trash2 />
-                {buttonText.remove.text} all
+                {buttonText.remove} all
               </Button>
             </div>
           </div>

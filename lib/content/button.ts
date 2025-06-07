@@ -1,17 +1,8 @@
 export const buttonText = {
   signOn: (social: string) => `Continue with ${social}`,
-  signIn: {
-    text: "Sign In",
-    loading: "Signing in...",
-  },
-  signUp: {
-    text: "Create Account",
-    loading: "Creating account...",
-  },
-  signOut: {
-    text: "Sign Out",
-    loading: "Signing out...",
-  },
+  signIn: "Sign In",
+  signUp: "Create Account",
+  signOut: "Sign Out",
 
   datePicker: "Pick a Date",
   fileInput: {
@@ -19,22 +10,10 @@ export const buttonText = {
     size: (mb: number) => `Up to ${mb} MB`,
   },
 
-  save: {
-    text: "Save Changes",
-    loading: "Saving changes...",
-  },
-  refresh: {
-    text: "Refresh",
-    loading: "Refreshing...",
-  },
-  upload: {
-    text: (file: string = "") => `Upload ${file}`,
-    loading: "Uploading...",
-  },
-  remove: {
-    text: "Remove",
-    loading: "Removing...",
-  },
+  save: "Save Changes",
+  refresh: "Refresh",
+  remove: "Remove",
+  upload: (file: string = "") => `Upload ${file}`,
 
   confirm: "Confirm",
   reset: "Reset",

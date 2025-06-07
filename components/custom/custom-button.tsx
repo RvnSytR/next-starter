@@ -21,8 +21,7 @@ export function LinkLoader({
 }
 
 export function RefreshButton({
-  text = buttonText.refresh.text,
-  loadingText = buttonText.refresh.loading,
+  text = buttonText.refresh,
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
   ...props
@@ -41,7 +40,7 @@ export function RefreshButton({
       {...props}
     >
       {refreshing ? loadingIcon : defaultIcon}
-      {refreshing ? loadingText : text}
+      {text}
     </Button>
   );
 }

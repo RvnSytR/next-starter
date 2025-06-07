@@ -1,6 +1,6 @@
 export const toastMessage = {
   default: {
-    loading: "Almost there...",
+    loading: "Processing your request...",
     error: "Uh-oh! Something went wrong. Please try again later.",
     success: (
       thing: string,
@@ -13,7 +13,8 @@ export const toastMessage = {
     `No changes were made to ${target} ${thing}.`,
 
   user: {
-    signIn: (name: string) => `Signed in successfully, Welcome ${name}!`,
+    signIn: (name?: string) =>
+      `Signed in successfully${name ? `, Welcome ${name}!` : "!"}`,
     signUp:
       "Your account has been registered successfully! Please sign in to continue.",
     signOut: "Signed out successfully.",

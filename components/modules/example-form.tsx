@@ -265,7 +265,7 @@ export function ExampleForm() {
           <Button type="submit">
             {/* {loading ? <Spinner /> : <Save />} */}
             <Save />
-            {buttonText.save.text}
+            {buttonText.save}
           </Button>
 
           <Button type="reset" variant="outline" onClick={() => form.reset()}>
