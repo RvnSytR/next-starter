@@ -1,6 +1,6 @@
 "use server";
 
-import { media, Media } from "@/lib/media";
+import { FileCategory, mediaMetadata } from "@/lib/const";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -36,7 +36,7 @@ export async function uploadFile({
   formData: FormData;
   names: string[];
   nameAskey?: boolean;
-  contentType?: Media;
+  contentType?: FileCategory;
 }): Promise<{ key: string; res: PutObjectCommandOutput }[]> {
   return await Promise.all(
     names.map(async (name) => {
@@ -49,7 +49,7 @@ export async function uploadFile({
             Key: key,
             Bucket: S3_BUCKET_NAME,
             Body: Buffer.from(await file.arrayBuffer()),
-            ContentType: media[contentType].type.join(", "),
+            ContentType: mediaMetadata[contentType].type.join(", "),
             ...props,
           }),
         ),

@@ -2,12 +2,11 @@
 
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { route } from "@/lib/const";
-import { buttonText, dialog, toastMessage } from "@/lib/content";
-import { media } from "@/lib/media";
+import { mediaMetadata, route } from "@/lib/const";
+import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth, zodFile, zodMessage } from "@/lib/zod";
+import { zodAuth, zodFile } from "@/lib/zod";
 import { deleteProfilePicture } from "@/server/action";
 import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -521,7 +520,7 @@ export function ProfilePicture({
       <input
         type="file"
         ref={inputAvatarRef}
-        accept={media.image.type.join(", ")}
+        accept={mediaMetadata.image.type.join(", ")}
         className="hidden"
         onChange={(e) => {
           const fileList = e.currentTarget.files;

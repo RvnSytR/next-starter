@@ -1,5 +1,5 @@
+import { FileCategory, mediaMetadata } from "@/lib/const";
 import { buttonText } from "@/lib/content";
-import { Media, media } from "@/lib/media";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Trash2, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -167,12 +167,12 @@ export function InputFile({
 }: Pick<ComponentProps<"input">, "className" | "placeholder" | "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
-  accept?: Media | "all";
+  accept?: FileCategory;
   maxFileSize?: number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const fileMedia = media[accept];
+  const fileMedia = mediaMetadata[accept];
   const fileSize = size ? { mb: size, byte: toByte(size) } : fileMedia.size;
   const isFiles = files.length > 0;
   const Icon = fileMedia.icon;

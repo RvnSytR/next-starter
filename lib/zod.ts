@@ -1,28 +1,31 @@
-import { z } from "zod";
-import { media, Media } from "./media";
+import { RawCreateParams, z } from "zod";
+import { FieldType, FileCategory, mediaMetadata } from "./const";
+import { zodMessage } from "./content";
 import { capitalize } from "./utils";
 
-export const zodMessage = {
-  confirmPassword: "Passwords do not match.",
+const zodParams = {
+  create: (thing: string, type?: FieldType) =>
+    ({
+      required_error: zodMessage.required(thing),
+      invalid_type_error: zodMessage.invalidType(thing, type),
+    }) as RawCreateParams,
 };
 
-export const zodFile = (mediaType: Media) => {
-  const fileMedia = media[mediaType];
-  const mediaFileType = mediaType !== "all" ? mediaType : "file";
+export const zodFile = (category: FileCategory) => {
+  const fileMedia = mediaMetadata[category];
+  const mediaFileType = category !== "all" ? category : "file";
 
   return z
     .instanceof(File)
     .array()
-    .nonempty({
-      message: `At least one ${mediaFileType} is required.`,
-    })
+    .nonempty({ message: zodMessage.atleastOne(mediaFileType) })
     .refine(
       (files) =>
         files.every(
           ({ type }) =>
             fileMedia.type.includes("*") || fileMedia.type.includes(type),
         ),
-      { message: `Invalid ${mediaFileType} type.` },
+      { message: zodMessage.invalidFileType(mediaFileType) },
     )
     .refine(
       (files) => files.every((file) => file.size <= fileMedia.size.byte),
@@ -37,54 +40,35 @@ export const zodAuth = z.object({
   role: z.string().nullable().optional(),
 
   name: z
-    .string({
-      required_error: "Please enter your name.",
-      invalid_type_error: "Name must be a valid text or string.",
-    })
+    .string(zodParams.create("Name"))
     .trim()
-    .min(1, "Name cannot be empty."),
+    .min(1, zodMessage.cannotEmpty("Name")),
 
   email: z
-    .string({
-      required_error: "Email is required.",
-      invalid_type_error: "Email must be a valid text.",
-    })
+    .string(zodParams.create("Email"))
     .trim()
-    .email("Please enter a valid email address.")
-    .min(1, "Email cannot be empty.")
-    .max(255, "Email is too long. Maximum 255 characters allowed."),
+    .email(zodMessage.email)
+    .min(1, zodMessage.cannotEmpty("Email"))
+    .max(255, zodMessage.toLong("Email", 255)),
 
   password: z
-    .string({
-      required_error: "Password is required.",
-      invalid_type_error: "Password must be a valid text or string.",
-    })
+    .string(zodParams.create("Password"))
     .trim()
-    .min(1, "Password cannot be empty.")
-    .min(8, "Password must be at least 8 characters long.")
-    .max(128, "Password is too long. Maximum 128 characters allowed."),
+    .min(1, zodMessage.cannotEmpty("Password"))
+    .min(8, zodMessage.toShort("Password", 8))
+    .max(128, zodMessage.toLong("Password", 128)),
 
   confirmPassword: z
-    .string({
-      required_error: "Please confirm your new password.",
-      invalid_type_error: "Password must be a valid text or string.",
-    })
-    .min(1, "Confirm Password cannot be empty."),
+    .string(zodParams.create("Confirm password"))
+    .min(1, zodMessage.cannotEmpty("Confirm password")),
 
-  rememberMe: z.boolean({
-    invalid_type_error: "Remember Me must be a boolean value.",
-  }),
+  rememberMe: z.boolean(zodParams.create("Remember me", "boolean")),
 
-  revokeOtherSessions: z.boolean({
-    invalid_type_error: "Sign out from other devices must be a boolean value.",
-  }),
+  revokeOtherSessions: z.boolean(
+    zodParams.create("Sign out from other devices", "boolean"),
+  ),
 
   isAgree: z
-    .boolean({
-      required_error: "Agreement is required",
-      invalid_type_error: "Agreement must be a boolean value.",
-    })
-    .refine((value) => value === true, {
-      message: "You must agree to the Terms of Service and Privacy Policy.",
-    }),
+    .boolean(zodParams.create("Agreement", "boolean"))
+    .refine((v) => v === true, { message: zodMessage.agreement }),
 });
