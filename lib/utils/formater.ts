@@ -1,3 +1,14 @@
+export function capitalize(str: string) {
+  return str
+    .split(" ")
+    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
+    .join(" ");
+}
+
+export function sanitizeNumber(str: string): number {
+  return Number(str.replace(/[^\d]/g, "") || "0");
+}
+
 export function toByte(mb: number) {
   return mb * 1024 * 1024;
 }
@@ -34,15 +45,4 @@ export function formatPhone(num: string | number): string {
   }
 
   return formatted;
-}
-
-export function capitalize(str: string) {
-  return str
-    .split(" ")
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join(" ");
-}
-
-export function sanitizeNumber(str: string): number {
-  return Number(str.replace(/[^\d]/g, "") || "0");
 }
