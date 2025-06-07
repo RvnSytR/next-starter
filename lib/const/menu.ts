@@ -15,10 +15,7 @@ type MenuContent = {
   subMenu?: { subLabel: string; className?: string }[];
 };
 
-export type Menu = {
-  section: string;
-  content: MenuContent[];
-};
+export type Menu = { section: string; content: MenuContent[] };
 
 export const dashboardMenu: Menu[] = [
   {
