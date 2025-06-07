@@ -7,7 +7,7 @@ import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
-import { deleteProfilePicture } from "@/server/action";
+import { deleteProfilePicture, redirectAction } from "@/server/action";
 import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
@@ -126,7 +126,6 @@ export function UserAvatar({
 }
 
 export function SignOutButton() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <SidebarMenuButton
@@ -142,7 +141,7 @@ export function SignOutButton() {
             return e.message;
           },
           success: () => {
-            router.push(route.signIn);
+            redirectAction(route.signIn);
             return toastMessage.user.signOut;
           },
         });
@@ -183,7 +182,6 @@ export function SignOnGithubButton() {
 }
 
 export function SignInForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodAuth.pick({
@@ -206,7 +204,7 @@ export function SignInForm() {
         return e.message;
       },
       success: (res) => {
-        router.push(route.protected);
+        redirectAction(route.protected);
         return toastMessage.user.signIn(res.data?.user.name);
       },
     });
@@ -987,7 +985,6 @@ export function RevokeAllOtherSessionButton() {
 export function DeleteMyAccountButton({
   image,
 }: Pick<Session["user"], "image">) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const clickHandler = () => {
     setIsLoading(true);
@@ -1004,7 +1001,7 @@ export function DeleteMyAccountButton({
         },
         success: () => {
           setIsLoading(false);
-          router.push(route.signIn);
+          redirectAction(route.signIn);
           return (
             toastMessage.default.success("account", "removed") + " Goodbye!"
           );
