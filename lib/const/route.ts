@@ -9,7 +9,7 @@ export type RouteMetadata = {
 
 export const route = {
   signIn: "/sign-in",
-  protected: "/dashboard", // change to "/" if all the routes is protected
+  protected: "/dashboard",
 };
 
 export const routeMetadata: Record<Route, RouteMetadata> = {

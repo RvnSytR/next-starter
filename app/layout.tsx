@@ -10,7 +10,7 @@ const font = Inter({ subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
   title: appInfo.name,
   description: appInfo.description,
-  keywords: [...appInfo.keywords],
+  keywords: appInfo.keywords,
   manifest: "/manifest.json",
 };
 
