@@ -9,7 +9,6 @@ import { ReactNode, useState } from "react";
 import { Spinner } from "../other/icon";
 import { Button, ButtonProps } from "../ui/button";
 
-type ActionProps = Omit<ButtonProps, "onClick" | "children">;
 type LoadingProps = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
 
 export function LinkLoader({
@@ -24,14 +23,16 @@ export function RefreshButton({
   text = buttonText.refresh,
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
+  onClick,
   ...props
-}: ActionProps & LoadingProps & { text?: string; loadingText?: string }) {
+}: LoadingProps & Omit<ButtonProps, "children"> & { text?: string }) {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   return (
     <Button
-      onClick={async () => {
+      onClick={async (e) => {
+        onClick?.(e);
         setRefreshing(true);
         await delay(0.5);
         router.refresh();
@@ -48,13 +49,15 @@ export function RefreshButton({
 export function CopyButton({
   size = "icon",
   value,
+  onClick,
   ...props
-}: ActionProps & { value: string }) {
+}: Omit<ButtonProps, "children"> & { value: string }) {
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <Button
       size={size}
-      onClick={async () => {
+      onClick={async (e) => {
+        onClick?.(e);
         setCopied(true);
         navigator.clipboard.writeText(value);
         await delay(1);
@@ -77,8 +80,9 @@ export function CopyButton({
 export function ScrollToTopButton({
   size = "iconlg",
   className,
+  onClick,
   ...props
-}: ActionProps) {
+}: Omit<ButtonProps, "children">) {
   return (
     <Button
       size={size}
@@ -86,10 +90,13 @@ export function ScrollToTopButton({
         "fixed right-4 bottom-4 z-40 rounded-full lg:right-10 lg:bottom-8",
         className,
       )}
-      onClick={() => window.scrollTo(0, 0)}
+      onClick={(e) => {
+        onClick?.(e);
+        window.scrollTo(0, 0);
+      }}
       {...props}
     >
-      <ArrowUp />
+      <ArrowUp className="size-5" />
     </Button>
   );
 }

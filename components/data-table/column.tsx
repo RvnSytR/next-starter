@@ -83,7 +83,7 @@ export const userColumn = [
       icon: UserRound,
     },
   }),
-  userColumnHelper.accessor((row) => row.role!, {
+  userColumnHelper.accessor((row) => row.role, {
     id: "role",
     header: ({ column }) => (
       <HeaderButton
@@ -118,11 +118,7 @@ export const userColumn = [
       icon: CircleDot,
       transformOptionFn: (value) => {
         const { displayName, icon } = roleMetadata[value as Role];
-        return {
-          value: value,
-          label: displayName ?? capitalize(value),
-          icon: icon,
-        };
+        return { value, label: displayName ?? capitalize(value), icon: icon };
       },
     },
   }),

@@ -101,13 +101,13 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
       <SidebarMenu>
         {item.content.map(
-          ({ route, icon: ButtonIcon, disabled, subMenu }, bodyIndex) => {
+          ({ route, icon: ContentIcon, disabled, subMenu }, bodyIndex) => {
             const { path, displayName } = routeMetadata[route];
             if (disabled) {
               return (
                 <SidebarMenuItem key={bodyIndex}>
                   <SidebarMenuButton disabled>
-                    {ButtonIcon && <ButtonIcon />}
+                    {ContentIcon && <ContentIcon />}
                     <span className="line-clamp-1">{displayName}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -119,7 +119,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
                 <SidebarMenuItem>
                   <SCMenuButton pathname={path} tooltip={displayName} asChild>
                     <Link href={path}>
-                      <LinkLoader defaultIcon={ButtonIcon && <ButtonIcon />} />
+                      <LinkLoader
+                        defaultIcon={ContentIcon && <ContentIcon />}
+                      />
                       <span className="line-clamp-1">{displayName}</span>
                     </Link>
                   </SCMenuButton>
@@ -169,16 +171,18 @@ function Content({ role }: Pick<SidebarData, "role">) {
 function Footer() {
   return (
     <SidebarMenu className="gap-2">
-      {dashboardfooterMenu.map((item, index) => (
-        <SidebarMenuItem key={index}>
-          <SidebarMenuButton size="sm" tooltip={item.displayName} asChild>
-            <Link href={item.path}>
-              <LinkLoader defaultIcon={item.icon && <item.icon />} />
-              {item.displayName}
-            </Link>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
-      ))}
+      {dashboardfooterMenu.map(
+        ({ icon: FooterIcon, displayName, path }, index) => (
+          <SidebarMenuItem key={index}>
+            <SidebarMenuButton size="sm" tooltip={displayName} asChild>
+              <Link href={path}>
+                <LinkLoader defaultIcon={FooterIcon && <FooterIcon />} />
+                {displayName}
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        ),
+      )}
 
       <SidebarSeparator />
 

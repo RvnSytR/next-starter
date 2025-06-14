@@ -8,7 +8,7 @@ export const toastMessage = {
       thing: string,
       action: "created" | "updated" | "removed" | "terminated",
       target: string = "Your",
-    ) => `${target} ${thing} has been ${action} successfully.`,
+    ) => `${target} ${thing} has been ${action} successfully.`.trim(),
   },
 
   noChanges: (thing: string, target: string = "your") =>

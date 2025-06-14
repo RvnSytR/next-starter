@@ -33,7 +33,7 @@ export function Section({
         </div>
       </header>
 
-      <main className={cn("z-10 my-4 flex flex-col gap-y-4 px-4", className)}>
+      <main className={cn("z-10 flex flex-1 flex-col gap-y-4 p-4", className)}>
         {children}
       </main>
     </>
