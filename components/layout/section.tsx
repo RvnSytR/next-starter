@@ -40,9 +40,9 @@ export function Section({
   );
 }
 
-export function SectionTagline() {
+export function SectionTagline({ className }: { className?: string }) {
   return (
-    <small className="text-muted-foreground">
+    <small className={cn("text-muted-foreground", className)}>
       {"Built by "}
       <Link href="https://github.com/RvnSytR" className="link">
         RvnS

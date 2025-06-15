@@ -129,7 +129,6 @@ export function SignOutButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <SidebarMenuButton
-      size="sm"
       className="text-destructive hover:text-destructive"
       disabled={isLoading}
       onClick={() => {
