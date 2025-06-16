@@ -32,7 +32,7 @@ export const userColumn = [
   userColumnHelper.display({
     id: "number",
     header: "No",
-    cell: ({ row }) => row.index + 1,
+    cell: ({ row }) => <div className="px-4">{row.index + 1}</div>,
     enableHiding: false,
   }),
   userColumnHelper.accessor((row) => row.image, {

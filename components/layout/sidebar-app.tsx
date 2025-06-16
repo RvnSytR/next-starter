@@ -14,6 +14,7 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuAction,
   SidebarMenuButton,
@@ -52,7 +53,7 @@ export function SidebarApp({
         <SidebarRail />
       </Sidebar>
 
-      {children}
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );
 }

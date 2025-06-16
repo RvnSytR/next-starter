@@ -16,10 +16,11 @@ export default async function Page() {
   const data = await getUserList();
 
   return (
-    <Section currentPage={currenRoute.displayName} className="items-center">
+    <Section currentPage={currenRoute.displayName} className="xl:items-center">
       <AdminAccountDataTable
         currentUser={session.user}
         data={data.users}
+        className="max-w-[80rem]"
         withRefresh
         {...dashboardPage.account}
       >

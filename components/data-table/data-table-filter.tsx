@@ -1230,9 +1230,7 @@ export function FilterValueOptionController<TData, TValue>({
             return (
               <CommandItem
                 key={v.value}
-                onSelect={() => {
-                  handleOptionSelect(v.value, !checked);
-                }}
+                onSelect={() => handleOptionSelect(v.value, !checked)}
                 className="group flex items-center justify-between gap-2"
               >
                 <Checkbox checked={checked} />
@@ -1395,9 +1393,7 @@ export function FilterValueMultiOptionController<
             return (
               <CommandItem
                 key={v.value}
-                onSelect={() => {
-                  handleOptionSelect(v.value, !checked);
-                }}
+                onSelect={() => handleOptionSelect(v.value, !checked)}
                 className="group flex items-center justify-between gap-2"
               >
                 <Checkbox checked={checked} />
@@ -1413,7 +1409,7 @@ export function FilterValueMultiOptionController<
                     />
                   ))}
 
-                <span>{v.label}</span>
+                <span>{v.label} </span>
 
                 <span
                   className={cn(

@@ -100,7 +100,7 @@ export function DataTable<TData>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const rowsLimitArr = [10, 20, 30, 40, 50];
+  const rowsLimitArr = [20, 30, 40, 50, 100];
 
   const table = useReactTable({
     data,
@@ -122,19 +122,8 @@ export function DataTable<TData>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
-    initialState: {
-      pagination: {
-        pageIndex: 0,
-        pageSize: rowsLimitArr[0],
-      },
-    },
-
-    state: {
-      sorting,
-      globalFilter,
-      columnFilters,
-      columnVisibility,
-    },
+    initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[0] } },
+    state: { sorting, globalFilter, columnFilters, columnVisibility },
   });
 
   return (
@@ -156,7 +145,7 @@ export function DataTable<TData>({
         </ActiveFiltersMobileContainer>
       )}
 
-      <CardContent>
+      <CardContent className="px-0">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -210,20 +199,18 @@ export function DataTable<TData>({
         </Table>
       </CardContent>
 
-      <CardFooter className="flex flex-col items-center justify-between gap-4 md:flex-row">
-        <RowsPerPage
-          table={table}
-          rowsLimitArr={rowsLimitArr}
-          className="order-3 md:order-1"
-        />
+      <CardFooter className="flex flex-col items-center gap-4">
+        {caption && <small className="text-muted-foreground">{caption}</small>}
 
-        {caption && (
-          <small className="text-muted-foreground order-1 md:order-2">
-            {caption}
-          </small>
-        )}
+        <div className="flex w-full justify-between gap-x-4 md:justify-start">
+          <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
 
-        <Pagination table={table} className="order-2 md:order-3" />
+          <Label className="md:ml-auto">
+            {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
+          </Label>
+
+          <Pagination table={table} />
+        </div>
       </CardFooter>
     </Card>
   );
@@ -239,45 +226,47 @@ function ToolBox<TData>({
     <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
 
-      <FilterSelector table={table} />
+      <div className="grid grid-cols-2 gap-x-2">
+        <FilterSelector table={table} />
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button size="sm" variant="outline">
-            <Settings2 />
-            View
-          </Button>
-        </PopoverTrigger>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button size="sm" variant="outline">
+              <Settings2 />
+              View
+            </Button>
+          </PopoverTrigger>
 
-        <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
-          {table
-            .getAllColumns()
-            .filter((column) => column.getCanHide())
-            .map((column, index) => {
-              const cbId = `cb${column.id}`;
-              return (
-                <Label
-                  key={index}
-                  htmlFor={cbId}
-                  className={cn(
-                    buttonVariants({ variant: "ghost", size: "sm" }),
-                    "items-center justify-start gap-x-2 p-2 capitalize",
-                  )}
-                >
-                  <Checkbox
-                    id={cbId}
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  />
+          <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column, index) => {
+                const cbId = `cb${column.id}`;
+                return (
+                  <Label
+                    key={index}
+                    htmlFor={cbId}
+                    className={cn(
+                      buttonVariants({ variant: "ghost", size: "sm" }),
+                      "items-center justify-start gap-x-2 p-2 capitalize",
+                    )}
+                  >
+                    <Checkbox
+                      id={cbId}
+                      checked={column.getIsVisible()}
+                      onCheckedChange={(value) =>
+                        column.toggleVisibility(!!value)
+                      }
+                    />
 
-                  <small className="font-medium">{column.id}</small>
-                </Label>
-              );
-            })}
-        </PopoverContent>
-      </Popover>
+                    <small className="font-medium">{column.id}</small>
+                  </Label>
+                );
+              })}
+          </PopoverContent>
+        </Popover>
+      </div>
 
       <div className="flex gap-x-2">
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
@@ -302,50 +291,42 @@ function Pagination<TData>({
 }: TableProps<TData> & { className?: string }) {
   const isMobile = useIsMobile();
   return (
-    <div
-      className={cn("flex flex-col items-center gap-4 md:flex-row", className)}
-    >
-      <Label className="order-2 md:order-1">
-        {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
-      </Label>
+    <div className={cn("flex gap-x-1", className)}>
+      <Button
+        size={isMobile ? "icon" : "iconsm"}
+        variant="outline"
+        onClick={() => table.firstPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <ChevronsLeft />
+      </Button>
 
-      <div className="order-1 flex gap-x-1 md:order-2">
-        <Button
-          size={isMobile ? "icon" : "iconsm"}
-          variant="outline"
-          onClick={() => table.firstPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronsLeft />
-        </Button>
+      <Button
+        size={isMobile ? "icon" : "iconsm"}
+        variant="outline"
+        onClick={() => table.previousPage()}
+        disabled={!table.getCanPreviousPage()}
+      >
+        <ChevronLeft />
+      </Button>
 
-        <Button
-          size={isMobile ? "icon" : "iconsm"}
-          variant="outline"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <ChevronLeft />
-        </Button>
+      <Button
+        size={isMobile ? "icon" : "iconsm"}
+        variant="outline"
+        onClick={() => table.nextPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        <ChevronRight />
+      </Button>
 
-        <Button
-          size={isMobile ? "icon" : "iconsm"}
-          variant="outline"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronRight />
-        </Button>
-
-        <Button
-          size={isMobile ? "icon" : "iconsm"}
-          variant="outline"
-          onClick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <ChevronsRight />
-        </Button>
-      </div>
+      <Button
+        size={isMobile ? "icon" : "iconsm"}
+        variant="outline"
+        onClick={() => table.lastPage()}
+        disabled={!table.getCanNextPage()}
+      >
+        <ChevronsRight />
+      </Button>
     </div>
   );
 }
@@ -357,7 +338,7 @@ function RowsPerPage<TData>({
 }: TableProps<TData> & { rowsLimitArr: number[]; className?: string }) {
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
-      <Label>Rows per page</Label>
+      <Label className="hidden lg:flex">Rows per page</Label>
       <Select
         value={String(table.getState().pagination.pageSize)}
         onValueChange={(value) => {
