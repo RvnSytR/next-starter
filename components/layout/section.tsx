@@ -16,7 +16,7 @@ export function Section({
 }: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
   return (
     <>
-      <header className="bg-background sticky top-0 z-50 flex h-fit items-center justify-between gap-x-2 border-b p-4 shadow-xs">
+      <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
           <SidebarTrigger className="hidden md:flex" />
           <Separator

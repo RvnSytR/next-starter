@@ -19,7 +19,7 @@ export default async function DashboardLayout({
     <SidebarApp {...session.user}>
       <GridPattern className="stroke-accent/35 z-0" />
       {children}
-      <div className="bg-background z-10 mt-auto flex h-12 items-center justify-center border-t text-center">
+      <div className="bg-background/90 z-10 mt-auto flex h-12 items-center justify-center border-t text-center">
         <SectionTagline className="container" />
       </div>
     </SidebarApp>
