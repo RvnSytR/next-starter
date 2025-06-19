@@ -1,6 +1,5 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -126,6 +125,10 @@ export function DataTable<TData>({
     state: { sorting, globalFilter, columnFilters, columnVisibility },
   });
 
+  const pageCount = table.getPageCount();
+  const pageNumber =
+    table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 0;
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
@@ -202,14 +205,16 @@ export function DataTable<TData>({
       <CardFooter className="flex flex-col items-center gap-4">
         {caption && <small className="text-muted-foreground">{caption}</small>}
 
-        <div className="flex w-full justify-between gap-x-4 md:justify-start">
-          <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
+        <div className="flex w-full flex-col items-center gap-4 md:flex-row">
+          <div className="order-2 flex grow items-center justify-between gap-x-4 md:order-1">
+            <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
 
-          <Label className="md:ml-auto">
-            {`Page ${table.getState().pagination.pageIndex + 1} of ${table.getPageCount()}`}
-          </Label>
+            <small className="tabular-nums">
+              {`Page ${pageNumber} of ${pageCount}`}
+            </small>
+          </div>
 
-          <Pagination table={table} />
+          <Pagination table={table} className="order-1 md:order-2" />
         </div>
       </CardFooter>
     </Card>
@@ -289,11 +294,10 @@ function Pagination<TData>({
   table,
   className,
 }: TableProps<TData> & { className?: string }) {
-  const isMobile = useIsMobile();
   return (
     <div className={cn("flex gap-x-1", className)}>
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="icon"
         variant="outline"
         onClick={() => table.firstPage()}
         disabled={!table.getCanPreviousPage()}
@@ -302,7 +306,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="icon"
         variant="outline"
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
@@ -311,7 +315,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="icon"
         variant="outline"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
@@ -320,7 +324,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="icon"
         variant="outline"
         onClick={() => table.lastPage()}
         disabled={!table.getCanNextPage()}

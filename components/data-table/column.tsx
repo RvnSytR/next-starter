@@ -7,15 +7,25 @@ import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
   ArrowUpDown,
+  Ban,
   CalendarCheck2,
   CalendarClock,
   CircleDot,
+  EllipsisVertical,
+  Layers2,
   Mail,
   UserRound,
 } from "lucide-react";
-import { UserAvatar } from "../modules/auth";
+import {
+  AdminChangeUserRoleDialog,
+  AdminRemoveUserDialog,
+  AdminTerminateUserSessionDialog,
+  UserAvatar,
+} from "../modules/auth";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps } from "../ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Separator } from "../ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
@@ -28,14 +38,14 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
 };
 
 export const userColumnHelper = createColumnHelper<UserWithRole>();
-export const userColumn = [
+export const getUserColumn = (currentUserId: string) => [
   userColumnHelper.display({
     id: "number",
     header: () => <div className="px-2">No</div>,
     cell: ({ row }) => row.index + 1,
     enableHiding: false,
   }),
-  userColumnHelper.accessor((row) => row.image, {
+  userColumnHelper.accessor(({ image }) => image, {
     id: "Profile Picture",
     header: "Profile Picture",
     cell: ({ row }) => (
@@ -49,7 +59,7 @@ export const userColumn = [
       </div>
     ),
   }),
-  userColumnHelper.accessor((row) => row.email, {
+  userColumnHelper.accessor(({ email }) => email, {
     id: "email",
     header: ({ column }) => (
       <HeaderButton
@@ -66,7 +76,7 @@ export const userColumn = [
       icon: Mail,
     },
   }),
-  userColumnHelper.accessor((row) => row.name, {
+  userColumnHelper.accessor(({ name }) => name, {
     id: "name",
     header: ({ column }) => (
       <HeaderButton
@@ -83,7 +93,7 @@ export const userColumn = [
       icon: UserRound,
     },
   }),
-  userColumnHelper.accessor((row) => row.role, {
+  userColumnHelper.accessor(({ role }) => role, {
     id: "role",
     header: ({ column }) => (
       <HeaderButton
@@ -122,7 +132,7 @@ export const userColumn = [
       },
     },
   }),
-  userColumnHelper.accessor((row) => row.updatedAt, {
+  userColumnHelper.accessor(({ updatedAt }) => updatedAt, {
     id: "Updated At",
     header: ({ column }) => (
       <HeaderButton
@@ -142,7 +152,7 @@ export const userColumn = [
       icon: CalendarClock,
     },
   }),
-  userColumnHelper.accessor((row) => row.createdAt, {
+  userColumnHelper.accessor(({ createdAt }) => createdAt, {
     id: "Created At",
     header: ({ column }) => (
       <HeaderButton
@@ -160,6 +170,52 @@ export const userColumn = [
       displayName: "Created At",
       type: "date",
       icon: CalendarCheck2,
+    },
+  }),
+  userColumnHelper.display({
+    id: "Action",
+    header: "Action",
+    cell: ({ row }) => {
+      if (row.original.id === currentUserId) {
+        return <Badge variant="outline">Current User</Badge>;
+      }
+
+      return (
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button size="icon" variant="ghost">
+              <EllipsisVertical />
+            </Button>
+          </PopoverTrigger>
+
+          <PopoverContent
+            align="end"
+            className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
+          >
+            <div className="px-2 py-1 text-center">
+              <small className="font-medium">{row.original.name}</small>
+            </div>
+
+            <Separator />
+
+            <AdminChangeUserRoleDialog {...row.original} />
+
+            <Button size="sm" variant="ghost" disabled>
+              <Layers2 />
+              Impersonate Session
+            </Button>
+
+            <AdminTerminateUserSessionDialog {...row.original} />
+
+            <Button size="sm" variant="ghost_destructive" disabled>
+              <Ban />
+              Ban
+            </Button>
+
+            <AdminRemoveUserDialog {...row.original} />
+          </PopoverContent>
+        </Popover>
+      );
     },
   }),
 ];

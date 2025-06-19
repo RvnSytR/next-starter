@@ -13,12 +13,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
-  Ban,
   CircleFadingArrowUp,
   Dot,
-  EllipsisVertical,
   Gamepad2,
-  Layers2,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
@@ -42,7 +39,7 @@ import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { FormFloating } from "../custom/custom-field";
-import { userColumn, userColumnHelper } from "../data-table/column";
+import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { GithubIcon, Spinner } from "../other/icon";
 import {
@@ -57,7 +54,6 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -81,7 +77,6 @@ import {
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
   Select,
   SelectContent,
@@ -1047,62 +1042,13 @@ export function DeleteMyAccountButton({
 
 export function AdminAccountDataTable({
   data,
-  currentUser,
+  currentUserId,
   ...props
 }: OtherDataTableProps & {
   data: UserWithRole[];
-  currentUser: Session["user"];
+  currentUserId: string;
 }) {
-  const columns = [
-    ...userColumn,
-    userColumnHelper.display({
-      id: "Action",
-      header: "Action",
-      cell: ({ row }) => {
-        if (row.original.id === currentUser.id) {
-          return <Badge variant="outline">Current User</Badge>;
-        }
-
-        return (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="icon" variant="ghost">
-                <EllipsisVertical />
-              </Button>
-            </PopoverTrigger>
-
-            <PopoverContent
-              align="end"
-              className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
-            >
-              <div className="px-2 py-1 text-center">
-                <small className="font-medium">{row.original.name}</small>
-              </div>
-
-              <Separator />
-
-              <AdminChangeUserRoleDialog {...row.original} />
-
-              <Button size="sm" variant="ghost" disabled>
-                <Layers2 />
-                Impersonate Session
-              </Button>
-
-              <AdminTerminateUserSessionDialog {...row.original} />
-
-              <Button size="sm" variant="ghost_destructive" disabled>
-                <Ban />
-                Ban
-              </Button>
-
-              <AdminRemoveUserDialog {...row.original} />
-            </PopoverContent>
-          </Popover>
-        );
-      },
-    }),
-  ];
-
+  const columns = getUserColumn(currentUserId);
   return <DataTable data={data} columns={columns} {...props} />;
 }
 
