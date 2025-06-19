@@ -104,6 +104,11 @@
 }
 
 @theme inline {
+  --breakpoint-3xl: 112rem; /* 1792px */
+  --breakpoint-4xl: 128rem; /* 2048px */
+  --breakpoint-5xl: 144rem; /* 2304px */
+  --breakpoint-6xl: 160rem; /* 2560px */
+
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

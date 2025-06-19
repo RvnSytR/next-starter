@@ -31,8 +31,8 @@ export const userColumnHelper = createColumnHelper<UserWithRole>();
 export const userColumn = [
   userColumnHelper.display({
     id: "number",
-    header: "No",
-    cell: ({ row }) => <div className="px-4">{row.index + 1}</div>,
+    header: () => <div className="px-2">No</div>,
+    cell: ({ row }) => row.index + 1,
     enableHiding: false,
   }),
   userColumnHelper.accessor((row) => row.image, {

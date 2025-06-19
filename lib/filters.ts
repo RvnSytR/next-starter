@@ -6,7 +6,6 @@ import {
   RowData,
   Table,
 } from "@tanstack/react-table";
-import "@tanstack/table-core";
 import {
   endOfDay,
   isAfter,
