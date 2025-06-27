@@ -128,15 +128,16 @@ export function SignOutButton() {
       disabled={isLoading}
       onClick={() => {
         setIsLoading(true);
-        toast.promise(authClient.signOut(), {
-          loading: toastMessage.default.loading,
-          error: (e) => {
-            setIsLoading(false);
-            return e.message;
-          },
-          success: () => {
-            redirectAction(route.signIn);
-            return toastMessage.user.signOut;
+        authClient.signOut({
+          fetchOptions: {
+            onError: ({ error }) => {
+              toast.error(error.message);
+              setIsLoading(false);
+            },
+            onSuccess: () => {
+              toast.success(toastMessage.user.signOut);
+              redirectAction(route.signIn);
+            },
           },
         });
       }}
@@ -155,16 +156,20 @@ export function SignOnGithubButton() {
       disabled={isLoading}
       onClick={() => {
         setIsLoading(true);
-        toast.promise(
-          authClient.signIn.social({
+        authClient.signIn.social(
+          {
             provider: "github",
             callbackURL: route.protected,
             errorCallbackURL: route.signIn,
-          }),
+          },
           {
-            loading: toastMessage.default.loading,
-            error: (e) => e.message,
-            success: toastMessage.user.signIn(),
+            onError: ({ error }) => {
+              toast.error(error.message);
+              setIsLoading(false);
+            },
+            onSuccess: () => {
+              toast.success(toastMessage.user.signIn());
+            },
           },
         );
       }}
@@ -191,15 +196,14 @@ export function SignInForm() {
 
   const formHandler = (formData: z.infer<typeof schema>) => {
     setIsLoading(true);
-    toast.promise(authClient.signIn.email(formData), {
-      loading: toastMessage.default.loading,
-      error: (e) => {
+    authClient.signIn.email(formData, {
+      onError: ({ error }) => {
+        toast.error(error.message);
         setIsLoading(false);
-        return e.message;
       },
-      success: (res) => {
-        redirectAction(route.protected);
-        return toastMessage.user.signIn(res.data?.user.name);
+      onSuccess: () => {
+        toast.success(toastMessage.user.signOut);
+        redirectAction(route.signIn);
       },
     });
   };
@@ -301,16 +305,15 @@ export function SignUpForm() {
 
   const formHandler = (formData: z.infer<typeof schema>) => {
     setIsLoading(true);
-    toast.promise(authClient.signUp.email(formData), {
-      loading: toastMessage.default.loading,
-      error: (e) => {
+    authClient.signUp.email(formData, {
+      onError: ({ error }) => {
+        toast.error(error.message);
         setIsLoading(false);
-        return e.message;
       },
-      success: () => {
+      onSuccess: () => {
+        toast.success(toastMessage.user.signUp);
         setIsLoading(false);
         form.reset();
-        return toastMessage.user.signUp;
       },
     });
   };
@@ -444,62 +447,59 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const schema = zodFile("image");
-  const changeHandler = (fileList: FileList) => {
+
+  const changeHandler = async (fileList: FileList) => {
+    setIsChange(true);
+
     const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
     if (!parseRes.success) return toast.error(parseRes.error.errors[0].message);
 
-    setIsChange(true);
-    toast.promise(
-      async () => {
-        const formData = new FormData();
-        const file = fileList[0];
-        const fileKey = `${id}_${file.name}`;
-        const fileUrl = await getFilePublicUrl(fileKey);
+    const formData = new FormData();
+    const file = fileList[0];
+    const fileKey = `${id}_${file.name}`;
+    const fileUrl = await getFilePublicUrl(fileKey);
 
-        formData.append(fileKey, file);
-        if (image && fileUrl !== image) await deleteProfilePicture(image);
+    formData.set(fileKey, file);
+    if (image && fileUrl !== image) await deleteProfilePicture(image);
 
-        await uploadFile({
-          formData: formData,
-          names: [fileKey],
-          nameAskey: true,
-          ACL: "public-read",
-        });
+    await uploadFile({
+      formData: formData,
+      names: [fileKey],
+      nameAskey: true,
+      ACL: "public-read",
+    });
 
-        await authClient.updateUser({ image: fileUrl });
-      },
+    await authClient.updateUser(
+      { image: fileUrl },
       {
-        loading: toastMessage.default.loading,
-        error: (e) => {
+        onError: ({ error }) => {
+          toast.error(error.message);
           setIsChange(false);
-          return e.message;
         },
-        success: () => {
+        onSuccess: () => {
+          toast.success(toastMessage.default.success("avatar", "updated"));
           setIsChange(false);
           router.refresh();
-          return toastMessage.default.success("avatar", "updated");
         },
       },
     );
   };
 
-  const deleteHandler = () => {
+  const deleteHandler = async () => {
     setIsRemoved(true);
-    toast.promise(
-      async () => {
-        if (image) await deleteProfilePicture(image);
-        await authClient.updateUser({ image: null });
-      },
+    if (image) await deleteProfilePicture(image);
+
+    await authClient.updateUser(
+      { image: null },
       {
-        loading: toastMessage.default.loading,
-        error: (e) => {
+        onError: ({ error }) => {
           setIsRemoved(false);
-          return e.message;
+          toast.error(error.message);
         },
-        success: () => {
+        onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          return toastMessage.default.success("avatar", "removed");
+          toast.success(toastMessage.default.success("avatar", "removed"));
         },
       },
     );
@@ -597,20 +597,23 @@ export function PersonalInformation({
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(toastMessage.noChanges("profile"));
     setIsLoading(true);
-    toast.promise(authClient.updateUser({ name: newName }), {
-      loading: toastMessage.default.loading,
-      error: (e) => {
-        setIsLoading(false);
-        return e.message;
+    if (newName === name) return toast.info(toastMessage.noChanges("profile"));
+
+    authClient.updateUser(
+      { name: newName },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(toastMessage.default.success("profile", "updated"));
+          setIsLoading(false);
+          router.refresh();
+        },
       },
-      success: () => {
-        setIsLoading(false);
-        router.refresh();
-        return toastMessage.default.success("profile", "updated");
-      },
-    });
+    );
   };
 
   return (
@@ -722,17 +725,16 @@ export function ChangePasswordForm() {
 
   const formHandler = (formData: z.infer<typeof schema>) => {
     setIsLoading(true);
-    toast.promise(authClient.changePassword(formData), {
-      loading: toastMessage.default.loading,
-      error: (e) => {
+    authClient.changePassword(formData, {
+      onError: ({ error }) => {
+        toast.error(error.message);
         setIsLoading(false);
-        return e.message;
       },
-      success: () => {
+      onSuccess: () => {
+        toast.success(toastMessage.default.success("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
-        return toastMessage.default.success("password", "updated");
       },
     });
   };
@@ -867,14 +869,20 @@ export function ActiveSessionButton({
   }[device.type ?? "other"];
 
   const clickHandler = () => {
-    toast.promise(authClient.revokeSession({ token }), {
-      loading: toastMessage.default.loading,
-      error: (e) => e.message,
-      success: () => {
-        router.refresh();
-        return toastMessage.default.success("sessions", "terminated", "The");
+    authClient.revokeSession(
+      { token },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+        onSuccess: () => {
+          toast.success(
+            toastMessage.default.success("sessions", "terminated", "The"),
+          );
+          router.refresh();
+        },
       },
-    });
+    );
   };
 
   return (
@@ -942,12 +950,17 @@ export function RevokeAllOtherSessionButton() {
   const { trigger, title, desc } = dialog.profile.revokeAllOtherSession;
 
   const clickHandler = () => {
-    toast.promise(authClient.revokeOtherSessions(), {
-      loading: toastMessage.default.loading,
-      error: (e) => e.message,
-      success: () => {
-        router.refresh();
-        return toastMessage.default.success("other sessions", "terminated");
+    authClient.revokeOtherSessions({
+      fetchOptions: {
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+        onSuccess: () => {
+          toast.success(
+            toastMessage.default.success("other sessions", "terminated"),
+          );
+          router.refresh();
+        },
       },
     });
   };
@@ -980,25 +993,25 @@ export function DeleteMyAccountButton({
   image,
 }: Pick<Session["user"], "image">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const clickHandler = () => {
+
+  const clickHandler = async () => {
     setIsLoading(true);
-    toast.promise(
-      async () => {
-        if (image) await deleteProfilePicture(image);
-        authClient.deleteUser({ callbackURL: route.signIn });
-      },
+    if (image) await deleteProfilePicture(image);
+
+    authClient.deleteUser(
+      { callbackURL: route.signIn },
       {
-        loading: toastMessage.default.loading,
-        error: (e) => {
+        onRequest: () => setIsLoading(true),
+        onError: ({ error }) => {
+          toast.error(error.message);
           setIsLoading(false);
-          return e.message;
         },
-        success: () => {
+        onSuccess: () => {
+          toast.success(
+            toastMessage.default.success("account", "removed") + " Goodbye!",
+          );
           setIsLoading(false);
           redirectAction(route.signIn);
-          return (
-            toastMessage.default.success("account", "removed") + " Goodbye!"
-          );
         },
       },
     );
@@ -1081,26 +1094,23 @@ export function AdminCreateUserDialog() {
     },
   });
 
-  const formHandler = async (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: z.infer<typeof schema>) => {
     const { role, ...restData } = formData;
     setIsLoading(true);
-    toast.promise(
-      authClient.admin.createUser({ role: role as Role, ...restData }),
+    authClient.admin.createUser(
+      { role: role as Role, ...restData },
       {
-        loading: toastMessage.default.loading,
-        error: (e) => {
+        onError: ({ error }) => {
+          toast.error(error.message);
           setIsLoading(false);
-          return e.message;
         },
-        success: () => {
+        onSuccess: () => {
+          toast.success(
+            toastMessage.default.success("account", "created", formData.name),
+          );
           setIsLoading(false);
           form.reset();
           router.refresh();
-          return toastMessage.default.success(
-            "account",
-            "created",
-            formData.name,
-          );
         },
       },
     );
@@ -1282,25 +1292,28 @@ export function AdminChangeUserRoleDialog({
     defaultValues: { role: role },
   });
 
-  const formHandler = async (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: z.infer<typeof schema>) => {
+    setIsLoading(true);
+
     const newRole = formData.role as Role;
     if (newRole === role)
       return toast.info(toastMessage.noChanges("role", name));
 
-    setIsLoading(true);
-    toast.promise(authClient.admin.setRole({ userId: id, role: newRole }), {
-      loading: toastMessage.default.loading,
-      error: (e) => {
-        setIsLoading(false);
-        return e.message;
+    authClient.admin.setRole(
+      { userId: id, role: newRole },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(toastMessage.user.changeRole(name, newRole));
+          setIsLoading(false);
+          setIsOpen(false);
+          router.refresh();
+        },
       },
-      success: () => {
-        setIsLoading(false);
-        setIsOpen(false);
-        router.refresh();
-        return toastMessage.user.changeRole(name, newRole);
-      },
-    });
+    );
   };
 
   return (
@@ -1384,11 +1397,17 @@ export function AdminTerminateUserSessionDialog({
   name,
 }: Pick<Session["user"], "id" | "name">) {
   const clickHandler = () => {
-    toast.promise(authClient.admin.revokeUserSessions({ userId: id }), {
-      loading: toastMessage.default.loading,
-      error: (e) => e.message,
-      success: toastMessage.user.revokeSession(name),
-    });
+    authClient.admin.revokeUserSessions(
+      { userId: id },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+        },
+        onSuccess: () => {
+          toast.success(toastMessage.user.revokeSession(name));
+        },
+      },
+    );
   };
 
   return (
@@ -1435,23 +1454,23 @@ export function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const clickHandler = () => {
+  const clickHandler = async () => {
     setIsLoading(true);
-    toast.promise(
-      async () => {
-        if (image) await deleteProfilePicture(image);
-        await authClient.admin.removeUser({ userId: id });
-      },
+    if (image) await deleteProfilePicture(image);
+
+    authClient.admin.removeUser(
+      { userId: id },
       {
-        loading: toastMessage.default.loading,
-        error: (e) => {
+        onError: ({ error }) => {
+          toast.error(error.message);
           setIsLoading(false);
-          return e.message;
         },
-        success: () => {
+        onSuccess: () => {
+          toast.success(
+            toastMessage.default.success("account", "removed", name),
+          );
           setIsLoading(false);
           router.refresh();
-          return toastMessage.default.success("account", "removed", name);
         },
       },
     );
