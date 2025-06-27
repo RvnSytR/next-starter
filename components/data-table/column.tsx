@@ -37,7 +37,7 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-export const userColumnHelper = createColumnHelper<UserWithRole>();
+const userColumnHelper = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   userColumnHelper.display({
     id: "number",
