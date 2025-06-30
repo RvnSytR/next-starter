@@ -1,7 +1,7 @@
 import { FileCategory, mediaMetadata } from "@/lib/const";
 import { buttonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
-import { Calendar as CalendarIcon, Dot, Trash2, Upload, X } from "lucide-react";
+import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
 import {
   ComponentProps,
@@ -262,8 +262,8 @@ export function InputFile({
                 className="h-8"
                 onClick={resetFiles}
               >
-                <Trash2 />
-                {buttonText.remove} all
+                <X />
+                {buttonText.clear}
               </Button>
             </div>
           </div>
@@ -295,8 +295,8 @@ export function InputFile({
                     type="button"
                     onClick={() => removeFile(index)}
                     size="iconsm"
-                    variant="outline_destructive"
-                    className="bg-background/50 absolute -top-2.5 -right-2.5 size-6 rounded-full"
+                    variant="destructive"
+                    className="absolute -top-2 -right-2 size-5 rounded-full"
                   >
                     <X />
                   </Button>
@@ -343,12 +343,12 @@ export function InputFile({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-y-4 px-4 py-8">
+        <div className="flex flex-col items-center gap-y-4 px-4 pt-8 pb-10 text-center">
           <div className="rounded-full border p-3">
             <Icon />
           </div>
 
-          <div className="flex flex-col items-center gap-y-1 text-center">
+          <div className="flex flex-col items-center gap-y-2">
             <small className="font-medium">
               {placeholder ?? buttonText.fileInput.placeholder}
             </small>

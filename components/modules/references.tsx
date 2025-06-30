@@ -266,6 +266,7 @@ export function References() {
           code={`<Badge>Default</Badge>
 <Badge variant="secondary">Secondary</Badge>
 <Badge variant="outline">Outline</Badge>
+<Badge variant="outline_primary">Outline Primary</Badge>
 
 <Badge variant="success">Success</Badge>
 <Badge variant="outline_success">Outline Success</Badge>
@@ -281,6 +282,7 @@ export function References() {
               <Badge>Default</Badge>
               <Badge variant="secondary">Secondary</Badge>
               <Badge variant="outline">Outline</Badge>
+              <Badge variant="outline_primary">Outline Primary</Badge>
 
               <Badge variant="success">Success</Badge>
               <Badge variant="outline_success">Outline Success</Badge>
@@ -302,6 +304,7 @@ export function References() {
 <Button variant="outline">Outline</Button>
 <Button variant="ghost">Ghost</Button>
 <Button variant="link">Link</Button>
+<Button variant="outline_primary">Outline Primary</Button>
 
 <Button variant="success">Success</Button>
 <Button variant="outline_success">Outline Success</Button>
@@ -322,6 +325,7 @@ export function References() {
               <Button variant="outline">Outline</Button>
               <Button variant="ghost">Ghost</Button>
               <Button variant="link">Link</Button>
+              <Button variant="outline_primary">Outline Primary</Button>
             </div>
 
             <div className="flex flex-wrap justify-center gap-2">

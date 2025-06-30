@@ -1,52 +1,54 @@
 import { FieldType, FileCategory } from "../const";
 
 export const toastMessage = {
-  default: {
-    loading: "Processing your request...",
-    error: "Uh-oh! Something went wrong. Please try again later.",
-    success: (
-      thing: string,
-      action: "created" | "updated" | "removed" | "terminated",
-      target: string | null = "Your",
-    ) => `${target} ${thing} has been ${action} successfully.`.trim(),
-  },
+  loading: "Processing your request...",
+  error: "Uh-oh! Something went wrong. Please try again later.",
 
-  noChanges: (thing: string, target: string = "your") =>
-    `No changes were made to ${target} ${thing}.`,
+  success: (
+    thing: string,
+    action: "created" | "updated" | "removed" | "terminated",
+  ) => `${thing} has been ${action} successfully.`.trim(),
+  successTo: (
+    thing: string,
+    action: "created" | "updated" | "removed" | "terminated",
+    x: string = "Your",
+  ) => `${x} ${thing} has been ${action} successfully.`.trim(),
+
+  noChanges: (thing: string) => `No changes were made to ${thing}.`,
+  noChangesTo: (thing: string, x: string = "your") =>
+    `No changes were made to ${x} ${thing}.`,
+
+  deleteForbidden: (thing: string, x: string) =>
+    `This ${thing} cannot be deleted because it is currently assigned to a ${x}.`,
 
   user: {
     signIn: (name?: string) =>
-      `Signed in successfully${name ? `, Welcome ${name}!` : "!"}`,
-    signUp:
-      "Your account has been registered successfully! Please sign in to continue.",
+      `Signed in successfully${name ? `, welcome ${name}!` : "!"}`,
+    signUp: "Your account has been registered! Please sign in to continue.",
     signOut: "Signed out successfully.",
     changeRole: (name: string, role: string) =>
-      `${name}'s role has been successfully updated to ${role}!`,
+      `${name}'s role has been updated to ${role}.`,
     revokeSession: (name: string) =>
-      `All ${name}'s sessions have been terminated successfully.`,
+      `All ${name} active sessions have been terminated.`,
   },
 };
 
 export const zodMessage = {
   required: (thing: string) => `${thing} is required.`,
-
-  invalidType: (thing: string, type: FieldType = "string") =>
-    `${thing} must be a valid ${type} value.`,
-
-  invalidFileType: (file: Omit<FileCategory, "all"> | "file") =>
-    `Invalid ${file} type.`,
-
-  cannotEmpty: (thing: string) => `${thing} cannot be empty.`,
+  cannotEmpty: (thing: string) => `${thing} can't be empty.`,
+  atleastOne: (thing: string) => `At least one ${thing} is required.`,
 
   toShort: (thing: string, total: number) =>
     `${thing} must be at least ${total} characters long.`,
-
   toLong: (thing: string, total: number) =>
     `${thing} is too long. Maximum ${total} characters allowed.`,
 
-  atleastOne: (thing: string) => `At least one ${thing} is required.`,
+  invalidType: (thing: string, type: FieldType = "string") =>
+    `${thing} must be a valid ${type} value.`,
+  invalidFileType: (file: Omit<FileCategory, "all"> | "file" = "file") =>
+    `Invalid ${file} type.`,
 
   email: "Please enter a valid email address.",
-  confirmPassword: "Passwords do not match.",
+  confirmPassword: "Passwords do'nt match.",
   agreement: "You must agree to the Terms of Service and Privacy Policy.",
 };

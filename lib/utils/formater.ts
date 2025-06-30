@@ -32,7 +32,10 @@ export function formatNumeric(
   return `${prefix}${new Intl.NumberFormat("id-ID").format(sanitizeNumber(String(num)))}`;
 }
 
-export function formatPhone(num: string | number): string {
+export function formatPhone(
+  num: string | number,
+  withPrefix: boolean = false,
+): string {
   const phoneStr = String(sanitizeNumber(String(num)));
   if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
@@ -44,5 +47,6 @@ export function formatPhone(num: string | number): string {
     remaining = remaining.slice(4);
   }
 
-  return formatted;
+  const prefix = withPrefix ? "+62" : "";
+  return `${prefix}${formatted}`;
 }

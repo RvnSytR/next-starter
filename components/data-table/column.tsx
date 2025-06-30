@@ -9,7 +9,6 @@ import {
   ArrowUpDown,
   Ban,
   CalendarCheck2,
-  CalendarClock,
   CircleDot,
   EllipsisVertical,
   Layers2,
@@ -30,7 +29,12 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const HeaderButton = ({ children, ...props }: ButtonProps) => {
   return (
-    <Button size="sm" variant="ghost" className="w-full" {...props}>
+    <Button
+      size="sm"
+      variant="ghost"
+      className="h-7 w-full justify-between"
+      {...props}
+    >
       {children}
       <ArrowUpDown />
     </Button>
@@ -41,18 +45,18 @@ const userColumnHelper = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   userColumnHelper.display({
     id: "number",
-    header: () => <div className="px-2">No</div>,
+    header: "No",
     cell: ({ row }) => row.index + 1,
     enableHiding: false,
   }),
   userColumnHelper.accessor(({ image }) => image, {
-    id: "Profile Picture",
-    header: "Profile Picture",
+    id: "Avatar",
+    header: "Avatar",
     cell: ({ row }) => (
-      <div className="flex justify-center">
+      <div className="flex justify-start">
         <UserAvatar
           {...row.original}
-          className="size-24"
+          className="size-20"
           imageCn="group-hover:scale-125"
           fallbackCn="group-hover:scale-125"
         />
@@ -132,26 +136,6 @@ export const getUserColumn = (currentUserId: string) => [
       },
     },
   }),
-  userColumnHelper.accessor(({ updatedAt }) => updatedAt, {
-    id: "Updated At",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Updated At
-      </HeaderButton>
-    ),
-    cell: ({ row }) =>
-      row.original.updatedAt
-        ? formatDate(row.original.updatedAt, "PPPp")
-        : null,
-    filterFn: filterFn("date"),
-    meta: {
-      displayName: "Updated At",
-      type: "date",
-      icon: CalendarClock,
-    },
-  }),
   userColumnHelper.accessor(({ createdAt }) => createdAt, {
     id: "Created At",
     header: ({ column }) => (
@@ -181,40 +165,42 @@ export const getUserColumn = (currentUserId: string) => [
       }
 
       return (
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="icon" variant="ghost">
-              <EllipsisVertical />
-            </Button>
-          </PopoverTrigger>
+        <div className="flex justify-center">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="iconsm" variant="ghost">
+                <EllipsisVertical />
+              </Button>
+            </PopoverTrigger>
 
-          <PopoverContent
-            align="end"
-            className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
-          >
-            <div className="px-2 py-1 text-center">
-              <small className="font-medium">{row.original.name}</small>
-            </div>
+            <PopoverContent
+              align="end"
+              className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
+            >
+              <div className="px-2 py-1 text-center">
+                <small className="font-medium">{row.original.name}</small>
+              </div>
 
-            <Separator />
+              <Separator />
 
-            <AdminChangeUserRoleDialog {...row.original} />
+              <AdminChangeUserRoleDialog {...row.original} />
 
-            <Button size="sm" variant="ghost" disabled>
-              <Layers2 />
-              Impersonate Session
-            </Button>
+              <Button size="sm" variant="ghost" disabled>
+                <Layers2 />
+                Impersonate Session
+              </Button>
 
-            <AdminTerminateUserSessionDialog {...row.original} />
+              <AdminTerminateUserSessionDialog {...row.original} />
 
-            <Button size="sm" variant="ghost_destructive" disabled>
-              <Ban />
-              Ban
-            </Button>
+              <Button size="sm" variant="ghost_destructive" disabled>
+                <Ban />
+                Ban
+              </Button>
 
-            <AdminRemoveUserDialog {...row.original} />
-          </PopoverContent>
-        </Popover>
+              <AdminRemoveUserDialog {...row.original} />
+            </PopoverContent>
+          </Popover>
+        </div>
       );
     },
   }),

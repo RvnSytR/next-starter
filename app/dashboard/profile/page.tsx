@@ -16,11 +16,11 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { dashboardPage } from "@/lib/content";
-import { setTitle } from "@/lib/utils";
+import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getListSession } from "@/server/action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = { title: setTitle("profile") };
+export const metadata: Metadata = { title: getTitle("profile") };
 
 export default async function Page() {
   const { session, currenRoute } =

@@ -1,5 +1,14 @@
-import { dashboardMenu, Menu, routeMetadata } from "../const";
+import { appInfo, dashboardMenu, Menu, Route, routeMetadata } from "../const";
 import { Role } from "../permission";
+
+export function getTitle(r: Route) {
+  return `${routeMetadata[r].displayName} | ${appInfo.name}`;
+}
+
+export function getUrl() {
+  const { isProduction, origin } = appInfo;
+  return isProduction ? origin.prod : origin.dev;
+}
 
 export function getRandomString(length: number) {
   const characters =

@@ -17,6 +17,7 @@ export const buttonText = {
 
   confirm: "Confirm",
   reset: "Reset",
+  clear: "Clear",
   cancel: "Cancel",
   back: "Back",
 };

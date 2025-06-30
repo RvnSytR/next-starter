@@ -1,14 +1,13 @@
 export const appInfo = {
   name: "Project Title",
   description: "Project Description",
-  keywords: ["web application", "next starter"],
+  keywords: ["next starter"],
 
+  isProduction: process.env.IS_PRODUCTION === "true",
   // logo: "/some-image.png"
 
   origin: {
     dev: "http://localhost:3000",
-    prod: "https://yourdomain.ex",
+    prod: "https://example.domain",
   },
-
-  isProduction: false,
 };

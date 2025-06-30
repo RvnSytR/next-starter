@@ -15,16 +15,16 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { dashboardPage } from "@/lib/content";
-import { setTitle } from "@/lib/utils";
+import { getTitle } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: setTitle("signIn") };
+export const metadata: Metadata = { title: getTitle("signIn") };
 
 export default function Page() {
   return (
     <main className="relative flex min-h-dvh items-center justify-center">
-      <GridPattern className="stroke-input/25 animate-fade z-[-1] delay-500" />
+      <GridPattern className="stroke-accent/40 dark:stroke-accent/20 animate-fade z-[-1] delay-500" />
 
       <div className="container flex justify-center py-8">
         <Card className="animate-fade w-full md:w-md">

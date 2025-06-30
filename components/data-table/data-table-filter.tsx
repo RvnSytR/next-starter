@@ -23,6 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { buttonText } from "@/lib/content";
 import {
   ColumnDataType,
   ColumnOption,
@@ -162,7 +163,7 @@ export function FilterActions<TData>({ table }: { table: Table<TData> }) {
       onClick={clearFilters}
     >
       <FilterXIcon />
-      <span className="hidden md:block">Clear</span>
+      <span className="hidden md:block">{buttonText.clear}</span>
     </Button>
   );
 }

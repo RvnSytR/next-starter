@@ -4,4 +4,3 @@ export * from "./file";
 export * from "./formater";
 export * from "./getter";
 export * from "./other";
-export * from "./setter";

@@ -100,7 +100,7 @@ export function UserAvatar({
 }) {
   const fallbackName = name.slice(0, 2);
   return (
-    <Avatar className={className}>
+    <Avatar className={cn("rounded-xl", className)}>
       {image ? (
         <>
           <AvatarImage className={imageCn} src={image} />
@@ -477,7 +477,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.default.success("avatar", "updated"));
+          toast.success(toastMessage.successTo("avatar", "updated"));
           setIsChange(false);
           router.refresh();
         },
@@ -499,7 +499,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(toastMessage.default.success("avatar", "removed"));
+          toast.success(toastMessage.successTo("avatar", "removed"));
         },
       },
     );
@@ -507,7 +507,7 @@ export function ProfilePicture({
 
   return (
     <div className="flex items-center gap-x-4">
-      <UserAvatar name={name} image={image} className="size-24" />
+      <UserAvatar name={name} image={image} className="size-20 md:size-24" />
 
       <input
         type="file"
@@ -582,7 +582,7 @@ export function PersonalInformation({
   ...props
 }: Pick<Session["user"], "id" | "name" | "email" | "image" | "role">) {
   const router = useRouter();
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { name, email, role } = props;
   const schema = zodAuth.pick({ name: true, email: true, role: true });
@@ -597,9 +597,9 @@ export function PersonalInformation({
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
+    if (newName === name)
+      return toast.info(toastMessage.noChangesTo("profile"));
     setIsLoading(true);
-    if (newName === name) return toast.info(toastMessage.noChanges("profile"));
-
     authClient.updateUser(
       { name: newName },
       {
@@ -608,7 +608,7 @@ export function PersonalInformation({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.default.success("profile", "updated"));
+          toast.success(toastMessage.successTo("profile", "updated"));
           setIsLoading(false);
           router.refresh();
         },
@@ -683,8 +683,8 @@ export function PersonalInformation({
         <Separator />
 
         <CardFooter className="gap-x-2">
-          <Button type="submit" disabled={loading}>
-            {loading ? <Spinner /> : <Save />}
+          <Button type="submit" disabled={isLoading}>
+            {isLoading ? <Spinner /> : <Save />}
             {buttonText.save}
           </Button>
 
@@ -720,6 +720,7 @@ export function ChangePasswordForm() {
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
+      revokeOtherSessions: false,
     },
   });
 
@@ -731,7 +732,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(toastMessage.default.success("password", "updated"));
+        toast.success(toastMessage.successTo("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -851,6 +852,8 @@ export function ActiveSessionButton({
   token,
 }: Session["session"] & { currentSessionId: string }) {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const isCurrentSession = currentSessionId === id;
   const { title, desc } = dialog.profile.revokeSession;
 
@@ -869,16 +872,17 @@ export function ActiveSessionButton({
   }[device.type ?? "other"];
 
   const clickHandler = () => {
+    setIsLoading(true);
     authClient.revokeSession(
       { token },
       {
         onError: ({ error }) => {
           toast.error(error.message);
+          setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            toastMessage.default.success("sessions", "terminated", "The"),
-          );
+          toast.success(toastMessage.success("This sessions", "terminated"));
+          setIsLoading(false);
           router.refresh();
         },
       },
@@ -923,8 +927,8 @@ export function ActiveSessionButton({
       {!isCurrentSession && (
         <AlertDialog>
           <AlertDialogTrigger asChild>
-            <Button size="iconsm" variant="outline">
-              <LogOut />
+            <Button size="iconsm" variant="outline" disabled={isLoading}>
+              {isLoading ? <Spinner /> : <LogOut />}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -947,18 +951,21 @@ export function ActiveSessionButton({
 
 export function RevokeAllOtherSessionButton() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const { trigger, title, desc } = dialog.profile.revokeAllOtherSession;
 
   const clickHandler = () => {
+    setIsLoading(true);
     authClient.revokeOtherSessions({
       fetchOptions: {
         onError: ({ error }) => {
           toast.error(error.message);
+          setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            toastMessage.default.success("other sessions", "terminated"),
-          );
+          toast.success(toastMessage.successTo("other sessions", "terminated"));
+          setIsLoading(false);
           router.refresh();
         },
       },
@@ -968,8 +975,9 @@ export function RevokeAllOtherSessionButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">
-          <MonitorOff />
+        <Button variant="outline" disabled={isLoading}>
+          {isLoading ? <Spinner /> : <MonitorOff />}
+
           {trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1008,9 +1016,8 @@ export function DeleteMyAccountButton({
         },
         onSuccess: () => {
           toast.success(
-            toastMessage.default.success("account", "removed") + " Goodbye!",
+            toastMessage.successTo("account", "removed") + " Goodbye!",
           );
-          setIsLoading(false);
           redirectAction(route.signIn);
         },
       },
@@ -1106,7 +1113,7 @@ export function AdminCreateUserDialog() {
         },
         onSuccess: () => {
           toast.success(
-            toastMessage.default.success("account", "created", formData.name),
+            toastMessage.success(`${formData.name} account`, "created"),
           );
           setIsLoading(false);
           form.reset();
@@ -1282,7 +1289,7 @@ export function AdminChangeUserRoleDialog({
   role,
 }: Pick<Session["user"], "id" | "name" | "role">) {
   const router = useRouter();
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const schema = zodAuth.pick({ role: true });
@@ -1297,7 +1304,7 @@ export function AdminChangeUserRoleDialog({
 
     const newRole = formData.role as Role;
     if (newRole === role)
-      return toast.info(toastMessage.noChanges("role", name));
+      return toast.info(toastMessage.noChangesTo("role", name));
 
     authClient.admin.setRole(
       { userId: id, role: newRole },
@@ -1319,8 +1326,8 @@ export function AdminChangeUserRoleDialog({
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" variant="ghost" disabled={loading}>
-          {loading ? <Spinner /> : <CircleFadingArrowUp />}
+        <Button size="sm" variant="ghost" disabled={isLoading}>
+          {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
           {dialog.user.changeRole.trigger}
         </Button>
       </DialogTrigger>
@@ -1380,8 +1387,8 @@ export function AdminChangeUserRoleDialog({
                 {buttonText.cancel}
               </DialogClose>
 
-              <Button type="submit" disabled={loading}>
-                {loading ? <Spinner /> : <CircleFadingArrowUp />}
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
                 {dialog.user.changeRole.trigger}
               </Button>
             </DialogFooter>
@@ -1396,15 +1403,20 @@ export function AdminTerminateUserSessionDialog({
   id,
   name,
 }: Pick<Session["user"], "id" | "name">) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const clickHandler = () => {
+    setIsLoading(true);
     authClient.admin.revokeUserSessions(
       { userId: id },
       {
         onError: ({ error }) => {
           toast.error(error.message);
+          setIsLoading(false);
         },
         onSuccess: () => {
           toast.success(toastMessage.user.revokeSession(name));
+          setIsLoading(false);
         },
       },
     );
@@ -1413,8 +1425,9 @@ export function AdminTerminateUserSessionDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost_destructive">
-          <MonitorOff />
+        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
+          {isLoading ? <Spinner /> : <MonitorOff />}
+
           {dialog.user.revokeSession.trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1466,9 +1479,7 @@ export function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            toastMessage.default.success("account", "removed", name),
-          );
+          toast.success(toastMessage.success(`${name} account`, "removed"));
           setIsLoading(false);
           router.refresh();
         },

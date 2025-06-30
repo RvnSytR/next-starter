@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function NotFound() {
   return (
     <div className="flex min-h-dvh grow flex-col items-center justify-center gap-y-6 mask-radial-from-75% mask-alpha md:gap-y-2">
-      <GridPattern className="stroke-input/35" />
+      <GridPattern className="stroke-accent/40 dark:stroke-accent/20 z-0" />
 
       <div className="z-50 flex flex-col items-center gap-x-4 text-shadow-sm md:flex-row">
         <h1 className="animate-fade-right text-9xl">404</h1>

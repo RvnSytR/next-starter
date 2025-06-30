@@ -4,11 +4,11 @@ import {
   AdminCreateUserDialog,
 } from "@/components/modules/auth";
 import { dashboardPage } from "@/lib/content";
-import { setTitle } from "@/lib/utils";
+import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = { title: setTitle("account") };
+export const metadata: Metadata = { title: getTitle("account") };
 
 export default async function Page() {
   const { session, currenRoute } =
@@ -20,7 +20,6 @@ export default async function Page() {
       <AdminAccountDataTable
         data={data.users}
         currentUserId={session.user.id}
-        className="max-w-[80rem]"
         withRefresh
         {...dashboardPage.account}
       >
