@@ -16,6 +16,8 @@ const badgeVariants = cva(
 
         outline_primary:
           "text-primary border-primary [a&]:border-primary/30 [a&]:hover:border-primary [a&]:dark:bg-primary/5 [a&]:dark:hover:bg-primary/20",
+        outline_rvns:
+          "text-rvns border-rvns [a&]:border-rvns/30 [a&]:hover:border-rvns [a&]:dark:bg-rvns/5 [a&]:dark:hover:bg-rvns/20",
 
         success:
           "border-transparent bg-success text-white [a&]:hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60",

@@ -20,6 +20,7 @@ import {
   AdminRemoveUserDialog,
   AdminTerminateUserSessionDialog,
   UserAvatar,
+  VerifiedUserBadge,
 } from "../modules/auth";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps } from "../ui/button";
@@ -103,18 +104,21 @@ export const getUserColumn = (currentUserId: string) => [
       const isAdmin = adminRoles.includes(role);
       const { displayName, icon: RoleIcon, desc } = roleMetadata[role];
       return (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Badge
-              variant={isAdmin ? "outline_primary" : "outline"}
-              className="capitalize"
-            >
-              <RoleIcon />
-              {displayName ?? role}
-            </Badge>
-          </TooltipTrigger>
-          <TooltipContent>{desc}</TooltipContent>
-        </Tooltip>
+        <div className="flex flex-col gap-2">
+          {row.original.emailVerified && <VerifiedUserBadge />}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Badge
+                variant={isAdmin ? "outline_primary" : "outline"}
+                className="capitalize"
+              >
+                <RoleIcon />
+                {displayName ?? role}
+              </Badge>
+            </TooltipTrigger>
+            <TooltipContent>{desc}</TooltipContent>
+          </Tooltip>
+        </div>
       );
     },
     filterFn: filterFn("option"),

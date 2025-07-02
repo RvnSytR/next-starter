@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 export function R({
   upperCn,
   lowerCn,
+  className,
   ...props
 }: React.SVGAttributes<SVGSVGElement> & {
   upperCn?: string;
@@ -17,6 +18,7 @@ export function R({
       height={500}
       viewBox="0 0 641.42145 500"
       xmlSpace="preserve"
+      className={cn("size-24", className)}
       {...props}
     >
       <g transform="matrix(1.9909945,0,0,1.9909945,-1292.4585,-1295.8)">
@@ -29,7 +31,7 @@ export function R({
         />
         <motion.path
           d="m 699.37981,772.08865 0,61.04471 a 24.107944,24.107944 67.5 0 0 7.06105,17.04689 l 45.75392,45.75392 a 20.57795,20.57795 22.5 0 0 14.55081,6.02714 h 62.50688 C 785.96159,858.67042 742.6707,815.37954 699.37981,772.08865 Z"
-          className={cn("fill-transparent stroke-[#14FFEC] stroke-6", lowerCn)}
+          className={cn("stroke-rvns fill-transparent stroke-6", lowerCn)}
           initial={{ pathLength: 0, fillOpacity: 0 }}
           animate={{ pathLength: 1, fillOpacity: [0, 1] }}
           transition={{ duration: 1.5, ease: "easeInOut" }}

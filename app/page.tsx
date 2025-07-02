@@ -13,9 +13,9 @@ export default function Page() {
   return (
     <div className="container flex flex-col gap-y-8 py-12 md:py-24">
       <div className="flex flex-col items-center gap-y-4">
-        <R className="size-24" />
+        <R />
 
-        <div className="flex flex-wrap gap-2">
+        <div className="animate-fade-up flex flex-wrap gap-2 delay-500">
           <ThemeToggle size="icon" variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>
@@ -27,7 +27,7 @@ export default function Page() {
         </div>
       </div>
 
-      <References />
+      <References className="animate-fade-up delay-1000" />
     </div>
   );
 }

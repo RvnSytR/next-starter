@@ -20,7 +20,6 @@ export default async function Page() {
       <AdminAccountDataTable
         data={data.users}
         currentUserId={session.user.id}
-        withRefresh
         {...dashboardPage.account}
       >
         <AdminCreateUserDialog />

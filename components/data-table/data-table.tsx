@@ -132,8 +132,8 @@ export function DataTable<TData>({
 
   return (
     <Card className={className}>
-      <CardHeader className="flex flex-col gap-x-2 gap-y-4 lg:flex-row lg:items-center lg:justify-between">
-        <div className="space-y-1">
+      <CardHeader action>
+        <div className="space-y-1.5">
           <CardTitle>{title}</CardTitle>
           <CardDescription>{desc}</CardDescription>
         </div>
@@ -281,7 +281,10 @@ function ToolBox<TData>({
       <div className="grid grid-cols-3 gap-x-2 lg:flex">
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
 
-        <FormFloating icon={<Search />} className="col-span-2">
+        <FormFloating
+          icon={<Search />}
+          className={withRefresh ? "col-span-2" : "col-span-3"}
+        >
           <Input
             type="search"
             placeholder={searchPlaceholder}

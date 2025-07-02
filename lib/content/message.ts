@@ -4,15 +4,13 @@ export const toastMessage = {
   loading: "Processing your request...",
   error: "Uh-oh! Something went wrong. Please try again later.",
 
-  success: (
-    thing: string,
-    action: "created" | "updated" | "removed" | "terminated",
-  ) => `${thing} has been ${action} successfully.`.trim(),
+  success: (thing: string, action: "created" | "updated" | "removed") =>
+    `${thing} has been ${action}.`.trim(),
   successTo: (
     thing: string,
     action: "created" | "updated" | "removed" | "terminated",
     x: string = "Your",
-  ) => `${x} ${thing} has been ${action} successfully.`.trim(),
+  ) => `${x} ${thing} has been ${action}.`.trim(),
 
   noChanges: (thing: string) => `No changes were made to ${thing}.`,
   noChangesTo: (thing: string, x: string = "your") =>
@@ -28,8 +26,8 @@ export const toastMessage = {
     signOut: "Signed out successfully.",
     changeRole: (name: string, role: string) =>
       `${name}'s role has been updated to ${role}.`,
-    revokeSession: (name: string) =>
-      `All ${name} active sessions have been terminated.`,
+    revokeSession: (name?: string) =>
+      `All${name ? " " + name : ""} active sessions has been terminated.`,
   },
 };
 

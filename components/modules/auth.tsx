@@ -7,12 +7,13 @@ import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
-import { deleteProfilePicture, redirectAction } from "@/server/action";
+import { deleteProfilePicture } from "@/server/action";
 import { getFilePublicUrl, uploadFile } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
+  BadgeCheck,
   CircleFadingArrowUp,
   Dot,
   Gamepad2,
@@ -54,6 +55,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
@@ -86,6 +88,20 @@ import {
 } from "../ui/select";
 import { Separator } from "../ui/separator";
 import { SidebarMenuButton } from "../ui/sidebar";
+
+export function VerifiedUserBadge({
+  withoutText = false,
+  className,
+}: {
+  withoutText?: boolean;
+  className?: string;
+}) {
+  return (
+    <Badge variant="outline_rvns" className={className}>
+      <BadgeCheck /> {!withoutText && "Verified"}
+    </Badge>
+  );
+}
 
 export function UserAvatar({
   image,
@@ -121,6 +137,7 @@ export function UserAvatar({
 }
 
 export function SignOutButton() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <SidebarMenuButton
@@ -136,7 +153,7 @@ export function SignOutButton() {
             },
             onSuccess: () => {
               toast.success(toastMessage.user.signOut);
-              redirectAction(signInRoute);
+              router.push(signInRoute);
             },
           },
         });
@@ -181,6 +198,7 @@ export function SignOnGithubButton() {
 }
 
 export function SignInForm() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodAuth.pick({
@@ -203,7 +221,7 @@ export function SignInForm() {
       },
       onSuccess: () => {
         toast.success(toastMessage.user.signOut);
-        redirectAction(signInRoute);
+        router.push(signInRoute);
       },
     });
   };
@@ -578,9 +596,7 @@ export function ProfilePicture({
   );
 }
 
-export function PersonalInformation({
-  ...props
-}: Pick<Session["user"], "id" | "name" | "email" | "image" | "role">) {
+export function PersonalInformation({ ...props }: Session["user"]) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -881,7 +897,7 @@ export function ActiveSessionButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.success("This sessions", "terminated"));
+          toast.success(toastMessage.user.revokeSession());
           setIsLoading(false);
           router.refresh();
         },
@@ -1000,6 +1016,7 @@ export function RevokeAllOtherSessionButton() {
 export function DeleteMyAccountButton({
   image,
 }: Pick<Session["user"], "image">) {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = async () => {
@@ -1018,7 +1035,7 @@ export function DeleteMyAccountButton({
           toast.success(
             toastMessage.successTo("account", "removed") + " Goodbye!",
           );
-          redirectAction(signInRoute);
+          router.push(signInRoute);
         },
       },
     );

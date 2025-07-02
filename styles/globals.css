@@ -4,6 +4,8 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
+  --rvns: oklch(0.6799 0.1156 200.65);
+
   --background: oklch(0.99 0 0);
   --foreground: oklch(0 0 0);
 
@@ -73,6 +75,8 @@
 }
 
 .dark {
+  --rvns: oklch(0.9001 0.1568 185.22);
+
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
 
@@ -135,6 +139,8 @@
 }
 
 @theme inline {
+  --color-rvns: var(--rvns);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 

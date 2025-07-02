@@ -1,6 +1,6 @@
 "use client";
 
-import { dashboardRoute } from "@/lib/const";
+import { dashboardRoute, Route } from "@/lib/const";
 import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 import { ComponentProps, useEffect, useState } from "react";
@@ -11,17 +11,16 @@ import {
   useSidebar,
 } from "../ui/sidebar";
 
-function IsActiveRoute(pathname: string): boolean {
-  const currentPathname = usePathname();
+function IsActiveRoute(route: Route): boolean {
+  const pathname = usePathname();
 
   const trimProtectedRoute = (p: string) =>
     p.replace(dashboardRoute, "").trim();
 
-  const trimmedCurrentRoute = trimProtectedRoute(currentPathname);
-  const trimmedRoute = trimProtectedRoute(pathname);
+  const trimmedCurrentRoute = trimProtectedRoute(pathname);
+  const trimmedRoute = trimProtectedRoute(route);
 
-  const isRootRoute =
-    currentPathname === dashboardRoute && currentPathname === pathname;
+  const isRootRoute = pathname === dashboardRoute && pathname === route;
   const isTrimmedRoute =
     !!trimmedRoute && trimmedCurrentRoute.startsWith(trimmedRoute);
 
@@ -30,29 +29,29 @@ function IsActiveRoute(pathname: string): boolean {
 
 // ? SC = Sidebar Client
 export function SCMenuButton({
-  pathname,
+  route,
   ...props
 }: Omit<SidebarMenuButtonProps, "onClick" | "isActive"> & {
-  pathname: string;
+  route: Route;
 }) {
   const { isMobile, toggleSidebar } = useSidebar();
 
   return (
     <SidebarMenuButton
       onClick={() => isMobile && toggleSidebar()}
-      isActive={IsActiveRoute(pathname)}
+      isActive={IsActiveRoute(route)}
       {...props}
     />
   );
 }
 
 export function SCCollapsible({
-  pathname,
+  route,
   ...props
 }: ComponentProps<typeof CollapsiblePrimitive.Root> & {
-  pathname: string;
+  route: Route;
 }) {
-  const isActive = IsActiveRoute(pathname);
+  const isActive = IsActiveRoute(route);
   const [isOpen, setIsOpen] = useState(isActive);
 
   useEffect(() => {

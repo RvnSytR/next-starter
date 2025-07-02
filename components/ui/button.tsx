@@ -19,6 +19,8 @@ const buttonVariants = cva(
 
         outline_primary:
           "text-primary border border-primary/30 bg-background shadow-xs hover:border-primary dark:bg-primary/5 dark:hover:bg-primary/20 focus-visible:border-primary focus-visible:ring-primary/20 dark:focus-visible:ring-primary/40",
+        outline_rvns:
+          "text-rvns border border-rvns/30 bg-background shadow-xs hover:border-rvns dark:bg-rvns/5 dark:hover:bg-rvns/20 focus-visible:border-rvns focus-visible:ring-rvns/20 dark:focus-visible:ring-rvns/40",
 
         success:
           "bg-success text-white shadow-xs hover:bg-success/90 focus-visible:ring-success/20 dark:focus-visible:ring-success/40 dark:bg-success/60",

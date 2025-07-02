@@ -138,7 +138,7 @@ function ComponentCard({
   );
 }
 
-export function References() {
+export function References({ className }: { className?: string }) {
   const pieChartData = [
     { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
     { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
@@ -568,7 +568,7 @@ export function References() {
     <Tabs
       defaultValue={tabs[0].value}
       orientation="vertical"
-      className="w-full md:flex-row"
+      className={cn("w-full md:flex-row", className)}
     >
       <ScrollArea className="pb-2 md:hidden">
         <TabsList className="w-full rounded-none border-b bg-transparent p-0">

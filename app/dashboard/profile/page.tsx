@@ -5,6 +5,7 @@ import {
   DeleteMyAccountButton,
   PersonalInformation,
   RevokeAllOtherSessionButton,
+  VerifiedUserBadge,
 } from "@/components/modules/auth";
 import {
   Card,
@@ -25,7 +26,10 @@ export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
 export default async function Page() {
   const { session, currenRoute } =
     await checkAndGetAuthorizedSession("/dashboard/profile");
+
   const sessionList = await getListSession();
+  const { info, password, activeSession, deleteAccount } =
+    dashboardPage.profile;
 
   return (
     <Section currentPage={currenRoute.displayName} className="items-center">
@@ -33,9 +37,15 @@ export default async function Page() {
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-2xl"
       >
-        <CardHeader>
-          <CardTitle>{dashboardPage.profile.info.title}</CardTitle>
-          <CardDescription>{dashboardPage.profile.info.desc}</CardDescription>
+        <CardHeader className="flex-row" action>
+          <div className="space-y-1.5">
+            <CardTitle>{info.title}</CardTitle>
+            <CardDescription>{info.desc}</CardDescription>
+          </div>
+
+          {!session.user.emailVerified && (
+            <VerifiedUserBadge className="size-fit" />
+          )}
         </CardHeader>
 
         <Separator />
@@ -45,10 +55,8 @@ export default async function Page() {
 
       <Card id="change-password" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
-          <CardTitle>{dashboardPage.profile.password.title}</CardTitle>
-          <CardDescription>
-            {dashboardPage.profile.password.desc}
-          </CardDescription>
+          <CardTitle>{password.title}</CardTitle>
+          <CardDescription>{password.desc}</CardDescription>
         </CardHeader>
 
         <Separator />
@@ -58,10 +66,8 @@ export default async function Page() {
 
       <Card id="active-session" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
-          <CardTitle>{dashboardPage.profile.activeSession.title}</CardTitle>
-          <CardDescription>
-            {dashboardPage.profile.activeSession.desc}
-          </CardDescription>
+          <CardTitle>{activeSession.title}</CardTitle>
+          <CardDescription>{activeSession.desc}</CardDescription>
         </CardHeader>
 
         <Separator />
@@ -86,11 +92,9 @@ export default async function Page() {
       <Card id="delete-account" className="w-full scroll-m-20 lg:max-w-2xl">
         <CardHeader>
           <CardTitle className="text-destructive">
-            {dashboardPage.profile.deleteAccount.title}
+            {deleteAccount.title}
           </CardTitle>
-          <CardDescription>
-            {dashboardPage.profile.deleteAccount.desc}
-          </CardDescription>
+          <CardDescription>{deleteAccount.desc}</CardDescription>
         </CardHeader>
 
         <Separator />

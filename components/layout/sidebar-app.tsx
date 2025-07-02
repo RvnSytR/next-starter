@@ -116,9 +116,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
           }
 
           return (
-            <SCCollapsible key={index} pathname={route} asChild>
+            <SCCollapsible key={index} route={route} asChild>
               <SidebarMenuItem>
-                <SCMenuButton pathname={route} tooltip={displayName} asChild>
+                <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
                     <LinkLoader defaultIcon={MenuIcon && <MenuIcon />} />
                     <span className="line-clamp-1">{displayName}</span>
