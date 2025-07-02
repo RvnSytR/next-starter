@@ -18,7 +18,7 @@ import { getTitle } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const metadata: Metadata = { title: getTitle("signIn") };
+export const metadata: Metadata = { title: getTitle("/sign-in") };
 
 export default function Page() {
   return (

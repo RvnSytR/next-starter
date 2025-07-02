@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Route, routeMetadata } from "@/lib/const";
+import { Route, routesMetadata } from "@/lib/const";
 import Link from "next/link";
 import { Fragment } from "react";
 
@@ -23,16 +23,19 @@ export function DynamicBreadcrumb({
     <Breadcrumb>
       <BreadcrumbList className="flex-nowrap">
         {breadcrumbArr?.map((item, index) => {
-          const menu = typeof item === "string" ? routeMetadata[item] : item;
-          const content = menu ? (
-            <BreadcrumbLink asChild>
-              <Link href={menu.path}>{menu.displayName}</Link>
-            </BreadcrumbLink>
-          ) : (
+          let content = (
             <BreadcrumbPage className="text-destructive">
               Invalid route!
             </BreadcrumbPage>
           );
+
+          if (typeof item === "string") {
+            content = (
+              <BreadcrumbLink asChild>
+                <Link href={item}>{routesMetadata[item].displayName}</Link>
+              </BreadcrumbLink>
+            );
+          }
 
           return (
             <Fragment key={index}>

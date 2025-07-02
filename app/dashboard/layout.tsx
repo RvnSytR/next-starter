@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SectionTagline } from "../../components/layout/section";
 
-export const metadata: Metadata = { title: getTitle("dashboard") };
+export const metadata: Metadata = { title: getTitle("/dashboard") };
 
 export default async function DashboardLayout({
   children,

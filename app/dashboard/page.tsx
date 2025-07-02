@@ -3,7 +3,7 @@ import { checkAndGetAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
   const { session, currenRoute } =
-    await checkAndGetAuthorizedSession("dashboard");
+    await checkAndGetAuthorizedSession("/dashboard");
 
   return (
     <Section currentPage={currenRoute.displayName}>

@@ -20,11 +20,11 @@ import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getListSession } from "@/server/action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = { title: getTitle("profile") };
+export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
 
 export default async function Page() {
   const { session, currenRoute } =
-    await checkAndGetAuthorizedSession("profile");
+    await checkAndGetAuthorizedSession("/dashboard/profile");
   const sessionList = await getListSession();
 
   return (

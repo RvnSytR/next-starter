@@ -3,7 +3,7 @@ import { References } from "@/components/modules/references";
 import { R } from "@/components/other-ui/r";
 import { ThemeToggle } from "@/components/other/theme";
 import { Button } from "@/components/ui/button";
-import { route } from "@/lib/const";
+import { Route } from "@/lib/const";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -19,7 +19,7 @@ export default function Page() {
           <ThemeToggle size="icon" variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>
-            <Link href={route.protected}>
+            <Link href={"/dashboard" satisfies Route}>
               Go To Dashboard
               <LinkLoader defaultIcon={<ArrowRight />} />
             </Link>

@@ -8,11 +8,11 @@ import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = { title: getTitle("account") };
+export const metadata: Metadata = { title: getTitle("/dashboard/account") };
 
 export default async function Page() {
   const { session, currenRoute } =
-    await checkAndGetAuthorizedSession("account");
+    await checkAndGetAuthorizedSession("/dashboard/account");
   const data = await getUserList();
 
   return (

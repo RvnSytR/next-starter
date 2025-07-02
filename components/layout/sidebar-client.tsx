@@ -1,6 +1,6 @@
 "use client";
 
-import { route } from "@/lib/const";
+import { dashboardRoute } from "@/lib/const";
 import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 import { ComponentProps, useEffect, useState } from "react";
@@ -15,13 +15,13 @@ function IsActiveRoute(pathname: string): boolean {
   const currentPathname = usePathname();
 
   const trimProtectedRoute = (p: string) =>
-    p.replace(route.protected, "").trim();
+    p.replace(dashboardRoute, "").trim();
 
   const trimmedCurrentRoute = trimProtectedRoute(currentPathname);
   const trimmedRoute = trimProtectedRoute(pathname);
 
   const isRootRoute =
-    currentPathname === route.protected && currentPathname === pathname;
+    currentPathname === dashboardRoute && currentPathname === pathname;
   const isTrimmedRoute =
     !!trimmedRoute && trimmedCurrentRoute.startsWith(trimmedRoute);
 

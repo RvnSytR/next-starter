@@ -1,8 +1,15 @@
-import { appInfo, dashboardMenu, Menu, Route, routeMetadata } from "../const";
+import {
+  appInfo,
+  dashboardMenu,
+  Menu,
+  Route,
+  RouteRole,
+  routesMetadata,
+} from "../const";
 import { Role } from "../permission";
 
 export function getTitle(r: Route) {
-  return `${routeMetadata[r].displayName} | ${appInfo.name}`;
+  return `${routesMetadata[r].displayName} | ${appInfo.name}`;
 }
 
 export function getUrl() {
@@ -31,18 +38,21 @@ export function getRandomColor(withHash?: boolean) {
 }
 
 export function getMenuByRole(
-  role: string,
+  role: Role,
   menu: Menu[] = dashboardMenu,
 ): Menu[] {
-  const res = menu.map(({ section, content }) => {
-    const filteredMenuContent = content.filter(({ route }) => {
-      const { role: routeRole } = routeMetadata[route];
-      return (
-        routeRole && (routeRole === "all" || routeRole.includes(role as Role))
-      );
+  const filteredMenu = menu.map(({ section, content }) => {
+    const filteredContent = content.filter(({ route }) => {
+      const meta = routesMetadata[route];
+      if ("role" in meta) {
+        const currentRole = meta.role as RouteRole;
+        return currentRole === "all" || currentRole.includes(role as Role);
+      } else return true;
     });
-    if (filteredMenuContent.length <= 0) return null;
-    else return { section, content: filteredMenuContent } as Menu;
+
+    if (filteredContent.length <= 0) return null;
+    else return { section, content: filteredContent } as Menu;
   });
-  return res.filter((section) => section !== null);
+
+  return filteredMenu.filter((item) => item !== null);
 }

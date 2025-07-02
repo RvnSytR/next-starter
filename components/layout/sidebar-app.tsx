@@ -1,5 +1,6 @@
 import { Session } from "@/lib/auth";
-import { dashboardfooterMenu, routeMetadata } from "@/lib/const";
+import { dashboardfooterMenu, Route, routesMetadata } from "@/lib/const";
+import { Role } from "@/lib/permission";
 import { getMenuByRole, toKebabCase } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
@@ -67,7 +68,7 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
           className="group/head-button group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
           asChild
         >
-          <Link href={routeMetadata.profile.path}>
+          <Link href={"/dashboard/profile" satisfies Route}>
             <UserAvatar
               name={name}
               image={image}
@@ -96,74 +97,65 @@ function Content({ role }: Pick<SidebarData, "role">) {
     );
   }
 
-  return getMenuByRole(role).map((item, index) => (
-    <SidebarGroup key={index}>
-      <SidebarGroupLabel>{item.section}</SidebarGroupLabel>
+  return getMenuByRole(role as Role).map(({ section, content }, i) => (
+    <SidebarGroup key={i}>
+      <SidebarGroupLabel>{section}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {item.content.map(
-          ({ route, icon: ContentIcon, disabled, subMenu }, bodyIndex) => {
-            const { path, displayName } = routeMetadata[route];
-            if (disabled) {
-              return (
-                <SidebarMenuItem key={bodyIndex}>
-                  <SidebarMenuButton disabled>
-                    {ContentIcon && <ContentIcon />}
-                    <span className="line-clamp-1">{displayName}</span>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              );
-            }
-
+        {content.map(({ route, icon: MenuIcon, disabled, subMenu }, index) => {
+          const { displayName } = routesMetadata[route];
+          if (disabled) {
             return (
-              <SCCollapsible key={bodyIndex} pathname={path} asChild>
-                <SidebarMenuItem>
-                  <SCMenuButton pathname={path} tooltip={displayName} asChild>
-                    <Link href={path}>
-                      <LinkLoader
-                        defaultIcon={ContentIcon && <ContentIcon />}
-                      />
-                      <span className="line-clamp-1">{displayName}</span>
-                    </Link>
-                  </SCMenuButton>
-
-                  {subMenu && (
-                    <>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuAction className="data-[state=open]:rotate-90">
-                          <ChevronRight />
-                        </SidebarMenuAction>
-                      </CollapsibleTrigger>
-
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {subMenu.map((subItem, subIndex) => (
-                            <SidebarMenuSubItem key={subIndex}>
-                              <SidebarMenuSubButton
-                                className={subItem.className}
-                                asChild
-                              >
-                                <Link
-                                  href={`${path}/#${toKebabCase(subItem.subLabel)}`}
-                                  className="flex justify-between"
-                                >
-                                  <span className="line-clamp-1">
-                                    {subItem.subLabel}
-                                  </span>
-                                  <LinkLoader />
-                                </Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </>
-                  )}
-                </SidebarMenuItem>
-              </SCCollapsible>
+              <SidebarMenuItem key={index}>
+                <SidebarMenuButton disabled>
+                  {MenuIcon && <MenuIcon />}
+                  <span className="line-clamp-1">{displayName}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             );
-          },
-        )}
+          }
+
+          return (
+            <SCCollapsible key={index} pathname={route} asChild>
+              <SidebarMenuItem>
+                <SCMenuButton pathname={route} tooltip={displayName} asChild>
+                  <Link href={route}>
+                    <LinkLoader defaultIcon={MenuIcon && <MenuIcon />} />
+                    <span className="line-clamp-1">{displayName}</span>
+                  </Link>
+                </SCMenuButton>
+
+                {subMenu && (
+                  <>
+                    <CollapsibleTrigger asChild>
+                      <SidebarMenuAction className="data-[state=open]:rotate-90">
+                        <ChevronRight />
+                      </SidebarMenuAction>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {subMenu.map(({ label, className }, idx) => (
+                          <SidebarMenuSubItem key={idx}>
+                            <SidebarMenuSubButton className={className} asChild>
+                              <Link
+                                href={`${route}/#${toKebabCase(label)}`}
+                                className="flex justify-between"
+                              >
+                                <span className="line-clamp-1">{label}</span>
+                                <LinkLoader />
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </>
+                )}
+              </SidebarMenuItem>
+            </SCCollapsible>
+          );
+        })}
       </SidebarMenu>
     </SidebarGroup>
   ));

@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { Route, routeMetadata } from "@/lib/const";
+import { Route, RouteRole, routesMetadata } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
@@ -27,15 +27,15 @@ export async function deleteProfilePicture(image: string) {
 }
 
 export async function checkAndGetAuthorizedSession(route: Route) {
-  const currenRoute = routeMetadata[route];
-  if (!currenRoute.role) notFound();
+  const currenRoute = routesMetadata[route];
+  if (!("role" in currenRoute)) return notFound();
 
   const session = await getSession();
   if (!session?.user.role) notFound();
 
-  const role = currenRoute.role;
-  const isAllowed = role === "all" || role.includes(session.user.role as Role);
+  const routeRole = currenRoute.role as RouteRole;
+  const userRole = session.user.role as Role;
+  if (!(routeRole === "all" || routeRole.includes(userRole))) notFound();
 
-  if (!isAllowed) notFound();
   return { session, currenRoute };
 }

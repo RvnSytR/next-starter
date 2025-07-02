@@ -12,7 +12,7 @@ type MenuContent = {
   route: Route;
   icon?: LucideIcon;
   disabled?: boolean;
-  subMenu?: { subLabel: string; className?: string }[];
+  subMenu?: { label: string; className?: string }[];
 };
 
 export type Menu = { section: string; content: MenuContent[] };
@@ -21,22 +21,22 @@ export const dashboardMenu: Menu[] = [
   {
     section: "General",
     content: [
-      { route: "dashboard", icon: LayoutDashboard },
-      { route: "account", icon: UsersRound },
+      { route: "/dashboard", icon: LayoutDashboard },
+      { route: "/dashboard/account", icon: UsersRound },
     ],
   },
   {
     section: "Settings",
     content: [
       {
-        route: "profile",
+        route: "/dashboard/profile",
         icon: UserRound,
         subMenu: [
-          { subLabel: "Personal Information" },
-          { subLabel: "Change Password" },
-          { subLabel: "Active Session" },
+          { label: "Personal Information" },
+          { label: "Change Password" },
+          { label: "Active Session" },
           {
-            subLabel: "Delete Account",
+            label: "Delete Account",
             className: "text-destructive hover:text-destructive",
           },
         ],

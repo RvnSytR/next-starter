@@ -41,15 +41,15 @@ const HeaderButton = ({ children, ...props }: ButtonProps) => {
   );
 };
 
-const userColumnHelper = createColumnHelper<UserWithRole>();
+const createUserColumn = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
-  userColumnHelper.display({
+  createUserColumn.display({
     id: "number",
     header: "No",
     cell: ({ row }) => row.index + 1,
     enableHiding: false,
   }),
-  userColumnHelper.accessor(({ image }) => image, {
+  createUserColumn.accessor(({ image }) => image, {
     id: "Avatar",
     header: "Avatar",
     cell: ({ row }) => (
@@ -63,7 +63,7 @@ export const getUserColumn = (currentUserId: string) => [
       </div>
     ),
   }),
-  userColumnHelper.accessor(({ email }) => email, {
+  createUserColumn.accessor(({ email }) => email, {
     id: "email",
     header: ({ column }) => (
       <HeaderButton
@@ -74,13 +74,9 @@ export const getUserColumn = (currentUserId: string) => [
     ),
     cell: ({ row }) => row.original.email,
     filterFn: filterFn("text"),
-    meta: {
-      displayName: "Email",
-      type: "text",
-      icon: Mail,
-    },
+    meta: { displayName: "Email", type: "text", icon: Mail },
   }),
-  userColumnHelper.accessor(({ name }) => name, {
+  createUserColumn.accessor(({ name }) => name, {
     id: "name",
     header: ({ column }) => (
       <HeaderButton
@@ -91,13 +87,9 @@ export const getUserColumn = (currentUserId: string) => [
     ),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
-    meta: {
-      displayName: "Name",
-      type: "text",
-      icon: UserRound,
-    },
+    meta: { displayName: "Name", type: "text", icon: UserRound },
   }),
-  userColumnHelper.accessor(({ role }) => role, {
+  createUserColumn.accessor(({ role }) => role, {
     id: "role",
     header: ({ column }) => (
       <HeaderButton
@@ -136,7 +128,7 @@ export const getUserColumn = (currentUserId: string) => [
       },
     },
   }),
-  userColumnHelper.accessor(({ createdAt }) => createdAt, {
+  createUserColumn.accessor(({ createdAt }) => createdAt, {
     id: "Created At",
     header: ({ column }) => (
       <HeaderButton
@@ -150,13 +142,9 @@ export const getUserColumn = (currentUserId: string) => [
         ? formatDate(row.original.createdAt, "PPPp")
         : null,
     filterFn: filterFn("date"),
-    meta: {
-      displayName: "Created At",
-      type: "date",
-      icon: CalendarCheck2,
-    },
+    meta: { displayName: "Created At", type: "date", icon: CalendarCheck2 },
   }),
-  userColumnHelper.display({
+  createUserColumn.display({
     id: "Action",
     header: "Action",
     cell: ({ row }) => {

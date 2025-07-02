@@ -1,38 +1,18 @@
 import { Role } from "../permission";
 
-export type Route = "signIn" | "dashboard" | "account" | "profile";
-export type RouteMetadata = {
-  path: string;
-  displayName: string;
-  role?: "all" | Role[];
-};
+export type RouteRole = "all" | Role[];
+type RouteMetadata = { displayName: string; role?: RouteRole };
 
-export const route = {
-  signIn: "/sign-in",
-  protected: "/dashboard",
-};
+const createRoutes = <T extends Record<string, RouteMetadata>>(r: T) => r;
 
-export const routeMetadata: Record<Route, RouteMetadata> = {
-  signIn: {
-    path: route.signIn,
-    displayName: "Sign In",
-  },
+export const routesMetadata = createRoutes({
+  "/sign-in": { displayName: "Sign In" },
+  "/dashboard": { displayName: "Dashboard", role: "all" },
+  "/dashboard/profile": { displayName: "My Profile", role: "all" },
+  "/dashboard/account": { displayName: "Users", role: ["admin"] },
+});
 
-  dashboard: {
-    path: route.protected,
-    displayName: "Dashboard",
-    role: "all",
-  },
+export type Route = keyof typeof routesMetadata;
 
-  profile: {
-    path: `${route.protected}/profile`,
-    displayName: "My Profile",
-    role: "all",
-  },
-
-  account: {
-    path: `${route.protected}/account`,
-    displayName: "Users",
-    role: ["admin"],
-  },
-};
+export const signInRoute: Route = "/sign-in";
+export const dashboardRoute: Route = "/dashboard";

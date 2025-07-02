@@ -2,7 +2,7 @@
 
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { mediaMetadata, route } from "@/lib/const";
+import { dashboardRoute, mediaMetadata, signInRoute } from "@/lib/const";
 import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
 import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
@@ -136,7 +136,7 @@ export function SignOutButton() {
             },
             onSuccess: () => {
               toast.success(toastMessage.user.signOut);
-              redirectAction(route.signIn);
+              redirectAction(signInRoute);
             },
           },
         });
@@ -159,8 +159,8 @@ export function SignOnGithubButton() {
         authClient.signIn.social(
           {
             provider: "github",
-            callbackURL: route.protected,
-            errorCallbackURL: route.signIn,
+            callbackURL: dashboardRoute,
+            errorCallbackURL: signInRoute,
           },
           {
             onError: ({ error }) => {
@@ -203,7 +203,7 @@ export function SignInForm() {
       },
       onSuccess: () => {
         toast.success(toastMessage.user.signOut);
-        redirectAction(route.signIn);
+        redirectAction(signInRoute);
       },
     });
   };
@@ -1007,7 +1007,7 @@ export function DeleteMyAccountButton({
     if (image) await deleteProfilePicture(image);
 
     authClient.deleteUser(
-      { callbackURL: route.signIn },
+      { callbackURL: signInRoute },
       {
         onRequest: () => setIsLoading(true),
         onError: ({ error }) => {
@@ -1018,7 +1018,7 @@ export function DeleteMyAccountButton({
           toast.success(
             toastMessage.successTo("account", "removed") + " Goodbye!",
           );
-          redirectAction(route.signIn);
+          redirectAction(signInRoute);
         },
       },
     );
