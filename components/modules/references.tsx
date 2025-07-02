@@ -6,7 +6,8 @@ import {
 } from "@/components/custom/custom-chart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ReactNode } from "react";
+import { cn } from "@/lib/utils";
+import { Fragment, ReactNode } from "react";
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
@@ -160,29 +161,143 @@ export function References() {
     key2: { label: "Mobile", color: "var(--color-chart-2)" },
   };
 
-  return (
-    <Tabs defaultValue="Custom Chart">
-      <ScrollArea>
-        <TabsList className="min-w-full md:min-w-fit">
-          <TabsTrigger value="Custom Chart">Custom Chart</TabsTrigger>
-          <TabsTrigger value="Badge and Button">Badge and Button</TabsTrigger>
-          <TabsTrigger value="Form Example">Form Example</TabsTrigger>
-        </TabsList>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+  const tabs = [
+    {
+      value: "Badge and Button",
+      children: (
+        <Fragment>
+          <ComponentCard
+            title="Badge Variant"
+            importCode={`import { Badge } from "@/components/ui/badge";`}
+            code={`<Badge>Default</Badge>
+<Badge variant="secondary">Secondary</Badge>
+<Badge variant="outline">Outline</Badge>
+<Badge variant="outline_primary">Outline Primary</Badge>
 
-      <TabsContent value="Custom Chart" className="space-y-2">
-        <ComponentCard
-          title="Pie Chart"
-          apiReference={[
-            { name: "label", type: "string" },
-            {
-              name: "data",
-              type: "{ nameKey: string; dataKey: number; fill: string }[]",
-            },
-          ]}
-          importCode={`import { PieChart } from "@/components/custom/custom-chart";`}
-          code={`export default function ExamplePieChart() {
+<Badge variant="success">Success</Badge>
+<Badge variant="outline_success">Outline Success</Badge>
+
+<Badge variant="warning">Warning</Badge>
+<Badge variant="outline_warning">Outline Warning</Badge>
+
+<Badge variant="destructive">Destructive</Badge>
+<Badge variant="outline_destructive">Outline Destructive</Badge>`}
+          >
+            <div className="space-y-4">
+              <div className="flex flex-wrap justify-center gap-2">
+                <Badge>Default</Badge>
+                <Badge variant="secondary">Secondary</Badge>
+                <Badge variant="outline">Outline</Badge>
+                <Badge variant="outline_primary">Outline Primary</Badge>
+
+                <Badge variant="success">Success</Badge>
+                <Badge variant="outline_success">Outline Success</Badge>
+
+                <Badge variant="warning">Warning</Badge>
+                <Badge variant="outline_warning">Outline Warning</Badge>
+
+                <Badge variant="destructive">Destructive</Badge>
+                <Badge variant="outline_destructive">Outline Destructive</Badge>
+              </div>
+            </div>
+          </ComponentCard>
+
+          <ComponentCard
+            title="Button Variant"
+            importCode={`import { Button } from "@/components/ui/button";`}
+            code={`<Button>Default</Button>
+<Button variant="secondary">Secondary</Button>
+<Button variant="outline">Outline</Button>
+<Button variant="ghost">Ghost</Button>
+<Button variant="link">Link</Button>
+<Button variant="outline_primary">Outline Primary</Button>
+
+<Button variant="success">Success</Button>
+<Button variant="outline_success">Outline Success</Button>
+<Button variant="ghost_success">Ghost Success</Button>
+
+<Button variant="warning">Warning</Button>
+<Button variant="outline_warning">Outline Warning</Button>
+<Button variant="ghost_warning">Ghost Warning</Button>
+
+<Button variant="destructive">Destructive</Button>
+<Button variant="outline_destructive">Outline Destructive</Button>
+<Button variant="ghost_destructive">Ghost Destructive</Button>`}
+          >
+            <div className="space-y-4">
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button>Default</Button>
+                <Button variant="secondary">Secondary</Button>
+                <Button variant="outline">Outline</Button>
+                <Button variant="ghost">Ghost</Button>
+                <Button variant="link">Link</Button>
+                <Button variant="outline_primary">Outline Primary</Button>
+              </div>
+
+              <div className="flex flex-wrap justify-center gap-2">
+                <Button variant="success">Success</Button>
+                <Button variant="outline_success">Outline Success</Button>
+                <Button variant="ghost_success">Ghost Success</Button>
+
+                <Button variant="warning">Warning</Button>
+                <Button variant="outline_warning">Outline Warning</Button>
+                <Button variant="ghost_warning">Ghost Warning</Button>
+
+                <Button variant="destructive">Destructive</Button>
+                <Button variant="outline_destructive">
+                  Outline Destructive
+                </Button>
+                <Button variant="ghost_destructive">Ghost Destructive</Button>
+              </div>
+            </div>
+          </ComponentCard>
+
+          <ComponentCard
+            title="Refresh Button"
+            apiReference={[
+              {
+                name: "...props",
+                type: `Omit<ButtonProps, "onClick" | "children">`,
+              },
+            ]}
+            importCode={`import { RefreshButton } from "@/components/custom/custom-button";`}
+            code={`<RefreshButton />`}
+          >
+            <RefreshButton />
+          </ComponentCard>
+
+          <ComponentCard
+            title="Copy Button"
+            apiReference={[
+              { name: "value", type: "string" },
+              {
+                name: "...props",
+                type: `Omit<ButtonProps, "onClick" | "children">`,
+              },
+            ]}
+            importCode={`import { CopyButton } from "@/components/custom/custom-button";`}
+            code={`<CopyButton value="Hello World" />`}
+          >
+            <CopyButton value="Hello World" />
+          </ComponentCard>
+        </Fragment>
+      ),
+    },
+    {
+      value: "Custom Chart",
+      children: (
+        <Fragment>
+          <ComponentCard
+            title="Pie Chart"
+            apiReference={[
+              { name: "label", type: "string" },
+              {
+                name: "data",
+                type: "{ nameKey: string; dataKey: number; fill: string }[]",
+              },
+            ]}
+            importCode={`import { PieChart } from "@/components/custom/custom-chart";`}
+            code={`export default function ExamplePieChart() {
   const data = [
     { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
     { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
@@ -197,23 +312,23 @@ export function References() {
     </div>
   );
 }`}
-        >
-          <div className="mx-auto aspect-square h-[20rem]">
-            <PieChart label="Kategori" data={pieChartData} />
-          </div>
-        </ComponentCard>
+          >
+            <div className="mx-auto aspect-square h-[20rem]">
+              <PieChart label="Kategori" data={pieChartData} />
+            </div>
+          </ComponentCard>
 
-        <ComponentCard
-          title="Area and Pie Chart"
-          apiReference={[
-            { name: "config", type: "ChartConfig (rechart)" },
-            {
-              name: "data",
-              type: "{ xLabel: string; dataKeys: Record<string, number> }[]",
-            },
-          ]}
-          importCode={`import { AreaChart, BarChart } from "@/components/custom/custom-chart";`}
-          code={`export function ExampleAreaAndPieChart() {
+          <ComponentCard
+            title="Area and Pie Chart"
+            apiReference={[
+              { name: "config", type: "ChartConfig (rechart)" },
+              {
+                name: "data",
+                type: "{ xLabel: string; dataKeys: Record<string, number> }[]",
+              },
+            ]}
+            importCode={`import { AreaChart, BarChart } from "@/components/custom/custom-chart";`}
+            code={`export function ExampleAreaAndPieChart() {
   const data = [
     { xLabel: "January", dataKeys: { key1: 186, key2: 80 } },
     { xLabel: "February", dataKeys: { key1: 305, key2: 200 } },
@@ -240,148 +355,37 @@ export function References() {
     </div>
   );
 }`}
-        >
-          <div className="flex w-full flex-col gap-2 md:flex-row">
-            <div className="md:basis-1/2">
-              <AreaChart
-                config={areaAndPieChartConfig}
-                data={areaAndPieChartData}
-              />
+          >
+            <div className="flex w-full flex-col gap-2 md:flex-row">
+              <div className="md:basis-1/2">
+                <AreaChart
+                  config={areaAndPieChartConfig}
+                  data={areaAndPieChartData}
+                />
+              </div>
+
+              <div className="md:basis-1/2">
+                <BarChart
+                  config={areaAndPieChartConfig}
+                  data={areaAndPieChartData}
+                />
+              </div>
             </div>
+          </ComponentCard>
+        </Fragment>
+      ),
+    },
+    {
+      value: "Form",
+      children: (
+        <Fragment>
+          <ComponentCard title="Form Example" code="-">
+            <ExampleForm />
+          </ComponentCard>
 
-            <div className="md:basis-1/2">
-              <BarChart
-                config={areaAndPieChartConfig}
-                data={areaAndPieChartData}
-              />
-            </div>
-          </div>
-        </ComponentCard>
-      </TabsContent>
-
-      <TabsContent value="Badge and Button" className="space-y-2">
-        <ComponentCard
-          title="Badge Variant"
-          importCode={`import { Badge } from "@/components/ui/badge";`}
-          code={`<Badge>Default</Badge>
-<Badge variant="secondary">Secondary</Badge>
-<Badge variant="outline">Outline</Badge>
-<Badge variant="outline_primary">Outline Primary</Badge>
-
-<Badge variant="success">Success</Badge>
-<Badge variant="outline_success">Outline Success</Badge>
-
-<Badge variant="warning">Warning</Badge>
-<Badge variant="outline_warning">Outline Warning</Badge>
-
-<Badge variant="destructive">Destructive</Badge>
-<Badge variant="outline_destructive">Outline Destructive</Badge>`}
-        >
-          <div className="space-y-4">
-            <div className="flex flex-wrap justify-center gap-2">
-              <Badge>Default</Badge>
-              <Badge variant="secondary">Secondary</Badge>
-              <Badge variant="outline">Outline</Badge>
-              <Badge variant="outline_primary">Outline Primary</Badge>
-
-              <Badge variant="success">Success</Badge>
-              <Badge variant="outline_success">Outline Success</Badge>
-
-              <Badge variant="warning">Warning</Badge>
-              <Badge variant="outline_warning">Outline Warning</Badge>
-
-              <Badge variant="destructive">Destructive</Badge>
-              <Badge variant="outline_destructive">Outline Destructive</Badge>
-            </div>
-          </div>
-        </ComponentCard>
-
-        <ComponentCard
-          title="Button Variant"
-          importCode={`import { Button } from "@/components/ui/button";`}
-          code={`<Button>Default</Button>
-<Button variant="secondary">Secondary</Button>
-<Button variant="outline">Outline</Button>
-<Button variant="ghost">Ghost</Button>
-<Button variant="link">Link</Button>
-<Button variant="outline_primary">Outline Primary</Button>
-
-<Button variant="success">Success</Button>
-<Button variant="outline_success">Outline Success</Button>
-<Button variant="ghost_success">Ghost Success</Button>
-
-<Button variant="warning">Warning</Button>
-<Button variant="outline_warning">Outline Warning</Button>
-<Button variant="ghost_warning">Ghost Warning</Button>
-
-<Button variant="destructive">Destructive</Button>
-<Button variant="outline_destructive">Outline Destructive</Button>
-<Button variant="ghost_destructive">Ghost Destructive</Button>`}
-        >
-          <div className="space-y-4">
-            <div className="flex flex-wrap justify-center gap-2">
-              <Button>Default</Button>
-              <Button variant="secondary">Secondary</Button>
-              <Button variant="outline">Outline</Button>
-              <Button variant="ghost">Ghost</Button>
-              <Button variant="link">Link</Button>
-              <Button variant="outline_primary">Outline Primary</Button>
-            </div>
-
-            <div className="flex flex-wrap justify-center gap-2">
-              <Button variant="success">Success</Button>
-              <Button variant="outline_success">Outline Success</Button>
-              <Button variant="ghost_success">Ghost Success</Button>
-
-              <Button variant="warning">Warning</Button>
-              <Button variant="outline_warning">Outline Warning</Button>
-              <Button variant="ghost_warning">Ghost Warning</Button>
-
-              <Button variant="destructive">Destructive</Button>
-              <Button variant="outline_destructive">Outline Destructive</Button>
-              <Button variant="ghost_destructive">Ghost Destructive</Button>
-            </div>
-          </div>
-        </ComponentCard>
-
-        <ComponentCard
-          title="Refresh Button"
-          apiReference={[
-            {
-              name: "...props",
-              type: `Omit<ButtonProps, "onClick" | "children">`,
-            },
-          ]}
-          importCode={`import { RefreshButton } from "@/components/custom/custom-button";`}
-          code={`<RefreshButton />`}
-        >
-          <RefreshButton />
-        </ComponentCard>
-
-        <ComponentCard
-          title="Copy Button"
-          apiReference={[
-            { name: "value", type: "string" },
-            {
-              name: "...props",
-              type: `Omit<ButtonProps, "onClick" | "children">`,
-            },
-          ]}
-          importCode={`import { CopyButton } from "@/components/custom/custom-button";`}
-          code={`<CopyButton value="Hello World" />`}
-        >
-          <CopyButton value="Hello World" />
-        </ComponentCard>
-      </TabsContent>
-
-      <TabsContent value="Form Example" className="space-y-2">
-        <ComponentCard title="Form Example" code="-">
-          <ExampleForm />
-        </ComponentCard>
-
-        <ComponentCard
-          title="Text Field"
-          code={`<FormField
+          <ComponentCard
+            title="Text Field"
+            code={`<FormField
   control={form.control}
   name="text"
   render={({ field }) => (
@@ -396,11 +400,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="Numeric and Phone Field"
-          code={`{/* Numeric */}
+          <ComponentCard
+            title="Numeric and Phone Field"
+            code={`{/* Numeric */}
 <FormField
   control={form.control}
   name="numeric"
@@ -447,11 +451,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="Date Field"
-          code={`<FormField
+          <ComponentCard
+            title="Date Field"
+            code={`<FormField
   control={form.control}
   name="date"
   render={({ field }) => (
@@ -462,11 +466,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="Select Field"
-          code={`<FormField
+          <ComponentCard
+            title="Select Field"
+            code={`<FormField
   control={form.control}
   name="select"
   render={({ field }) => (
@@ -491,11 +495,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="Custom Radio Group Field"
-          code={`<FormField
+          <ComponentCard
+            title="Custom Radio Group Field"
+            code={`<FormField
   control={form.control}
   name="radio"
   render={({ field }) => (
@@ -510,11 +514,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="Radio Group Field"
-          code={`<FormField
+          <ComponentCard
+            title="Radio Group Field"
+            code={`<FormField
   control={form.control}
   name="radio"
   render={({ field }) => (
@@ -539,11 +543,11 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
+          />
 
-        <ComponentCard
-          title="File Field"
-          code={`<FormField
+          <ComponentCard
+            title="File Field"
+            code={`<FormField
   control={form.control}
   name="file"
   render={({ field }) => (
@@ -554,8 +558,58 @@ export function References() {
     </FormItem>
   )}
 />`}
-        />
-      </TabsContent>
+          />
+        </Fragment>
+      ),
+    },
+  ];
+
+  return (
+    <Tabs
+      defaultValue={tabs[0].value}
+      orientation="vertical"
+      className="w-full md:flex-row"
+    >
+      <ScrollArea className="pb-2 md:hidden">
+        <TabsList className="w-full rounded-none border-b bg-transparent p-0">
+          {tabs.map(({ value }, index) => (
+            <TabsTrigger
+              key={index}
+              value={value}
+              className={cn(
+                "relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5",
+                "data-[state=active]:after:bg-primary data-[state=active]:hover:bg-accent data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
+              )}
+            >
+              {value}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+
+      <TabsList className="hidden h-full flex-col items-start justify-start rounded-none border-l bg-transparent p-0 md:flex">
+        {tabs.map(({ value }, index) => (
+          <TabsTrigger
+            key={index}
+            value={value}
+            className={cn(
+              "relative w-full justify-start rounded-none after:absolute after:inset-y-0 after:-start-0.5 after:w-0.5",
+              "data-[state=active]:after:bg-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
+            )}
+          >
+            {value}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      <div className="w-full">
+        {tabs.map(({ value, children }, index) => (
+          <TabsContent key={index} value={value} className="space-y-4">
+            {children}
+          </TabsContent>
+        ))}
+      </div>
     </Tabs>
   );
 }

@@ -1,5 +1,4 @@
 import { SidebarApp } from "@/components/layout/sidebar-app";
-import { GridPattern } from "@/components/other-ui/grid-pattern";
 import { getTitle } from "@/lib/utils";
 import { getSession } from "@/server/action";
 import { Metadata } from "next";
@@ -17,7 +16,6 @@ export default async function DashboardLayout({
   if (!session) notFound();
   return (
     <SidebarApp {...session.user}>
-      <GridPattern className="stroke-accent/40 dark:stroke-accent/20 z-0" />
       {children}
       <div className="bg-background/90 z-10 mt-auto flex h-12 items-center justify-center border-t text-center">
         <SectionTagline className="container" />

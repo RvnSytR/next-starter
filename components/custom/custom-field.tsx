@@ -208,7 +208,7 @@ export function InputFile({
     <div
       tabIndex={0}
       className={cn(
-        "border-input dark:bg-input/30 relative rounded-md border border-dashed bg-transparent shadow-xs transition-[border]",
+        "border-input dark:bg-input/30 relative rounded-md border bg-transparent shadow-xs transition-[border]",
         "focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
         !isFiles && "hover:border-muted-foreground hover:cursor-pointer",
         className,
