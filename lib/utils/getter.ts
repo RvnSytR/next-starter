@@ -1,4 +1,11 @@
-import { appInfo, dashboardMenu, Menu, Route, routesMeta } from "../const";
+import {
+  allRoutes,
+  appInfo,
+  dashboardMenu,
+  Menu,
+  Route,
+  routesMeta,
+} from "../const";
 import { Role } from "../permission";
 
 export function getTitle(r: Route) {
@@ -13,16 +20,14 @@ export function getRandomString(length: number) {
   for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * characters.length));
   }
-  return result as string;
+  return result;
 }
 
 export function getRandomColor(withHash?: boolean) {
   const letters = "0123456789ABCDEF";
   let color = withHash ? "#" : "";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color as string;
+  for (let i = 0; i < 6; i++) color += letters[Math.floor(Math.random() * 16)];
+  return color;
 }
 
 export function getMenuByRole(
@@ -43,4 +48,19 @@ export function getMenuByRole(
   });
 
   return filteredMenu.filter((item) => item !== null);
+}
+
+export function getActiveRoute(pathname: string) {
+  const parts = pathname.split("/").filter(Boolean);
+  const paths: string[] = [];
+
+  for (let i = parts.length; i > 0; i--) {
+    paths.push("/" + parts.slice(0, i).join("/"));
+  }
+
+  paths.push("/");
+  for (const p of paths) {
+    const activeRoute = allRoutes.find((item) => item === p);
+    if (activeRoute) return activeRoute;
+  }
 }

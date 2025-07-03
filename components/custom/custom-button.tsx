@@ -24,6 +24,7 @@ export function RefreshButton({
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
   onClick,
+  disabled,
   ...props
 }: LoadingProps & Omit<ButtonProps, "children"> & { text?: string }) {
   const router = useRouter();
@@ -38,6 +39,7 @@ export function RefreshButton({
         router.refresh();
         setRefreshing(false);
       }}
+      disabled={refreshing || disabled}
       {...props}
     >
       {refreshing ? loadingIcon : defaultIcon}

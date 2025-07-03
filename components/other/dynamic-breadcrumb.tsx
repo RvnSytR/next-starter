@@ -10,37 +10,31 @@ import { Route, routesMeta } from "@/lib/const";
 import Link from "next/link";
 import { Fragment } from "react";
 
+type DynamicBreadcrumbLink = { url: string; displayName: string };
 export type DynamicBreadcrumbProps = {
-  breadcrumbArr?: (Route | { path: string; displayName: string })[];
+  breadcrumb?: (Route | DynamicBreadcrumbLink)[];
   currentPage: string;
 };
 
 export function DynamicBreadcrumb({
-  breadcrumbArr,
+  breadcrumb,
   currentPage,
 }: DynamicBreadcrumbProps) {
   return (
     <Breadcrumb>
       <BreadcrumbList className="flex-nowrap">
-        {breadcrumbArr?.map((item, index) => {
-          let content = (
-            <BreadcrumbPage className="text-destructive">
-              Invalid route!
-            </BreadcrumbPage>
-          );
-
-          if (typeof item === "string") {
-            content = (
-              <BreadcrumbLink asChild>
-                <Link href={item}>{routesMeta[item].displayName}</Link>
-              </BreadcrumbLink>
-            );
-          }
+        {breadcrumb?.map((item, index) => {
+          const { url, displayName }: DynamicBreadcrumbLink =
+            typeof item === "string"
+              ? { url: item, displayName: routesMeta[item].displayName }
+              : item;
 
           return (
             <Fragment key={index}>
               <BreadcrumbItem className="hidden shrink-0 md:flex">
-                {content}
+                <BreadcrumbLink asChild>
+                  <Link href={url}>{displayName}</Link>
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:flex">
                 /

@@ -46,9 +46,9 @@ export const dashboardMenu: Menu[] = [
 ];
 
 export const dashboardfooterMenu: (Omit<MenuContent, "route" | "subMenu"> & {
-  path: string;
+  url: string;
   displayName: string;
 })[] = [
-  { path: "/", displayName: "Home", icon: ExternalLink },
-  { path: "/somewhere", displayName: "Help", icon: CircleHelp },
+  { url: "/", displayName: "Home", icon: ExternalLink },
+  { url: "/somewhere", displayName: "Help", icon: CircleHelp, disabled: true },
 ];
