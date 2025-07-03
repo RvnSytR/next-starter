@@ -31,6 +31,7 @@ export const roles = {
 };
 
 export type Role = keyof typeof roles;
+export const defaultRole = "user" satisfies Role;
 export const allRoles = Object.keys(roles) as Role[];
 export const adminRoles: Role[] = ["admin"];
 export const userRoles: Role[] = allRoles.filter(

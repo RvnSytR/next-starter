@@ -31,7 +31,7 @@ export async function checkAndGetAuthorizedSession(route: Route) {
   if (!routeMeta.role) notFound();
 
   const session = await getSession();
-  if (!session?.user.role) notFound();
+  if (!session) notFound();
 
   const routeRole = routeMeta.role;
   const userRole = session.user.role as Role;

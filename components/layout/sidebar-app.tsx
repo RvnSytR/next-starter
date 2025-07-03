@@ -7,7 +7,6 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { LinkLoader, RefreshButton } from "../custom/custom-button";
 import { SignOutButton, UserAvatar } from "../modules/auth";
-import { Spinner } from "../other/icon";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -109,14 +108,6 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  if (!role) {
-    return (
-      <SidebarGroup className="flex h-full items-center justify-center">
-        <Spinner />
-      </SidebarGroup>
-    );
-  }
-
   return getMenuByRole(role as Role).map(({ section, content }, i) => (
     <SidebarGroup key={i}>
       <SidebarGroupLabel>{section}</SidebarGroupLabel>

@@ -4,7 +4,13 @@ import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
 import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
-import { allRoles, Role, rolesMeta, userRoles } from "@/lib/permission";
+import {
+  allRoles,
+  defaultRole,
+  Role,
+  rolesMeta,
+  userRoles,
+} from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
 import { deleteProfilePicture } from "@/server/action";
@@ -1299,11 +1305,7 @@ export function AdminCreateUserDialog() {
   );
 }
 
-export function AdminChangeUserRoleDialog({
-  id,
-  name,
-  role,
-}: Pick<Session["user"], "id" | "name" | "role">) {
+export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -1312,7 +1314,7 @@ export function AdminChangeUserRoleDialog({
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { role: role },
+    defaultValues: { role: role ?? defaultRole },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
