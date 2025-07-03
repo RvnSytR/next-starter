@@ -1,10 +1,10 @@
 import { NextConfig } from "next";
-import { mediaMetadata } from "./lib/const";
+import { mediaMeta } from "./lib/const";
 
 const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
-      bodySizeLimit: `${Math.max(...Object.values(mediaMetadata).map(({ size }) => size.mb))}mb`,
+      bodySizeLimit: `${Math.max(...Object.values(mediaMeta).map(({ size }) => size.mb))}mb`,
     },
   },
 };

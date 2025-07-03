@@ -1,6 +1,6 @@
 "use server";
 
-import { FileCategory, mediaMetadata } from "@/lib/const";
+import { FileCategory, mediaMeta } from "@/lib/const";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -49,7 +49,7 @@ export async function uploadFile({
             Key: key,
             Bucket: S3_BUCKET_NAME,
             Body: Buffer.from(await file.arrayBuffer()),
-            ContentType: mediaMetadata[contentType].type.join(", "),
+            ContentType: mediaMeta[contentType].type.join(", "),
             ...props,
           }),
         ),

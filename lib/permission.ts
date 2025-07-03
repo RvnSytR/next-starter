@@ -31,13 +31,13 @@ export const roles = {
 };
 
 export type Role = keyof typeof roles;
-export const allRoles: Role[] = Object.keys(roles) as Role[];
+export const allRoles = Object.keys(roles) as Role[];
 export const adminRoles: Role[] = ["admin"];
 export const userRoles: Role[] = allRoles.filter(
   (role) => !adminRoles.includes(role),
 );
 
-export const roleMetadata: Record<
+export const rolesMeta: Record<
   Role,
   { displayName?: string; icon: LucideIcon; desc: string }
 > = {

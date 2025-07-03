@@ -1,5 +1,5 @@
 import { RawCreateParams, z } from "zod";
-import { FieldType, FileCategory, mediaMetadata } from "./const";
+import { FieldType, FileCategory, mediaMeta } from "./const";
 import { zodMessage } from "./content";
 import { capitalize } from "./utils";
 
@@ -12,7 +12,7 @@ const zodParams = {
 };
 
 export const zodFile = (category: FileCategory) => {
-  const fileMedia = mediaMetadata[category];
+  const fileMedia = mediaMeta[category];
   const mediaFileType = category !== "all" ? category : "file";
 
   return z

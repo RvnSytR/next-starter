@@ -1,7 +1,7 @@
 "use client";
 
 import { filterFn } from "@/lib/filters";
-import { adminRoles, Role, roleMetadata } from "@/lib/permission";
+import { adminRoles, Role, rolesMeta } from "@/lib/permission";
 import { capitalize, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
@@ -102,7 +102,7 @@ export const getUserColumn = (currentUserId: string) => [
     cell: ({ row }) => {
       const role = row.original.role! as Role;
       const isAdmin = adminRoles.includes(role);
-      const { displayName, icon: RoleIcon, desc } = roleMetadata[role];
+      const { displayName, icon: RoleIcon, desc } = rolesMeta[role];
       return (
         <div className="flex flex-col gap-2">
           {row.original.emailVerified && <VerifiedUserBadge />}
@@ -127,7 +127,7 @@ export const getUserColumn = (currentUserId: string) => [
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
-        const { displayName, icon } = roleMetadata[value as Role];
+        const { displayName, icon } = rolesMeta[value as Role];
         return { value, label: displayName ?? capitalize(value), icon: icon };
       },
     },

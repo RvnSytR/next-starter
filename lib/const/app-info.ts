@@ -5,9 +5,4 @@ export const appInfo = {
 
   isProduction: process.env.IS_PRODUCTION === "true",
   // logo: "/some-image.png"
-
-  origin: {
-    dev: "http://localhost:3000",
-    prod: "https://example.domain",
-  },
 };

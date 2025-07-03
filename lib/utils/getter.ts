@@ -1,20 +1,8 @@
-import {
-  appInfo,
-  dashboardMenu,
-  Menu,
-  Route,
-  RouteRole,
-  routesMetadata,
-} from "../const";
+import { appInfo, dashboardMenu, Menu, Route, routesMeta } from "../const";
 import { Role } from "../permission";
 
 export function getTitle(r: Route) {
-  return `${routesMetadata[r].displayName} | ${appInfo.name}`;
-}
-
-export function getUrl() {
-  const { isProduction, origin } = appInfo;
-  return isProduction ? origin.prod : origin.dev;
+  return `${routesMeta[r].displayName} | ${appInfo.name}`;
 }
 
 export function getRandomString(length: number) {
@@ -43,11 +31,11 @@ export function getMenuByRole(
 ): Menu[] {
   const filteredMenu = menu.map(({ section, content }) => {
     const filteredContent = content.filter(({ route }) => {
-      const meta = routesMetadata[route];
-      if ("role" in meta) {
-        const currentRole = meta.role as RouteRole;
-        return currentRole === "all" || currentRole.includes(role as Role);
-      } else return true;
+      const routeMeta = routesMeta[route];
+      if (!routeMeta.role) return true;
+
+      const currentRole = routeMeta.role;
+      return currentRole === "all" || currentRole.includes(role);
     });
 
     if (filteredContent.length <= 0) return null;

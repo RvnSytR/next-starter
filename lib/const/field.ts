@@ -24,7 +24,7 @@ type MediaProps = Record<
   }
 >;
 
-export const mediaMetadata: MediaProps = {
+export const mediaMeta: MediaProps = {
   all: {
     type: ["*"],
     extensions: [],

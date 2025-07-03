@@ -1,4 +1,4 @@
-import { FileCategory, mediaMetadata } from "@/lib/const";
+import { FileCategory, mediaMeta } from "@/lib/const";
 import { buttonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
@@ -172,7 +172,7 @@ export function InputFile({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const fileMedia = mediaMetadata[accept];
+  const fileMedia = mediaMeta[accept];
   const fileSize = size ? { mb: size, byte: toByte(size) } : fileMedia.size;
   const isFiles = files.length > 0;
   const Icon = fileMedia.icon;

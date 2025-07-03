@@ -1,5 +1,5 @@
 import { Session } from "@/lib/auth";
-import { dashboardfooterMenu, Route, routesMetadata } from "@/lib/const";
+import { dashboardfooterMenu, Route, routesMeta } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { getMenuByRole, toKebabCase } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
@@ -103,7 +103,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
       <SidebarMenu>
         {content.map(({ route, icon: MenuIcon, disabled, subMenu }, index) => {
-          const { displayName } = routesMetadata[route];
+          const { displayName } = routesMeta[route];
           if (disabled) {
             return (
               <SidebarMenuItem key={index}>

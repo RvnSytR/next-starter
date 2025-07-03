@@ -1,4 +1,4 @@
-import { mediaMetadata } from "../const";
+import { mediaMeta } from "../const";
 
 function readFileAsURL(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -14,7 +14,7 @@ async function getFilesAsURL(files: File[] | null) {
     throw new Error("Invalid file(s) provided!");
   const results: string[] = [];
   for (const item of files) {
-    if (item.size > mediaMetadata.image.size.byte)
+    if (item.size > mediaMeta.image.size.byte)
       throw new Error("Ukuran File Terlalu Besar!");
     results.push(await readFileAsURL(item));
   }

@@ -1,13 +1,16 @@
 import { Section } from "@/components/layout/section";
+import { R } from "@/components/other-ui/r";
 import { checkAndGetAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
-  const { session, currenRoute } =
-    await checkAndGetAuthorizedSession("/dashboard");
+  const { routeMeta } = await checkAndGetAuthorizedSession("/dashboard");
 
   return (
-    <Section currentPage={currenRoute.displayName}>
-      <p>{JSON.stringify(session, null, 2)}</p>
+    <Section
+      currentPage={routeMeta.displayName}
+      className="items-center justify-center"
+    >
+      <R />
     </Section>
   );
 }

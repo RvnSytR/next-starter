@@ -24,7 +24,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
 
 export default async function Page() {
-  const { session, currenRoute } =
+  const { session, routeMeta } =
     await checkAndGetAuthorizedSession("/dashboard/profile");
 
   const sessionList = await getListSession();
@@ -32,7 +32,7 @@ export default async function Page() {
     dashboardPage.profile;
 
   return (
-    <Section currentPage={currenRoute.displayName} className="items-center">
+    <Section currentPage={routeMeta.displayName} className="items-center">
       <Card
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-2xl"
@@ -43,7 +43,7 @@ export default async function Page() {
             <CardDescription>{info.desc}</CardDescription>
           </div>
 
-          {!session.user.emailVerified && (
+          {session.user.emailVerified && (
             <VerifiedUserBadge className="size-fit" />
           )}
         </CardHeader>

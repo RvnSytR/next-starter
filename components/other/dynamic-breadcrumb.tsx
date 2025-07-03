@@ -6,7 +6,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Route, routesMetadata } from "@/lib/const";
+import { Route, routesMeta } from "@/lib/const";
 import Link from "next/link";
 import { Fragment } from "react";
 
@@ -32,7 +32,7 @@ export function DynamicBreadcrumb({
           if (typeof item === "string") {
             content = (
               <BreadcrumbLink asChild>
-                <Link href={item}>{routesMetadata[item].displayName}</Link>
+                <Link href={item}>{routesMeta[item].displayName}</Link>
               </BreadcrumbLink>
             );
           }

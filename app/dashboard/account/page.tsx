@@ -11,12 +11,12 @@ import { Metadata } from "next";
 export const metadata: Metadata = { title: getTitle("/dashboard/account") };
 
 export default async function Page() {
-  const { session, currenRoute } =
+  const { session, routeMeta } =
     await checkAndGetAuthorizedSession("/dashboard/account");
   const data = await getUserList();
 
   return (
-    <Section currentPage={currenRoute.displayName} className="xl:items-center">
+    <Section currentPage={routeMeta.displayName} className="xl:items-center">
       <AdminAccountDataTable
         data={data.users}
         currentUserId={session.user.id}

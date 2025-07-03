@@ -2,9 +2,9 @@
 
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { dashboardRoute, mediaMetadata, signInRoute } from "@/lib/const";
+import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
 import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
-import { allRoles, Role, roleMetadata, userRoles } from "@/lib/permission";
+import { allRoles, Role, rolesMeta, userRoles } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
 import { deleteProfilePicture } from "@/server/action";
@@ -530,7 +530,7 @@ export function ProfilePicture({
       <input
         type="file"
         ref={inputAvatarRef}
-        accept={mediaMetadata.image.type.join(", ")}
+        accept={mediaMeta.image.type.join(", ")}
         className="hidden"
         onChange={(e) => {
           const fileList = e.currentTarget.files;
@@ -1259,8 +1259,7 @@ export function AdminCreateUserDialog() {
 
                     <SelectContent>
                       {allRoles.map((item, index) => {
-                        const { displayName, icon: RoleIcon } =
-                          roleMetadata[item];
+                        const { displayName, icon: RoleIcon } = rolesMeta[item];
                         return (
                           <SelectItem
                             key={index}
@@ -1377,8 +1376,7 @@ export function AdminChangeUserRoleDialog({
 
                     <SelectContent>
                       {allRoles.map((item, index) => {
-                        const { displayName, icon: RoleIcon } =
-                          roleMetadata[item];
+                        const { displayName, icon: RoleIcon } = rolesMeta[item];
                         return (
                           <SelectItem
                             key={index}

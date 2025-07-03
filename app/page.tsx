@@ -27,7 +27,7 @@ export default function Page() {
         </div>
       </div>
 
-      <References className="animate-fade-up delay-1000" />
+      <References className="animate-fade-up delay-750" />
     </div>
   );
 }
