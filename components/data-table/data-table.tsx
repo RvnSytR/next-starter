@@ -259,7 +259,7 @@ function ToolBox<TData>({
                     htmlFor={cbId}
                     className={cn(
                       buttonVariants({ variant: "ghost", size: "sm" }),
-                      "items-center justify-start gap-x-2 p-2 capitalize",
+                      "justify-start gap-x-2 p-2 capitalize",
                     )}
                   >
                     <Checkbox

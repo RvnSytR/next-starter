@@ -3,7 +3,7 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import { buttonText, dialog, toastMessage, zodMessage } from "@/lib/content";
+import { buttonText, dialog, message } from "@/lib/content";
 import {
   allRoles,
   defaultRole,
@@ -14,7 +14,7 @@ import {
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
 import { deleteProfilePicture } from "@/server/action";
-import { getFilePublicUrl, uploadFile } from "@/server/s3";
+import { getFilePublicUrl, uploadFiles } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
@@ -44,7 +44,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
-import { z } from "zod";
+import { z } from "zod/v4";
 import { FormFloating } from "../custom/custom-field";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
@@ -125,8 +125,10 @@ export function UserAvatar({
     <Avatar className={cn("rounded-xl", className)}>
       {image ? (
         <>
-          <AvatarImage className={imageCn} src={image} />
-          <AvatarFallback className={fallbackCn}>{fallbackName}</AvatarFallback>
+          <AvatarImage className={cn("rounded-xl", imageCn)} src={image} />
+          <AvatarFallback className={cn("rounded-xl", fallbackCn)}>
+            {fallbackName}
+          </AvatarFallback>
         </>
       ) : (
         <span
@@ -158,7 +160,7 @@ export function SignOutButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(toastMessage.user.signOut);
+              toast.success(message.user.signOut);
               router.push(signInRoute);
             },
           },
@@ -191,7 +193,7 @@ export function SignOnGithubButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(toastMessage.user.signIn());
+              toast.success(message.user.signIn());
             },
           },
         );
@@ -226,7 +228,7 @@ export function SignInForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(toastMessage.user.signOut);
+        toast.success(message.user.signOut);
         router.push(signInRoute);
       },
     });
@@ -312,7 +314,7 @@ export function SignUpForm() {
       isAgree: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: zodMessage.confirmPassword,
+      message: message.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -335,7 +337,7 @@ export function SignUpForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(toastMessage.user.signUp);
+        toast.success(message.user.signUp);
         setIsLoading(false);
         form.reset();
       },
@@ -470,38 +472,37 @@ export function ProfilePicture({
   const [isChange, setIsChange] = useState<boolean>(false);
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
-  const schema = zodFile("image");
+  const contentType = "image";
+  const schema = zodFile(contentType);
 
   const changeHandler = async (fileList: FileList) => {
     setIsChange(true);
+    const files = Array.from(fileList).map((f) => f);
 
-    const parseRes = schema.safeParse(Array.from(fileList).map((file) => file));
-    if (!parseRes.success) return toast.error(parseRes.error.errors[0].message);
+    const parseRes = schema.safeParse(files);
+    if (!parseRes.success) return toast.error(parseRes.error.message);
 
-    const formData = new FormData();
-    const file = fileList[0];
-    const fileKey = `${id}_${file.name}`;
-    const fileUrl = await getFilePublicUrl(fileKey);
+    const file = files[0];
+    const key = `${id}_${file.name}`;
+    const url = await getFilePublicUrl(key);
 
-    formData.set(fileKey, file);
-    if (image && fileUrl !== image) await deleteProfilePicture(image);
+    if (image && url !== image) await deleteProfilePicture(image);
 
-    await uploadFile({
-      formData: formData,
-      names: [fileKey],
-      nameAskey: true,
+    await uploadFiles({
+      files: [{ key, file }],
+      contentType,
       ACL: "public-read",
     });
 
-    await authClient.updateUser(
-      { image: fileUrl },
+    authClient.updateUser(
+      { image: url },
       {
         onError: ({ error }) => {
           toast.error(error.message);
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.successTo("avatar", "updated"));
+          toast.success(message.user.success("avatar", "updated"));
           setIsChange(false);
           router.refresh();
         },
@@ -523,7 +524,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(toastMessage.successTo("avatar", "removed"));
+          toast.success(message.user.success("Avatar", "removed"));
         },
       },
     );
@@ -536,7 +537,7 @@ export function ProfilePicture({
       <input
         type="file"
         ref={inputAvatarRef}
-        accept={mediaMeta.image.type.join(", ")}
+        accept={mediaMeta[contentType].mimeType.join(", ")}
         className="hidden"
         onChange={(e) => {
           const fileList = e.currentTarget.files;
@@ -582,11 +583,7 @@ export function ProfilePicture({
               </AlertDialogHeader>
 
               <AlertDialogFooter>
-                <AlertDialogCancel
-                  className={buttonVariants({ variant: "outline" })}
-                >
-                  {buttonText.cancel}
-                </AlertDialogCancel>
+                <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
                 <AlertDialogAction
                   className={buttonVariants({ variant: "destructive" })}
                   onClick={() => deleteHandler()}
@@ -614,13 +611,12 @@ export function PersonalInformation({ ...props }: Session["user"]) {
     defaultValues: {
       name: name,
       email: email,
-      role: role ? capitalize(role) : null,
+      role: role ? capitalize(role) : defaultRole,
     },
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name)
-      return toast.info(toastMessage.noChangesTo("profile"));
+    if (newName === name) return toast.info(message.user.noChanges("profile"));
     setIsLoading(true);
     authClient.updateUser(
       { name: newName },
@@ -630,7 +626,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.successTo("profile", "updated"));
+          toast.success(message.user.success("profile", "updated"));
           setIsLoading(false);
           router.refresh();
         },
@@ -732,7 +728,7 @@ export function ChangePasswordForm() {
       revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
     })
     .refine((sc) => sc.newPassword === sc.confirmPassword, {
-      message: zodMessage.confirmPassword,
+      message: message.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -754,7 +750,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(toastMessage.successTo("password", "updated"));
+        toast.success(message.user.success("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -903,7 +899,7 @@ export function ActiveSessionButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.user.revokeSession());
+          toast.success(message.user.revokeThisSession);
           setIsLoading(false);
           router.refresh();
         },
@@ -971,7 +967,7 @@ export function ActiveSessionButton({
   );
 }
 
-export function RevokeAllOtherSessionButton() {
+export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -986,7 +982,7 @@ export function RevokeAllOtherSessionButton() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.successTo("other sessions", "terminated"));
+          toast.success(message.user.revokeOtherSessions);
           setIsLoading(false);
           router.refresh();
         },
@@ -1038,9 +1034,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            toastMessage.successTo("account", "removed") + " Goodbye!",
-          );
+          toast.success(message.user.success("account", "removed"));
           router.push(signInRoute);
         },
       },
@@ -1058,7 +1052,7 @@ export function DeleteMyAccountButton({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-x-2">
+          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
             <TriangleAlert />
             {dialog.profile.deleteAccount.title}
           </AlertDialogTitle>
@@ -1068,9 +1062,7 @@ export function DeleteMyAccountButton({
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {buttonText.cancel}
-          </AlertDialogCancel>
+          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
@@ -1109,7 +1101,7 @@ export function AdminCreateUserDialog() {
       role: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: zodMessage.confirmPassword,
+      message: message.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -1135,9 +1127,7 @@ export function AdminCreateUserDialog() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            toastMessage.success(`${formData.name} account`, "created"),
-          );
+          toast.success(message.success(`${formData.name} account`, "created"));
           setIsLoading(false);
           form.reset();
           router.refresh();
@@ -1287,12 +1277,7 @@ export function AdminCreateUserDialog() {
             <Separator />
 
             <DialogFooter>
-              <DialogClose asChild>
-                <Button type="button" variant="outline">
-                  {buttonText.cancel}
-                </Button>
-              </DialogClose>
-
+              <DialogClose>{buttonText.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? <Spinner /> : <Icon />}
                 {dialog.user.create.trigger}
@@ -1321,8 +1306,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
     setIsLoading(true);
 
     const newRole = formData.role as Role;
-    if (newRole === role)
-      return toast.info(toastMessage.noChangesTo("role", name));
+    if (newRole === role) return toast.info(message.noChanges(`${name} role`));
 
     authClient.admin.setRole(
       { userId: id, role: newRole },
@@ -1332,7 +1316,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.user.changeRole(name, newRole));
+          toast.success(message.user.changeRole(name, newRole));
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1400,10 +1384,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
             <Separator />
 
             <DialogFooter>
-              <DialogClose className={buttonVariants({ variant: "outline" })}>
-                {buttonText.cancel}
-              </DialogClose>
-
+              <DialogClose>{buttonText.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
                 {dialog.user.changeRole.trigger}
@@ -1416,7 +1397,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
   );
 }
 
-export function AdminTerminateUserSessionDialog({
+export function AdminTerminateUserSessionsDialog({
   id,
   name,
 }: Pick<Session["user"], "id" | "name">) {
@@ -1432,7 +1413,7 @@ export function AdminTerminateUserSessionDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.user.revokeSession(name));
+          toast.success(message.user.revokeUserSession(name));
           setIsLoading(false);
         },
       },
@@ -1496,7 +1477,7 @@ export function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(toastMessage.success(`${name} account`, "removed"));
+          toast.success(message.success(`${name} account`, "removed"));
           setIsLoading(false);
           router.refresh();
         },

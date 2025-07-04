@@ -9,8 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.839.0",
-    "@aws-sdk/s3-request-presigner": "^3.839.0",
+    "@aws-sdk/client-s3": "^3.842.0",
+    "@aws-sdk/s3-request-presigner": "^3.842.0",
     "@hookform/resolvers": "^5.1.1",
     "@tanstack/react-table": "^8.21.3",
     "better-auth": "^1.2.12",
@@ -19,9 +19,8 @@
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.44.2",
-    "drizzle-zod": "^0.8.2",
     "lucide-react": "^0.518.0",
-    "motion": "^12.20.1",
+    "motion": "^12.23.0",
     "next": "^15.3.4",
     "next-themes": "^0.4.6",
     "pg": "^8.16.3",
@@ -36,18 +35,18 @@
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.4",
     "ua-parser-js": "^2.0.4",
-    "zod": "^3.25.67"
+    "zod": "^3.25.71"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@tailwindcss/postcss": "^4.1.11",
-    "@types/node": "^24.0.7",
+    "@types/node": "^24.0.10",
     "@types/pg": "^8.15.4",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@types/ua-parser-js": "^0.7.39",
     "drizzle-kit": "^0.31.4",
-    "eslint": "^9.30.0",
+    "eslint": "^9.30.1",
     "eslint-config-next": "^15.3.4",
     "eslint-plugin-react": "^7.37.5",
     "postcss": "^8.5.6",

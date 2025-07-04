@@ -32,7 +32,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={cn(font.className, "relative")}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          disableTransitionOnChange
+          enableSystem
+        >
           <GridPattern className="stroke-accent/40 dark:stroke-accent/20 -z-1" />
           {children}
           <Toaster position="top-center" closeButton richColors />

@@ -9,15 +9,15 @@ export type FieldType =
   | "array"
   | "object";
 
-export type FileCategory = "all" | "image" | "document";
+export type FileType = "file" | "image" | "document";
 //   | "archive"
 //   | "audio"
 //   | "video";
 
 type MediaProps = Record<
-  FileCategory,
+  FileType,
   {
-    type: string[];
+    mimeType: string[];
     extensions: string[];
     size: { mb: number; byte: number };
     icon: LucideIcon;
@@ -25,15 +25,15 @@ type MediaProps = Record<
 >;
 
 export const mediaMeta: MediaProps = {
-  all: {
-    type: ["*"],
+  file: {
+    mimeType: ["*"],
     extensions: [],
     size: { mb: 2, byte: toByte(2) },
     icon: Upload,
   },
 
   image: {
-    type: [
+    mimeType: [
       "image/png",
       "image/jpg",
       "image/jpeg",
@@ -46,7 +46,7 @@ export const mediaMeta: MediaProps = {
   },
 
   document: {
-    type: [
+    mimeType: [
       "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -61,21 +61,21 @@ export const mediaMeta: MediaProps = {
   },
 
   // archive: {
-  //   type: ["zip", "archive"],
+  //   mimeType: ["zip", "archive"],
   //   extensions: [".zip", ".rar", ".7z"],
   //   size: { mb: 20, byte: toByte(20) },
   //   icon: FileArchive,
   // },
 
   // audio: {
-  //   type: ["audio/"],
+  //   mimeType: ["audio/"],
   //   extensions: [".mp3", ".wav", ".ogg", ".flac"],
   //   size: { mb: 10, byte: toByte(10) },
   //   icon: Headphones,
   // },
 
   // video: {
-  //   type: ["video/"],
+  //   mimeType: ["video/"],
   //   extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
   //   size: { mb: 50, byte: toByte(50) },
   //   icon: Video,

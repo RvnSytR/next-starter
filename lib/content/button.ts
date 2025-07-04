@@ -13,7 +13,8 @@ export const buttonText = {
   save: "Save Changes",
   refresh: "Refresh",
   remove: "Remove",
-  upload: (file: string = "") => `Upload ${file}`,
+  upload: (file: string = "", multiple: boolean = false) =>
+    `Upload ${multiple ? `${file}'s` : file}`,
 
   confirm: "Confirm",
   reset: "Reset",

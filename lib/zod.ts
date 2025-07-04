@@ -1,74 +1,53 @@
-import { RawCreateParams, z } from "zod";
-import { FieldType, FileCategory, mediaMeta } from "./const";
-import { zodMessage } from "./content";
-import { capitalize } from "./utils";
+import { message } from "@/lib/content";
+import { z } from "zod/v4";
+import { FileType, mediaMeta } from "./const";
 
-const zodParams = {
-  create: (thing: string, type?: FieldType) =>
-    ({
-      required_error: zodMessage.required(thing),
-      invalid_type_error: zodMessage.invalidType(thing, type),
-    }) as RawCreateParams,
-};
-
-export const zodFile = (category: FileCategory) => {
-  const fileMedia = mediaMeta[category];
-  const mediaFileType = category !== "all" ? category : "file";
-
+export const zodFile = (type: FileType) => {
+  const { size, mimeType } = mediaMeta[type];
   return z
-    .instanceof(File)
-    .array()
-    .nonempty({ message: zodMessage.atleastOne(mediaFileType) })
-    .refine(
-      (files) =>
-        files.every(
-          ({ type }) =>
-            fileMedia.type.includes("*") || fileMedia.type.includes(type),
-        ),
-      { message: zodMessage.invalidFileType(mediaFileType) },
+    .array(
+      z
+        .file()
+        .min(1)
+        .max(size.byte, { error: message.fileTooLarge(type, size.mb) })
+        .mime(mimeType, { error: message.invalidFileType(type) }),
     )
-    .refine(
-      (files) => files.every((file) => file.size <= fileMedia.size.byte),
-      {
-        message: `${capitalize(mediaFileType)} size should not exceed ${fileMedia.size.mb} MB.`,
-      },
-    );
+    .min(1, { error: message.fileRequired(type) });
 };
 
 export const zodAuth = z.object({
   id: z.string(),
-  role: z.string().nullable().optional(),
-
+  role: z.string().optional(),
   name: z
-    .string(zodParams.create("Name"))
+    .string({ error: message.requiredAndInvalidField("Name", "string") })
     .trim()
-    .min(1, zodMessage.cannotEmpty("Name")),
-
+    .min(1, { error: message.tooShort("Name", 1) }),
   email: z
-    .string(zodParams.create("Email"))
+    .email({ error: message.invalidEmail })
     .trim()
-    .email(zodMessage.email)
-    .min(1, zodMessage.cannotEmpty("Email"))
-    .max(255, zodMessage.toLong("Email", 255)),
-
+    .min(1, { error: message.tooShort("Email", 1) })
+    .max(255, { error: message.tooShort("Email", 255) }),
   password: z
-    .string(zodParams.create("Password"))
+    .string({ error: message.requiredAndInvalidField("Password", "string") })
     .trim()
-    .min(1, zodMessage.cannotEmpty("Password"))
-    .min(8, zodMessage.toShort("Password", 8))
-    .max(128, zodMessage.toLong("Password", 128)),
-
+    .min(1, { error: message.tooShort("Password", 1) })
+    .min(8, { error: message.tooShort("Password", 8) })
+    .max(255, { error: message.tooShort("Password", 255) }),
   confirmPassword: z
-    .string(zodParams.create("Confirm password"))
-    .min(1, zodMessage.cannotEmpty("Confirm password")),
-
-  rememberMe: z.boolean(zodParams.create("Remember me", "boolean")),
-
-  revokeOtherSessions: z.boolean(
-    zodParams.create("Sign out from other devices", "boolean"),
-  ),
-
+    .string({
+      error: message.requiredAndInvalidField("Confirm Password", "string"),
+    })
+    .min(1, { error: message.tooShort("Confirm Password", 1) }),
+  rememberMe: z.boolean({
+    error: message.requiredAndInvalidField("Remember Me", "boolean"),
+  }),
+  revokeOtherSessions: z.boolean({
+    error: message.requiredAndInvalidField(
+      "Sign out from other devices",
+      "boolean",
+    ),
+  }),
   isAgree: z
-    .boolean(zodParams.create("Agreement", "boolean"))
-    .refine((v) => v === true, { message: zodMessage.agreement }),
+    .boolean({ error: message.requiredAndInvalidField("Agreement", "boolean") })
+    .refine((v) => v === true, { error: message.user.agreement }),
 });

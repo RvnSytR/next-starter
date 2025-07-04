@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { XIcon } from "lucide-react";
 import { Dialog as DialogPrimitive } from "radix-ui";
+import { buttonVariants } from "./button";
 
 function Dialog({
   ...props
@@ -23,9 +24,16 @@ function DialogPortal({
 }
 
 function DialogClose({
+  className,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-  return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+  return (
+    <DialogPrimitive.Close
+      data-slot="dialog-close"
+      className={cn(buttonVariants({ variant: "outline" }), className)}
+      {...props}
+    />
+  );
 }
 
 function DialogOverlay({

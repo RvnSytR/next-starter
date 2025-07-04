@@ -1,4 +1,4 @@
-import { FileCategory, mediaMeta } from "@/lib/const";
+import { FileType, mediaMeta } from "@/lib/const";
 import { buttonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
@@ -159,7 +159,7 @@ export function InputDateRange({
 export function InputFile({
   value: files,
   onChange,
-  accept = "all",
+  accept = "file",
   maxFileSize: size,
   className,
   placeholder,
@@ -167,7 +167,7 @@ export function InputFile({
 }: Pick<ComponentProps<"input">, "className" | "placeholder" | "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
-  accept?: FileCategory;
+  accept?: FileType;
   maxFileSize?: number;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -185,12 +185,10 @@ export function InputFile({
   };
 
   const changeHandler = (fileList: FileList | null) => {
-    const newFileList = fileList;
-    if (newFileList) {
-      const newFiles = Array.from(newFileList);
-      if (isFiles) onChange([...files, ...newFiles]);
-      else onChange(newFiles.map((f) => f));
-    }
+    if (!fileList) return;
+    const newFiles = Array.from(fileList);
+    if (isFiles) onChange([...files, ...newFiles]);
+    else onChange(newFiles.map((f) => f));
   };
 
   const handleDragEnterAndOver = useCallback((e: DragEvent<HTMLElement>) => {
@@ -220,7 +218,7 @@ export function InputFile({
           tabIndex={-1}
           ref={inputRef}
           multiple={multiple}
-          accept={fileMedia.type.join(", ")}
+          accept={fileMedia.mimeType.join(", ")}
           className={cn(
             "absolute size-full opacity-0",
             isFiles ? "z-[-1]" : "z-0",
@@ -253,8 +251,7 @@ export function InputFile({
                   if (inputRef.current) inputRef.current.click();
                 }}
               >
-                <Upload />
-                Add {accept === "all" ? "files" : accept}
+                <Upload /> Add {multiple ? `${accept}'s` : accept}
               </Button>
               <Button
                 type="button"
@@ -279,8 +276,8 @@ export function InputFile({
               const isImage = file.type.startsWith("image/");
               const isInvalid =
                 file.size > fileSize.byte ||
-                (!fileMedia.type.includes("*") &&
-                  !fileMedia.type.includes(file.type));
+                (!fileMedia.mimeType.includes("*") &&
+                  !fileMedia.mimeType.includes(file.type));
 
               return (
                 <div

@@ -18,7 +18,7 @@ import {
 import {
   AdminChangeUserRoleDialog,
   AdminRemoveUserDialog,
-  AdminTerminateUserSessionDialog,
+  AdminTerminateUserSessionsDialog,
   UserAvatar,
   VerifiedUserBadge,
 } from "../modules/auth";
@@ -182,7 +182,7 @@ export const getUserColumn = (currentUserId: string) => [
                 Impersonate Session
               </Button>
 
-              <AdminTerminateUserSessionDialog {...row.original} />
+              <AdminTerminateUserSessionsDialog {...row.original} />
 
               <Button size="sm" variant="ghost_destructive" disabled>
                 <Ban />

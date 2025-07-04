@@ -1,6 +1,6 @@
 "use server";
 
-import { FileCategory, mediaMeta } from "@/lib/const";
+import { FileType, mediaMeta } from "@/lib/const";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -12,13 +12,13 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME!;
-const S3_ENDPOINT = process.env.S3_ENDPOINT!;
+const bucket = process.env.S3_BUCKET_NAME!;
+const endpoint = process.env.S3_ENDPOINT!;
 const region = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
 
 const s3 = new S3Client({
+  endpoint,
   region: region.jakarta,
-  endpoint: process.env.S3_ENDPOINT!,
   forcePathStyle: true,
   credentials: {
     accessKeyId: process.env.S3_ACCESS_KEY!,
@@ -26,61 +26,63 @@ const s3 = new S3Client({
   },
 });
 
-export async function uploadFile({
-  formData,
-  names,
-  nameAskey = false,
-  contentType = "all",
+export async function uploadFiles({
+  files,
+  contentType,
   ...props
 }: Omit<PutObjectCommandInput, "Key" | "Bucket" | "Body" | "ContentType"> & {
-  formData: FormData;
-  names: string[];
-  nameAskey?: boolean;
-  contentType?: FileCategory;
+  files: File[] | { key: string; file: File }[];
+  contentType: FileType;
 }): Promise<{ key: string; res: PutObjectCommandOutput }[]> {
-  return await Promise.all(
-    names.map(async (name) => {
-      const file = formData.get(name) as File;
-      const key = nameAskey ? name : file.name;
-      return {
-        key: key,
-        res: await s3.send(
-          new PutObjectCommand({
-            Key: key,
-            Bucket: S3_BUCKET_NAME,
-            Body: Buffer.from(await file.arrayBuffer()),
-            ContentType: mediaMeta[contentType].type.join(", "),
-            ...props,
-          }),
-        ),
-      };
+  return Promise.all(
+    files.map(async (item) => {
+      let key: string;
+      let file: File;
+
+      if ("key" in item && "file" in item) {
+        key = item.key;
+        file = item.file;
+      } else {
+        key = item.name;
+        file = item;
+      }
+
+      const command = new PutObjectCommand({
+        Key: key,
+        Bucket: bucket,
+        Body: Buffer.from(await file.arrayBuffer()),
+        ContentType: mediaMeta[contentType].mimeType.join(", "),
+        ...props,
+      });
+
+      return { key, res: await s3.send(command) };
     }),
   );
 }
 
 export async function listFiles() {
-  return await s3.send(new ListObjectsV2Command({ Bucket: S3_BUCKET_NAME }));
+  return await s3.send(new ListObjectsV2Command({ Bucket: bucket }));
+}
+
+export async function getFileSignedUrl(key: string) {
+  return await getSignedUrl(
+    s3,
+    new GetObjectCommand({ Bucket: bucket, Key: key }),
+  );
+}
+
+export async function getFilePublicUrl(key: string) {
+  return `${endpoint}/${bucket}/${key}`;
+}
+
+export async function getFileKeyFromPublicUrl(key: string) {
+  return key.replace(`${endpoint}/${bucket}/`, "");
 }
 
 export async function deleteFile(key: string[]) {
   return Promise.all(
     key.map((item) =>
-      s3.send(new DeleteObjectCommand({ Bucket: S3_BUCKET_NAME, Key: item })),
+      s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: item })),
     ),
   );
-}
-
-export async function getFilePreSignedUrl(key: string) {
-  return await getSignedUrl(
-    s3,
-    new GetObjectCommand({ Bucket: S3_BUCKET_NAME, Key: key }),
-  );
-}
-
-export async function getFilePublicUrl(key: string) {
-  return `${S3_ENDPOINT}/${S3_BUCKET_NAME}/${key}`;
-}
-
-export async function getFileKeyFromPublicUrl(key: string) {
-  return key.replace(`${S3_ENDPOINT}/${S3_BUCKET_NAME}/`, "");
 }

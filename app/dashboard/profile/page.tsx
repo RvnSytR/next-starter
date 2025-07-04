@@ -4,7 +4,7 @@ import {
   ChangePasswordForm,
   DeleteMyAccountButton,
   PersonalInformation,
-  RevokeAllOtherSessionButton,
+  RevokeOtherSessionsButton,
   VerifiedUserBadge,
 } from "@/components/modules/auth";
 import {
@@ -85,7 +85,7 @@ export default async function Page() {
         <Separator />
 
         <CardFooter>
-          <RevokeAllOtherSessionButton />
+          <RevokeOtherSessionsButton />
         </CardFooter>
       </Card>
 
