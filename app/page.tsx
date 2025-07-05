@@ -1,5 +1,5 @@
 import { LinkLoader } from "@/components/custom/custom-button";
-import { References } from "@/components/modules/references";
+import { Example } from "@/components/modules/example";
 import { R } from "@/components/other-ui/r";
 import { ThemeToggle } from "@/components/other/theme";
 import { Button } from "@/components/ui/button";
@@ -28,7 +28,7 @@ export default function Page() {
         </div>
       </div>
 
-      <References className="animate-fade-up delay-1000" />
+      <Example />
     </div>
   );
 }

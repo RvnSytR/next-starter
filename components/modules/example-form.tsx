@@ -2,7 +2,7 @@
 
 import { buttonText } from "@/lib/content";
 import { formatNumeric, formatPhone, sanitizeNumber } from "@/lib/utils";
-import { zodFile } from "@/lib/zod";
+import { zodDateRange, zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Club,
@@ -40,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+// import { uploadFiles } from "@/server/s3";
 
 export function ExampleForm() {
   const card = ["Spade", "Heart", "Diamond", "Club"] as const;
@@ -62,14 +63,18 @@ export function ExampleForm() {
     },
   ];
 
+  const fileType = "image";
   const schema = z.object({
     text: z.string().min(1),
     numeric: z.number(),
     phone: z.number(),
     date: z.date(),
+    dateMultiple: z.array(z.date()),
+    dateRange: zodDateRange,
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile("image"),
+    file: zodFile(fileType),
+    // file: zodFile("file", { optional: true }),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -78,7 +83,9 @@ export function ExampleForm() {
       text: "Some Text",
       numeric: 100000,
       phone: 81234567890,
-      date: new Date(),
+      // date: new Date(),
+      // dateMultiple: [new Date()],
+      // dateRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "Spade",
       radio: "Spade",
       file: [],
@@ -87,13 +94,15 @@ export function ExampleForm() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     console.log(formData.file);
+    // const res = uploadFiles({ files: formData.file, contentType: fileType });
     toast(<p>{JSON.stringify(formData, null, 2)}</p>);
   };
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="w-full">
-        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        {/* General */}
+        <div className="grid gap-x-2 gap-y-4 md:grid-cols-4">
           {/* Text */}
           <FormField
             control={form.control}
@@ -115,7 +124,7 @@ export function ExampleForm() {
           <FormField
             control={form.control}
             name="numeric"
-            render={({ field }) => (
+            render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Numeric</FormLabel>
                 <FormFloating icon="Rp.">
@@ -123,10 +132,9 @@ export function ExampleForm() {
                     <Input
                       type="text"
                       inputMode="numeric"
-                      value={formatNumeric(field.value)}
-                      onChange={(e) =>
-                        field.onChange(sanitizeNumber(e.target.value))
-                      }
+                      value={formatNumeric(value)}
+                      onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                      {...rest}
                     />
                   </FormControl>
                 </FormFloating>
@@ -139,7 +147,7 @@ export function ExampleForm() {
           <FormField
             control={form.control}
             name="phone"
-            render={({ field }) => (
+            render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Phone</FormLabel>
                 <FormFloating icon="+62" extraPadding>
@@ -147,26 +155,12 @@ export function ExampleForm() {
                     <Input
                       type="text"
                       inputMode="numeric"
-                      value={formatPhone(field.value)}
-                      onChange={(e) => {
-                        field.onChange(sanitizeNumber(e.target.value));
-                      }}
+                      value={formatPhone(value)}
+                      onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                      {...rest}
                     />
                   </FormControl>
                 </FormFloating>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Date */}
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Date</FormLabel>
-                <InputDate selected={field.value} onSelect={field.onChange} />
                 <FormMessage />
               </FormItem>
             )}
@@ -201,13 +195,68 @@ export function ExampleForm() {
           />
         </div>
 
-        <div className="flex flex-col gap-x-2 gap-y-4 lg:flex-row">
+        {/* Dates */}
+        <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
+          {/* Date Single */}
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="label-required">Date Single</FormLabel>
+                <InputDate
+                  mode="single"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Date Multiple */}
+          <FormField
+            control={form.control}
+            name="dateMultiple"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="label-required">Date Multiple</FormLabel>
+                <InputDate
+                  mode="multiple"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Date Range */}
+          <FormField
+            control={form.control}
+            name="dateRange"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="label-required">Date Range</FormLabel>
+                <InputDate
+                  mode="range"
+                  selected={field.value}
+                  onSelect={field.onChange}
+                />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* Radio */}
+        <div className="grid gap-x-2 gap-y-4 md:grid-cols-2">
           {/* Custom Radio Group */}
           <FormField
             control={form.control}
             name="radio"
             render={({ field }) => (
-              <FormItem className="col-span-3">
+              <FormItem>
                 <FormLabel className="label-required">
                   Custom Radio Group
                 </FormLabel>
@@ -229,16 +278,17 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Radio Group</FormLabel>
-
-                <RadioGroup value={field.value} onValueChange={field.onChange}>
+                <RadioGroup
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="h-full"
+                >
                   {selectAndRadioData.map((item, index) => (
-                    <FormItem key={index} className="flex items-center">
+                    <FormItem key={index} className="flex-row items-center">
                       <FormControl>
                         <RadioGroupItem value={item.value} />
                       </FormControl>
-                      <FormLabel className="font-normal">
-                        {item.value}
-                      </FormLabel>
+                      <FormLabel>{item.value}</FormLabel>
                     </FormItem>
                   ))}
                 </RadioGroup>
@@ -248,14 +298,14 @@ export function ExampleForm() {
           />
         </div>
 
-        {/* File */}
+        {/* Files */}
         <FormField
           control={form.control}
           name="file"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">File</FormLabel>
-              <InputFile accept="image" multiple {...field} />
+              <InputFile accept={fileType} multiple {...field} />
               <FormMessage />
             </FormItem>
           )}
@@ -276,4 +326,8 @@ export function ExampleForm() {
       </form>
     </Form>
   );
+}
+
+export function ExampleInputFile() {
+  return;
 }

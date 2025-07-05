@@ -9,12 +9,14 @@ import { ReactNode, useState } from "react";
 import { Spinner } from "../other/icon";
 import { Button, ButtonProps } from "../ui/button";
 
-type LoadingProps = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
+type LoadingIcon = { defaultIcon?: ReactNode; loadingIcon?: ReactNode };
+type LoadingIconWihtText = LoadingIcon & { text?: string };
+type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 
 export function LinkLoader({
   defaultIcon,
   loadingIcon = <Spinner />,
-}: LoadingProps) {
+}: LoadingIcon) {
   const { pending } = useLinkStatus();
   return pending ? loadingIcon : defaultIcon;
 }
@@ -23,15 +25,16 @@ export function RefreshButton({
   text = buttonText.refresh,
   defaultIcon = <Spinner spinnerType="refresh" animate={false} />,
   loadingIcon = <Spinner spinnerType="refresh" />,
-  onClick,
   disabled,
+  onClick,
   ...props
-}: LoadingProps & Omit<ButtonProps, "children"> & { text?: string }) {
+}: ButtonPropsWithoutChildren & LoadingIconWihtText) {
   const router = useRouter();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   return (
     <Button
+      disabled={refreshing || disabled}
       onClick={async (e) => {
         onClick?.(e);
         setRefreshing(true);
@@ -39,7 +42,6 @@ export function RefreshButton({
         router.refresh();
         setRefreshing(false);
       }}
-      disabled={refreshing || disabled}
       {...props}
     >
       {refreshing ? loadingIcon : defaultIcon}
@@ -49,15 +51,18 @@ export function RefreshButton({
 }
 
 export function CopyButton({
-  size = "icon",
   value,
+  text,
+  size,
+  disabled,
   onClick,
   ...props
-}: Omit<ButtonProps, "children"> & { value: string }) {
+}: ButtonPropsWithoutChildren & { value: string; text?: string }) {
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <Button
-      size={size}
+      size={size ?? (text ? "default" : "icon")}
+      disabled={copied || disabled}
       onClick={async (e) => {
         onClick?.(e);
         setCopied(true);
@@ -68,13 +73,16 @@ export function CopyButton({
       {...props}
     >
       <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
-      <Copy className={cn("transition", copied ? "scale-0" : "scale-100")} />
-      <Check
-        className={cn(
-          "absolute transition",
-          copied ? "scale-100" : "- scale-0",
-        )}
-      />
+      <div className="inline-flex">
+        <Copy className={cn("transition", copied ? "scale-0" : "scale-100")} />
+        <Check
+          className={cn(
+            "absolute transition",
+            copied ? "scale-100" : "scale-0",
+          )}
+        />
+      </div>
+      {text}
     </Button>
   );
 }
@@ -84,7 +92,7 @@ export function ScrollToTopButton({
   className,
   onClick,
   ...props
-}: Omit<ButtonProps, "children">) {
+}: ButtonPropsWithoutChildren) {
   return (
     <Button
       size={size}

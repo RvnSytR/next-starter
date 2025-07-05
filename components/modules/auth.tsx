@@ -281,7 +281,7 @@ export function SignInForm() {
           control={form.control}
           name="rememberMe"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-2">
+            <FormItem className="flex-row">
               <FormControl>
                 <Checkbox
                   checked={field.value}
