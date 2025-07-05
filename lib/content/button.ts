@@ -1,12 +1,20 @@
+import { FileType } from "../const";
+
 export const buttonText = {
   signOn: (social: string) => `Continue with ${social}`,
   signIn: "Sign In",
   signUp: "Create Account",
   signOut: "Sign Out",
 
-  datePicker: "Pick a Date",
+  datePicker: {
+    single: "Select Date",
+    multiple: "Select Dates",
+    range: "Select Date Range",
+  },
+
   fileInput: {
-    placeholder: "Drag & drop a file here, or click to upload",
+    placeholder: (fileType: FileType) =>
+      `Drag & drop a ${fileType} here or click to upload`,
     size: (mb: number) => `Up to ${mb} MB`,
   },
 

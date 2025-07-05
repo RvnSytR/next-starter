@@ -35,7 +35,7 @@ export default function Page() {
 
         <CardContent className="flex flex-col gap-y-4">
           <Tabs defaultValue="sign-in">
-            <TabsList>
+            <TabsList className="w-full">
               <TabsTrigger value="sign-in">Sign In</TabsTrigger>
               <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
             </TabsList>
@@ -48,7 +48,7 @@ export default function Page() {
             </TabsContent>
           </Tabs>
 
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-x-4">
             <div className="grow border-t before:border-t" />
             <small className="text-muted-foreground text-xs font-medium">
               Or

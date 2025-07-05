@@ -31,7 +31,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(font.className, "relative")}>
+      <body className={cn(font.className, "relative min-h-dvh")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

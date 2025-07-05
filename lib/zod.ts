@@ -2,17 +2,35 @@ import { message } from "@/lib/content";
 import { z } from "zod/v4";
 import { FileType, mediaMeta } from "./const";
 
-export const zodFile = (type: FileType) => {
+export const zodDateRange = z.object(
+  {
+    from: z.date({ error: message.invalid.dateRange.from }),
+    to: z.date({ error: message.invalid.dateRange.to }),
+  },
+  { error: message.invalid.dateRange.field },
+);
+
+export const zodFile = (
+  type: FileType,
+  options?: { optional?: boolean; max?: number },
+) => {
   const { size, mimeType } = mediaMeta[type];
-  return z
-    .array(
-      z
-        .file()
-        .min(1)
-        .max(size.byte, { error: message.fileTooLarge(type, size.mb) })
-        .mime(mimeType, { error: message.invalidFileType(type) }),
-    )
-    .min(1, { error: message.fileRequired(type) });
+  const maxFileSize = options?.max ?? size.byte;
+
+  let schema = z.array(
+    z
+      .file()
+      .min(1)
+      .max(maxFileSize, { error: message.fileTooLarge(type, size.mb) })
+      .mime(mimeType, { error: message.invalid.fileType(type) }),
+  );
+
+  if (!options?.optional)
+    schema = schema.min(1, { error: message.fileRequired(type) });
+
+  return schema.refine((f) => f.every(({ size }) => size <= maxFileSize), {
+    error: message.fileTooLarge(type, size.mb),
+  });
 };
 
 export const zodAuth = z.object({
@@ -23,7 +41,7 @@ export const zodAuth = z.object({
     .trim()
     .min(1, { error: message.tooShort("Name", 1) }),
   email: z
-    .email({ error: message.invalidEmail })
+    .email({ error: message.invalid.email })
     .trim()
     .min(1, { error: message.tooShort("Email", 1) })
     .max(255, { error: message.tooShort("Email", 255) }),

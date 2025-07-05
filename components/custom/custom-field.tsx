@@ -3,6 +3,7 @@ import { buttonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   ComponentProps,
   DragEvent,
@@ -10,14 +11,13 @@ import {
   useCallback,
   useRef,
 } from "react";
-import { PropsRangeRequired, PropsSingleRequired } from "react-day-picker";
 import { Button } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
-import { CardTitle } from "../ui/card";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
+import { Separator } from "../ui/separator";
 
 export function FormFloating({
   icon,
@@ -83,74 +83,49 @@ export function InputRadioGroup({
 }
 
 export function InputDate({
-  selected,
-  label,
+  placeholder = buttonText.datePicker.single,
   ...props
-}: Omit<Extract<CalendarProps, PropsSingleRequired>, "mode" | "required"> & {
-  label?: string;
-}) {
+}: CalendarProps & { placeholder?: string }) {
+  let isSelected = false;
+
+  if (props.mode) {
+    const { mode, selected } = props;
+    placeholder = buttonText.datePicker[mode];
+
+    if (selected) isSelected = true;
+    if (mode === "single" && selected) {
+      placeholder = formatDate(selected, "PPPP");
+    } else if (mode === "multiple" && selected) {
+      const maxDisplay = 2;
+      const formattedDates = selected.map((date) => formatDate(date, "PPP"));
+
+      if (selected.length <= maxDisplay) {
+        placeholder = formattedDates.join(", ");
+      } else {
+        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} more`;
+      }
+    } else if (mode === "range" && selected && selected.from) {
+      placeholder = selected.to
+        ? `${formatDate(selected.from, "PPP")} - ${formatDate(selected.to, "PPP")}`
+        : formatDate(selected.from, "PPP");
+    }
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <FormControl>
           <Button
             variant="outline"
-            className={cn(!selected && "text-muted-foreground")}
+            className={cn(!isSelected && "text-muted-foreground")}
           >
-            <CalendarIcon />
-            {selected ? (
-              formatDate(selected, "PPPP")
-            ) : (
-              <span>{label ?? buttonText.datePicker}</span>
-            )}
+            <CalendarIcon /> {placeholder}
           </Button>
         </FormControl>
       </PopoverTrigger>
 
       <PopoverContent className="size-fit p-0">
-        <Calendar mode="single" required selected={selected} {...props} />
-      </PopoverContent>
-    </Popover>
-  );
-}
-
-export function InputDateRange({
-  selected,
-  numberOfMonths = 2,
-  label,
-  ...props
-}: Omit<Extract<CalendarProps, PropsRangeRequired>, "mode" | "required"> & {
-  label?: string;
-}) {
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          className={cn(!selected && "text-muted-foreground")}
-        >
-          <CalendarIcon />
-          {selected?.from ? (
-            selected.to ? (
-              `${formatDate(selected.from, "PPP")} - ${formatDate(selected.to, "PPP")}`
-            ) : (
-              formatDate(selected.from, "PPP")
-            )
-          ) : (
-            <span>{label ?? buttonText.datePicker}</span>
-          )}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="size-fit p-0">
-        <Calendar
-          mode="range"
-          required
-          selected={selected}
-          defaultMonth={selected?.from}
-          numberOfMonths={numberOfMonths}
-          {...props}
-        />
+        <Calendar captionLayout="dropdown" {...props} />
       </PopoverContent>
     </Popover>
   );
@@ -205,10 +180,16 @@ export function InputFile({
   return (
     <div
       tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          inputRef.current?.click();
+        }
+      }}
       className={cn(
         "border-input dark:bg-input/30 relative rounded-md border bg-transparent shadow-xs transition-[border]",
-        "focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
-        !isFiles && "hover:border-muted-foreground hover:cursor-pointer",
+        "group focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
+        !isFiles && "hover:border-foreground hover:cursor-pointer",
         className,
       )}
     >
@@ -220,7 +201,7 @@ export function InputFile({
           multiple={multiple}
           accept={fileMedia.mimeType.join(", ")}
           className={cn(
-            "absolute size-full opacity-0",
+            "absolute size-full opacity-0 group-hover:cursor-pointer",
             isFiles ? "z-[-1]" : "z-0",
           )}
           onChange={({ target }) => changeHandler(target.files)}
@@ -239,20 +220,10 @@ export function InputFile({
           }}
           className="flex flex-col gap-y-4 p-4"
         >
-          <div className="flex items-center justify-between gap-x-2">
-            <CardTitle>Total Files: {files.length}</CardTitle>
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+            <p>Total {`${accept}s : ${files.length}`}</p>
 
-            <div className="flex gap-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                className="h-8"
-                onClick={() => {
-                  if (inputRef.current) inputRef.current.click();
-                }}
-              >
-                <Upload /> Add {multiple ? `${accept}'s` : accept}
-              </Button>
+            <div className="flex gap-x-2 *:grow">
               <Button
                 type="button"
                 variant="outline_destructive"
@@ -262,13 +233,25 @@ export function InputFile({
                 <X />
                 {buttonText.clear}
               </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="h-8"
+                onClick={() => {
+                  if (inputRef.current) inputRef.current.click();
+                }}
+              >
+                <Upload /> Add {accept}
+              </Button>
             </div>
           </div>
+
+          <Separator className="flex md:hidden" />
 
           <div
             className={cn(
               multiple
-                ? "grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6"
+                ? "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6"
                 : "flex justify-center",
             )}
           >
@@ -279,13 +262,14 @@ export function InputFile({
                 (!fileMedia.mimeType.includes("*") &&
                   !fileMedia.mimeType.includes(file.type));
 
+              const url = URL.createObjectURL(file);
+
               return (
                 <div
                   key={index}
                   className={cn(
                     "relative flex flex-col rounded-md border shadow-xs",
                     !multiple && "max-w-1/2 md:max-w-1/4 lg:max-w-1/6",
-                    isInvalid && "border-destructive",
                   )}
                 >
                   <Button
@@ -300,35 +284,35 @@ export function InputFile({
 
                   {isImage ? (
                     <Image
-                      src={URL.createObjectURL(file)}
+                      src={url}
                       alt={file.name}
                       className="aspect-square size-full rounded-t-md object-cover"
                       width={100}
                       height={100}
                     />
                   ) : (
-                    <div className="bg-accent flex aspect-square size-full items-center justify-center">
-                      <div className="rounded-full border p-3">
-                        <Icon />
-                      </div>
+                    <div className="bg-accent flex aspect-square size-full items-center justify-center rounded-t-md">
+                      <Icon className="size-5" />
                     </div>
                   )}
 
-                  <div className="flex flex-col gap-1 border-t p-3">
-                    <small
+                  <div className="text-muted-foreground flex flex-col items-start gap-0.5 border-t p-2.5 break-all">
+                    <Link
+                      href={url}
+                      target="_blank"
                       className={cn(
-                        "truncate font-medium",
-                        isInvalid && "text-destructive",
+                        "line-clamp-1 text-sm font-medium",
+                        isInvalid
+                          ? "text-destructive"
+                          : "hover:text-foreground",
                       )}
                     >
                       {file.name}
-                    </small>
+                    </Link>
                     <small
                       className={cn(
-                        "truncate text-xs",
-                        isInvalid
-                          ? "text-destructive"
-                          : "text-muted-foreground",
+                        "line-clamp-1 text-xs",
+                        isInvalid && "text-destructive",
                       )}
                     >
                       {toMegabytes(file.size).toFixed(2)} MB
@@ -341,20 +325,23 @@ export function InputFile({
         </div>
       ) : (
         <div className="flex flex-col items-center gap-y-4 px-4 pt-8 pb-10 text-center">
-          <div className="rounded-full border p-3">
+          <div className="group-hover:text-foreground group-hover:border-muted-foreground group-focus:border-muted-foreground text-muted-foreground rounded-full border p-3 transition">
             <Icon />
           </div>
 
           <div className="flex flex-col items-center gap-y-2">
             <small className="font-medium">
-              {placeholder ?? buttonText.fileInput.placeholder}
+              {placeholder ?? buttonText.fileInput.placeholder(accept)}
             </small>
 
             <small className="text-muted-foreground flex items-center text-xs">
               {buttonText.fileInput.size(fileSize.mb)}
-              <Dot />
-              {fileMedia.extensions.length > 0 &&
-                `( ${fileMedia.extensions.join(" ")} )`}
+              {fileMedia.extensions.length > 0 && (
+                <>
+                  <Dot />
+                  {`( ${fileMedia.extensions.join(" ")} )`}
+                </>
+              )}
             </small>
           </div>
         </div>

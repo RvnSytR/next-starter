@@ -2,7 +2,7 @@
 
 import { filterFn } from "@/lib/filters";
 import { adminRoles, Role, rolesMeta } from "@/lib/permission";
-import { capitalize, formatDate } from "@/lib/utils";
+import { capitalize, cn, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
@@ -28,12 +28,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const HeaderButton = ({ children, ...props }: ButtonProps) => {
+const HeaderButton = ({ className, children, ...props }: ButtonProps) => {
   return (
     <Button
       size="sm"
       variant="ghost"
-      className="h-7 w-full justify-between"
+      className={cn("h-7 w-full justify-between", className)}
       {...props}
     >
       {children}
@@ -54,7 +54,7 @@ export const getUserColumn = (currentUserId: string) => [
     id: "Avatar",
     header: "Avatar",
     cell: ({ row }) => (
-      <div className="flex justify-start">
+      <div className="flex justify-center">
         <UserAvatar
           {...row.original}
           className="size-20"
