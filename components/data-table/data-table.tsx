@@ -22,15 +22,14 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Search,
   Settings2,
 } from "lucide-react";
 import { useState } from "react";
 import { RefreshButton } from "../custom/custom-button";
-import { FormFloating } from "../custom/custom-field";
 import { Button, buttonVariants } from "../ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -38,7 +37,6 @@ import {
   CardTitle,
 } from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -57,6 +55,7 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { DataTableSearch } from "./data-table-client";
 import {
   ActiveFilters,
   ActiveFiltersMobileContainer,
@@ -69,8 +68,9 @@ type DataTableProps<TData> = {
   columns: ColumnDef<TData, any>[];
   data: TData[];
 };
-type TableProps<TData> = { table: DataTableType<TData> };
-type ToolBoxProps = {
+
+export type TableProps<TData> = { table: DataTableType<TData> };
+export type ToolBoxProps = {
   withRefresh?: boolean;
   searchPlaceholder?: string;
   children?: React.ReactNode;
@@ -132,12 +132,9 @@ export function DataTable<TData>({
 
   return (
     <Card className={className}>
-      <CardHeader action>
-        <div className="space-y-1.5">
-          <CardTitle>{title}</CardTitle>
-          <CardDescription>{desc}</CardDescription>
-        </div>
-
+      <CardHeader>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{desc}</CardDescription>
         <ToolBox table={table} {...props} />
       </CardHeader>
 
@@ -229,72 +226,62 @@ export function DataTable<TData>({
 function ToolBox<TData>({
   table,
   withRefresh = false,
-  searchPlaceholder = "Search Something",
+  searchPlaceholder,
   children,
 }: TableProps<TData> & ToolBoxProps) {
   return (
-    <div className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
+    <CardAction className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
       {children}
 
       <div className="grid grid-cols-2 gap-x-2 lg:flex">
         <FilterSelector table={table} />
-
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button size="sm" variant="outline">
-              <Settings2 />
-              View
-            </Button>
-          </PopoverTrigger>
-
-          <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
-            {table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column, index) => {
-                const cbId = `cb${column.id}`;
-                return (
-                  <Label
-                    key={index}
-                    htmlFor={cbId}
-                    className={cn(
-                      buttonVariants({ variant: "ghost", size: "sm" }),
-                      "justify-start gap-x-2 p-2 capitalize",
-                    )}
-                  >
-                    <Checkbox
-                      id={cbId}
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    />
-
-                    <small className="font-medium">{column.id}</small>
-                  </Label>
-                );
-              })}
-          </PopoverContent>
-        </Popover>
+        <View table={table} />
       </div>
 
       <div className="grid grid-cols-3 gap-x-2 lg:flex">
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
-
-        <FormFloating
-          icon={<Search />}
-          className={withRefresh ? "col-span-2" : "col-span-3"}
-        >
-          <Input
-            type="search"
-            placeholder={searchPlaceholder}
-            value={table.getState().globalFilter}
-            onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-            className="h-8"
-          />
-        </FormFloating>
+        <DataTableSearch table={table} searchPlaceholder={searchPlaceholder} />
       </div>
-    </div>
+    </CardAction>
+  );
+}
+
+function View<TData>({ table }: TableProps<TData>) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button size="sm" variant="outline">
+          <Settings2 /> View
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
+        {table
+          .getAllColumns()
+          .filter((column) => column.getCanHide())
+          .map((column, index) => {
+            const cbId = `cb${column.id}`;
+            return (
+              <Label
+                key={index}
+                htmlFor={cbId}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "justify-start gap-x-2 p-2 capitalize",
+                )}
+              >
+                <Checkbox
+                  id={cbId}
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                />
+
+                <small className="font-medium">{column.id}</small>
+              </Label>
+            );
+          })}
+      </PopoverContent>
+    </Popover>
   );
 }
 

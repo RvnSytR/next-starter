@@ -45,7 +45,7 @@ import {
 import { cn, formatDate, take, uniq } from "@/lib/utils";
 import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import { isEqual } from "date-fns";
-import { ArrowRight, Ellipsis, Filter, FilterXIcon, X } from "lucide-react";
+import { ArrowRight, Ellipsis, FilterXIcon, ListFilter, X } from "lucide-react";
 import {
   cloneElement,
   isValidElement,
@@ -237,7 +237,7 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
     >
       <PopoverTrigger asChild>
         <Button size="sm" variant="outline">
-          <Filter /> Filter
+          <ListFilter /> Filter
         </Button>
       </PopoverTrigger>
 

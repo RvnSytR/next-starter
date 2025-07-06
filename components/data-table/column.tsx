@@ -1,7 +1,7 @@
 "use client";
 
 import { filterFn } from "@/lib/filters";
-import { adminRoles, Role, rolesMeta } from "@/lib/permission";
+import { Role, rolesMeta } from "@/lib/permission";
 import { capitalize, cn, formatDate } from "@/lib/utils";
 import { createColumnHelper } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
@@ -20,25 +20,27 @@ import {
   AdminRemoveUserDialog,
   AdminTerminateUserSessionsDialog,
   UserAvatar,
-  VerifiedUserBadge,
+  UserRoleBadge,
+  UserVerifiedBadge,
 } from "../modules/auth";
 import { Badge } from "../ui/badge";
 import { Button, ButtonProps } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const HeaderButton = ({ className, children, ...props }: ButtonProps) => {
   return (
-    <Button
-      size="sm"
-      variant="ghost"
-      className={cn("h-7 w-full justify-between", className)}
-      {...props}
-    >
-      {children}
-      <ArrowUpDown />
-    </Button>
+    <div className="flex justify-start">
+      <Button
+        size="sm"
+        variant="ghost"
+        className={cn("h-7 justify-between", className)}
+        {...props}
+      >
+        {children}
+        <ArrowUpDown />
+      </Button>
+    </div>
   );
 };
 
@@ -99,28 +101,12 @@ export const getUserColumn = (currentUserId: string) => [
         Role
       </HeaderButton>
     ),
-    cell: ({ row }) => {
-      const role = row.original.role! as Role;
-      const isAdmin = adminRoles.includes(role);
-      const { displayName, icon: RoleIcon, desc } = rolesMeta[role];
-      return (
-        <div className="flex flex-col gap-2">
-          {row.original.emailVerified && <VerifiedUserBadge />}
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge
-                variant={isAdmin ? "outline_primary" : "outline"}
-                className="capitalize"
-              >
-                <RoleIcon />
-                {displayName ?? role}
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>{desc}</TooltipContent>
-          </Tooltip>
-        </div>
-      );
-    },
+    cell: ({ row }) => (
+      <div className="flex flex-col gap-1.5">
+        {row.original.emailVerified && <UserVerifiedBadge />}
+        <UserRoleBadge role={row.original.role as Role} />
+      </div>
+    ),
     filterFn: filterFn("option"),
     meta: {
       displayName: "Role",
@@ -153,7 +139,11 @@ export const getUserColumn = (currentUserId: string) => [
     header: "Action",
     cell: ({ row }) => {
       if (row.original.id === currentUserId) {
-        return <Badge variant="outline">Current User</Badge>;
+        return (
+          <div className="flex justify-center">
+            <Badge variant="outline">Current User</Badge>
+          </div>
+        );
       }
 
       return (

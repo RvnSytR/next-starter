@@ -18,24 +18,19 @@ export function Section({
     <>
       <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
-          <SidebarTrigger className="hidden md:flex" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 hidden h-4 md:flex"
-          />
+          <SidebarTrigger />
+          <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
 
         <div className="flex items-center gap-x-2">
           <ThemeToggle />
-          <Separator orientation="vertical" className="flex h-4 md:hidden" />
-          <SidebarTrigger className="flex md:hidden" />
         </div>
       </header>
 
       <div
         className={cn(
-          "relative z-10 flex flex-1 flex-col gap-y-4 p-4",
+          "relative z-10 container flex flex-1 flex-col gap-y-4 py-4",
           className,
         )}
       >

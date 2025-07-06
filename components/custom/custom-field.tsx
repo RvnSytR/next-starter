@@ -32,7 +32,7 @@ export function FormFloating({
   return (
     <div
       className={cn(
-        "relative h-fit [&_input]:pl-9 [&_svg:not([class*='size-'])]:size-4",
+        "relative h-fit [&_svg:not([class*='size-'])]:size-4",
         extraPadding ? "[&_input]:pl-11" : "[&_input]:pl-9",
         className,
       )}

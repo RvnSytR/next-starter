@@ -252,12 +252,12 @@
   margin-inline: auto;
   padding-inline: 1rem;
 
-  @media (width >=--theme(--breakpoint-sm)) {
+  @media (width >= --theme(--breakpoint-sm)) {
     max-width: none;
   }
 
-  @media (width >=1400px) {
-    max-width: 1400px;
+  @media (width >= 1440px) {
+    max-width: 1440px;
   }
 }
 
@@ -271,7 +271,7 @@
   }
 
   h1 {
-    @apply text-4xl leading-tight font-extrabold lg:text-5xl;
+    @apply text-4xl leading-tight font-extrabold text-balance lg:text-5xl;
   }
 
   h2 {
@@ -304,7 +304,7 @@
   }
 
   code {
-    @apply bg-muted rounded px-2 py-1 font-mono text-sm;
+    @apply bg-accent rounded-md px-2 py-1 font-mono text-sm;
   }
 
   form {
@@ -323,5 +323,9 @@
 
   .label-required {
     @apply after:text-destructive after:content-['*'];
+  }
+
+  .form-grid-gap {
+    @apply gap-x-2 gap-y-2;
   }
 }

@@ -5,6 +5,7 @@ import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
 import { buttonText, dialog, message } from "@/lib/content";
 import {
+  adminRoles,
   allRoles,
   defaultRole,
   Role,
@@ -94,8 +95,34 @@ import {
 } from "../ui/select";
 import { Separator } from "../ui/separator";
 import { SidebarMenuButton } from "../ui/sidebar";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-export function VerifiedUserBadge({
+export function UserRoleBadge({
+  role,
+  className,
+}: {
+  role: Role;
+  className?: string;
+}) {
+  const isAdmin = adminRoles.includes(role);
+  const { displayName, icon: RoleIcon, desc } = rolesMeta[role];
+  return (
+    <Tooltip>
+      <TooltipTrigger className={className} asChild>
+        <Badge
+          variant={isAdmin ? "outline_primary" : "outline"}
+          className="capitalize"
+        >
+          <RoleIcon />
+          {displayName ?? role}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>{desc}</TooltipContent>
+    </Tooltip>
+  );
+}
+
+export function UserVerifiedBadge({
   withoutText = false,
   className,
 }: {
@@ -603,16 +630,12 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { name, email, role } = props;
-  const schema = zodAuth.pick({ name: true, email: true, role: true });
+  const { name, email } = props;
+  const schema = zodAuth.pick({ name: true, email: true });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: name,
-      email: email,
-      role: role ? capitalize(role) : defaultRole,
-    },
+    defaultValues: { name: name, email: email },
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
@@ -642,26 +665,6 @@ export function PersonalInformation({ ...props }: Session["user"]) {
 
           <FormField
             control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Username</FormLabel>
-                <FormFloating icon={<UserRound />}>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder="Enter your Name"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormFloating>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
             name="email"
             render={({ field }) => (
               <FormItem>
@@ -678,17 +681,16 @@ export function PersonalInformation({ ...props }: Session["user"]) {
 
           <FormField
             control={form.control}
-            name="role"
-            render={({ field: { value, ...restField } }) => (
+            name="name"
+            render={({ field }) => (
               <FormItem>
-                <FormLabel>Role</FormLabel>
-                <FormFloating icon={<LockKeyholeOpen />}>
+                <FormLabel className="label-required">Username</FormLabel>
+                <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
                       type="text"
-                      value={value ?? undefined}
-                      disabled
-                      {...restField}
+                      placeholder="Enter your Name"
+                      {...field}
                     />
                   </FormControl>
                 </FormFloating>
@@ -830,7 +832,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="revokeOtherSessions"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-2">
+              <FormItem className="flex-row">
                 <FormControl>
                   <Checkbox
                     checked={field.value}

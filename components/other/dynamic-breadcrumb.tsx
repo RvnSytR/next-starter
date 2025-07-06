@@ -1,47 +1,89 @@
+"use client";
+
+import { useIsMobile } from "@/hooks/use-mobile";
+import { Route, routesMeta } from "@/lib/const";
+import Link from "next/link";
+import { Fragment } from "react";
 import {
   Breadcrumb,
+  BreadcrumbEllipsis,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Route, routesMeta } from "@/lib/const";
-import Link from "next/link";
-import { Fragment } from "react";
+} from "../ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
-type DynamicBreadcrumbLink = { url: string; displayName: string };
+type DynamicBreadcrumbMeta = { url: string; displayName: string };
+type DynamicBreadcrumbData = Route | DynamicBreadcrumbMeta;
 export type DynamicBreadcrumbProps = {
-  breadcrumb?: (Route | DynamicBreadcrumbLink)[];
+  breadcrumb?: DynamicBreadcrumbData[];
   currentPage: string;
 };
+
+function getProps(data: DynamicBreadcrumbData): DynamicBreadcrumbMeta {
+  return typeof data === "string"
+    ? { url: data, displayName: routesMeta[data].displayName }
+    : data;
+}
 
 export function DynamicBreadcrumb({
   breadcrumb,
   currentPage,
 }: DynamicBreadcrumbProps) {
+  const isMobile = useIsMobile();
   return (
     <Breadcrumb>
-      <BreadcrumbList className="flex-nowrap">
+      <BreadcrumbList>
         {breadcrumb?.map((item, index) => {
-          const { url, displayName }: DynamicBreadcrumbLink =
-            typeof item === "string"
-              ? { url: item, displayName: routesMeta[item].displayName }
-              : item;
+          const { url, displayName } = getProps(item);
+          if (isMobile && index !== 0) return;
 
           return (
             <Fragment key={index}>
-              <BreadcrumbItem className="hidden shrink-0 md:flex">
+              <BreadcrumbItem className="shrink-0">
                 <BreadcrumbLink asChild>
-                  <Link href={url}>{displayName}</Link>
+                  <Link href={url} className="link">
+                    {displayName}
+                  </Link>
                 </BreadcrumbLink>
               </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:flex">
-                /
-              </BreadcrumbSeparator>
+              <BreadcrumbSeparator>/</BreadcrumbSeparator>
             </Fragment>
           );
         })}
+
+        {breadcrumb && breadcrumb.length > 2 && (
+          <>
+            <BreadcrumbItem className="mx-0.5 md:hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <BreadcrumbEllipsis />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {breadcrumb?.map((item, index) => {
+                    const { url, displayName } = getProps(item);
+                    if (isMobile && index === 0) return;
+
+                    return (
+                      <DropdownMenuItem key={index} asChild>
+                        <Link href={url}>{displayName}</Link>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </BreadcrumbItem>
+
+            <BreadcrumbSeparator className="md:hidden">/</BreadcrumbSeparator>
+          </>
+        )}
 
         <BreadcrumbItem>
           <BreadcrumbPage className="line-clamp-1 cursor-default text-ellipsis">

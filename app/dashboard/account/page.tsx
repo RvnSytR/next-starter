@@ -16,7 +16,7 @@ export default async function Page() {
   const data = await getUserList();
 
   return (
-    <Section currentPage={routeMeta.displayName} className="xl:items-center">
+    <Section currentPage={routeMeta.displayName}>
       <AdminAccountDataTable
         data={data.users}
         currentUserId={session.user.id}

@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { Slot as SlotPrimitive } from "radix-ui";
+import { Button, ButtonProps } from "./button";
 
 function Breadcrumb({ ...props }: React.ComponentProps<"nav">) {
   return <nav aria-label="breadcrumb" data-slot="breadcrumb" {...props} />;
@@ -78,21 +79,19 @@ function BreadcrumbSeparator({
   );
 }
 
-function BreadcrumbEllipsis({
-  className,
-  ...props
-}: React.ComponentProps<"span">) {
+function BreadcrumbEllipsis({ role = "presentation", ...props }: ButtonProps) {
   return (
-    <span
+    <Button
       data-slot="breadcrumb-ellipsis"
-      role="presentation"
       aria-hidden="true"
-      className={cn("flex size-9 items-center justify-center", className)}
+      size="iconsm"
+      variant="ghost"
+      role={role}
       {...props}
     >
-      <MoreHorizontal className="size-4" />
+      <MoreHorizontal />
       <span className="sr-only">More</span>
-    </span>
+    </Button>
   );
 }
 
