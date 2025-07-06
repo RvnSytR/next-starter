@@ -3,7 +3,13 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import { badgeText, buttonText, dialog, message } from "@/lib/content";
+import {
+  badgeText,
+  buttonText,
+  compText,
+  dialog,
+  message,
+} from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -21,9 +27,11 @@ import { UserWithRole } from "better-auth/plugins";
 import { formatDistanceToNow } from "date-fns";
 import {
   BadgeCheck,
+  Ban,
   CircleFadingArrowUp,
   Dot,
   Gamepad2,
+  Layers,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
@@ -32,6 +40,7 @@ import {
   MonitorSmartphone,
   RotateCcw,
   Save,
+  Settings2,
   Smartphone,
   Tablet,
   Trash2,
@@ -76,6 +85,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   Form,
   FormControl,
@@ -1077,12 +1094,52 @@ export function AdminAccountDataTable({
   data,
   currentUserId,
   ...props
-}: OtherDataTableProps & {
+}: OtherDataTableProps<UserWithRole> & {
   data: UserWithRole[];
   currentUserId: string;
 }) {
   const columns = getUserColumn(currentUserId);
-  return <DataTable data={data} columns={columns} {...props} />;
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      onRowSelection={(data) => {
+        const ids = data.map(({ original }) => original.id);
+        console.log(ids);
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline">
+                <Settings2 />
+                {buttonText.action}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="text-center">{`${ids.length} ${compText.selected}`}</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              {/* // TODO */}
+              <DropdownMenuItem asChild>
+                <Button size="sm" variant="ghost" disabled>
+                  <Layers />
+                  Impersonate Session
+                </Button>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <Button size="sm" variant="ghost_destructive" disabled>
+                  <Ban />
+                  Ban
+                </Button>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      }}
+      {...props}
+    />
+  );
 }
 
 export function AdminCreateUserDialog() {

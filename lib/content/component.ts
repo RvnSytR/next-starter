@@ -1,5 +1,10 @@
 import { FileType } from "../const";
 
+export const compText = {
+  more: "more",
+  selected: "selected",
+};
+
 export const buttonText = {
   signIn: "Sign In",
   signOn: (social: string) => `Continue with ${social}`,
@@ -21,6 +26,7 @@ export const buttonText = {
   upload: (file: string = "", multiple: boolean = false) =>
     `Upload ${multiple ? `${file}'s` : file}`,
 
+  action: "Action",
   back: "Back",
   cancel: "Cancel",
   clear: "Clear",
@@ -45,7 +51,7 @@ export const tableText = {
 
   rowsPerPage: "Rows per page",
   rowSelecion: (selected: number, totalRows: number) =>
-    `${selected} of ${totalRows} row(s) selected.`,
+    `${selected} of ${totalRows} row(s) ${compText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
     `Page ${pageNumber} of ${totalPage}`,
 };

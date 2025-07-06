@@ -6,6 +6,7 @@ import {
   ColumnDef,
   ColumnFiltersState,
   Table as DataTableType,
+  Row,
   SortingState,
   VisibilityState,
   flexRender,
@@ -22,10 +23,10 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Columns3,
   ListRestart,
-  Settings2,
 } from "lucide-react";
-import { Fragment, useState } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import { RefreshButton } from "../custom/custom-button";
 import { Button, buttonVariants } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -67,7 +68,11 @@ export type ToolBoxProps = {
   searchPlaceholder?: string;
 };
 
-export type OtherDataTableProps = ToolBoxProps & {
+export type OtherDataTableProps<TData> = ToolBoxProps & {
+  onRowSelection?: (
+    data: Row<TData>[],
+    table: DataTableType<TData>,
+  ) => ReactNode;
   caption?: string;
   noResult?: string[];
   className?: string;
@@ -79,8 +84,9 @@ export function DataTable<TData>({
   caption,
   noResult,
   className,
+  onRowSelection,
   ...props
-}: DataTableProps<TData> & OtherDataTableProps) {
+}: DataTableProps<TData> & OtherDataTableProps<TData>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
@@ -88,6 +94,7 @@ export function DataTable<TData>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const [children, setChildren] = useState<ReactNode>(null);
   const rowsLimitArr = [20, 30, 40, 50, 100];
 
   const table = useReactTable({
@@ -129,9 +136,16 @@ export function DataTable<TData>({
   const pageNumber =
     table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 0;
 
+  useEffect(() => {
+    if (onRowSelection) setChildren(onRowSelection(selectedRows, table));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedRows]);
+
   return (
     <Fragment>
-      <ToolBox table={table} {...props} />
+      <ToolBox table={table} {...props}>
+        {selectedRows.length > 0 && children}
+      </ToolBox>
 
       {table.getState().columnFilters.length > 0 && (
         <ActiveFiltersMobileContainer>
@@ -224,33 +238,42 @@ function ToolBox<TData>({
   table,
   withRefresh = false,
   searchPlaceholder,
-}: TableProps<TData> & ToolBoxProps) {
+  children,
+}: TableProps<TData> & ToolBoxProps & { children: ReactNode }) {
   return (
     <div className="flex w-full flex-col gap-2 lg:flex-row lg:justify-between">
-      <div
-        className={cn(
-          "grid gap-2 lg:flex",
-          withRefresh ? "grid-cols-3" : "grid-cols-2",
-        )}
-      >
+      <div className={cn("flex items-center gap-x-2 [&_button]:grow")}>
         <FilterSelector table={table} />
         <View table={table} />
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
+        {children && (
+          <Separator orientation="vertical" className="hidden h-4 lg:flex" />
+        )}
+
+        {children}
       </div>
 
-      <div className="flex gap-x-2">
+      <div className="flex gap-x-2 *:grow">
         <Reset table={table} />
-        <DataTableSearch table={table} searchPlaceholder={searchPlaceholder} />
+        <DataTableSearch
+          table={table}
+          searchPlaceholder={searchPlaceholder}
+          className="col-span-2"
+        />
       </div>
     </div>
   );
 }
 
-function Reset<TData>({ table }: TableProps<TData>) {
+function Reset<TData>({
+  table,
+  className,
+}: TableProps<TData> & { className?: string }) {
   return (
     <Button
       size="sm"
       variant="outline"
+      className={className}
       onClick={() => {
         table.reset();
         table.resetColumnFilters();
@@ -284,7 +307,7 @@ function View<TData>({ table }: TableProps<TData>) {
     <Popover>
       <PopoverTrigger asChild>
         <Button size="sm" variant="outline">
-          <Settings2 /> {buttonText.view}
+          <Columns3 /> {buttonText.view}
         </Button>
       </PopoverTrigger>
 

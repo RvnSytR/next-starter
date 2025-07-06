@@ -25,7 +25,7 @@ export default async function Page() {
   const data = await getUserList();
 
   return (
-    <Section currentPage={routeMeta.displayName} className="md:pt-6">
+    <Section currentPage={routeMeta.displayName} className="pt-6">
       <CardHeader className="px-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{desc}</CardDescription>
