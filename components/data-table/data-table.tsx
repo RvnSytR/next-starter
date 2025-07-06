@@ -1,6 +1,6 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
+import { buttonText, tableText } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -22,6 +22,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  ListRestart,
   Settings2,
 } from "lucide-react";
 import { Fragment, useState } from "react";
@@ -85,6 +86,7 @@ export function DataTable<TData>({
 
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = useState({});
 
   const rowsLimitArr = [20, 30, 40, 50, 100];
 
@@ -108,11 +110,22 @@ export function DataTable<TData>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
+    onRowSelectionChange: setRowSelection,
+
     initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[0] } },
-    state: { sorting, globalFilter, columnFilters, columnVisibility },
+    state: {
+      sorting,
+      globalFilter,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
   });
 
-  const pageCount = table.getPageCount();
+  const selectedRows = table.getFilteredSelectedRowModel().rows;
+  const filteredRows = table.getFilteredRowModel().rows;
+
+  const totalPage = table.getPageCount();
   const pageNumber =
     table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 0;
 
@@ -174,7 +187,7 @@ export function DataTable<TData>({
                 >
                   {noResult
                     ? noResult.map((item) => item + "\n")
-                    : "No results."}
+                    : tableText.default.noResult}
                 </TableCell>
               </TableRow>
             )}
@@ -185,19 +198,21 @@ export function DataTable<TData>({
       <div className="flex flex-col items-center gap-4">
         {caption && <small className="text-muted-foreground">{caption}</small>}
 
-        <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
-          <RowsPerPage
-            table={table}
-            rowsLimitArr={rowsLimitArr}
-            className="order-2 md:order-1"
-          />
+        <div className="flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
+          <small className="text-muted-foreground">
+            {tableText.rowSelecion(selectedRows.length, filteredRows.length)}
+          </small>
 
-          <div className="order-1 flex flex-col items-center gap-4 md:order-2 md:flex-row">
-            <small className="order-2 tabular-nums md:order-1">
-              {`Page ${pageNumber} of ${pageCount}`}
-            </small>
+          <div className="flex flex-col items-center gap-4 lg:flex-row">
+            <div className="order-2 flex items-center gap-4 lg:order-1">
+              <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
 
-            <Pagination table={table} className="order-1 md:order-2" />
+              <small className="tabular-nums">
+                {tableText.pagenation(pageNumber, totalPage)}
+              </small>
+            </div>
+
+            <Pagination table={table} className="order-1 lg:order-2" />
           </div>
         </div>
       </div>
@@ -212,15 +227,9 @@ function ToolBox<TData>({
 }: TableProps<TData> & ToolBoxProps) {
   return (
     <div className="flex w-full flex-col gap-2 lg:flex-row lg:justify-between">
-      <DataTableSearch
-        table={table}
-        searchPlaceholder={searchPlaceholder}
-        className="order-2 lg:order-1"
-      />
-
       <div
         className={cn(
-          "order-1 grid gap-2 lg:order-2 lg:flex",
+          "grid gap-2 lg:flex",
           withRefresh ? "grid-cols-3" : "grid-cols-2",
         )}
       >
@@ -228,7 +237,45 @@ function ToolBox<TData>({
         <View table={table} />
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
       </div>
+
+      <div className="flex gap-x-2">
+        <Reset table={table} />
+        <DataTableSearch table={table} searchPlaceholder={searchPlaceholder} />
+      </div>
     </div>
+  );
+}
+
+function Reset<TData>({ table }: TableProps<TData>) {
+  return (
+    <Button
+      size="sm"
+      variant="outline"
+      onClick={() => {
+        table.reset();
+        table.resetColumnFilters();
+        table.resetColumnOrder();
+        table.resetColumnPinning();
+        table.resetColumnSizing();
+        table.resetColumnVisibility();
+        table.resetExpanded();
+
+        table.resetGlobalFilter();
+        table.setGlobalFilter("");
+
+        table.resetGrouping();
+        table.resetHeaderSizeInfo();
+        table.resetPageIndex();
+        table.resetPageSize();
+        table.resetPagination();
+        table.resetRowPinning();
+        table.resetRowSelection();
+        table.resetSorting();
+      }}
+    >
+      <ListRestart />
+      {buttonText.reset}
+    </Button>
   );
 }
 
@@ -237,7 +284,7 @@ function View<TData>({ table }: TableProps<TData>) {
     <Popover>
       <PopoverTrigger asChild>
         <Button size="sm" variant="outline">
-          <Settings2 /> View
+          <Settings2 /> {buttonText.view}
         </Button>
       </PopoverTrigger>
 
@@ -275,11 +322,10 @@ function Pagination<TData>({
   table,
   className,
 }: TableProps<TData> & { className?: string }) {
-  const isMobile = useIsMobile();
   return (
     <div className={cn("flex gap-x-1", className)}>
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="iconsm"
         variant="outline"
         onClick={() => table.firstPage()}
         disabled={!table.getCanPreviousPage()}
@@ -288,7 +334,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="iconsm"
         variant="outline"
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
@@ -297,7 +343,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="iconsm"
         variant="outline"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
@@ -306,7 +352,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size={isMobile ? "icon" : "iconsm"}
+        size="iconsm"
         variant="outline"
         onClick={() => table.lastPage()}
         disabled={!table.getCanNextPage()}
@@ -324,7 +370,7 @@ function RowsPerPage<TData>({
 }: TableProps<TData> & { rowsLimitArr: number[]; className?: string }) {
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
-      <Label>Rows per page</Label>
+      <Label>{tableText.rowsPerPage}</Label>
       <Select
         value={String(table.getState().pagination.pageSize)}
         onValueChange={(value) => {

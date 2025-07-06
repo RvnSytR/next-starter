@@ -1,3 +1,55 @@
+import { FileType } from "../const";
+
+export const buttonText = {
+  signIn: "Sign In",
+  signOn: (social: string) => `Continue with ${social}`,
+  signOut: "Sign Out",
+  signUp: "Create Account",
+
+  datePicker: {
+    multiple: "Select Dates",
+    range: "Select Date Range",
+    single: "Select Date",
+  },
+
+  fileInput: {
+    placeholder: (fileType: FileType) =>
+      `Drag & drop a ${fileType} here or click to upload`,
+    size: (mb: number) => `Up to ${mb} MB`,
+  },
+
+  upload: (file: string = "", multiple: boolean = false) =>
+    `Upload ${multiple ? `${file}'s` : file}`,
+
+  back: "Back",
+  cancel: "Cancel",
+  clear: "Clear",
+  confirm: "Confirm",
+  filter: "Filter",
+  refresh: "Refresh",
+  remove: "Remove",
+  reset: "Reset",
+  save: "Save Changes",
+  view: "View",
+};
+
+export const badgeText = {
+  verifiedUser: "Verified",
+};
+
+export const tableText = {
+  default: {
+    placeholder: "Search Something",
+    noResult: "No Result",
+  },
+
+  rowsPerPage: "Rows per page",
+  rowSelecion: (selected: number, totalRows: number) =>
+    `${selected} of ${totalRows} row(s) selected.`,
+  pagenation: (pageNumber: number, totalPage: number) =>
+    `Page ${pageNumber} of ${totalPage}`,
+};
+
 export const dialog = {
   user: {
     create: {

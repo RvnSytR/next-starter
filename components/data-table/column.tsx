@@ -2,8 +2,8 @@
 
 import { filterFn } from "@/lib/filters";
 import { Role, rolesMeta } from "@/lib/permission";
-import { capitalize, cn, formatDate } from "@/lib/utils";
-import { createColumnHelper } from "@tanstack/react-table";
+import { capitalize, formatDate } from "@/lib/utils";
+import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
   ArrowUpDown,
@@ -24,32 +24,67 @@ import {
   UserVerifiedBadge,
 } from "../modules/auth";
 import { Badge } from "../ui/badge";
-import { Button, ButtonProps } from "../ui/button";
+import { Button } from "../ui/button";
+import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
 
-const HeaderButton = ({ className, children, ...props }: ButtonProps) => {
+function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
   return (
     <div className="flex justify-start">
       <Button
         size="sm"
         variant="ghost"
-        className={cn("h-7 justify-between", className)}
-        {...props}
+        className="h-7 justify-between"
+        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
       >
         {children}
         <ArrowUpDown />
       </Button>
     </div>
   );
-};
+}
+
+function cellNum(num: number) {
+  return <div className="text-center">{num}</div>;
+}
+
+function headerCheckbox<T>(table: Table<T>) {
+  return (
+    <Checkbox
+      aria-label="Select all"
+      onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+      checked={
+        table.getIsAllPageRowsSelected() ||
+        (table.getIsSomePageRowsSelected() && "indeterminate")
+      }
+    />
+  );
+}
+
+function cellCheckbox<R>(row: Row<R>) {
+  return (
+    <Checkbox
+      checked={row.getIsSelected()}
+      onCheckedChange={(value) => row.toggleSelected(!!value)}
+      aria-label="Select row"
+    />
+  );
+}
 
 const createUserColumn = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
+    id: "select",
+    header: ({ table }) => headerCheckbox(table),
+    cell: ({ row }) => cellCheckbox(row),
+    enableHiding: false,
+    enableSorting: false,
+  }),
+  createUserColumn.display({
     id: "number",
     header: "No",
-    cell: ({ row }) => row.index + 1,
+    cell: ({ row }) => cellNum(row.index + 1),
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
@@ -63,39 +98,21 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ email }) => email, {
     id: "email",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Email
-      </HeaderButton>
-    ),
+    header: ({ column }) => headerButton(column, "Email"),
     cell: ({ row }) => row.original.email,
     filterFn: filterFn("text"),
     meta: { displayName: "Email", type: "text", icon: Mail },
   }),
   createUserColumn.accessor(({ name }) => name, {
     id: "name",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Name
-      </HeaderButton>
-    ),
+    header: ({ column }) => headerButton(column, "Name"),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
     meta: { displayName: "Name", type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Role
-      </HeaderButton>
-    ),
+    header: ({ column }) => headerButton(column, "Role"),
     cell: ({ row }) => (
       <div className="flex flex-col gap-1.5">
         {row.original.emailVerified && <UserVerifiedBadge />}
@@ -115,13 +132,7 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
     id: "Created At",
-    header: ({ column }) => (
-      <HeaderButton
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        Created At
-      </HeaderButton>
-    ),
+    header: ({ column }) => headerButton(column, "Created At"),
     cell: ({ row }) =>
       row.original.createdAt
         ? formatDate(row.original.createdAt, "PPPp")

@@ -178,7 +178,6 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
   const [value, setValue] = useState("");
   const [property, setProperty] = useState<string | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
-  const isMobile = useIsMobile();
 
   const column = property ? getColumn(table, property) : undefined;
   const columnMeta = property ? getColumnMeta(table, property) : undefined;
@@ -248,7 +247,7 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
       </PopoverTrigger>
 
       <PopoverContent
-        align={isMobile ? "start" : "center"}
+        align="start"
         className="w-fit origin-(--radix-popover-content-transform-origin) p-0"
       >
         {content}

@@ -3,7 +3,7 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import { buttonText, dialog, message } from "@/lib/content";
+import { badgeText, buttonText, dialog, message } from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -131,7 +131,7 @@ export function UserVerifiedBadge({
 }) {
   return (
     <Badge variant="outline_rvns" className={className}>
-      <BadgeCheck /> {!withoutText && "Verified"}
+      <BadgeCheck /> {!withoutText && badgeText.verifiedUser}
     </Badge>
   );
 }
@@ -700,9 +700,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           />
         </CardContent>
 
-        <Separator />
-
-        <CardFooter className="gap-x-2">
+        <CardFooter className="border-t">
           <Button type="submit" disabled={isLoading}>
             {isLoading ? <Spinner /> : <Save />}
             {buttonText.save}
@@ -845,9 +843,7 @@ export function ChangePasswordForm() {
           />
         </CardContent>
 
-        <Separator />
-
-        <CardFooter className="gap-x-2">
+        <CardFooter className="border-t">
           <Button type="submit" disabled={isLoading}>
             {isLoading ? <Spinner /> : <Save />}
             {buttonText.save}

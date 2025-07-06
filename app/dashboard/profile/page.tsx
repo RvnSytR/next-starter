@@ -17,7 +17,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { dashboardPage } from "@/lib/content";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
@@ -42,44 +41,32 @@ export default async function Page() {
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-xl"
       >
-        <CardHeader className="flex-row">
+        <CardHeader className="border-b">
           <CardTitle>{info.title}</CardTitle>
           <CardDescription>{info.desc}</CardDescription>
           <CardAction className="flex flex-col items-end gap-1.5 md:flex-row">
-            {user.emailVerified && (
-              <UserVerifiedBadge className="order-1 md:order-2" />
-            )}
-
-            <UserRoleBadge
-              role={user.role as Role}
-              className="order-2 md:order-1"
-            />
+            {user.emailVerified && <UserVerifiedBadge />}
+            <UserRoleBadge role={user.role as Role} />
           </CardAction>
         </CardHeader>
-
-        <Separator />
 
         <PersonalInformation {...user} />
       </Card>
 
       <Card id="change-password" className="w-full scroll-m-20 lg:max-w-xl">
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>{password.title}</CardTitle>
           <CardDescription>{password.desc}</CardDescription>
         </CardHeader>
-
-        <Separator />
 
         <ChangePasswordForm />
       </Card>
 
       <Card id="active-session" className="w-full scroll-m-20 lg:max-w-xl">
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle>{activeSession.title}</CardTitle>
           <CardDescription>{activeSession.desc}</CardDescription>
         </CardHeader>
-
-        <Separator />
 
         <CardContent className="flex flex-col gap-y-2">
           {sessionList.map((item, index) => (
@@ -91,22 +78,18 @@ export default async function Page() {
           ))}
         </CardContent>
 
-        <Separator />
-
-        <CardFooter>
+        <CardFooter className="border-t">
           <RevokeOtherSessionsButton />
         </CardFooter>
       </Card>
 
       <Card id="delete-account" className="w-full scroll-m-20 lg:max-w-xl">
-        <CardHeader>
+        <CardHeader className="border-b">
           <CardTitle className="text-destructive">
             {deleteAccount.title}
           </CardTitle>
           <CardDescription>{deleteAccount.desc}</CardDescription>
         </CardHeader>
-
-        <Separator />
 
         <CardContent>
           <DeleteMyAccountButton {...user} />

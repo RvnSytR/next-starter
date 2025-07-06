@@ -1,5 +1,6 @@
 "use client";
 
+import { tableText } from "@/lib/content";
 import { Search } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { FormFloating } from "../custom/custom-field";
@@ -9,7 +10,7 @@ import { TableProps, ToolBoxProps } from "./data-table";
 
 export function DataTableSearch<TData>({
   table,
-  searchPlaceholder = "Search Something",
+  searchPlaceholder = tableText.default.placeholder,
   className,
 }: TableProps<TData> &
   Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {
@@ -31,7 +32,6 @@ export function DataTableSearch<TData>({
   return (
     <FormFloating icon={<Search />} className={className}>
       <Input
-        type="search"
         ref={searchRef}
         placeholder={searchPlaceholder}
         value={table.getState().globalFilter}

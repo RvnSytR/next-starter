@@ -9,6 +9,7 @@ export const dashboardPage = {
   account: {
     title: "User Management",
     desc: "Manage and view details of all registered users.",
+    placeholder: "Search user...",
   },
 
   profile: {

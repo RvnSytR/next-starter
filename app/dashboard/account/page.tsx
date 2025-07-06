@@ -20,13 +20,15 @@ export const metadata: Metadata = { title: getTitle("/dashboard/account") };
 export default async function Page() {
   const { session, routeMeta } =
     await checkAndGetAuthorizedSession("/dashboard/account");
+
+  const { title, desc, placeholder } = dashboardPage.account;
   const data = await getUserList();
 
   return (
     <Section currentPage={routeMeta.displayName} className="md:pt-6">
       <CardHeader className="px-0">
-        <CardTitle>{dashboardPage.account.title}</CardTitle>
-        <CardDescription>{dashboardPage.account.desc}</CardDescription>
+        <CardTitle>{title}</CardTitle>
+        <CardDescription>{desc}</CardDescription>
         <CardAction>
           <AdminCreateUserDialog />
         </CardAction>
@@ -37,6 +39,7 @@ export default async function Page() {
       <AdminAccountDataTable
         data={data.users}
         currentUserId={session.user.id}
+        searchPlaceholder={placeholder}
       />
     </Section>
   );
