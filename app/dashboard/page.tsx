@@ -11,7 +11,6 @@ export default async function Page() {
       className="items-center justify-center"
     >
       <R />
-      <p className="animate-fade-up delay-500">Next Starter v2.5</p>
     </Section>
   );
 }

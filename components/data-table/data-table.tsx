@@ -24,18 +24,9 @@ import {
   ChevronsRight,
   Settings2,
 } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { RefreshButton } from "../custom/custom-button";
 import { Button, buttonVariants } from "../ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
@@ -73,12 +64,9 @@ export type TableProps<TData> = { table: DataTableType<TData> };
 export type ToolBoxProps = {
   withRefresh?: boolean;
   searchPlaceholder?: string;
-  children?: React.ReactNode;
 };
 
 export type OtherDataTableProps = ToolBoxProps & {
-  title?: string;
-  desc?: string;
   caption?: string;
   noResult?: string[];
   className?: string;
@@ -87,8 +75,6 @@ export type OtherDataTableProps = ToolBoxProps & {
 export function DataTable<TData>({
   data,
   columns,
-  title = "Data Table",
-  desc = "Data Table Description",
   caption,
   noResult,
   className,
@@ -131,12 +117,8 @@ export function DataTable<TData>({
     table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 0;
 
   return (
-    <Card className={className}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{desc}</CardDescription>
-        <ToolBox table={table} {...props} />
-      </CardHeader>
+    <Fragment>
+      <ToolBox table={table} {...props} />
 
       {table.getState().columnFilters.length > 0 && (
         <ActiveFiltersMobileContainer>
@@ -146,7 +128,7 @@ export function DataTable<TData>({
         </ActiveFiltersMobileContainer>
       )}
 
-      <CardContent className="px-0">
+      <div className={cn("bg-background/50 rounded-lg border", className)}>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -198,9 +180,9 @@ export function DataTable<TData>({
             )}
           </TableBody>
         </Table>
-      </CardContent>
+      </div>
 
-      <CardFooter className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4">
         {caption && <small className="text-muted-foreground">{caption}</small>}
 
         <div className="flex w-full flex-col items-center justify-between gap-4 md:flex-row">
@@ -218,8 +200,8 @@ export function DataTable<TData>({
             <Pagination table={table} className="order-1 md:order-2" />
           </div>
         </div>
-      </CardFooter>
-    </Card>
+      </div>
+    </Fragment>
   );
 }
 
@@ -227,22 +209,26 @@ function ToolBox<TData>({
   table,
   withRefresh = false,
   searchPlaceholder,
-  children,
 }: TableProps<TData> & ToolBoxProps) {
   return (
-    <CardAction className="flex w-full flex-col gap-2 lg:w-fit lg:flex-row">
-      {children}
+    <div className="flex w-full flex-col gap-2 lg:flex-row lg:justify-between">
+      <DataTableSearch
+        table={table}
+        searchPlaceholder={searchPlaceholder}
+        className="order-2 lg:order-1"
+      />
 
-      <div className="grid grid-cols-2 gap-x-2 lg:flex">
+      <div
+        className={cn(
+          "order-1 grid gap-2 lg:order-2 lg:flex",
+          withRefresh ? "grid-cols-3" : "grid-cols-2",
+        )}
+      >
         <FilterSelector table={table} />
         <View table={table} />
-      </div>
-
-      <div className="grid grid-cols-3 gap-x-2 lg:flex">
         {withRefresh && <RefreshButton size="sm" variant="outline" />}
-        <DataTableSearch table={table} searchPlaceholder={searchPlaceholder} />
       </div>
-    </CardAction>
+    </div>
   );
 }
 
@@ -255,7 +241,7 @@ function View<TData>({ table }: TableProps<TData>) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="flex w-fit min-w-60 flex-col gap-y-1 p-1">
+      <PopoverContent className="flex w-fit flex-col gap-y-1 p-1">
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())

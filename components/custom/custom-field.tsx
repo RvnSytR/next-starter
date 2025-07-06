@@ -125,7 +125,7 @@ export function InputDate({
       </PopoverTrigger>
 
       <PopoverContent className="size-fit p-0">
-        <Calendar captionLayout="dropdown" {...props} />
+        <Calendar {...props} />
       </PopoverContent>
     </Popover>
   );

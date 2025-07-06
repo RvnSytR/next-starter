@@ -1141,9 +1141,8 @@ export function AdminCreateUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline">
-          <Icon />
-          {dialog.user.create.trigger}
+        <Button size="sm">
+          <Icon /> {dialog.user.create.trigger}
         </Button>
       </DialogTrigger>
 

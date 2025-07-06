@@ -57,12 +57,7 @@ export const getUserColumn = (currentUserId: string) => [
     header: "Avatar",
     cell: ({ row }) => (
       <div className="flex justify-center">
-        <UserAvatar
-          {...row.original}
-          className="size-20"
-          imageCn="group-hover:scale-125"
-          fallbackCn="group-hover:scale-125"
-        />
+        <UserAvatar {...row.original} className="size-20" />
       </div>
     ),
   }),

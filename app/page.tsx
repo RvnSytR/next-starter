@@ -14,9 +14,8 @@ export default function Page() {
     <div className="container flex flex-col gap-y-8 py-12 md:py-24">
       <div className="flex flex-col items-center gap-y-4">
         <R />
-        <p className="animate-fade-up delay-500">Next Starter v2.5</p>
 
-        <div className="animate-fade-up flex flex-wrap gap-2 delay-750">
+        <div className="animate-fade flex flex-wrap gap-2 delay-750">
           <ThemeToggle size="icon" variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>

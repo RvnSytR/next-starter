@@ -45,7 +45,7 @@ import {
 import { cn, formatDate, take, uniq } from "@/lib/utils";
 import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import { isEqual } from "date-fns";
-import { ArrowRight, Ellipsis, FilterXIcon, ListFilter, X } from "lucide-react";
+import { ArrowRight, Ellipsis, ListFilter, X } from "lucide-react";
 import {
   cloneElement,
   isValidElement,
@@ -94,52 +94,56 @@ export function ActiveFiltersMobileContainer({
 }: {
   children: React.ReactNode;
 }) {
-  // const scrollContainerRef = useRef<HTMLDivElement>(null);
-  // const [showLeftBlur, setShowLeftBlur] = useState(false);
-  // const [showRightBlur, setShowRightBlur] = useState(true);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [showLeftBlur, setShowLeftBlur] = useState(false);
+  const [showRightBlur, setShowRightBlur] = useState(true);
 
-  // // Check if there's content to scroll and update blur states
-  // const checkScroll = () => {
-  //   if (scrollContainerRef.current) {
-  //     const { scrollLeft, scrollWidth, clientWidth } =
-  //       scrollContainerRef.current;
+  // Check if there's content to scroll and update blur states
+  const checkScroll = () => {
+    if (scrollContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } =
+        scrollContainerRef.current;
 
-  //     // Show left blur if scrolled to the right
-  //     setShowLeftBlur(scrollLeft > 0);
+      // Show left blur if scrolled to the right
+      setShowLeftBlur(scrollLeft > 0);
 
-  //     // Show right blur if there's more content to scroll to the right
-  //     // Add a small buffer (1px) to account for rounding errors
-  //     setShowRightBlur(scrollLeft + clientWidth < scrollWidth - 1);
-  //   }
-  // };
+      // Show right blur if there's more content to scroll to the right
+      // Add a small buffer (1px) to account for rounding errors
+      setShowRightBlur(scrollLeft + clientWidth < scrollWidth - 1);
+    }
+  };
 
-  // // Log blur states for debugging
-  // useEffect(() => {
-  //   console.log("left:", showLeftBlur, "  right:", showRightBlur);
-  // }, [showLeftBlur, showRightBlur]);
+  // Log blur states for debugging
+  useEffect(() => {
+    console.log("left:", showLeftBlur, "  right:", showRightBlur);
+  }, [showLeftBlur, showRightBlur]);
 
-  // // Set up ResizeObserver to monitor container size
-  // useEffect(() => {
-  //   if (scrollContainerRef.current) {
-  //     const resizeObserver = new ResizeObserver(() => {
-  //       checkScroll();
-  //     });
-  //     resizeObserver.observe(scrollContainerRef.current);
-  //     return () => {
-  //       resizeObserver.disconnect();
-  //     };
-  //   }
-  // }, []);
+  // Set up ResizeObserver to monitor container size
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      const resizeObserver = new ResizeObserver(() => {
+        checkScroll();
+      });
+      resizeObserver.observe(scrollContainerRef.current);
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }
+  }, []);
 
-  // // Update blur states when children change
-  // useEffect(() => checkScroll(), [children]);
+  // Update blur states when children change
+  useEffect(() => checkScroll(), [children]);
 
   return (
     <div className="w-full border-t border-b border-dashed shadow-xs">
       <div
-        // ref={scrollContainerRef}
-        // onScroll={checkScroll}
-        className="no-scrollbar flex items-center gap-2 overflow-x-auto px-6 py-3"
+        ref={scrollContainerRef}
+        onScroll={checkScroll}
+        className={cn(
+          "no-scrollbar flex items-center gap-2 overflow-x-auto py-2",
+          showLeftBlur && "mask-l-from-95%",
+          showRightBlur && "mask-r-from-95%",
+        )}
       >
         {children}
       </div>
@@ -147,23 +151,24 @@ export function ActiveFiltersMobileContainer({
   );
 }
 
-export function FilterActions<TData>({ table }: { table: Table<TData> }) {
-  const hasFilters = table.getState().columnFilters.length > 0;
-
-  function clearFilters() {
-    table.setColumnFilters([]);
-    table.setGlobalFilter("");
-  }
-
+export function FilterActions<TData>({
+  table,
+  className,
+}: {
+  table: Table<TData>;
+  className?: string;
+}) {
   return (
     <Button
       size="sm"
       variant="outline_destructive"
-      className={cn(!hasFilters && "hidden")}
-      onClick={clearFilters}
+      className={className}
+      onClick={() => {
+        table.setColumnFilters([]);
+        table.setGlobalFilter("");
+      }}
     >
-      <FilterXIcon />
-      <span className="hidden md:block">{buttonText.clear}</span>
+      <X /> {buttonText.clear}
     </Button>
   );
 }
@@ -173,6 +178,7 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
   const [value, setValue] = useState("");
   const [property, setProperty] = useState<string | undefined>(undefined);
   const inputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useIsMobile();
 
   const column = property ? getColumn(table, property) : undefined;
   const columnMeta = property ? getColumnMeta(table, property) : undefined;
@@ -241,7 +247,10 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="w-fit origin-(--radix-popover-content-transform-origin) p-0">
+      <PopoverContent
+        align={isMobile ? "start" : "center"}
+        className="w-fit origin-(--radix-popover-content-transform-origin) p-0"
+      >
         {content}
       </PopoverContent>
     </Popover>
@@ -1481,15 +1490,13 @@ export function FilterValueDateController<TData, TValue>({
       {/* <CommandEmpty>No results.</CommandEmpty> */}
       <CommandList className="max-h-fit">
         <CommandGroup>
-          <div>
-            <Calendar
-              mode="range"
-              defaultMonth={date?.from}
-              selected={date}
-              onSelect={changeDateRange}
-              numberOfMonths={1}
-            />
-          </div>
+          <Calendar
+            mode="range"
+            defaultMonth={date?.from}
+            selected={date}
+            onSelect={changeDateRange}
+            numberOfMonths={1}
+          />
         </CommandGroup>
       </CommandList>
     </Command>

@@ -10,7 +10,9 @@ import { TableProps, ToolBoxProps } from "./data-table";
 export function DataTableSearch<TData>({
   table,
   searchPlaceholder = "Search Something",
-}: TableProps<TData> & Pick<ToolBoxProps, "searchPlaceholder">) {
+  className,
+}: TableProps<TData> &
+  Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -27,14 +29,14 @@ export function DataTableSearch<TData>({
   }, []);
 
   return (
-    <FormFloating icon={<Search />}>
+    <FormFloating icon={<Search />} className={className}>
       <Input
         type="search"
         ref={searchRef}
         placeholder={searchPlaceholder}
         value={table.getState().globalFilter}
         onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-        className="h-8"
+        className="h-8 pr-12"
       />
       <CommandShortcut className="absolute inset-y-0 right-3 flex items-center select-none">
         ⌘+K
