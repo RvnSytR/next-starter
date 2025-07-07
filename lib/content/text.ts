@@ -63,16 +63,15 @@ export const dialogText = {
 
     detail: {
       title: (name: string) => `${name}'s Details`,
-      desc: (name: string) =>
-        `View and manage detailed information for ${name}.`,
+      desc: (name: string) => `View detailed information for ${name}.`,
     },
 
-    changeRole: {
-      trigger: "Change Role",
-      title: (name: string) => `Change ${name}'s Role`,
-      desc: (name: string) =>
-        `Changing ${name}'s role will update their permissions and access within the system. Are you sure you want to proceed?`,
-    },
+    // changeRole: {
+    //   trigger: "Change Role",
+    //   title: (name: string) => `Change ${name}'s Role`,
+    //   desc: (name: string) =>
+    //     `Changing ${name}'s role will update their permissions and access within the system. Are you sure you want to proceed?`,
+    // },
 
     revokeSessions: {
       trigger: "Revoke Sessions",

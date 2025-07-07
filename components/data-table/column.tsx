@@ -7,36 +7,19 @@ import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
   ArrowUpDown,
-  Ban,
   CalendarCheck2,
   CircleDot,
-  EllipsisVertical,
-  Layers2,
   Mail,
   UserRound,
 } from "lucide-react";
 import {
-  AdminChangeUserRoleDialog,
-  AdminRemoveUserDialog,
-  AdminTerminateUserSessionsDialog,
+  AdminUserDetailSheet,
   UserAvatar,
   UserRoleBadge,
   UserVerifiedBadge,
 } from "../modules/auth";
-import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Separator } from "../ui/separator";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetFooter,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
 
 function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
   return (
@@ -120,24 +103,7 @@ export const getUserColumn = (currentUserId: string) => [
         );
       }
 
-      return (
-        <Sheet>
-          <div className="flex items-center gap-x-2">
-            <SheetTrigger className="link">{email}</SheetTrigger>
-            {emailVerified && <UserVerifiedBadge withoutText />}
-          </div>
-          <SheetContent>
-            <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
-              <SheetDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
-              </SheetDescription>
-            </SheetHeader>
-            <SheetFooter>Something</SheetFooter>
-          </SheetContent>
-        </Sheet>
-      );
+      return <AdminUserDetailSheet data={row.original} />;
     },
     filterFn: filterFn("text"),
     meta: { displayName: "Email", type: "text", icon: Mail },
@@ -174,56 +140,56 @@ export const getUserColumn = (currentUserId: string) => [
     filterFn: filterFn("date"),
     meta: { displayName: "Created At", type: "date", icon: CalendarCheck2 },
   }),
-  createUserColumn.display({
-    id: "Action",
-    header: "Action",
-    cell: ({ row }) => {
-      if (row.original.id === currentUserId) {
-        return (
-          <div className="flex justify-center">
-            <Badge variant="outline">Current User</Badge>
-          </div>
-        );
-      }
+  // createUserColumn.display({
+  //   id: "Action",
+  //   header: "Action",
+  //   cell: ({ row }) => {
+  //     if (row.original.id === currentUserId) {
+  //       return (
+  //         <div className="flex justify-center">
+  //           <Badge variant="outline">Current User</Badge>
+  //         </div>
+  //       );
+  //     }
 
-      return (
-        <div className="flex justify-center">
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button size="iconsm" variant="ghost">
-                <EllipsisVertical />
-              </Button>
-            </PopoverTrigger>
+  //     return (
+  //       <div className="flex justify-center">
+  //         <Popover>
+  //           <PopoverTrigger asChild>
+  //             <Button size="iconsm" variant="ghost">
+  //               <EllipsisVertical />
+  //             </Button>
+  //           </PopoverTrigger>
 
-            <PopoverContent
-              align="end"
-              className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
-            >
-              <div className="px-2 py-1 text-center">
-                <small className="font-medium">{row.original.name}</small>
-              </div>
+  //           <PopoverContent
+  //             align="end"
+  //             className="flex w-fit flex-col gap-y-1 p-1 [&_button]:justify-start"
+  //           >
+  //             <div className="px-2 py-1 text-center">
+  //               <small className="font-medium">{row.original.name}</small>
+  //             </div>
 
-              <Separator />
+  //             <Separator />
 
-              <AdminChangeUserRoleDialog {...row.original} />
+  //             <AdminChangeUserRoleDialog {...row.original} />
 
-              <Button size="sm" variant="ghost" disabled>
-                <Layers2 />
-                Impersonate Session
-              </Button>
+  //             <Button size="sm" variant="ghost" disabled>
+  //               <Layers2 />
+  //               Impersonate Session
+  //             </Button>
 
-              <AdminTerminateUserSessionsDialog {...row.original} />
+  //             <AdminTerminateUserSessionsDialog {...row.original} />
 
-              <Button size="sm" variant="ghost_destructive" disabled>
-                <Ban />
-                Ban
-              </Button>
+  //             <Button size="sm" variant="ghost_destructive" disabled>
+  //               <Ban />
+  //               Ban
+  //             </Button>
 
-              <AdminRemoveUserDialog {...row.original} />
-            </PopoverContent>
-          </Popover>
-        </div>
-      );
-    },
-  }),
+  //             <AdminRemoveUserDialog {...row.original} />
+  //           </PopoverContent>
+  //         </Popover>
+  //       </div>
+  //     );
+  //   },
+  // }),
 ];

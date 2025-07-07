@@ -1,5 +1,10 @@
 import { FieldType, FileType, mediaMeta } from "../const";
-import { aOrAn, capitalize, formatDateDistanceToNow } from "../utils";
+import {
+  aOrAn,
+  capitalize,
+  formatDate,
+  formatDateDistanceToNow,
+} from "../utils";
 
 type Action = "created" | "updated" | "removed";
 
@@ -9,8 +14,8 @@ const baseMessages = {
   success: (thing: string, action: Action) =>
     `${thing} has been ${action} successfully.`.trim(),
 
-  lastThingAgo: (thing: string, time: Date) =>
-    `Last ${thing} ${formatDateDistanceToNow(time)} ago.`,
+  thingAgo: (thing: string, time: Date) =>
+    `${thing} ${formatDateDistanceToNow(time)} ago.`,
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
     `${browser ?? "A browser"} on ${os ?? "some OS"}`,
 
@@ -77,6 +82,7 @@ export const messages = {
     success: (thing: string, action: Action) =>
       `Your ${baseMessages.success(thing, action)}`,
     noChanges: (thing: string) => `Your ${baseMessages.noChanges(thing)}`,
+    verified: "This user has verified their email.",
 
     signIn: (name?: string) =>
       `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
@@ -92,12 +98,17 @@ export const messages = {
       `${name}'s role is now set to ${role}.`,
 
     current: (thing: "user" | "session") => `Current ${thing}`,
-    lastSeen: (time: Date) => baseMessages.lastThingAgo("seen", time),
+    lastSeen: (time: Date) => baseMessages.thingAgo("Last seen", time),
+    createdAgo: (time: Date) =>
+      `${formatDate(time, "PPP")} - ${formatDateDistanceToNow(time)} ago`,
 
     revokeThisSession: "This session has been revoked.",
     revokeOtherSessions: "Your other active sessions has been revoked.",
+
     revokeUserSession: (name?: string) =>
       `${name ? name + "'s" : "All user"} active sessions have been revoked.`,
+    revokeUserSessions: (success: number, length: number) =>
+      `${success} out of ${length} user active sessions have been revoked.`,
 
     removeUsers: (success: number, length: number) =>
       baseMessages.success(`${success} out of ${length} users`, "removed"),

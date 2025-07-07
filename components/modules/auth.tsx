@@ -28,6 +28,7 @@ import {
   CircleFadingArrowUp,
   Dot,
   Gamepad2,
+  Info,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
@@ -52,6 +53,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod/v4";
+import { CopyButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
@@ -108,6 +110,15 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Separator } from "../ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
@@ -146,10 +157,15 @@ export function UserVerifiedBadge({
   if (withoutText) return <BadgeCheck className="text-rvns size-4 shrink-0" />;
 
   return (
-    <Badge variant="outline_rvns" className={cn("capitalize", className)}>
-      <BadgeCheck />
-      {baseText.verified}
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger className={className} asChild>
+        <Badge variant="outline_rvns" className={cn("capitalize", className)}>
+          <BadgeCheck />
+          {baseText.verified}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>{messages.user.verified}</TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -1130,13 +1146,12 @@ export function AdminAccountDataTable({
               <DropdownMenuSeparator />
 
               <DropdownMenuItem asChild>
-                <AdminActionTerminateUserSessionsDialog
+                <AdminActionRevokeUserSessionsDialog
                   ids={filteredData.map(({ id }) => id)}
                   onSuccess={clearRowSelection}
                 />
               </DropdownMenuItem>
 
-              {/* // TODO */}
               <DropdownMenuItem asChild>
                 <Button size="sm" variant="ghost_destructive" disabled>
                   <Ban />
@@ -1365,34 +1380,117 @@ export function AdminCreateUserDialog() {
   );
 }
 
-export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
+export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { title, desc } = dialogText.user.detail;
+  const details: {
+    label: string;
+    desc: string | number;
+    copy?: keyof UserWithRole;
+  }[] = [
+    { label: "User ID", desc: `${data.id.slice(0, 19)}...`, copy: "id" },
+    { label: "Email Address", desc: data.email, copy: "email" },
+    { label: "Created At", desc: messages.user.createdAgo(data.createdAt) },
+  ];
+
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <div className="flex items-center gap-x-2">
+        <SheetTrigger className="link">{data.email}</SheetTrigger>
+        {data.emailVerified && <UserVerifiedBadge withoutText />}
+      </div>
+
+      <SheetContent>
+        <SheetHeader className="flex-row items-center">
+          <UserAvatar {...data} className="size-12" />
+
+          <div className="flex flex-col">
+            <SheetTitle className="text-base">{title(data.name)}</SheetTitle>
+            <SheetDescription>{desc(data.name)}</SheetDescription>
+          </div>
+        </SheetHeader>
+
+        <div className="flex flex-col gap-y-4 px-4">
+          <Separator />
+
+          <div className="flex items-start gap-x-4">
+            <div className="flex flex-col gap-y-4">
+              <div className="flex items-center gap-x-2">
+                <UserRoleBadge role={data.role as Role} />
+                {data.emailVerified && <UserVerifiedBadge />}
+              </div>
+
+              {details.map(({ label, desc, copy }, index) => (
+                <div key={index} className="grid gap-y-1">
+                  <Label>{label}</Label>
+
+                  {copy ? (
+                    <div className="flex items-center gap-x-2">
+                      <small className="text-muted-foreground">{desc}</small>
+                      <CopyButton
+                        value={data.email}
+                        size="iconxs"
+                        variant="ghost"
+                      />
+                    </div>
+                  ) : (
+                    <small className="text-muted-foreground">{desc}</small>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <Separator />
+
+          <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
+
+          <Separator />
+
+          <AdminRevokeUserSessionsDialog {...data} />
+        </div>
+
+        <SheetFooter>
+          <AdminRemoveUserDialog data={data} setIsOpen={setIsOpen} />
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+function AdminChangeUserRoleForm({
+  data,
+  setIsOpen,
+}: {
+  data: UserWithRole;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const schema = zodAuth.pick({ role: true });
-  const { trigger, title, desc } = dialogText.user.changeRole;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { role: role ?? defaultRole },
+    defaultValues: { role: data.role ?? defaultRole },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
-    setIsLoading(true);
-
     const newRole = formData.role as Role;
-    if (newRole === role) return toast.info(messages.noChanges(`${name} role`));
+    if (newRole === data.role)
+      return toast.info(messages.noChanges(`${name}'s role`));
 
+    setIsLoading(true);
     authClient.admin.setRole(
-      { userId: id, role: newRole },
+      { userId: data.id, role: newRole },
       {
         onError: ({ error }) => {
           toast.error(error.message);
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(messages.user.changeRole(name, newRole));
+          toast.success(messages.user.changeRole(data.name, newRole));
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1402,76 +1500,55 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button size="sm" variant="ghost" disabled={isLoading}>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Change {`${data.name}'s`} Role</FormLabel>
+              <Select
+                value={field.value as Role}
+                onValueChange={field.onChange}
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                </FormControl>
+
+                <SelectContent>
+                  {allRoles.map((item, index) => {
+                    const { displayName, icon: RoleIcon } = rolesMeta[item];
+                    return (
+                      <SelectItem
+                        key={index}
+                        value={item}
+                        className="capitalize"
+                      >
+                        <RoleIcon />
+                        {displayName ?? capitalize(item)}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" size="sm" disabled={isLoading}>
           {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
-          {trigger}
+          {buttonText.save}
         </Button>
-      </DialogTrigger>
-
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{title(name)}</DialogTitle>
-          <DialogDescription>{desc(name)}</DialogDescription>
-        </DialogHeader>
-
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(formHandler)}>
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">Role</FormLabel>
-                  <Select
-                    value={field.value as Role}
-                    onValueChange={field.onChange}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {allRoles.map((item, index) => {
-                        const { displayName, icon: RoleIcon } = rolesMeta[item];
-                        return (
-                          <SelectItem
-                            key={index}
-                            value={item}
-                            className="capitalize"
-                          >
-                            <RoleIcon />
-                            {displayName ?? capitalize(item)}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <Separator />
-
-            <DialogFooter>
-              <DialogClose>{buttonText.cancel}</DialogClose>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
-                {trigger}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      </form>
+    </Form>
   );
 }
 
-export function AdminTerminateUserSessionsDialog({
+function AdminRevokeUserSessionsDialog({
   id,
   name,
 }: Pick<Session["user"], "id" | "name">) {
@@ -1499,7 +1576,7 @@ export function AdminTerminateUserSessionsDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
+        <Button variant="outline_warning" disabled={isLoading}>
           {isLoading ? <Spinner /> : <MonitorOff />}
           {trigger}
         </Button>
@@ -1507,7 +1584,8 @@ export function AdminTerminateUserSessionsDialog({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-x-2">
+          <AlertDialogTitle className="text-warning flex items-center gap-x-2">
+            <Info />
             {title(name)}
           </AlertDialogTitle>
           <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
@@ -1517,7 +1595,7 @@ export function AdminTerminateUserSessionsDialog({
           <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
 
           <AlertDialogAction
-            className={buttonVariants({ variant: "destructive" })}
+            className={buttonVariants({ variant: "warning" })}
             onClick={clickHandler}
           >
             {buttonText.confirm}
@@ -1528,11 +1606,13 @@ export function AdminTerminateUserSessionsDialog({
   );
 }
 
-export function AdminRemoveUserDialog({
-  id,
-  name,
-  image,
-}: Pick<Session["user"], "id" | "name" | "image">) {
+function AdminRemoveUserDialog({
+  data: { id, name, image },
+  setIsOpen,
+}: {
+  data: Pick<Session["user"], "id" | "name" | "image">;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -1552,6 +1632,7 @@ export function AdminRemoveUserDialog({
         onSuccess: () => {
           toast.success(messages.success(name, "removed"));
           setIsLoading(false);
+          setIsOpen(false);
           router.refresh();
         },
       },
@@ -1561,7 +1642,7 @@ export function AdminRemoveUserDialog({
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
+        <Button variant="outline_destructive" disabled={isLoading}>
           {isLoading ? <Spinner /> : <Trash2 />}
           {buttonText.remove}
         </Button>
@@ -1569,7 +1650,7 @@ export function AdminRemoveUserDialog({
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-x-2">
+          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
             <TriangleAlert />
             {title(name)}
           </AlertDialogTitle>
@@ -1591,7 +1672,7 @@ export function AdminRemoveUserDialog({
   );
 }
 
-function AdminActionTerminateUserSessionsDialog({
+function AdminActionRevokeUserSessionsDialog({
   ids,
   onSuccess,
 }: {
@@ -1610,10 +1691,12 @@ function AdminActionTerminateUserSessionsDialog({
         setIsLoading(false);
         return e;
       },
-      success: () => {
+      success: (res) => {
         setIsLoading(false);
         onSuccess();
-        return messages.user.revokeUserSession();
+
+        const successLength = res.filter(({ success }) => success).length;
+        return messages.user.revokeUserSessions(successLength, ids.length);
       },
     });
   };

@@ -53,11 +53,16 @@ export function RefreshButton({
 export function CopyButton({
   value,
   text,
+  iconCn,
   size,
   disabled,
   onClick,
   ...props
-}: ButtonPropsWithoutChildren & { value: string; text?: string }) {
+}: ButtonPropsWithoutChildren & {
+  value: string;
+  text?: string;
+  iconCn?: string;
+}) {
   const [copied, setCopied] = useState<boolean>(false);
   return (
     <Button
@@ -73,15 +78,16 @@ export function CopyButton({
       {...props}
     >
       <span className="sr-only">{copied ? "Copied" : "Copy"}</span>
-      <div className="inline-flex">
-        <Copy className={cn("transition", copied ? "scale-0" : "scale-100")} />
-        <Check
-          className={cn(
-            "absolute transition",
-            copied ? "scale-100" : "scale-0",
-          )}
-        />
-      </div>
+      <Copy
+        className={cn("transition", copied ? "scale-0" : "scale-100", iconCn)}
+      />
+      <Check
+        className={cn(
+          "absolute transition",
+          copied ? "scale-100" : "scale-0",
+          iconCn,
+        )}
+      />
       {text}
     </Button>
   );
