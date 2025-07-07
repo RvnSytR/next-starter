@@ -20,22 +20,25 @@ import {
 } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
 import { zodAuth, zodFile } from "@/lib/zod";
-import { deleteProfilePicture } from "@/server/action";
+import {
+  deleteProfilePicture,
+  deleteUsers,
+  revokeUserSessions,
+} from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { UserWithRole } from "better-auth/plugins";
-import { formatDistanceToNow } from "date-fns";
 import {
   BadgeCheck,
   Ban,
   CircleFadingArrowUp,
   Dot,
   Gamepad2,
-  Layers,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
   Mail,
+  Monitor,
   MonitorOff,
   MonitorSmartphone,
   RotateCcw,
@@ -272,7 +275,7 @@ export function SignInForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(message.user.signOut);
+        toast.success(message.user.signIn);
         router.push(signInRoute);
       },
     });
@@ -517,6 +520,8 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
+  const { title, desc } = dialog.profile.removeAvatar;
+
   const schema = zodFile(contentType);
 
   const changeHandler = async (fileList: FileList) => {
@@ -618,12 +623,8 @@ export function ProfilePicture({
 
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>
-                  {dialog.profile.removeAvatar.title}
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  {dialog.profile.removeAvatar.desc}
-                </AlertDialogDescription>
+                <AlertDialogTitle>{title}</AlertDialogTitle>
+                <AlertDialogDescription>{desc}</AlertDialogDescription>
               </AlertDialogHeader>
 
               <AlertDialogFooter>
@@ -888,10 +889,11 @@ export function ActiveSessionButton({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const isCurrentSession = currentSessionId === id;
-  const { title, desc } = dialog.profile.revokeSession;
+  const parsedResult = new UAParser(userAgent!).getResult();
 
-  const parseResult = new UAParser(userAgent!).getResult();
-  const { browser, os, device } = parseResult;
+  const { browser, os, device } = parsedResult;
+  const { title, desc } = dialog.profile.revokeSession;
+  const { currentSession, browserAndOS, lastSeen } = message.user;
 
   const DeviceIcons = {
     mobile: Smartphone,
@@ -901,7 +903,7 @@ export function ActiveSessionButton({
     wearable: MonitorSmartphone,
     xr: MonitorSmartphone,
     embedded: MonitorSmartphone,
-    other: MonitorSmartphone,
+    other: Monitor,
   }[device.type ?? "other"];
 
   const clickHandler = () => {
@@ -930,7 +932,9 @@ export function ActiveSessionButton({
         </div>
 
         <div className="flex flex-col">
-          <small className="font-medium">{`${browser.name} on ${os.name}`}</small>
+          <small className="font-medium">
+            {browserAndOS(browser.name, os.name)}
+          </small>
 
           <div className="text-muted-foreground flex items-center">
             <small
@@ -946,11 +950,11 @@ export function ActiveSessionButton({
 
             {isCurrentSession ? (
               <small className="text-success order-1 font-medium">
-                Current Session
+                {currentSession}
               </small>
             ) : (
               <small className="order-3 line-clamp-1 font-normal">
-                Last seen {formatDistanceToNow(updatedAt)} ago
+                {lastSeen(updatedAt)}
               </small>
             )}
           </div>
@@ -1010,7 +1014,6 @@ export function RevokeOtherSessionsButton() {
       <AlertDialogTrigger asChild>
         <Button variant="outline" disabled={isLoading}>
           {isLoading ? <Spinner /> : <MonitorOff />}
-
           {trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1035,6 +1038,8 @@ export function DeleteMyAccountButton({
 }: Pick<Session["user"], "image">) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { trigger, title, desc } = dialog.profile.deleteAccount;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1061,7 +1066,7 @@ export function DeleteMyAccountButton({
       <AlertDialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           {isLoading ? <Spinner /> : <Trash2 />}
-          {dialog.profile.deleteAccount.trigger}
+          {trigger}
         </Button>
       </AlertDialogTrigger>
 
@@ -1069,11 +1074,9 @@ export function DeleteMyAccountButton({
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
             <TriangleAlert />
-            {dialog.profile.deleteAccount.title}
+            {title}
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            {dialog.profile.deleteAccount.desc}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{desc}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -1090,6 +1093,10 @@ export function DeleteMyAccountButton({
   );
 }
 
+/*
+ * --- ADMIN ---
+ */
+
 export function AdminAccountDataTable({
   data,
   currentUserId,
@@ -1103,9 +1110,12 @@ export function AdminAccountDataTable({
     <DataTable
       data={data}
       columns={columns}
-      onRowSelection={(data) => {
-        const ids = data.map(({ original }) => original.id);
-        console.log(ids);
+      enableRowSelection={({ original }) => original.id !== currentUserId}
+      onRowSelection={(data, table) => {
+        const filteredData = data.map(({ original }) => original);
+
+        const clearRowSelection = () => table.resetRowSelection();
+
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -1115,23 +1125,30 @@ export function AdminAccountDataTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className="text-center">{`${ids.length} ${compText.selected}`}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${compText.selected}`}</DropdownMenuLabel>
 
               <DropdownMenuSeparator />
 
-              {/* // TODO */}
               <DropdownMenuItem asChild>
-                <Button size="sm" variant="ghost" disabled>
-                  <Layers />
-                  Impersonate Session
-                </Button>
+                <AdminActionTerminateUserSessionsDialog
+                  ids={filteredData.map(({ id }) => id)}
+                  onSuccess={clearRowSelection}
+                />
               </DropdownMenuItem>
 
+              {/* // TODO */}
               <DropdownMenuItem asChild>
                 <Button size="sm" variant="ghost_destructive" disabled>
                   <Ban />
                   Ban
                 </Button>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <AdminActionRemoveUsersDialog
+                  data={filteredData}
+                  onSuccess={clearRowSelection}
+                />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -1145,7 +1162,9 @@ export function AdminAccountDataTable({
 export function AdminCreateUserDialog() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const Icon = UserRoundPlus;
+  const { trigger, title, desc } = dialog.user.create;
 
   const schema = zodAuth
     .pick({
@@ -1195,14 +1214,14 @@ export function AdminCreateUserDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button size="sm">
-          <Icon /> {dialog.user.create.trigger}
+          <Icon /> {trigger}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialog.user.create.title}</DialogTitle>
-          <DialogDescription>{dialog.user.create.desc}</DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{desc}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -1334,7 +1353,7 @@ export function AdminCreateUserDialog() {
               <DialogClose>{buttonText.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? <Spinner /> : <Icon />}
-                {dialog.user.create.trigger}
+                {trigger}
               </Button>
             </DialogFooter>
           </form>
@@ -1350,6 +1369,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const schema = zodAuth.pick({ role: true });
+  const { trigger, title, desc } = dialog.user.changeRole;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -1384,16 +1404,14 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
       <DialogTrigger asChild>
         <Button size="sm" variant="ghost" disabled={isLoading}>
           {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
-          {dialog.user.changeRole.trigger}
+          {trigger}
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{dialog.user.changeRole.title(name)}</DialogTitle>
-          <DialogDescription>
-            {dialog.user.changeRole.desc(name)}
-          </DialogDescription>
+          <DialogTitle>{title(name)}</DialogTitle>
+          <DialogDescription>{desc(name)}</DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -1441,7 +1459,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
               <DialogClose>{buttonText.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
                 {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
-                {dialog.user.changeRole.trigger}
+                {trigger}
               </Button>
             </DialogFooter>
           </form>
@@ -1456,6 +1474,8 @@ export function AdminTerminateUserSessionsDialog({
   name,
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { trigger, title, desc } = dialog.user.revokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1479,25 +1499,20 @@ export function AdminTerminateUserSessionsDialog({
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
           {isLoading ? <Spinner /> : <MonitorOff />}
-
-          {dialog.user.revokeSession.trigger}
+          {trigger}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-x-2">
-            {dialog.user.revokeSession.title(name)}
+            {title(name)}
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            {dialog.user.revokeSession.desc(name)}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {buttonText.cancel}
-          </AlertDialogCancel>
+          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
 
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
@@ -1519,6 +1534,8 @@ export function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { title, desc } = dialog.user.remove;
+
   const clickHandler = async () => {
     setIsLoading(true);
     if (image) await deleteProfilePicture(image);
@@ -1531,7 +1548,7 @@ export function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.success(`${name} account`, "removed"));
+          toast.success(message.success(name, "removed"));
           setIsLoading(false);
           router.refresh();
         },
@@ -1552,17 +1569,136 @@ export function AdminRemoveUserDialog({
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-x-2">
             <TriangleAlert />
-            {dialog.user.remove.title(name)}
+            {title(name)}
           </AlertDialogTitle>
-          <AlertDialogDescription>
-            {dialog.user.remove.desc(name)}
-          </AlertDialogDescription>
+          <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel className={buttonVariants({ variant: "outline" })}>
-            {buttonText.cancel}
-          </AlertDialogCancel>
+          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
+
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={clickHandler}
+          >
+            {buttonText.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function AdminActionTerminateUserSessionsDialog({
+  ids,
+  onSuccess,
+}: {
+  ids: string[];
+  onSuccess: () => void;
+}) {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { trigger, title, desc } = dialog.user.revokeMultipleSessions;
+
+  const clickHandler = async () => {
+    setIsLoading(true);
+    toast.promise(revokeUserSessions(ids), {
+      loading: message.loading,
+      error: (e) => {
+        setIsLoading(false);
+        return e;
+      },
+      success: () => {
+        setIsLoading(false);
+        onSuccess();
+        return message.user.revokeUserSession();
+      },
+    });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
+          {isLoading ? <Spinner /> : <MonitorOff />}
+          {trigger}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-x-2">
+            {title(ids.length)}
+          </AlertDialogTitle>
+          <AlertDialogDescription>{desc(ids.length)}</AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
+
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={clickHandler}
+          >
+            {buttonText.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+function AdminActionRemoveUsersDialog({
+  data,
+  onSuccess,
+}: {
+  data: Pick<Session["user"], "id" | "name" | "image">[];
+  onSuccess: () => void;
+}) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { title, desc } = dialog.user.removeMultiple;
+
+  const clickHandler = async () => {
+    setIsLoading(true);
+    toast.promise(deleteUsers(data), {
+      loading: message.loading,
+      error: (e) => {
+        setIsLoading(false);
+        return e;
+      },
+      success: (res) => {
+        setIsLoading(false);
+        onSuccess();
+
+        router.refresh();
+
+        const successLength = res.filter(({ success }) => success).length;
+        return message.user.removeUsers(successLength, data.length);
+      },
+    });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
+          {isLoading ? <Spinner /> : <Trash2 />}
+          {buttonText.remove}
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
+            <TriangleAlert /> {title(data.length)}
+          </AlertDialogTitle>
+          <AlertDialogDescription>{desc(data.length)}</AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
 
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}

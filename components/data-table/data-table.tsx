@@ -8,6 +8,7 @@ import {
   Table as DataTableType,
   Row,
   SortingState,
+  TableOptions,
   VisibilityState,
   flexRender,
   getCoreRowModel,
@@ -85,8 +86,11 @@ export function DataTable<TData>({
   noResult,
   className,
   onRowSelection,
+  enableRowSelection,
   ...props
-}: DataTableProps<TData> & OtherDataTableProps<TData>) {
+}: DataTableProps<TData> &
+  OtherDataTableProps<TData> &
+  Pick<TableOptions<TData>, "enableRowSelection">) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [globalFilter, setGlobalFilter] = useState<string>("");
 
@@ -118,6 +122,7 @@ export function DataTable<TData>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
     onRowSelectionChange: setRowSelection,
+    enableRowSelection,
 
     initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[0] } },
     state: {

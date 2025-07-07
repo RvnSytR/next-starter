@@ -62,12 +62,13 @@ function headerCheckbox<T>(table: Table<T>) {
   );
 }
 
-function cellCheckbox<R>(row: Row<R>) {
+function cellCheckbox<R>(row: Row<R>, disabled: boolean = false) {
   return (
     <Checkbox
       checked={row.getIsSelected()}
       onCheckedChange={(value) => row.toggleSelected(!!value)}
       aria-label="Select row"
+      disabled={disabled}
     />
   );
 }
@@ -77,7 +78,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
     id: "select",
     header: ({ table }) => headerCheckbox(table),
-    cell: ({ row }) => cellCheckbox(row),
+    cell: ({ row }) => cellCheckbox(row, row.original.id === currentUserId),
     enableHiding: false,
     enableSorting: false,
   }),

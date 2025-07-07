@@ -71,17 +71,30 @@ export const dialog = {
         `Changing ${name}'s role will update their permissions and access within the system. Are you sure you want to proceed?`,
     },
 
-    revokeSession: {
-      trigger: "Terminate Sessions",
-      title: (name: string) => `Terminate All Active Sessions for ${name}`,
+    revokeSessions: {
+      trigger: "Revoke Sessions",
+      title: (name: string) => `Revoke All Active Sessions for ${name}`,
       desc: (name: string) =>
         `This will immediately sign out all active sessions for ${name}. Are you sure you want to proceed?`,
+    },
+
+    revokeMultipleSessions: {
+      trigger: "Revoke Sessions",
+      title: (length: number) => `Revoke Sessions for ${length} Users`,
+      desc: (length: number) =>
+        `This will immediately sign out all active sessions for ${length} selected users. Are you sure you want to proceed?`,
     },
 
     remove: {
       title: (name: string) => `Remove ${name}'s Account`,
       desc: (name: string) =>
         `This will permanently delete ${name}'s account and all associated data. Proceed with caution as this action cannot be undone.`,
+    },
+
+    removeMultiple: {
+      title: (length: number) => `Remove ${length} Accounts`,
+      desc: (length: number) =>
+        `This will permanently delete ${length} selected user accounts and all associated data. Proceed with caution as this action cannot be undone.`,
     },
   },
 
@@ -92,14 +105,14 @@ export const dialog = {
     },
 
     revokeSession: {
-      trigger: "Terminate Session",
-      title: "Terminate Active Session",
+      trigger: "Revoke Session",
+      title: "Revoke Active Session",
       desc: "This will immediately sign out the selected device. Are you sure you want to proceed?",
     },
 
     revokeAllOtherSession: {
-      trigger: "Terminate Other Sessions",
-      title: "Terminate All Other Sessions",
+      trigger: "Revoke Other Sessions",
+      title: "Revoke All Other Sessions",
       desc: "This will sign out all active sessions except the current one. Are you sure you want to proceed?",
     },
 

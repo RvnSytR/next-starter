@@ -76,7 +76,7 @@ export function Calendar({
           defaultClassNames.dropdown_root,
         ),
         dropdown: cn(
-          "absolute bg-accent text-foreground inset-0 opacity-0 border",
+          "absolute bg-popover text-foreground inset-0 opacity-0 border",
           defaultClassNames.dropdown,
         ),
         caption_label: cn(

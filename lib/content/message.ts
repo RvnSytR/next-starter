@@ -1,5 +1,5 @@
 import { FieldType, FileType, mediaMeta } from "../const";
-import { aOrAn, capitalize } from "../utils";
+import { aOrAn, capitalize, formatDateDistanceToNow } from "../utils";
 
 type Action = "created" | "updated" | "removed";
 
@@ -7,7 +7,10 @@ const defaultMessage = {
   loading: "Just a moment...",
   error: "Uh-oh! Something went wrong. Please try again later.",
   success: (thing: string, action: Action) =>
-    `${thing} has been successfully ${action}.`.trim(),
+    `${thing} has been ${action} successfully.`.trim(),
+
+  lastThingAgo: (thing: string, time: Date) =>
+    `Last ${thing} ${formatDateDistanceToNow(time)} ago.`,
 
   invalid: {
     email: "Hmm, that doesn't look like a valid email.",
@@ -34,7 +37,6 @@ const defaultMessage = {
 
     selection: (field: string) => `That's not a valid option for ${field}.`,
 
-    // You can add more like:
     number: "That doesn't look like a valid number.",
     text: "Please enter valid text.",
     color: "That doesn't seem like a valid color code.",
@@ -87,9 +89,17 @@ export const message = {
     changeRole: (name: string, role: string) =>
       `${name}'s role is now set to ${role}.`,
 
-    revokeThisSession: "This session has been terminated.",
-    revokeOtherSessions: "Your other active sessions has been terminated.",
+    currentSession: "Current Session",
+    browserAndOS: (browser: string | undefined, os: string | undefined) =>
+      `${browser ?? "A browser"} on ${os ?? "some OS"}`,
+    lastSeen: (time: Date) => defaultMessage.lastThingAgo("seen", time),
+
+    revokeThisSession: "This session has been revoked.",
+    revokeOtherSessions: "Your other active sessions has been revoked.",
     revokeUserSession: (name?: string) =>
-      `${name ? name + "'s" : "All"} active sessions have been terminated.`,
+      `${name ? name + "'s" : "All user"} active sessions have been revoked.`,
+
+    removeUsers: (success: number, length: number) =>
+      message.success(`${success} out of ${length} users`, "removed"),
   },
 };
