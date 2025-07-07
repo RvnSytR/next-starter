@@ -219,7 +219,7 @@ export function DataTable<TData>({
 
         <div className="flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
           <small className="text-muted-foreground">
-            {tableText.rowSelecion(selectedRows.length, filteredRows.length)}
+            {tableText.rowSelection(selectedRows.length, filteredRows.length)}
           </small>
 
           <div className="flex flex-col items-center gap-4 lg:flex-row">

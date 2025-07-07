@@ -25,7 +25,7 @@ const baseMessages = {
     URL: "That URL doesn't look quite right.",
     time: "Please enter a proper time.",
     date: "That doesn't seem like a valid date.",
-    dateMultiple: "That doesn't seem like a valid dates.",
+    dateMultiple: "Those don't seem like valid dates.",
     dateRange: {
       field: "Please select a valid range of dates.",
       from: "Please choose a valid start date.",
@@ -36,9 +36,9 @@ const baseMessages = {
       `Age must be between ${min} and ${max}.`,
 
     fileType: (file: FileType = "file", withAccepted: boolean = false) =>
-      `Hmm, that's not a valid ${file} type.${
+      `That's not a valid ${file} type.${
         withAccepted
-          ? " Accepted types: " + mediaMeta[file].extensions.join(", ")
+          ? " Accepted: " + mediaMeta[file].extensions.join(", ")
           : ""
       }`.trim(),
 
@@ -86,7 +86,7 @@ export const messages = {
 
     signIn: (name?: string) =>
       `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
-    signUp: "You're all set! Please sign in to get started.",
+    signUp: "You're all set! Sign in to continue.",
     signOut: "You've been signed out. See you soon!",
 
     confirmPassword: "Passwords don't match — please double-check.",
@@ -100,17 +100,20 @@ export const messages = {
     current: (thing: "user" | "session") => `Current ${thing}`,
     lastSeen: (time: Date) => baseMessages.thingAgo("Last seen", time),
     createdAgo: (time: Date) =>
-      `${formatDate(time, "PPP")} - ${formatDateDistanceToNow(time)} ago`,
+      `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
 
     revokeThisSession: "This session has been revoked.",
-    revokeOtherSessions: "Your other active sessions has been revoked.",
+    revokeOtherSessions: "Your other active sessions have been revoked.",
 
     revokeUserSession: (name?: string) =>
       `${name ? name + "'s" : "All user"} active sessions have been revoked.`,
     revokeUserSessions: (success: number, length: number) =>
-      `${success} out of ${length} user active sessions have been revoked.`,
+      `${success} out of ${length} user active session${length !== 1 ? "s" : ""} have been revoked.`,
 
     removeUsers: (success: number, length: number) =>
-      baseMessages.success(`${success} out of ${length} users`, "removed"),
+      baseMessages.success(
+        `${success} out of ${length} user${length !== 1 ? "s" : ""}`,
+        "removed",
+      ),
   },
 };

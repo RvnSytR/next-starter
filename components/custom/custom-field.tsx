@@ -331,7 +331,8 @@ export function InputFile({
 
           <div className="flex flex-col items-center gap-y-2">
             <small className="font-medium">
-              {placeholder ?? buttonText.fileInput.placeholder(accept)}
+              {placeholder ??
+                buttonText.fileInput.placeholder(accept, multiple)}
             </small>
 
             <small className="text-muted-foreground flex items-center text-xs">

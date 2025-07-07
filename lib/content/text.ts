@@ -1,4 +1,5 @@
 import { FileType } from "../const";
+import { aOrAn } from "../utils";
 
 export const baseText = {
   more: "more",
@@ -19,13 +20,13 @@ export const buttonText = {
   },
 
   fileInput: {
-    placeholder: (fileType: FileType) =>
-      `Drag & drop a ${fileType} here or click to upload`,
+    placeholder: (fileType: FileType, multiple: boolean = false) =>
+      `Drag & drop ${multiple ? `${fileType}s` : `${aOrAn(fileType)} ${fileType}`} here or click to upload`,
     size: (mb: number) => `Up to ${mb} MB`,
   },
 
   upload: (file: string = "", multiple: boolean = false) =>
-    `Upload ${multiple ? `${file}'s` : file}`,
+    `Upload ${multiple ? `${file}s` : file}`,
 
   action: "Action",
   back: "Back",
@@ -42,12 +43,12 @@ export const buttonText = {
 
 export const tableText = {
   default: {
-    placeholder: "Search Something",
+    placeholder: "Search something...",
     noResult: "No Result",
   },
 
   rowsPerPage: "Rows per page",
-  rowSelecion: (selected: number, totalRows: number) =>
+  rowSelection: (selected: number, totalRows: number) =>
     `${selected} of ${totalRows} row(s) ${baseText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
     `Page ${pageNumber} of ${totalPage}`,
@@ -65,13 +66,6 @@ export const dialogText = {
       title: (name: string) => `${name}'s Details`,
       desc: (name: string) => `View detailed information for ${name}.`,
     },
-
-    // changeRole: {
-    //   trigger: "Change Role",
-    //   title: (name: string) => `Change ${name}'s Role`,
-    //   desc: (name: string) =>
-    //     `Changing ${name}'s role will update their permissions and access within the system. Are you sure you want to proceed?`,
-    // },
 
     revokeSessions: {
       trigger: "Revoke Sessions",
@@ -121,7 +115,7 @@ export const dialogText = {
     deleteAccount: {
       trigger: "Delete Account",
       title: "Delete Your Account",
-      desc: "Deleting your account will permanently remove all associated data. This action cannot be undone. Proceed with caution.",
+      desc: "Deleting your account will permanently remove all associated data. Proceed with caution as this action cannot be undone.",
     },
   },
 };

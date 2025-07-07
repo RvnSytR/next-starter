@@ -3,7 +3,8 @@ import { R } from "@/components/other-ui/r";
 import { checkAndGetAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
-  const { routeMeta } = await checkAndGetAuthorizedSession("/dashboard");
+  const { session, routeMeta } =
+    await checkAndGetAuthorizedSession("/dashboard");
 
   return (
     <Section
@@ -11,6 +12,7 @@ export default async function Page() {
       className="items-center justify-center"
     >
       <R />
+      <p>{JSON.stringify(session, null, 2)}</p>
     </Section>
   );
 }
