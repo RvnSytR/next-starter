@@ -1,3 +1,3 @@
-export * from "./component";
 export * from "./dashboard";
-export * from "./message";
+export * from "./messages";
+export * from "./text";

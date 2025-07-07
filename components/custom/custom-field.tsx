@@ -1,5 +1,5 @@
 import { FileType, mediaMeta } from "@/lib/const";
-import { buttonText, compText } from "@/lib/content";
+import { baseText, buttonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -102,7 +102,7 @@ export function InputDate({
       if (selected.length <= maxDisplay) {
         placeholder = formattedDates.join(", ");
       } else {
-        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} ${compText.more}`;
+        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} ${baseText.more}`;
       }
     } else if (mode === "range" && selected && selected.from) {
       placeholder = selected.to

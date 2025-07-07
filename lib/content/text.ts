@@ -1,8 +1,9 @@
 import { FileType } from "../const";
 
-export const compText = {
+export const baseText = {
   more: "more",
   selected: "selected",
+  verified: "verified",
 };
 
 export const buttonText = {
@@ -39,10 +40,6 @@ export const buttonText = {
   view: "View",
 };
 
-export const badgeText = {
-  verifiedUser: "Verified",
-};
-
 export const tableText = {
   default: {
     placeholder: "Search Something",
@@ -51,17 +48,23 @@ export const tableText = {
 
   rowsPerPage: "Rows per page",
   rowSelecion: (selected: number, totalRows: number) =>
-    `${selected} of ${totalRows} row(s) ${compText.selected}.`,
+    `${selected} of ${totalRows} row(s) ${baseText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
     `Page ${pageNumber} of ${totalPage}`,
 };
 
-export const dialog = {
+export const dialogText = {
   user: {
     create: {
       trigger: "Create User",
       title: "Create New User",
       desc: "Create a new user by entering their details. Ensure all required fields are completed.",
+    },
+
+    detail: {
+      title: (name: string) => `${name}'s Details`,
+      desc: (name: string) =>
+        `View and manage detailed information for ${name}.`,
     },
 
     changeRole: {

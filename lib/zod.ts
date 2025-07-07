@@ -1,13 +1,13 @@
-import { message } from "@/lib/content";
 import { z } from "zod/v4";
 import { FileType, mediaMeta } from "./const";
+import { messages } from "./content";
 
 export const zodDateRange = z.object(
   {
-    from: z.date({ error: message.invalid.dateRange.from }),
-    to: z.date({ error: message.invalid.dateRange.to }),
+    from: z.date({ error: messages.invalid.dateRange.from }),
+    to: z.date({ error: messages.invalid.dateRange.to }),
   },
-  { error: message.invalid.dateRange.field },
+  { error: messages.invalid.dateRange.field },
 );
 
 export const zodFile = (
@@ -21,15 +21,15 @@ export const zodFile = (
     z
       .file()
       .min(1)
-      .max(maxFileSize, { error: message.fileTooLarge(type, size.mb) })
-      .mime(mimeType, { error: message.invalid.fileType(type) }),
+      .max(maxFileSize, { error: messages.fileTooLarge(type, size.mb) })
+      .mime(mimeType, { error: messages.invalid.fileType(type) }),
   );
 
   if (!options?.optional)
-    schema = schema.min(1, { error: message.fileRequired(type) });
+    schema = schema.min(1, { error: messages.fileRequired(type) });
 
   return schema.refine((f) => f.every(({ size }) => size <= maxFileSize), {
-    error: message.fileTooLarge(type, size.mb),
+    error: messages.fileTooLarge(type, size.mb),
   });
 };
 
@@ -37,35 +37,37 @@ export const zodAuth = z.object({
   id: z.string(),
   role: z.string().optional(),
   name: z
-    .string({ error: message.requiredAndInvalidField("Name", "string") })
+    .string({ error: messages.requiredAndInvalidField("Name", "string") })
     .trim()
-    .min(1, { error: message.tooShort("Name", 1) }),
+    .min(1, { error: messages.tooShort("Name", 1) }),
   email: z
-    .email({ error: message.invalid.email })
+    .email({ error: messages.invalid.email })
     .trim()
-    .min(1, { error: message.tooShort("Email", 1) })
-    .max(255, { error: message.tooShort("Email", 255) }),
+    .min(1, { error: messages.tooShort("Email", 1) })
+    .max(255, { error: messages.tooShort("Email", 255) }),
   password: z
-    .string({ error: message.requiredAndInvalidField("Password", "string") })
+    .string({ error: messages.requiredAndInvalidField("Password", "string") })
     .trim()
-    .min(1, { error: message.tooShort("Password", 1) })
-    .min(8, { error: message.tooShort("Password", 8) })
-    .max(255, { error: message.tooShort("Password", 255) }),
+    .min(1, { error: messages.tooShort("Password", 1) })
+    .min(8, { error: messages.tooShort("Password", 8) })
+    .max(255, { error: messages.tooShort("Password", 255) }),
   confirmPassword: z
     .string({
-      error: message.requiredAndInvalidField("Confirm Password", "string"),
+      error: messages.requiredAndInvalidField("Confirm Password", "string"),
     })
-    .min(1, { error: message.tooShort("Confirm Password", 1) }),
+    .min(1, { error: messages.tooShort("Confirm Password", 1) }),
   rememberMe: z.boolean({
-    error: message.requiredAndInvalidField("Remember Me", "boolean"),
+    error: messages.requiredAndInvalidField("Remember Me", "boolean"),
   }),
   revokeOtherSessions: z.boolean({
-    error: message.requiredAndInvalidField(
+    error: messages.requiredAndInvalidField(
       "Sign out from other devices",
       "boolean",
     ),
   }),
   isAgree: z
-    .boolean({ error: message.requiredAndInvalidField("Agreement", "boolean") })
-    .refine((v) => v === true, { error: message.user.agreement }),
+    .boolean({
+      error: messages.requiredAndInvalidField("Agreement", "boolean"),
+    })
+    .refine((v) => v === true, { error: messages.user.agreement }),
 });

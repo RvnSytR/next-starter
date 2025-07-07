@@ -3,13 +3,7 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import {
-  badgeText,
-  buttonText,
-  compText,
-  dialog,
-  message,
-} from "@/lib/content";
+import { baseText, buttonText, dialogText, messages } from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -149,9 +143,12 @@ export function UserVerifiedBadge({
   withoutText?: boolean;
   className?: string;
 }) {
+  if (withoutText) return <BadgeCheck className="text-rvns size-4 shrink-0" />;
+
   return (
-    <Badge variant="outline_rvns" className={className}>
-      <BadgeCheck /> {!withoutText && badgeText.verifiedUser}
+    <Badge variant="outline_rvns" className={cn("capitalize", className)}>
+      <BadgeCheck />
+      {baseText.verified}
     </Badge>
   );
 }
@@ -207,7 +204,7 @@ export function SignOutButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(message.user.signOut);
+              toast.success(messages.user.signOut);
               router.push(signInRoute);
             },
           },
@@ -240,7 +237,7 @@ export function SignOnGithubButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(message.user.signIn());
+              toast.success(messages.user.signIn());
             },
           },
         );
@@ -275,7 +272,7 @@ export function SignInForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(message.user.signIn);
+        toast.success(messages.user.signIn);
         router.push(signInRoute);
       },
     });
@@ -361,7 +358,7 @@ export function SignUpForm() {
       isAgree: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: message.user.confirmPassword,
+      message: messages.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -384,7 +381,7 @@ export function SignUpForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(message.user.signUp);
+        toast.success(messages.user.signUp);
         setIsLoading(false);
         form.reset();
       },
@@ -520,7 +517,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc } = dialog.profile.removeAvatar;
+  const { title, desc } = dialogText.profile.removeAvatar;
 
   const schema = zodFile(contentType);
 
@@ -551,7 +548,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(message.user.success("avatar", "updated"));
+          toast.success(messages.user.success("avatar", "updated"));
           setIsChange(false);
           router.refresh();
         },
@@ -573,7 +570,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(message.user.success("Avatar", "removed"));
+          toast.success(messages.user.success("Avatar", "removed"));
         },
       },
     );
@@ -657,7 +654,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(message.user.noChanges("profile"));
+    if (newName === name) return toast.info(messages.user.noChanges("profile"));
     setIsLoading(true);
     authClient.updateUser(
       { name: newName },
@@ -667,7 +664,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.success("profile", "updated"));
+          toast.success(messages.user.success("profile", "updated"));
           setIsLoading(false);
           router.refresh();
         },
@@ -746,7 +743,7 @@ export function ChangePasswordForm() {
       revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
     })
     .refine((sc) => sc.newPassword === sc.confirmPassword, {
-      message: message.user.confirmPassword,
+      message: messages.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -768,7 +765,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(message.user.success("password", "updated"));
+        toast.success(messages.user.success("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -891,9 +888,12 @@ export function ActiveSessionButton({
   const isCurrentSession = currentSessionId === id;
   const parsedResult = new UAParser(userAgent!).getResult();
 
+  const {
+    browserOnOS,
+    user: { current, lastSeen },
+  } = messages;
   const { browser, os, device } = parsedResult;
-  const { title, desc } = dialog.profile.revokeSession;
-  const { currentSession, browserAndOS, lastSeen } = message.user;
+  const { title, desc } = dialogText.profile.revokeSession;
 
   const DeviceIcons = {
     mobile: Smartphone,
@@ -916,7 +916,7 @@ export function ActiveSessionButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.revokeThisSession);
+          toast.success(messages.user.revokeThisSession);
           setIsLoading(false);
           router.refresh();
         },
@@ -933,7 +933,7 @@ export function ActiveSessionButton({
 
         <div className="flex flex-col">
           <small className="font-medium">
-            {browserAndOS(browser.name, os.name)}
+            {browserOnOS(browser.name, os.name)}
           </small>
 
           <div className="text-muted-foreground flex items-center">
@@ -950,7 +950,7 @@ export function ActiveSessionButton({
 
             {isCurrentSession ? (
               <small className="text-success order-1 font-medium">
-                {currentSession}
+                {current("session")}
               </small>
             ) : (
               <small className="order-3 line-clamp-1 font-normal">
@@ -990,7 +990,7 @@ export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = dialog.profile.revokeAllOtherSession;
+  const { trigger, title, desc } = dialogText.profile.revokeAllOtherSession;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1001,7 +1001,7 @@ export function RevokeOtherSessionsButton() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.revokeOtherSessions);
+          toast.success(messages.user.revokeOtherSessions);
           setIsLoading(false);
           router.refresh();
         },
@@ -1039,7 +1039,7 @@ export function DeleteMyAccountButton({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = dialog.profile.deleteAccount;
+  const { trigger, title, desc } = dialogText.profile.deleteAccount;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1054,7 +1054,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.success("account", "removed"));
+          toast.success(messages.user.success("account", "removed"));
           router.push(signInRoute);
         },
       },
@@ -1125,7 +1125,7 @@ export function AdminAccountDataTable({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${compText.selected}`}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${baseText.selected}`}</DropdownMenuLabel>
 
               <DropdownMenuSeparator />
 
@@ -1164,7 +1164,7 @@ export function AdminCreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
-  const { trigger, title, desc } = dialog.user.create;
+  const { trigger, title, desc } = dialogText.user.create;
 
   const schema = zodAuth
     .pick({
@@ -1175,7 +1175,7 @@ export function AdminCreateUserDialog() {
       role: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: message.user.confirmPassword,
+      message: messages.user.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -1201,7 +1201,9 @@ export function AdminCreateUserDialog() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.success(`${formData.name} account`, "created"));
+          toast.success(
+            messages.success(`${formData.name} account`, "created"),
+          );
           setIsLoading(false);
           form.reset();
           router.refresh();
@@ -1369,7 +1371,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const schema = zodAuth.pick({ role: true });
-  const { trigger, title, desc } = dialog.user.changeRole;
+  const { trigger, title, desc } = dialogText.user.changeRole;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -1380,7 +1382,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
     setIsLoading(true);
 
     const newRole = formData.role as Role;
-    if (newRole === role) return toast.info(message.noChanges(`${name} role`));
+    if (newRole === role) return toast.info(messages.noChanges(`${name} role`));
 
     authClient.admin.setRole(
       { userId: id, role: newRole },
@@ -1390,7 +1392,7 @@ export function AdminChangeUserRoleDialog({ id, name, role }: UserWithRole) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.changeRole(name, newRole));
+          toast.success(messages.user.changeRole(name, newRole));
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1475,7 +1477,7 @@ export function AdminTerminateUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = dialog.user.revokeSessions;
+  const { trigger, title, desc } = dialogText.user.revokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1487,7 +1489,7 @@ export function AdminTerminateUserSessionsDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.user.revokeUserSession(name));
+          toast.success(messages.user.revokeUserSession(name));
           setIsLoading(false);
         },
       },
@@ -1534,7 +1536,7 @@ export function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = dialog.user.remove;
+  const { title, desc } = dialogText.user.remove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1548,7 +1550,7 @@ export function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(message.success(name, "removed"));
+          toast.success(messages.success(name, "removed"));
           setIsLoading(false);
           router.refresh();
         },
@@ -1598,12 +1600,12 @@ function AdminActionTerminateUserSessionsDialog({
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = dialog.user.revokeMultipleSessions;
+  const { trigger, title, desc } = dialogText.user.revokeMultipleSessions;
 
   const clickHandler = async () => {
     setIsLoading(true);
     toast.promise(revokeUserSessions(ids), {
-      loading: message.loading,
+      loading: messages.loading,
       error: (e) => {
         setIsLoading(false);
         return e;
@@ -1611,7 +1613,7 @@ function AdminActionTerminateUserSessionsDialog({
       success: () => {
         setIsLoading(false);
         onSuccess();
-        return message.user.revokeUserSession();
+        return messages.user.revokeUserSession();
       },
     });
   };
@@ -1658,12 +1660,12 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = dialog.user.removeMultiple;
+  const { title, desc } = dialogText.user.removeMultiple;
 
   const clickHandler = async () => {
     setIsLoading(true);
     toast.promise(deleteUsers(data), {
-      loading: message.loading,
+      loading: messages.loading,
       error: (e) => {
         setIsLoading(false);
         return e;
@@ -1675,7 +1677,7 @@ function AdminActionRemoveUsersDialog({
         router.refresh();
 
         const successLength = res.filter(({ success }) => success).length;
-        return message.user.removeUsers(successLength, data.length);
+        return messages.user.removeUsers(successLength, data.length);
       },
     });
   };

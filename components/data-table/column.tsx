@@ -28,6 +28,15 @@ import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Separator } from "../ui/separator";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
   return (
@@ -78,7 +87,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
     id: "select",
     header: ({ table }) => headerCheckbox(table),
-    cell: ({ row }) => cellCheckbox(row, row.original.id === currentUserId),
+    cell: ({ row }) => cellCheckbox(row),
     enableHiding: false,
     enableSorting: false,
   }),
@@ -100,7 +109,36 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.accessor(({ email }) => email, {
     id: "email",
     header: ({ column }) => headerButton(column, "Email"),
-    cell: ({ row }) => row.original.email,
+    cell: ({ row }) => {
+      const { id, email, emailVerified } = row.original;
+      if (id === currentUserId) {
+        return (
+          <div className="flex items-center gap-x-2">
+            {email}
+            {emailVerified && <UserVerifiedBadge withoutText />}
+          </div>
+        );
+      }
+
+      return (
+        <Sheet>
+          <div className="flex items-center gap-x-2">
+            <SheetTrigger className="link">{email}</SheetTrigger>
+            {emailVerified && <UserVerifiedBadge withoutText />}
+          </div>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetDescription>
+                This action cannot be undone. This will permanently delete your
+                account and remove your data from our servers.
+              </SheetDescription>
+            </SheetHeader>
+            <SheetFooter>Something</SheetFooter>
+          </SheetContent>
+        </Sheet>
+      );
+    },
     filterFn: filterFn("text"),
     meta: { displayName: "Email", type: "text", icon: Mail },
   }),
@@ -114,12 +152,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
     header: ({ column }) => headerButton(column, "Role"),
-    cell: ({ row }) => (
-      <div className="flex flex-col gap-1.5">
-        {row.original.emailVerified && <UserVerifiedBadge />}
-        <UserRoleBadge role={row.original.role as Role} />
-      </div>
-    ),
+    cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
       displayName: "Role",

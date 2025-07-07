@@ -3,7 +3,7 @@ import { aOrAn, capitalize, formatDateDistanceToNow } from "../utils";
 
 type Action = "created" | "updated" | "removed";
 
-const defaultMessage = {
+const baseMessages = {
   loading: "Just a moment...",
   error: "Uh-oh! Something went wrong. Please try again later.",
   success: (thing: string, action: Action) =>
@@ -11,6 +11,8 @@ const defaultMessage = {
 
   lastThingAgo: (thing: string, time: Date) =>
     `Last ${thing} ${formatDateDistanceToNow(time)} ago.`,
+  browserOnOS: (browser: string | undefined, os: string | undefined) =>
+    `${browser ?? "A browser"} on ${os ?? "some OS"}`,
 
   invalid: {
     email: "Hmm, that doesn't look like a valid email.",
@@ -68,16 +70,16 @@ const defaultMessage = {
     `This ${thing} cannot be deleted because it is currently assigned to ${x}.`,
 };
 
-export const message = {
-  ...defaultMessage,
+export const messages = {
+  ...baseMessages,
 
   user: {
     success: (thing: string, action: Action) =>
-      `Your ${defaultMessage.success(thing, action)}`,
-    noChanges: (thing: string) => `Your ${defaultMessage.noChanges(thing)}`,
+      `Your ${baseMessages.success(thing, action)}`,
+    noChanges: (thing: string) => `Your ${baseMessages.noChanges(thing)}`,
 
     signIn: (name?: string) =>
-      `Signed in successfully${name ? ` — welcome back, ${name}!` : "!"}`,
+      `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
     signUp: "You're all set! Please sign in to get started.",
     signOut: "You've been signed out. See you soon!",
 
@@ -89,10 +91,8 @@ export const message = {
     changeRole: (name: string, role: string) =>
       `${name}'s role is now set to ${role}.`,
 
-    currentSession: "Current Session",
-    browserAndOS: (browser: string | undefined, os: string | undefined) =>
-      `${browser ?? "A browser"} on ${os ?? "some OS"}`,
-    lastSeen: (time: Date) => defaultMessage.lastThingAgo("seen", time),
+    current: (thing: "user" | "session") => `Current ${thing}`,
+    lastSeen: (time: Date) => baseMessages.lastThingAgo("seen", time),
 
     revokeThisSession: "This session has been revoked.",
     revokeOtherSessions: "Your other active sessions has been revoked.",
@@ -100,6 +100,6 @@ export const message = {
       `${name ? name + "'s" : "All user"} active sessions have been revoked.`,
 
     removeUsers: (success: number, length: number) =>
-      message.success(`${success} out of ${length} users`, "removed"),
+      baseMessages.success(`${success} out of ${length} users`, "removed"),
   },
 };
