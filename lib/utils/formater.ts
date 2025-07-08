@@ -29,17 +29,11 @@ export function toKebabCase(str: string): string {
     .replace(/\s+/g, "-");
 }
 
-export function formatNumeric(
-  num: string | number,
-  prefix: string = "",
-): string {
-  return `${prefix}${new Intl.NumberFormat("id-ID").format(sanitizeNumber(String(num)))}`;
+export function formatNumeric(num: string | number): string {
+  return new Intl.NumberFormat("id-ID").format(sanitizeNumber(String(num)));
 }
 
-export function formatPhone(
-  num: string | number,
-  withPrefix: boolean = false,
-): string {
+export function formatPhone(num: string | number): string {
   const phoneStr = String(sanitizeNumber(String(num)));
   if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
@@ -51,6 +45,5 @@ export function formatPhone(
     remaining = remaining.slice(4);
   }
 
-  const prefix = withPrefix ? "+62" : "";
-  return `${prefix}${formatted}`;
+  return formatted;
 }
