@@ -53,10 +53,10 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod/v4";
-import { CopyButton } from "../custom/custom-button";
 import { FormFloating } from "../custom/custom-field";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
+import { SectionSheetDetails } from "../layout/section";
 import { GithubIcon, Spinner } from "../other/icon";
 import {
   AlertDialog,
@@ -1384,14 +1384,10 @@ export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { title, desc } = dialogText.user.detail;
-  const details: {
-    label: string;
-    desc: string | number;
-    copy?: keyof UserWithRole;
-  }[] = [
-    { label: "User ID", desc: `${data.id.slice(0, 19)}...`, copy: "id" },
-    { label: "Email Address", desc: data.email, copy: "email" },
-    { label: "Created At", desc: messages.user.createdAgo(data.createdAt) },
+  const details = [
+    { label: "User ID", content: `${data.id.slice(0, 19)}...` },
+    { label: "Email Address", content: data.email, withCopy: true },
+    { label: "Created At", content: messages.user.createdAgo(data.createdAt) },
   ];
 
   return (
@@ -1421,24 +1417,7 @@ export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
                 {data.emailVerified && <UserVerifiedBadge />}
               </div>
 
-              {details.map(({ label, desc, copy }, index) => (
-                <div key={index} className="grid gap-y-1">
-                  <Label>{label}</Label>
-
-                  {copy ? (
-                    <div className="flex items-center gap-x-2">
-                      <small className="text-muted-foreground">{desc}</small>
-                      <CopyButton
-                        value={data.email}
-                        size="iconxs"
-                        variant="ghost"
-                      />
-                    </div>
-                  ) : (
-                    <small className="text-muted-foreground">{desc}</small>
-                  )}
-                </div>
-              ))}
+              <SectionSheetDetails data={details} />
             </div>
           </div>
 

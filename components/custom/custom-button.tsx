@@ -58,7 +58,7 @@ export function CopyButton({
   disabled,
   onClick,
   ...props
-}: ButtonPropsWithoutChildren & {
+}: Omit<ButtonPropsWithoutChildren, "value"> & {
   value: string;
   text?: string;
   iconCn?: string;

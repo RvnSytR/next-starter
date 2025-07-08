@@ -2,11 +2,13 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { CopyButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "../other/dynamic-breadcrumb";
 import { ThemeToggle } from "../other/theme";
+import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
 export function Section({
@@ -50,4 +52,25 @@ export function SectionTagline({ className }: { className?: string }) {
       {" under heavy caffeine influence."}
     </small>
   );
+}
+
+export function SectionSheetDetails({
+  data,
+}: {
+  data: { label: string; content: string; withCopy?: boolean }[];
+}) {
+  return data.map(({ label, content, withCopy }, index) => (
+    <div key={index} className="grid gap-y-1">
+      <Label>{label}</Label>
+
+      {withCopy ? (
+        <div className="flex items-center gap-x-2">
+          <small className="text-muted-foreground">{content}</small>
+          <CopyButton value={content} size="iconxs" variant="ghost" />
+        </div>
+      ) : (
+        <small className="text-muted-foreground">{content}</small>
+      )}
+    </div>
+  ));
 }
