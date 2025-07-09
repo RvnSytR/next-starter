@@ -2,7 +2,6 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { CopyButton } from "../custom/custom-button";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
@@ -57,20 +56,12 @@ export function SectionTagline({ className }: { className?: string }) {
 export function SectionSheetDetails({
   data,
 }: {
-  data: { label: string; content: string; withCopy?: boolean }[];
+  data: { label: string; content: ReactNode }[];
 }) {
-  return data.map(({ label, content, withCopy }, index) => (
+  return data.map(({ label, content }, index) => (
     <div key={index} className="grid gap-y-1">
       <Label>{label}</Label>
-
-      {withCopy ? (
-        <div className="flex items-center gap-x-2">
-          <small className="text-muted-foreground">{content}</small>
-          <CopyButton value={content} size="iconxs" variant="ghost" />
-        </div>
-      ) : (
-        <small className="text-muted-foreground">{content}</small>
-      )}
+      <div className="text-muted-foreground text-sm">{content}</div>
     </div>
   ));
 }

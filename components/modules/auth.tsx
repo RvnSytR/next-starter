@@ -29,6 +29,7 @@ import {
   Dot,
   Gamepad2,
   Info,
+  Layers2,
   LockKeyhole,
   LockKeyholeOpen,
   LogOut,
@@ -173,20 +174,21 @@ export function UserAvatar({
   image,
   name,
   className,
-  imageCn,
-  fallbackCn,
+  classNames,
 }: Pick<Session["user"], "image" | "name"> & {
   className?: string;
-  imageCn?: string;
-  fallbackCn?: string;
+  classNames?: { image?: string; fallback?: string };
 }) {
   const fallbackName = name.slice(0, 2);
   return (
     <Avatar className={cn("rounded-xl", className)}>
       {image ? (
         <>
-          <AvatarImage className={cn("rounded-xl", imageCn)} src={image} />
-          <AvatarFallback className={cn("rounded-xl", fallbackCn)}>
+          <AvatarImage
+            className={cn("rounded-xl", classNames?.image)}
+            src={image}
+          />
+          <AvatarFallback className={cn("rounded-xl", classNames?.fallback)}>
             {fallbackName}
           </AvatarFallback>
         </>
@@ -194,7 +196,7 @@ export function UserAvatar({
         <span
           className={cn(
             "bg-muted flex size-full items-center justify-center transition-transform hover:scale-125",
-            fallbackCn,
+            classNames?.fallback,
           )}
         >
           {fallbackName}
@@ -1152,6 +1154,7 @@ export function AdminAccountDataTable({
                 />
               </DropdownMenuItem>
 
+              {/* // TODO */}
               <DropdownMenuItem asChild>
                 <Button size="sm" variant="ghost_destructive" disabled>
                   <Ban />
@@ -1386,7 +1389,7 @@ export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
   const { title, desc } = dialogText.user.detail;
   const details = [
     { label: "User ID", content: `${data.id.slice(0, 19)}...` },
-    { label: "Email Address", content: data.email, withCopy: true },
+    { label: "Email Address", content: data.email },
     { label: "Created At", content: messages.user.createdAgo(data.createdAt) },
   ];
 
@@ -1407,8 +1410,8 @@ export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
           </div>
         </SheetHeader>
 
-        <div className="flex flex-col gap-y-4 px-4">
-          <Separator />
+        <div className="flex flex-col gap-y-2 px-4">
+          <Separator className="my-2" />
 
           <div className="flex items-start gap-x-4">
             <div className="flex flex-col gap-y-4">
@@ -1421,13 +1424,25 @@ export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
             </div>
           </div>
 
-          <Separator />
+          <Separator className="my-2" />
 
           <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
 
-          <Separator />
+          <Separator className="my-2" />
+
+          {/* // TODO */}
+          <Button variant="outline_primary" disabled>
+            <Layers2 />
+            Impersonate Session
+          </Button>
 
           <AdminRevokeUserSessionsDialog {...data} />
+
+          {/* // TODO */}
+          <Button variant="outline_destructive" disabled>
+            <Ban />
+            Ban {data.name}
+          </Button>
         </div>
 
         <SheetFooter>
@@ -1480,7 +1495,7 @@ function AdminChangeUserRoleForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
+      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-2">
         <FormField
           control={form.control}
           name="role"

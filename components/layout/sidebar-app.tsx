@@ -92,8 +92,10 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
               name={name}
               image={image}
               className="rounded-md"
-              imageCn="rounded-md group-hover/head-button:scale-125"
-              fallbackCn="rounded-md group-hover/head-button:scale-125"
+              classNames={{
+                image: "rounded-md group-hover/head-button:scale-125",
+                fallback: "rounded-md group-hover/head-button:scale-125",
+              }}
             />
 
             <div className="grid [&_span]:truncate">
