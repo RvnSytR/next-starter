@@ -79,6 +79,6 @@ To avoid default imports for Radix UI components, you can adjust your TypeScript
 
 ```json
 {
-  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["radix-ui"]
+  "typescript.preferences.autoImportFileExcludePatterns": ["radix-ui"]
 }
 ```
