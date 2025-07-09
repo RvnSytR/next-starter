@@ -1,43 +1,40 @@
 # Next.js Starter Template
 
-Personalized Next.js 15 starter template, designed to include core tools and configurations I frequently use in most projects. It aims to streamline the setup process, saving time and effort by providing a solid foundation-so I can focus on building features rather than configuring the basics.
+A lightweight, personalized starter template for **Next.js 15 (App Router)** with just the tools and configurations I use in most projects. It’s designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
 
-## Features
+## ✨ Features
 
-- Ready-to-use components, styling and authentication.
-- Database and S3 integration.
+- Authentication with user dashboard and RBAC
+- Database and S3 integration
+- Ready-to-use components, and styling
+- Centralized project structure (write once, use anywhere)
+- Handy utility functions, action and S3 helpers
 
-## Tech Stack
+## 🛠️ Tech Stack
 
-### Framework and Language
+- Framework and Language
+  - [Next.js 15](https://nextjs.org)
+  - [React 19](https://react.dev)
+  - [TypeScript](https://www.typescriptlang.org)
 
-- [Next.js 15](https://nextjs.org)
-- [React 19](https://react.dev)
-- [TypeScript](https://www.typescriptlang.org)
+- Styling
+  - [Tailwind CSS v4](https://tailwindcss.com)
+  - [Shadcn/ui](https://ui.shadcn.com)
 
-### Styling
+- Database and ORM
+  - [PostgreSQL](https://www.postgresql.org)
+  - [Drizzle ORM](https://orm.drizzle.team)
 
-- [Tailwind CSS v4](https://tailwindcss.com)
-- [Shadcn/ui](https://ui.shadcn.com)
+- Authentication
+  - [Better Auth](https://better-auth.com)
 
-### Database and ORM
+- Other
+  - [AWS SDK for S3](https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-s3)
+  - [Zod v4](https://zod.dev)
+  - [Motion](https://motion.dev)
+  - [Prettier](https://prettier.io)
 
-- [PostgreSQL](https://www.postgresql.org)
-- [Drizzle ORM](https://orm.drizzle.team)
-
-### Authentication
-
-- [Better Auth](https://better-auth.com)
-
-### Other
-
-- [AWS SDK for S3](https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-s3)
-- [ESLint](https://eslint.org)
-- [Zod](https://zod.dev)
-- [Motion](https://motion.dev)
-- [Prettier](https://prettier.io)
-
-## Getting Started
+## 🚀 Getting Started
 
 ### Installation
 
@@ -52,6 +49,8 @@ Install the dependencies:
 
 ```sh
 npm install
+# or
+bun install
 ```
 
 ### Database Setup
@@ -60,6 +59,8 @@ Push database schema to your PostgreSQL instance:
 
 ```sh
 npx drizzle-kit push
+# or
+bunx drizzle-kit push
 ```
 
 ### Development Server
@@ -68,14 +69,16 @@ Start the Next.js development server:
 
 ```sh
 npm run dev
+# or
+bun run dev
 ```
 
-### Tips
+## 💡 Tips
 
 To avoid default imports for Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
 
 ```json
 {
-  "typescript.preferences.autoImportFileExcludePatterns": ["@radix-ui"]
+  "typescript.preferences.autoImportSpecifierExcludeRegexes": ["radix-ui"]
 }
 ```
