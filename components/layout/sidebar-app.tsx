@@ -6,7 +6,7 @@ import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { LinkLoader, RefreshButton } from "../custom/custom-button";
-import { SignOutButton, UserAvatar } from "../modules/auth";
+import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/auth";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -29,7 +29,10 @@ import {
 } from "../ui/sidebar";
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
-type SidebarData = Pick<Session["user"], "name" | "email" | "image" | "role">;
+type SidebarData = Pick<
+  Session["user"],
+  "name" | "email" | "image" | "role" | "emailVerified"
+>;
 
 export const sidebarMenuButtonVariants = cva(
   "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding,margin] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
@@ -78,7 +81,12 @@ export function SidebarApp({
   );
 }
 
-function Head({ name, email, image }: Omit<SidebarData, "role">) {
+function Head({
+  name,
+  email,
+  image,
+  emailVerified,
+}: Omit<SidebarData, "role">) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -98,8 +106,17 @@ function Head({ name, email, image }: Omit<SidebarData, "role">) {
               }}
             />
 
-            <div className="grid [&_span]:truncate">
-              <span className="text-sm font-semibold">{name}</span>
+            <div className="grid break-all [&_span]:line-clamp-1">
+              <div className="flex items-center gap-x-2">
+                <span className="text-sm font-semibold">{name}</span>
+                {emailVerified && (
+                  <UserVerifiedBadge
+                    classNames={{ icon: "size-3.5" }}
+                    withoutText
+                  />
+                )}
+              </div>
+
               <span className="text-xs">{email}</span>
             </div>
           </Link>

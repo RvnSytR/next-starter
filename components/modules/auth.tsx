@@ -17,6 +17,7 @@ import { zodAuth, zodFile } from "@/lib/zod";
 import {
   deleteProfilePicture,
   deleteUsers,
+  redirectAction,
   revokeUserSessions,
 } from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
@@ -49,7 +50,7 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
@@ -123,6 +124,9 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
+const contentAuth = content.auth;
+const formItem = contentAuth.formItem;
+
 export function UserRoleBadge({
   role,
   className,
@@ -151,21 +155,29 @@ export function UserRoleBadge({
 export function UserVerifiedBadge({
   withoutText = false,
   className,
+  classNames,
 }: {
   withoutText?: boolean;
   className?: string;
+  classNames?: { tooltip?: string; icon?: string };
 }) {
-  if (withoutText) return <BadgeCheck className="text-rvns size-4 shrink-0" />;
+  if (withoutText) {
+    return (
+      <BadgeCheck
+        className={cn("text-rvns size-4 shrink-0", classNames?.icon)}
+      />
+    );
+  }
 
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
         <Badge variant="outline_rvns" className={cn("capitalize", className)}>
-          <BadgeCheck />
+          <BadgeCheck className={classNames?.icon} />
           {commonText.verified}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent>{content.user.verified}</TooltipContent>
+      <TooltipContent>{contentAuth.verified}</TooltipContent>
     </Tooltip>
   );
 }
@@ -222,7 +234,7 @@ export function SignOutButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(content.user.signOut);
+              toast.success(contentAuth.signOut);
               router.push(signInRoute);
             },
           },
@@ -255,7 +267,7 @@ export function SignOnGithubButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(content.user.signIn());
+              toast.success(contentAuth.signIn());
             },
           },
         );
@@ -268,8 +280,8 @@ export function SignOnGithubButton() {
 }
 
 export function SignInForm() {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const schema = zodAuth.pick({
     email: true,
@@ -290,11 +302,15 @@ export function SignInForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(content.user.signIn);
-        router.push(signInRoute);
+        toast.success(contentAuth.signIn);
+        setIsAuthenticated(true);
       },
     });
   };
+
+  useEffect(() => {
+    if (isAuthenticated) redirectAction(signInRoute);
+  }, [isAuthenticated]);
 
   return (
     <Form {...form}>
@@ -304,12 +320,14 @@ export function SignInForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Email Address</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.email.label}
+              </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Enter your Email Address"
+                    placeholder={formItem.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -324,12 +342,14 @@ export function SignInForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Password</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.password.label}
+              </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your Password"
+                    placeholder={formItem.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -350,7 +370,7 @@ export function SignInForm() {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>Remember me</FormLabel>
+              <FormLabel>{formItem.rememberMe}</FormLabel>
             </FormItem>
           )}
         />
@@ -376,7 +396,7 @@ export function SignUpForm() {
       isAgree: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: content.user.confirmPassword,
+      message: contentAuth.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -399,7 +419,7 @@ export function SignUpForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(content.user.signUp);
+        toast.success(contentAuth.signUp);
         setIsLoading(false);
         form.reset();
       },
@@ -414,12 +434,14 @@ export function SignUpForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Username</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.username.label}
+              </FormLabel>
               <FormFloating icon={<UserRound />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Enter your Username"
+                    placeholder={formItem.username.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -434,12 +456,14 @@ export function SignUpForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Email Address</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.email.label}
+              </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder="Enter your Email Address"
+                    placeholder={formItem.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -454,12 +478,14 @@ export function SignUpForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Password</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.password.label}
+              </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Enter your Password"
+                    placeholder={formItem.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -474,12 +500,14 @@ export function SignUpForm() {
           name="confirmPassword"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">Confirm Password</FormLabel>
+              <FormLabel className="label-required">
+                {formItem.confirmPassword.label}
+              </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder="Confirm your Password"
+                    placeholder={formItem.confirmPassword.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -494,7 +522,7 @@ export function SignUpForm() {
           name="isAgree"
           render={({ field }) => (
             <FormItem>
-              <div className="flex gap-x-2">
+              <div className="flex gap-x-2.5">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -502,12 +530,12 @@ export function SignUpForm() {
                   />
                 </FormControl>
 
-                <FormLabel className="flex flex-col items-start gap-y-1">
-                  <span>Accept terms and conditions</span>
+                <div className="flex flex-col items-start gap-y-1.5">
+                  <FormLabel>{formItem.agreement.label}</FormLabel>
                   <small className="text-muted-foreground text-xs font-normal">
-                    I agree to the terms of service and privacy policy.
+                    {formItem.agreement.placeholder}
                   </small>
-                </FormLabel>
+                </div>
               </div>
 
               <FormMessage />
@@ -535,7 +563,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc } = content.profile.removeAvatar;
+  const { title, desc } = contentAuth.removeAvatar;
 
   const schema = zodFile(contentType);
 
@@ -566,7 +594,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(content.user.success("avatar", "updated"));
+          toast.success(contentAuth.success("avatar", "updated"));
           setIsChange(false);
           router.refresh();
         },
@@ -588,7 +616,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(content.user.success("Avatar", "removed"));
+          toast.success(contentAuth.success("avatar", "removed"));
         },
       },
     );
@@ -610,7 +638,7 @@ export function ProfilePicture({
       />
 
       <div className="flex flex-col gap-y-2">
-        <Label>Profile Picture</Label>
+        <Label>{formItem.profilePic}</Label>
         <div className="flex gap-x-2">
           <Button
             type="button"
@@ -672,7 +700,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(content.user.noChanges("profile"));
+    if (newName === name) return toast.info(contentAuth.noChanges("profile"));
     setIsLoading(true);
     authClient.updateUser(
       { name: newName },
@@ -682,7 +710,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.success("profile", "updated"));
+          toast.success(contentAuth.success("profile", "updated"));
           setIsLoading(false);
           router.refresh();
         },
@@ -701,7 +729,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email Address</FormLabel>
+                <FormLabel>{formItem.email.label}</FormLabel>
                 <FormFloating icon={<Mail />}>
                   <FormControl>
                     <Input type="text" disabled {...field} />
@@ -717,12 +745,14 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="label-required">Username</FormLabel>
+                <FormLabel className="label-required">
+                  {formItem.username.label}
+                </FormLabel>
                 <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder="Enter your Name"
+                      placeholder={formItem.username.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -761,7 +791,7 @@ export function ChangePasswordForm() {
       revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
     })
     .refine((sc) => sc.newPassword === sc.confirmPassword, {
-      message: content.user.confirmPassword,
+      message: contentAuth.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -783,7 +813,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(content.user.success("password", "updated"));
+        toast.success(contentAuth.success("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -801,13 +831,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  Current Password
+                  {formItem.currentPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter your current password"
+                      placeholder={formItem.currentPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -822,12 +852,14 @@ export function ChangePasswordForm() {
             name="newPassword"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="label-required">New Password</FormLabel>
+                <FormLabel className="label-required">
+                  {formItem.newPassword.label}
+                </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Enter your new password"
+                      placeholder={formItem.newPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -843,13 +875,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  Confirm Password
+                  {formItem.confirmPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder="Confirm password"
+                      placeholder={formItem.confirmPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -906,9 +938,9 @@ export function ActiveSessionButton({
   const isCurrentSession = currentSessionId === id;
   const parsedResult = new UAParser(userAgent!).getResult();
 
+  const { title, desc, success } = contentAuth.revokeSession;
   const { browser, os, device } = parsedResult;
-  const { current, lastSeen } = content.user;
-  const { title, desc } = content.profile.revokeSession;
+  const { current, lastSeen } = contentAuth;
 
   const DeviceIcons = {
     mobile: Smartphone,
@@ -931,7 +963,7 @@ export function ActiveSessionButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.revokeThisSession);
+          toast.success(success);
           setIsLoading(false);
           router.refresh();
         },
@@ -1005,7 +1037,7 @@ export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = content.profile.revokeAllOtherSession;
+  const { trigger, title, desc, success } = contentAuth.revokeAllOtherSession;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1016,7 +1048,7 @@ export function RevokeOtherSessionsButton() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.revokeOtherSessions);
+          toast.success(success);
           setIsLoading(false);
           router.refresh();
         },
@@ -1054,7 +1086,7 @@ export function DeleteMyAccountButton({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = content.profile.deleteAccount;
+  const { trigger, title, desc } = contentAuth.delete;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1069,7 +1101,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.success("account", "removed"));
+          toast.success(contentAuth.success("account", "removed"));
           router.push(signInRoute);
         },
       },
@@ -1109,10 +1141,80 @@ export function DeleteMyAccountButton({
 }
 
 /*
- * --- ADMIN ---
+ * --- USER ---
  */
 
-export function AdminAccountDataTable({
+export function UserDetailSheet({ data }: { data: UserWithRole }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { title, desc } = contentAuth.detail;
+  const details = [
+    { label: "User ID", content: `${data.id.slice(0, 19)}...` },
+    { label: "Email Address", content: data.email },
+    { label: "Created At", content: contentAuth.createdAgo(data.createdAt) },
+  ];
+
+  return (
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
+      <div className="flex items-center gap-x-2">
+        <SheetTrigger className="link">{data.email}</SheetTrigger>
+        {data.emailVerified && <UserVerifiedBadge withoutText />}
+      </div>
+
+      <SheetContent>
+        <SheetHeader className="flex-row items-center">
+          <UserAvatar {...data} className="size-12" />
+
+          <div className="flex flex-col">
+            <SheetTitle className="text-base">{title(data.name)}</SheetTitle>
+            <SheetDescription>{desc(data.name)}</SheetDescription>
+          </div>
+        </SheetHeader>
+
+        <div className="flex flex-col gap-y-2 px-4">
+          <Separator className="my-2" />
+
+          <div className="flex items-start gap-x-4">
+            <div className="flex flex-col gap-y-4">
+              <div className="flex items-center gap-x-2">
+                <UserRoleBadge role={data.role as Role} />
+                {data.emailVerified && <UserVerifiedBadge />}
+              </div>
+
+              <SectionSheetDetails data={details} />
+            </div>
+          </div>
+
+          <Separator className="my-2" />
+
+          <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
+
+          <Separator className="my-2" />
+
+          {/* // TODO */}
+          <Button variant="outline_primary" disabled>
+            <Layers2 />
+            Impersonate Session
+          </Button>
+
+          <AdminRevokeUserSessionsDialog {...data} />
+
+          {/* // TODO */}
+          <Button variant="outline_destructive" disabled>
+            <Ban />
+            Ban {data.name}
+          </Button>
+        </div>
+
+        <SheetFooter>
+          <AdminRemoveUserDialog data={data} setIsOpen={setIsOpen} />
+        </SheetFooter>
+      </SheetContent>
+    </Sheet>
+  );
+}
+
+export function UserDataTable({
   data,
   currentUserId,
   ...props
@@ -1174,12 +1276,16 @@ export function AdminAccountDataTable({
   );
 }
 
+/*
+ * --- ADMIN ACTION ---
+ */
+
 export function AdminCreateUserDialog() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
-  const { trigger, title, desc } = content.user.create;
+  const { trigger, title, desc } = contentAuth.adminCreate;
 
   const schema = zodAuth
     .pick({
@@ -1190,7 +1296,7 @@ export function AdminCreateUserDialog() {
       role: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: content.user.confirmPassword,
+      message: contentAuth.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -1380,76 +1486,6 @@ export function AdminCreateUserDialog() {
   );
 }
 
-export function AdminUserDetailSheet({ data }: { data: UserWithRole }) {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { title, desc } = content.user.detail;
-  const details = [
-    { label: "User ID", content: `${data.id.slice(0, 19)}...` },
-    { label: "Email Address", content: data.email },
-    { label: "Created At", content: content.user.createdAgo(data.createdAt) },
-  ];
-
-  return (
-    <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex items-center gap-x-2">
-        <SheetTrigger className="link">{data.email}</SheetTrigger>
-        {data.emailVerified && <UserVerifiedBadge withoutText />}
-      </div>
-
-      <SheetContent>
-        <SheetHeader className="flex-row items-center">
-          <UserAvatar {...data} className="size-12" />
-
-          <div className="flex flex-col">
-            <SheetTitle className="text-base">{title(data.name)}</SheetTitle>
-            <SheetDescription>{desc(data.name)}</SheetDescription>
-          </div>
-        </SheetHeader>
-
-        <div className="flex flex-col gap-y-2 px-4">
-          <Separator className="my-2" />
-
-          <div className="flex items-start gap-x-4">
-            <div className="flex flex-col gap-y-4">
-              <div className="flex items-center gap-x-2">
-                <UserRoleBadge role={data.role as Role} />
-                {data.emailVerified && <UserVerifiedBadge />}
-              </div>
-
-              <SectionSheetDetails data={details} />
-            </div>
-          </div>
-
-          <Separator className="my-2" />
-
-          <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
-
-          <Separator className="my-2" />
-
-          {/* // TODO */}
-          <Button variant="outline_primary" disabled>
-            <Layers2 />
-            Impersonate Session
-          </Button>
-
-          <AdminRevokeUserSessionsDialog {...data} />
-
-          {/* // TODO */}
-          <Button variant="outline_destructive" disabled>
-            <Ban />
-            Ban {data.name}
-          </Button>
-        </div>
-
-        <SheetFooter>
-          <AdminRemoveUserDialog data={data} setIsOpen={setIsOpen} />
-        </SheetFooter>
-      </SheetContent>
-    </Sheet>
-  );
-}
-
 function AdminChangeUserRoleForm({
   data,
   setIsOpen,
@@ -1481,7 +1517,7 @@ function AdminChangeUserRoleForm({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.changeRole(data.name, newRole));
+          toast.success(contentAuth.changeRole(data.name, newRole));
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1545,7 +1581,7 @@ function AdminRevokeUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = content.user.revokeSessions;
+  const { trigger, title, desc, success } = contentAuth.adminRevokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1557,7 +1593,7 @@ function AdminRevokeUserSessionsDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.user.revokeUserSession(name));
+          toast.success(success(name));
           setIsLoading(false);
         },
       },
@@ -1607,7 +1643,7 @@ function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = content.user.remove;
+  const { title, desc } = contentAuth.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1663,6 +1699,10 @@ function AdminRemoveUserDialog({
   );
 }
 
+/*
+ * --- ADMIN ROW SELECTION ACTIONS ---
+ */
+
 function AdminActionRevokeUserSessionsDialog({
   ids,
   onSuccess,
@@ -1672,7 +1712,8 @@ function AdminActionRevokeUserSessionsDialog({
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = content.user.revokeMultipleSessions;
+  const { trigger, titleMultiple, descMultiple, successMultiple } =
+    contentAuth.adminRevokeSessions;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1687,7 +1728,7 @@ function AdminActionRevokeUserSessionsDialog({
         onSuccess();
 
         const successLength = res.filter(({ success }) => success).length;
-        return content.user.revokeUserSessions(successLength, ids.length);
+        return successMultiple(successLength, ids.length);
       },
     });
   };
@@ -1704,9 +1745,11 @@ function AdminActionRevokeUserSessionsDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-x-2">
-            {title(ids.length)}
+            {titleMultiple(ids.length)}
           </AlertDialogTitle>
-          <AlertDialogDescription>{desc(ids.length)}</AlertDialogDescription>
+          <AlertDialogDescription>
+            {descMultiple(ids.length)}
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -1734,7 +1777,8 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = content.user.removeMultiple;
+  const { titleMultiple, descMultiple, successMultiple } =
+    contentAuth.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1751,7 +1795,7 @@ function AdminActionRemoveUsersDialog({
         router.refresh();
 
         const successLength = res.filter(({ success }) => success).length;
-        return content.user.removeUsers(successLength, data.length);
+        return successMultiple(successLength, data.length);
       },
     });
   };
@@ -1768,9 +1812,11 @@ function AdminActionRemoveUsersDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> {title(data.length)}
+            <TriangleAlert /> {titleMultiple(data.length)}
           </AlertDialogTitle>
-          <AlertDialogDescription>{desc(data.length)}</AlertDialogDescription>
+          <AlertDialogDescription>
+            {descMultiple(data.length)}
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>

@@ -13,8 +13,8 @@ import {
   UserRound,
 } from "lucide-react";
 import {
-  AdminUserDetailSheet,
   UserAvatar,
+  UserDetailSheet,
   UserRoleBadge,
   UserVerifiedBadge,
 } from "../modules/auth";
@@ -102,8 +102,7 @@ export const getUserColumn = (currentUserId: string) => [
           </div>
         );
       }
-
-      return <AdminUserDetailSheet data={row.original} />;
+      return <UserDetailSheet data={row.original} />;
     },
     filterFn: filterFn("text"),
     meta: { displayName: "Email", type: "text", icon: Mail },

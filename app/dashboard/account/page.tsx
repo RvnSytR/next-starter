@@ -1,7 +1,7 @@
 import { Section } from "@/components/layout/section";
 import {
-  AdminAccountDataTable,
   AdminCreateUserDialog,
+  UserDataTable,
 } from "@/components/modules/auth";
 import {
   CardAction,
@@ -36,7 +36,7 @@ export default async function Page() {
 
       <Separator />
 
-      <AdminAccountDataTable
+      <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
         searchPlaceholder={placeholder}

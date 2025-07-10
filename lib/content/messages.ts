@@ -11,6 +11,7 @@ export const messages = {
     `${thing} ${formatDateDistanceToNow(time)} ago.`,
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
     `${browser ?? "A browser"} on ${os ?? "some OS"}`,
+  tooManyRequest: "Too many requests. Please try again later.",
 
   invalid: {
     email: "Hmm, that doesn't look like a valid email.",

@@ -1,13 +1,13 @@
 import { appInfo } from "../const";
 
 export const pages = {
-  auth: {
+  signIn: {
     title: appInfo.name,
     desc: `Access the ${appInfo.name} Dashboard securely by entering your credentials.`,
   },
 
   account: {
-    title: "User Management",
+    title: "Users",
     desc: "Manage and view details of all users.",
     placeholder: "Search user...",
   },

@@ -71,5 +71,5 @@ export const zodAuth = z.object({
     .boolean({
       error: messages.requiredAndInvalidField("Agreement", "boolean"),
     })
-    .refine((v) => v === true, { error: content.user.agreement }),
+    .refine((v) => v === true, { error: content.auth.agreement }),
 });

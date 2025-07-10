@@ -27,10 +27,10 @@ export default function Page() {
         <CardHeader className="text-center">
           <CardTitle className="mx-auto">
             <Link href="/">
-              <h3>{pages.auth.title}</h3>
+              <h3>{pages.signIn.title}</h3>
             </Link>
           </CardTitle>
-          <CardDescription>{pages.auth.desc}</CardDescription>
+          <CardDescription>{pages.signIn.desc}</CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
