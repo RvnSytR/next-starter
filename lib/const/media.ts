@@ -1,18 +1,6 @@
 import { FileText, Image, LucideIcon, Upload } from "lucide-react";
 import { toByte } from "../utils";
-
-export type FieldType =
-  | "string"
-  | "boolean"
-  | "number"
-  | "date"
-  | "array"
-  | "object";
-
-export type FileType = "file" | "image" | "document";
-//   | "archive"
-//   | "audio"
-//   | "video";
+import { FileType } from "./other";
 
 type MediaProps = Record<
   FileType,

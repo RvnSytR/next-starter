@@ -1,5 +1,5 @@
 import { FileType, mediaMeta } from "@/lib/const";
-import { baseText, buttonText } from "@/lib/content";
+import { buttonText, commonText } from "@/lib/content";
 import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -38,10 +38,8 @@ export function FormFloating({
       )}
       {...props}
     >
-      <div className="absolute inset-y-0 flex items-center justify-center pl-3 text-center">
-        <small className="text-muted-foreground">
-          {typeof icon === "string" ? icon.slice(0, 3) : icon}
-        </small>
+      <div className="text-muted-foreground absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
+        {typeof icon === "string" ? icon.slice(0, 3) : icon}
       </div>
       {children}
     </div>
@@ -102,7 +100,7 @@ export function InputDate({
       if (selected.length <= maxDisplay) {
         placeholder = formattedDates.join(", ");
       } else {
-        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} ${baseText.more}`;
+        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} ${commonText.more}`;
       }
     } else if (mode === "range" && selected && selected.from) {
       placeholder = selected.to

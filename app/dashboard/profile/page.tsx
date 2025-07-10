@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { dashboardPage } from "@/lib/content";
+import { pages } from "@/lib/content";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getListSession } from "@/server/action";
@@ -32,8 +32,7 @@ export default async function Page() {
   } = await checkAndGetAuthorizedSession("/dashboard/profile");
 
   const sessionList = await getListSession();
-  const { info, password, activeSession, deleteAccount } =
-    dashboardPage.profile;
+  const { info, password, activeSession, deleteAccount } = pages.profile;
 
   return (
     <Section currentPage={routeMeta.displayName} className="items-center">

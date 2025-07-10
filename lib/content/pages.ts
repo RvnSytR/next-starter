@@ -1,6 +1,6 @@
 import { appInfo } from "../const";
 
-export const dashboardPage = {
+export const pages = {
   auth: {
     title: appInfo.name,
     desc: `Access the ${appInfo.name} Dashboard securely by entering your credentials.`,

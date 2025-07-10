@@ -1,13 +1,13 @@
 # Next.js Starter Template
 
-A lightweight, personalized starter template for **Next.js 15 (App Router)** with just the tools and configurations I use in most projects. It’s designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
+A lightweight, opinionated starter template for **Next.js 15 (App Router)** with just the tools and configurations I use in most projects. Designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
 
 ## ✨ Features
 
 - Authentication with user dashboard and RBAC
 - Database and S3 integration
 - Ready-to-use components, and styling
-- Centralized project structure (write once, use anywhere)
+- Centralized content, DB state, project constant and overall project structure (write once, use anywhere)
 - Handy utility functions, action and S3 helpers
 
 ## 🛠️ Tech Stack

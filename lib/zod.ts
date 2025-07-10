@@ -1,6 +1,8 @@
 import { z } from "zod/v4";
-import { FileType, mediaMeta } from "./const";
-import { messages } from "./content";
+import { appInfo, FileType, mediaMeta } from "./const";
+import { content, messages } from "./content";
+
+z.config(appInfo.i18n.zod());
 
 export const zodDateRange = z.object(
   {
@@ -69,5 +71,5 @@ export const zodAuth = z.object({
     .boolean({
       error: messages.requiredAndInvalidField("Agreement", "boolean"),
     })
-    .refine((v) => v === true, { error: messages.user.agreement }),
+    .refine((v) => v === true, { error: content.user.agreement }),
 });

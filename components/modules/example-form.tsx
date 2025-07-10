@@ -1,7 +1,12 @@
 "use client";
 
 import { buttonText } from "@/lib/content";
-import { formatNumeric, formatPhone, sanitizeNumber } from "@/lib/utils";
+import {
+  formatNumber,
+  formatPhone,
+  getCurrencySymbol,
+  sanitizeNumber,
+} from "@/lib/utils";
 import { zodDateRange, zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -127,12 +132,12 @@ export function ExampleForm() {
             render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Numeric</FormLabel>
-                <FormFloating icon="Rp.">
+                <FormFloating icon={getCurrencySymbol("id")}>
                   <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
-                      value={formatNumeric(value)}
+                      value={formatNumber(value)}
                       onChange={(e) => onChange(sanitizeNumber(e.target.value))}
                       {...rest}
                     />

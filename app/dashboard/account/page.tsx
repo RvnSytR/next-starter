@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { dashboardPage } from "@/lib/content";
+import { pages } from "@/lib/content";
 import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
 import { Metadata } from "next";
@@ -21,7 +21,7 @@ export default async function Page() {
   const { session, routeMeta } =
     await checkAndGetAuthorizedSession("/dashboard/account");
 
-  const { title, desc, placeholder } = dashboardPage.account;
+  const { title, desc, placeholder } = pages.account;
   const data = await getUserList();
 
   return (

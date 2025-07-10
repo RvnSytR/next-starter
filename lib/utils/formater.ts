@@ -1,3 +1,5 @@
+import { appInfo, Languages, languagesMeta } from "../const";
+
 export function aOrAn(word: string) {
   return /^[aiueo]/i.test(word) ? "an" : "a";
 }
@@ -10,7 +12,18 @@ export function capitalize(str: string) {
 }
 
 export function sanitizeNumber(str: string): number {
-  return Number(str.replace(/[^\d]/g, "") || "0");
+  const normalized = str
+    .replace(/\u0660/g, "0")
+    .replace(/\u0661/g, "1")
+    .replace(/\u0662/g, "2")
+    .replace(/\u0663/g, "3")
+    .replace(/\u0664/g, "4")
+    .replace(/\u0665/g, "5")
+    .replace(/\u0666/g, "6")
+    .replace(/\u0667/g, "7")
+    .replace(/\u0668/g, "8")
+    .replace(/\u0669/g, "9");
+  return Number(normalized.replace(/[^\d]/g, "") || "0");
 }
 
 export function toByte(mb: number) {
@@ -21,7 +34,7 @@ export function toMegabytes(byte: number) {
   return byte / 1024 / 1024;
 }
 
-export function toKebabCase(str: string): string {
+export function toKebabCase(str: string) {
   return str
     .trim()
     .toLowerCase()
@@ -29,12 +42,27 @@ export function toKebabCase(str: string): string {
     .replace(/\s+/g, "-");
 }
 
-export function formatNumeric(num: string | number): string {
-  return new Intl.NumberFormat("id-ID").format(sanitizeNumber(String(num)));
+export function formatNumber(
+  number: number,
+  props?: { lang?: Languages; options?: Intl.NumberFormatOptions },
+) {
+  const locale = languagesMeta[props?.lang ?? appInfo.lang].locale;
+  return new Intl.NumberFormat(locale, props?.options).format(number);
 }
 
-export function formatPhone(num: string | number): string {
-  const phoneStr = String(sanitizeNumber(String(num)));
+export function getCurrencySymbol(lang: Languages): string {
+  const { locale, currency } = languagesMeta[lang];
+  const formatted = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(1);
+  return formatted.replace(/[\d\s.,]/g, "").trim();
+}
+
+export function formatPhone(number: number, prefix?: "+62" | "0") {
+  const phoneStr = String(number);
   if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
 
@@ -45,5 +73,5 @@ export function formatPhone(num: string | number): string {
     remaining = remaining.slice(4);
   }
 
-  return formatted;
+  return `${prefix ?? ""}${formatted}`.trim();
 }

@@ -1,14 +1,7 @@
-import { FieldType, FileType, mediaMeta } from "../const";
-import {
-  aOrAn,
-  capitalize,
-  formatDate,
-  formatDateDistanceToNow,
-} from "../utils";
+import { Action, FieldType, FileType, mediaMeta } from "../const";
+import { aOrAn, capitalize, formatDateDistanceToNow } from "../utils";
 
-type Action = "created" | "updated" | "removed";
-
-const baseMessages = {
+export const messages = {
   loading: "Just a moment...",
   error: "Uh-oh! Something went wrong. Please try again later.",
   success: (thing: string, action: Action) =>
@@ -73,47 +66,4 @@ const baseMessages = {
   conflict: (thing: string) => `There's a conflict with an existing ${thing}.`,
   deleteForbidden: (thing: string, x: string) =>
     `This ${thing} cannot be deleted because it is currently assigned to ${x}.`,
-};
-
-export const messages = {
-  ...baseMessages,
-
-  user: {
-    success: (thing: string, action: Action) =>
-      `Your ${baseMessages.success(thing, action)}`,
-    noChanges: (thing: string) => `Your ${baseMessages.noChanges(thing)}`,
-    verified: "This user has verified their email.",
-
-    signIn: (name?: string) =>
-      `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
-    signUp: "You're all set! Sign in to continue.",
-    signOut: "You've been signed out. See you soon!",
-
-    confirmPassword: "Passwords don't match — please double-check.",
-    agreement:
-      "You'll need to agree to the Terms of Service and Privacy Policy to continue.",
-
-    notAuthorized: "You do not have permission to perform this action.",
-    changeRole: (name: string, role: string) =>
-      `${name}'s role is now set to ${role}.`,
-
-    current: (thing: "user" | "session") => `Current ${thing}`,
-    lastSeen: (time: Date) => baseMessages.thingAgo("Last seen", time),
-    createdAgo: (time: Date) =>
-      `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
-
-    revokeThisSession: "This session has been revoked.",
-    revokeOtherSessions: "Your other active sessions have been revoked.",
-
-    revokeUserSession: (name?: string) =>
-      `${name ? name + "'s" : "All user"} active sessions have been revoked.`,
-    revokeUserSessions: (success: number, length: number) =>
-      `${success} out of ${length} user active session${length !== 1 ? "s" : ""} have been revoked.`,
-
-    removeUsers: (success: number, length: number) =>
-      baseMessages.success(
-        `${success} out of ${length} user${length !== 1 ? "s" : ""}`,
-        "removed",
-      ),
-  },
 };

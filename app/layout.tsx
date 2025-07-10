@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={appInfo.lang} suppressHydrationWarning>
       <body className={cn(font.className, "relative min-h-dvh")}>
         <ThemeProvider
           attribute="class"

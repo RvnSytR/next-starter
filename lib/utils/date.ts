@@ -1,5 +1,7 @@
 import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
-import { enUS } from "date-fns/locale";
+import { appInfo } from "../const";
+
+const locale = appInfo.i18n.date;
 
 export function isDateInRange(from: Date, to: Date, date: Date) {
   return isBefore(from, date) && isAfter(to, date);
@@ -28,11 +30,11 @@ export function calculateAge(birthDate: Date): number | string {
 }
 
 export function formatDate(date: Date, formatStr: string) {
-  return format(date, formatStr, { locale: enUS });
+  return format(date, formatStr, { locale });
 }
 
 export function formatDateDistanceToNow(date: Date) {
-  return formatDistanceToNow(date, { locale: enUS });
+  return formatDistanceToNow(date, { locale });
 }
 
 export function formatSecondsToDHMS(totalSeconds: number) {
