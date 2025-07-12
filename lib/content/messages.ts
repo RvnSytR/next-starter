@@ -10,18 +10,21 @@ export const messages = {
   thingAgo: (thing: string, time: Date) =>
     `${thing} ${formatDateDistanceToNow(time)} ago.`,
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
-    `${browser ?? "A browser"} on ${os ?? "some OS"}`,
+    `${browser ?? "A browser"} on ${os ?? "an unknown OS"}`,
   tooManyRequest: "Too many requests. Please try again later.",
 
   invalid: {
-    email: "Hmm, that doesn't look like a valid email.",
-    phone: "That doesn't seem like a valid phone number.",
-    URL: "That URL doesn't look quite right.",
-    time: "Please enter a proper time.",
-    date: "That doesn't seem like a valid date.",
-    dateMultiple: "Those don't seem like valid dates.",
+    email: "That doesn't look like a valid email address.",
+    text: "Please enter valid text.",
+    number: "Please enter a valid number.",
+    color: "That doesn't appear to be a valid color code.",
+    phone: "Please enter a valid phone number.",
+    URL: "That URL doesn't seem valid.",
+    time: "Please enter a valid time.",
+    date: "Please enter a valid date.",
+    dateMultiple: "Some of the dates entered are invalid.",
     dateRange: {
-      field: "Please select a valid range of dates.",
+      field: "Please select a valid date range.",
       from: "Please choose a valid start date.",
       to: "Please choose a valid end date.",
     },
@@ -32,26 +35,22 @@ export const messages = {
     fileType: (file: FileType = "file", withAccepted: boolean = false) =>
       `That's not a valid ${file} type.${
         withAccepted
-          ? " Accepted: " + mediaMeta[file].extensions.join(", ")
+          ? " Accepted types: " + mediaMeta[file].extensions.join(", ")
           : ""
       }`.trim(),
 
     selection: (field: string) => `That's not a valid option for ${field}.`,
-
-    number: "That doesn't look like a valid number.",
-    text: "Please enter valid text.",
-    color: "That doesn't seem like a valid color code.",
   },
 
   tooShort: (field: string, min: number) =>
-    `${field} needs to be at least ${min} characters long.`,
+    `${field} needs to be at least ${min} characters.`,
   tooLong: (field: string, max: number) =>
     `${field} can't be longer than ${max} characters.`,
   outOfRange: (field: string, min: number, max: number) =>
     `${field} must be between ${min} and ${max} characters.`,
 
   invalidField: (field: string, fieldType: FieldType) =>
-    `${field} should be a valid ${fieldType}.`,
+    `${field} must be a valid ${fieldType}.`,
   requiredAndInvalidField: (field: string, fieldType: FieldType) =>
     `${field} is required and must be a valid ${fieldType}.`,
 
