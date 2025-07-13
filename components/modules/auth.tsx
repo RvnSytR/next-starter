@@ -1,5 +1,6 @@
 "use client";
 
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
@@ -50,7 +51,7 @@ import {
   UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
@@ -308,9 +309,7 @@ export function SignInForm() {
     });
   };
 
-  useEffect(() => {
-    if (isAuthenticated) redirectAction(signInRoute);
-  }, [isAuthenticated]);
+  if (isAuthenticated) redirectAction(signInRoute);
 
   return (
     <Form {...form}>
@@ -1282,6 +1281,7 @@ export function UserDataTable({
 
 export function AdminCreateUserDialog() {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
@@ -1336,8 +1336,9 @@ export function AdminCreateUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm">
-          <Icon /> {trigger}
+        <Button size={isMobile ? "iconsm" : "sm"}>
+          <Icon />
+          <span className="hidden md:flex">{trigger}</span>
         </Button>
       </DialogTrigger>
 

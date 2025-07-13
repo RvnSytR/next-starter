@@ -11,7 +11,7 @@ export const routesMeta = createRoutes({
   "/sign-in": { displayName: "Sign In" },
   "/dashboard": { displayName: "Dashboard", role: "all" },
   "/dashboard/profile": { displayName: "My Profile", role: "all" },
-  "/dashboard/account": { displayName: "Users", role: ["admin"] },
+  "/dashboard/users": { displayName: "Users", role: ["admin"] },
 });
 
 export type Route = keyof typeof routesMeta;

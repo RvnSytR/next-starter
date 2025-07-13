@@ -15,13 +15,13 @@ import { getTitle } from "@/lib/utils";
 import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
 import { Metadata } from "next";
 
-export const metadata: Metadata = { title: getTitle("/dashboard/account") };
+export const metadata: Metadata = { title: getTitle("/dashboard/users") };
 
 export default async function Page() {
   const { session, routeMeta } =
-    await checkAndGetAuthorizedSession("/dashboard/account");
+    await checkAndGetAuthorizedSession("/dashboard/users");
 
-  const { title, desc, placeholder } = pages.account;
+  const { title, desc, placeholder } = pages.users;
   const data = await getUserList();
 
   return (

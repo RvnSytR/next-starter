@@ -22,7 +22,7 @@ export const dashboardMenu: Menu[] = [
     section: "General",
     content: [
       { route: "/dashboard", icon: LayoutDashboard },
-      { route: "/dashboard/account", icon: UsersRound },
+      { route: "/dashboard/users", icon: UsersRound },
     ],
   },
   {
