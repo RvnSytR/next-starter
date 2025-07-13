@@ -4,6 +4,7 @@ import {
   dashboardMenu,
   Menu,
   Route,
+  RouteRole,
   routesMeta,
 } from "../const";
 import { Role } from "../permission";
@@ -37,9 +38,9 @@ export function getMenuByRole(
   const filteredMenu = menu.map(({ section, content }) => {
     const filteredContent = content.filter(({ route }) => {
       const routeMeta = routesMeta[route];
-      if (!routeMeta.role) return true;
+      if (!("role" in routeMeta)) return true;
 
-      const currentRole = routeMeta.role;
+      const currentRole = routeMeta.role as RouteRole;
       return currentRole === "all" || currentRole.includes(role);
     });
 
