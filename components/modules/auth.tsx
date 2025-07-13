@@ -126,7 +126,7 @@ import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const contentAuth = content.auth;
-const formItem = contentAuth.formItem;
+const formItem = contentAuth.formItems;
 const dialogs = contentAuth.dialogs;
 
 export function UserRoleBadge({

@@ -31,7 +31,7 @@ const auth = {
     desc: (name: string) => `View detailed information for ${name}.`,
   },
 
-  formItem: {
+  formItems: {
     rememberMe: "Remember me",
     profilePic: "Profile Picture",
 
