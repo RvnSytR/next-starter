@@ -127,6 +127,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const contentAuth = content.auth;
 const formItem = contentAuth.formItem;
+const dialogs = contentAuth.dialogs;
 
 export function UserRoleBadge({
   role,
@@ -562,7 +563,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc } = contentAuth.removeAvatar;
+  const { title, desc } = dialogs.removeAvatar;
 
   const schema = zodFile(contentType);
 
@@ -937,7 +938,7 @@ export function ActiveSessionButton({
   const isCurrentSession = currentSessionId === id;
   const parsedResult = new UAParser(userAgent!).getResult();
 
-  const { title, desc, success } = contentAuth.revokeSession;
+  const { title, desc, success } = dialogs.revokeSession;
   const { browser, os, device } = parsedResult;
   const { current, lastSeen } = contentAuth;
 
@@ -1036,7 +1037,7 @@ export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = contentAuth.revokeAllOtherSession;
+  const { trigger, title, desc, success } = dialogs.revokeAllOtherSession;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1085,7 +1086,7 @@ export function DeleteMyAccountButton({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = contentAuth.delete;
+  const { trigger, title, desc } = dialogs.delete;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1285,7 +1286,7 @@ export function AdminCreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
-  const { trigger, title, desc } = contentAuth.adminCreate;
+  const { trigger, title, desc } = dialogs.adminCreate;
 
   const schema = zodAuth
     .pick({
@@ -1582,7 +1583,7 @@ function AdminRevokeUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = contentAuth.adminRevokeSessions;
+  const { trigger, title, desc, success } = dialogs.adminRevokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1644,7 +1645,7 @@ function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = contentAuth.adminRemove;
+  const { title, desc } = dialogs.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1714,7 +1715,7 @@ function AdminActionRevokeUserSessionsDialog({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { trigger, titleMultiple, descMultiple, successMultiple } =
-    contentAuth.adminRevokeSessions;
+    dialogs.adminRevokeSessions;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1778,8 +1779,7 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { titleMultiple, descMultiple, successMultiple } =
-    contentAuth.adminRemove;
+  const { titleMultiple, descMultiple, successMultiple } = dialogs.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
