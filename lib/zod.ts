@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 import { appInfo, FileType, mediaMeta } from "./const";
 import { content, messages } from "./content";
 

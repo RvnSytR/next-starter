@@ -55,7 +55,7 @@ import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
-import { z } from "zod/v4";
+import { z } from "zod";
 import { FormFloating } from "../custom/custom-field";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";

@@ -1,5 +1,5 @@
 import { enUS } from "date-fns/locale";
-import { en } from "zod/v4/locales";
+import { en } from "zod/locales";
 import { Languages } from "./other";
 
 export const appInfo = {
