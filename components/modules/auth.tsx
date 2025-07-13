@@ -4,7 +4,12 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import { buttonText, commonText, content, messages } from "@/lib/content";
+import {
+  buttonText,
+  commonText,
+  content as contentAuth,
+  messages,
+} from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -125,9 +130,9 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const contentAuth = content.auth;
-const formItem = contentAuth.formItems;
-const dialogs = contentAuth.dialogs;
+const content = contentAuth.auth;
+const formItem = content.formItems;
+const dialogs = content.dialogs;
 
 export function UserRoleBadge({
   role,
@@ -179,7 +184,7 @@ export function UserVerifiedBadge({
           {commonText.verified}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent>{contentAuth.verified}</TooltipContent>
+      <TooltipContent>{content.verified}</TooltipContent>
     </Tooltip>
   );
 }
@@ -236,7 +241,7 @@ export function SignOutButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(contentAuth.signOut);
+              toast.success(content.signOut);
               router.push(signInRoute);
             },
           },
@@ -269,7 +274,7 @@ export function SignOnGithubButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(contentAuth.signIn());
+              toast.success(content.signIn());
             },
           },
         );
@@ -304,7 +309,7 @@ export function SignInForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(contentAuth.signIn);
+        toast.success(content.signIn);
         setIsAuthenticated(true);
       },
     });
@@ -396,7 +401,7 @@ export function SignUpForm() {
       isAgree: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: contentAuth.confirmPassword,
+      message: content.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -419,7 +424,7 @@ export function SignUpForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(contentAuth.signUp);
+        toast.success(content.signUp);
         setIsLoading(false);
         form.reset();
       },
@@ -594,7 +599,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(contentAuth.success("avatar", "updated"));
+          toast.success(content.success("avatar", "updated"));
           setIsChange(false);
           router.refresh();
         },
@@ -616,7 +621,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(contentAuth.success("avatar", "removed"));
+          toast.success(content.success("avatar", "removed"));
         },
       },
     );
@@ -700,7 +705,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(contentAuth.noChanges("profile"));
+    if (newName === name) return toast.info(content.noChanges("profile"));
     setIsLoading(true);
     authClient.updateUser(
       { name: newName },
@@ -710,7 +715,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(contentAuth.success("profile", "updated"));
+          toast.success(content.success("profile", "updated"));
           setIsLoading(false);
           router.refresh();
         },
@@ -791,7 +796,7 @@ export function ChangePasswordForm() {
       revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
     })
     .refine((sc) => sc.newPassword === sc.confirmPassword, {
-      message: contentAuth.confirmPassword,
+      message: content.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -813,7 +818,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(contentAuth.success("password", "updated"));
+        toast.success(content.success("password", "updated"));
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -940,7 +945,7 @@ export function ActiveSessionButton({
 
   const { title, desc, success } = dialogs.revokeSession;
   const { browser, os, device } = parsedResult;
-  const { current, lastSeen } = contentAuth;
+  const { current, lastSeen } = content;
 
   const DeviceIcons = {
     mobile: Smartphone,
@@ -1101,7 +1106,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(contentAuth.success("account", "removed"));
+          toast.success(content.success("account", "removed"));
           router.push(signInRoute);
         },
       },
@@ -1147,11 +1152,11 @@ export function DeleteMyAccountButton({
 export function UserDetailSheet({ data }: { data: UserWithRole }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { title, desc } = contentAuth.detail;
+  const { title, desc } = content.detail;
   const details = [
     { label: "User ID", content: `${data.id.slice(0, 19)}...` },
     { label: "Email Address", content: data.email },
-    { label: "Created At", content: contentAuth.createdAgo(data.createdAt) },
+    { label: "Created At", content: content.createdAgo(data.createdAt) },
   ];
 
   return (
@@ -1297,7 +1302,7 @@ export function AdminCreateUserDialog() {
       role: true,
     })
     .refine((sc) => sc.password === sc.confirmPassword, {
-      message: contentAuth.confirmPassword,
+      message: content.confirmPassword,
       path: ["confirmPassword"],
     });
 
@@ -1519,7 +1524,7 @@ function AdminChangeUserRoleForm({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(contentAuth.changeRole(data.name, newRole));
+          toast.success(content.changeRole(data.name, newRole));
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
