@@ -6,7 +6,7 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
-import { Route } from "./route";
+import { Route } from "./routes";
 
 type MenuContent = {
   route: Route;
