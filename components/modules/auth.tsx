@@ -4,12 +4,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import {
-  buttonText,
-  commonText,
-  content as contentAuth,
-  messages,
-} from "@/lib/content";
+import { baseContent, buttonText, commonText, messages } from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -130,7 +125,7 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const content = contentAuth.auth;
+const content = baseContent.auth;
 const formItem = content.formItems;
 const dialogs = content.dialogs;
 

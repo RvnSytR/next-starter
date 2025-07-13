@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { appInfo, FileType, mediaMeta } from "./const";
-import { content, messages } from "./content";
+import { baseContent, messages } from "./content";
 
 z.config(appInfo.i18n.zod());
 
@@ -71,5 +71,5 @@ export const zodAuth = z.object({
     .boolean({
       error: messages.requiredAndInvalidField("Agreement", "boolean"),
     })
-    .refine((v) => v === true, { error: content.auth.agreement }),
+    .refine((v) => v === true, { error: baseContent.auth.agreement }),
 });

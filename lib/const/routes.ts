@@ -3,9 +3,8 @@ import { Role } from "../permission";
 export type RouteRole = "all" | Role[];
 export type RouteMeta = { displayName: string; role?: RouteRole };
 
-const createRoutes = <T extends Record<string, RouteMeta>>(
-  routes: T,
-): Record<keyof T, RouteMeta> => routes;
+const createRoutes = <T extends Record<string, RouteMeta>>(routes: T): T =>
+  routes;
 
 export const routesMeta = createRoutes({
   "/sign-in": { displayName: "Sign In" },

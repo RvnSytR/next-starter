@@ -31,8 +31,9 @@ export default async function Page() {
     routeMeta,
   } = await checkAndGetAuthorizedSession("/dashboard/profile");
 
-  const sessionList = await getListSession();
   const { info, password, activeSession, deleteAccount } = pages.profile;
+
+  const sessionList = await getListSession();
 
   return (
     <Section currentPage={routeMeta.displayName} className="items-center">

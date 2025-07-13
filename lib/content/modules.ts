@@ -123,4 +123,4 @@ const auth = {
   },
 };
 
-export const content = { auth };
+export const baseContent = { auth };

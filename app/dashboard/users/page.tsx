@@ -21,7 +21,8 @@ export default async function Page() {
   const { session, routeMeta } =
     await checkAndGetAuthorizedSession("/dashboard/users");
 
-  const { title, desc, placeholder } = pages.users;
+  const { title, desc, searchPlaceholder } = pages.users;
+
   const data = await getUserList();
 
   return (
@@ -39,7 +40,7 @@ export default async function Page() {
       <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
-        searchPlaceholder={placeholder}
+        searchPlaceholder={searchPlaceholder}
       />
     </Section>
   );
