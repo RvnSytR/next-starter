@@ -120,11 +120,11 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
-    header: ({ column }) => headerButton(column, "Role"),
+    header: ({ column }) => headerButton(column, fields.role),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
-      displayName: "Role",
+      displayName: fields.role,
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
