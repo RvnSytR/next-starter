@@ -132,8 +132,8 @@ import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const content = baseContent.auth;
-const fields = content.fields;
-const comps = content.components;
+const cFields = content.fields;
+const cComps = content.components;
 
 export function UserRoleBadge({
   role,
@@ -327,13 +327,13 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.email.label}
+                {cFields.email.label}
               </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={fields.email.placeholder}
+                    placeholder={cFields.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -349,13 +349,13 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.password.label}
+                {cFields.password.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={fields.password.placeholder}
+                    placeholder={cFields.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -376,7 +376,7 @@ export function SignInForm() {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>{fields.rememberMe}</FormLabel>
+              <FormLabel>{cFields.rememberMe}</FormLabel>
             </FormItem>
           )}
         />
@@ -441,13 +441,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.name.label}
+                {cFields.name.label}
               </FormLabel>
               <FormFloating icon={<UserRound />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={fields.name.placeholder}
+                    placeholder={cFields.name.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -463,13 +463,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.email.label}
+                {cFields.email.label}
               </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={fields.email.placeholder}
+                    placeholder={cFields.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -485,13 +485,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.password.label}
+                {cFields.password.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={fields.password.placeholder}
+                    placeholder={cFields.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -507,13 +507,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {fields.confirmPassword.label}
+                {cFields.confirmPassword.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={fields.confirmPassword.placeholder}
+                    placeholder={cFields.confirmPassword.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -537,9 +537,9 @@ export function SignUpForm() {
                 </FormControl>
 
                 <div className="flex flex-col items-start gap-y-1.5">
-                  <FormLabel>{fields.agreement.label}</FormLabel>
+                  <FormLabel>{cFields.agreement.label}</FormLabel>
                   <small className="text-muted-foreground text-xs font-normal">
-                    {fields.agreement.placeholder}
+                    {cFields.agreement.placeholder}
                   </small>
                 </div>
               </div>
@@ -569,7 +569,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc, success } = comps.profilePic;
+  const { title, desc, success } = cComps.profilePic;
 
   const schema = zodFile(contentType);
 
@@ -644,7 +644,7 @@ export function ProfilePicture({
       />
 
       <div className="flex flex-col gap-y-2">
-        <Label>{fields.profilePic}</Label>
+        <Label>{cFields.profilePic}</Label>
         <div className="flex gap-x-2">
           <Button
             type="button"
@@ -698,7 +698,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { name, email } = props;
-  const { noChanges, success } = comps.personalInfo;
+  const { noChanges, success } = cComps.personalInfo;
   const schema = zodAuth.pick({ name: true, email: true });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -736,7 +736,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{fields.email.label}</FormLabel>
+                <FormLabel>{cFields.email.label}</FormLabel>
                 <FormFloating icon={<Mail />}>
                   <FormControl>
                     <Input type="text" disabled {...field} />
@@ -753,13 +753,13 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {fields.name.label}
+                  {cFields.name.label}
                 </FormLabel>
                 <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder={fields.name.placeholder}
+                      placeholder={cFields.name.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -838,13 +838,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {fields.currentPassword.label}
+                  {cFields.currentPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={fields.currentPassword.placeholder}
+                      placeholder={cFields.currentPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -860,13 +860,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {fields.newPassword.label}
+                  {cFields.newPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={fields.newPassword.placeholder}
+                      placeholder={cFields.newPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -882,13 +882,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {fields.confirmPassword.label}
+                  {cFields.confirmPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={fields.confirmPassword.placeholder}
+                      placeholder={cFields.confirmPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -945,7 +945,7 @@ export function ActiveSessionButton({
   const isCurrentSession = currentSessionId === id;
   const parsedResult = new UAParser(userAgent!).getResult();
 
-  const { title, desc, success } = comps.revokeSession;
+  const { title, desc, success } = cComps.revokeSession;
   const { browser, os, device } = parsedResult;
   const { current, lastSeen } = content;
 
@@ -1044,7 +1044,7 @@ export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = comps.revokeAllOtherSession;
+  const { trigger, title, desc, success } = cComps.revokeAllOtherSession;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1093,7 +1093,7 @@ export function DeleteMyAccountButton({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = comps.delete;
+  const { trigger, title, desc, success } = cComps.delete;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1156,8 +1156,8 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
 
   const { title, desc } = content.detail;
   const details = [
-    { label: fields.userId, content: `${data.id.slice(0, 19)}...` },
-    { label: fields.email.label, content: data.email },
+    { label: cFields.userId, content: `${data.id.slice(0, 19)}...` },
+    { label: cFields.email.label, content: data.email },
     {
       label: tableText.column.createdAt,
       content: content.createdAgo(data.createdAt),
@@ -1296,7 +1296,7 @@ export function AdminCreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
-  const { trigger, title, desc, success } = comps.adminCreate;
+  const { trigger, title, desc, success } = cComps.adminCreate;
 
   const schema = zodAuth
     .pick({
@@ -1365,13 +1365,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    {fields.name.label}
+                    {cFields.name.label}
                   </FormLabel>
                   <FormFloating icon={<UserRound />}>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder={fields.name.placeholder}
+                        placeholder={cFields.name.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1387,13 +1387,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    {fields.email.label}
+                    {cFields.email.label}
                   </FormLabel>
                   <FormFloating icon={<Mail />}>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder={fields.email.placeholder}
+                        placeholder={cFields.email.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1409,13 +1409,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    {fields.password.label}
+                    {cFields.password.label}
                   </FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder={fields.password.placeholder}
+                        placeholder={cFields.password.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1431,13 +1431,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    {fields.confirmPassword.label}
+                    {cFields.confirmPassword.label}
                   </FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder={fields.confirmPassword.placeholder}
+                        placeholder={cFields.confirmPassword.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1453,7 +1453,7 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    {fields.role}
+                    {cFields.role}
                   </FormLabel>
                   <Select
                     value={field.value as Role}
@@ -1550,7 +1550,7 @@ function AdminChangeUserRoleForm({
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{fields.changeRole(data.name)}</FormLabel>
+              <FormLabel>{cFields.changeRole(data.name)}</FormLabel>
               <Select
                 value={field.value as Role}
                 onValueChange={field.onChange}
@@ -1597,7 +1597,7 @@ function AdminRevokeUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = comps.adminRevokeSessions;
+  const { trigger, title, desc, success } = cComps.adminRevokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1659,7 +1659,7 @@ function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = comps.adminRemove;
+  const { title, desc } = cComps.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1729,7 +1729,7 @@ function AdminActionRevokeUserSessionsDialog({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { trigger, titleMultiple, descMultiple, successMultiple } =
-    comps.adminRevokeSessions;
+    cComps.adminRevokeSessions;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1793,7 +1793,7 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { titleMultiple, descMultiple, successMultiple } = comps.adminRemove;
+  const { titleMultiple, descMultiple, successMultiple } = cComps.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
