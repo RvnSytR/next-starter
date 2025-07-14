@@ -38,7 +38,7 @@ export default function RootLayout({
           disableTransitionOnChange
           enableSystem
         >
-          <GridPattern className="stroke-accent/40 dark:stroke-accent/20 -z-1" />
+          <GridPattern className="stroke-muted dark:stroke-muted/60 -z-1" />
           {children}
           <Toaster position="top-center" closeButton richColors />
         </ThemeProvider>

@@ -200,7 +200,7 @@ export function InputFile({
           accept={fileMedia.mimeType.join(", ")}
           className={cn(
             "absolute size-full opacity-0 group-hover:cursor-pointer",
-            isFiles ? "z-[-1]" : "z-0",
+            isFiles ? "-z-1" : "z-0",
           )}
           onChange={({ target }) => changeHandler(target.files)}
         />

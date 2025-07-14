@@ -11,17 +11,17 @@ export function ThemeToggle({
   className,
   ...props
 }: Omit<ButtonProps, "onClick">) {
-  const { setTheme } = useTheme();
+  const { theme, setTheme } = useTheme();
+  const Icon = theme === "dark" ? Moon : Sun;
   return (
     <Button
       size={size}
       variant={variant}
       className={cn("shrink-0", className)}
-      onClick={() => setTheme((prev) => (prev === "light" ? "dark" : "light"))}
+      onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
       {...props}
     >
-      <Sun className="scale-100 rotate-0 transition dark:scale-0 dark:-rotate-90" />
-      <Moon className="absolute scale-0 rotate-90 transition dark:scale-100 dark:rotate-0" />
+      <Icon />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

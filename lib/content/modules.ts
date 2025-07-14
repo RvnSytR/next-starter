@@ -1,42 +1,42 @@
-import { Action } from "../const";
 import { formatDate, formatDateDistanceToNow } from "../utils";
 import { messages } from "./messages";
 
 const auth = {
-  success: (thing: string, action: Action) =>
-    `Your ${messages.success(thing, action)}`,
-  noChanges: (thing: string) => `Your ${messages.noChanges(thing)}`,
   verified: "This user has verified their email.",
+  current: (thing: "user" | "session") => `Current ${thing}`,
+  lastSeen: (time: Date) => messages.thingAgo("Last seen", time),
+  createdAgo: (time: Date) =>
+    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
 
   signIn: (name?: string) =>
     `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
   signUp: "You're all set! Sign in to continue.",
   signOut: "You've been signed out. See you soon!",
-
-  confirmPassword: "Passwords don't match — please double-check.",
-  agreement:
-    "You'll need to agree to the Terms of Service and Privacy Policy to continue.",
-
-  notAuthorized: "You do not have permission to perform this action.",
   changeRole: (name: string, role: string) =>
     `${name}'s role is now set to ${role}.`,
 
-  current: (thing: "user" | "session") => `Current ${thing}`,
-  lastSeen: (time: Date) => messages.thingAgo("Last seen", time),
-  createdAgo: (time: Date) =>
-    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
+  confirmPassword: "Passwords don't match — please double-check.",
+  updatePassword: messages.success("password", "updated"),
+
+  agreement:
+    "You'll need to agree to the Terms of Service and Privacy Policy to continue.",
+  notAuthorized: "You do not have permission to perform this action.",
 
   detail: {
     title: (name: string) => `${name}'s Details`,
     desc: (name: string) => `View detailed information for ${name}.`,
   },
 
-  formItems: {
+  fields: {
+    userId: "User ID",
+    avatar: "Avatar",
     rememberMe: "Remember me",
     profilePic: "Profile Picture",
+    role: "Role",
+    changeRole: (name: string) => `Change ${name}'s Role`,
 
     email: { label: "Email address", placeholder: "Enter your email address" },
-    username: { label: "Username", placeholder: "Enter your password" },
+    name: { label: "Name", placeholder: "Enter your name" },
 
     password: { label: "Password", placeholder: "Enter your password" },
     currentPassword: {
@@ -58,10 +58,20 @@ const auth = {
     },
   },
 
-  dialogs: {
-    removeAvatar: {
-      title: "Remove Profile Avatar",
-      desc: "This will remove your current profile avatar. Are you sure you want to proceed?",
+  components: {
+    profilePic: {
+      title: "Remove Profile Picture",
+      desc: "This will remove your current profile picture. Are you sure you want to proceed?",
+      success: (isUpdate?: boolean) =>
+        messages.success(
+          "Your profile picture",
+          isUpdate ? "updated" : "removed",
+        ),
+    },
+
+    personalInfo: {
+      noChanges: messages.noChanges("profile"),
+      success: messages.success("profile", "updated"),
     },
 
     revokeSession: {
@@ -82,12 +92,14 @@ const auth = {
       trigger: "Delete Account",
       title: "Delete Your Account",
       desc: "Deleting your account will permanently remove all associated data. Proceed with caution as this action cannot be undone.",
+      success: messages.success("account", "removed"),
     },
 
     adminCreate: {
       trigger: "Create User",
       title: "Create New User",
       desc: "Create a new user by entering their details. Ensure all required fields are completed.",
+      success: (name: string) => messages.success(`${name} account`, "created"),
     },
 
     adminRevokeSessions: {

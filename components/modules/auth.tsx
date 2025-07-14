@@ -4,7 +4,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
-import { baseContent, buttonText, commonText, messages } from "@/lib/content";
+import {
+  baseContent,
+  buttonText,
+  commonText,
+  messages,
+  tableText,
+} from "@/lib/content";
 import {
   adminRoles,
   allRoles,
@@ -126,8 +132,8 @@ import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const content = baseContent.auth;
-const formItem = content.formItems;
-const dialogs = content.dialogs;
+const fields = content.fields;
+const comps = content.components;
 
 export function UserRoleBadge({
   role,
@@ -321,13 +327,13 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.email.label}
+                {fields.email.label}
               </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={formItem.email.placeholder}
+                    placeholder={fields.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -343,13 +349,13 @@ export function SignInForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.password.label}
+                {fields.password.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={formItem.password.placeholder}
+                    placeholder={fields.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -370,7 +376,7 @@ export function SignInForm() {
                   onCheckedChange={field.onChange}
                 />
               </FormControl>
-              <FormLabel>{formItem.rememberMe}</FormLabel>
+              <FormLabel>{fields.rememberMe}</FormLabel>
             </FormItem>
           )}
         />
@@ -435,13 +441,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.username.label}
+                {fields.name.label}
               </FormLabel>
               <FormFloating icon={<UserRound />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={formItem.username.placeholder}
+                    placeholder={fields.name.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -457,13 +463,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.email.label}
+                {fields.email.label}
               </FormLabel>
               <FormFloating icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
-                    placeholder={formItem.email.placeholder}
+                    placeholder={fields.email.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -479,13 +485,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.password.label}
+                {fields.password.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={formItem.password.placeholder}
+                    placeholder={fields.password.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -501,13 +507,13 @@ export function SignUpForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">
-                {formItem.confirmPassword.label}
+                {fields.confirmPassword.label}
               </FormLabel>
               <FormFloating icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
-                    placeholder={formItem.confirmPassword.placeholder}
+                    placeholder={fields.confirmPassword.placeholder}
                     {...field}
                   />
                 </FormControl>
@@ -531,9 +537,9 @@ export function SignUpForm() {
                 </FormControl>
 
                 <div className="flex flex-col items-start gap-y-1.5">
-                  <FormLabel>{formItem.agreement.label}</FormLabel>
+                  <FormLabel>{fields.agreement.label}</FormLabel>
                   <small className="text-muted-foreground text-xs font-normal">
-                    {formItem.agreement.placeholder}
+                    {fields.agreement.placeholder}
                   </small>
                 </div>
               </div>
@@ -563,7 +569,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc } = dialogs.removeAvatar;
+  const { title, desc, success } = comps.profilePic;
 
   const schema = zodFile(contentType);
 
@@ -594,7 +600,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(content.success("avatar", "updated"));
+          toast.success(success(true));
           setIsChange(false);
           router.refresh();
         },
@@ -616,7 +622,7 @@ export function ProfilePicture({
         onSuccess: () => {
           setIsRemoved(false);
           router.refresh();
-          toast.success(content.success("avatar", "removed"));
+          toast.success(success());
         },
       },
     );
@@ -638,7 +644,7 @@ export function ProfilePicture({
       />
 
       <div className="flex flex-col gap-y-2">
-        <Label>{formItem.profilePic}</Label>
+        <Label>{fields.profilePic}</Label>
         <div className="flex gap-x-2">
           <Button
             type="button"
@@ -692,6 +698,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { name, email } = props;
+  const { noChanges, success } = comps.personalInfo;
   const schema = zodAuth.pick({ name: true, email: true });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -700,7 +707,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(content.noChanges("profile"));
+    if (newName === name) return toast.info(noChanges);
     setIsLoading(true);
     authClient.updateUser(
       { name: newName },
@@ -710,7 +717,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.success("profile", "updated"));
+          toast.success(success);
           setIsLoading(false);
           router.refresh();
         },
@@ -729,7 +736,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>{formItem.email.label}</FormLabel>
+                <FormLabel>{fields.email.label}</FormLabel>
                 <FormFloating icon={<Mail />}>
                   <FormControl>
                     <Input type="text" disabled {...field} />
@@ -746,13 +753,13 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {formItem.username.label}
+                  {fields.name.label}
                 </FormLabel>
                 <FormFloating icon={<UserRound />}>
                   <FormControl>
                     <Input
                       type="text"
-                      placeholder={formItem.username.placeholder}
+                      placeholder={fields.name.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -813,7 +820,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(content.success("password", "updated"));
+        toast.success(content.updatePassword);
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -831,13 +838,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {formItem.currentPassword.label}
+                  {fields.currentPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={formItem.currentPassword.placeholder}
+                      placeholder={fields.currentPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -853,13 +860,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {formItem.newPassword.label}
+                  {fields.newPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={formItem.newPassword.placeholder}
+                      placeholder={fields.newPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -875,13 +882,13 @@ export function ChangePasswordForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">
-                  {formItem.confirmPassword.label}
+                  {fields.confirmPassword.label}
                 </FormLabel>
                 <FormFloating icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
-                      placeholder={formItem.confirmPassword.placeholder}
+                      placeholder={fields.confirmPassword.placeholder}
                       {...field}
                     />
                   </FormControl>
@@ -938,7 +945,7 @@ export function ActiveSessionButton({
   const isCurrentSession = currentSessionId === id;
   const parsedResult = new UAParser(userAgent!).getResult();
 
-  const { title, desc, success } = dialogs.revokeSession;
+  const { title, desc, success } = comps.revokeSession;
   const { browser, os, device } = parsedResult;
   const { current, lastSeen } = content;
 
@@ -1037,7 +1044,7 @@ export function RevokeOtherSessionsButton() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = dialogs.revokeAllOtherSession;
+  const { trigger, title, desc, success } = comps.revokeAllOtherSession;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1086,7 +1093,7 @@ export function DeleteMyAccountButton({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc } = dialogs.delete;
+  const { trigger, title, desc, success } = comps.delete;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1101,7 +1108,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.success("account", "removed"));
+          toast.success(success);
           router.push(signInRoute);
         },
       },
@@ -1149,9 +1156,12 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
 
   const { title, desc } = content.detail;
   const details = [
-    { label: "User ID", content: `${data.id.slice(0, 19)}...` },
-    { label: "Email Address", content: data.email },
-    { label: "Created At", content: content.createdAgo(data.createdAt) },
+    { label: fields.userId, content: `${data.id.slice(0, 19)}...` },
+    { label: fields.email.label, content: data.email },
+    {
+      label: tableText.column.createdAt,
+      content: content.createdAgo(data.createdAt),
+    },
   ];
 
   return (
@@ -1286,7 +1296,7 @@ export function AdminCreateUserDialog() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const Icon = UserRoundPlus;
-  const { trigger, title, desc } = dialogs.adminCreate;
+  const { trigger, title, desc, success } = comps.adminCreate;
 
   const schema = zodAuth
     .pick({
@@ -1323,9 +1333,7 @@ export function AdminCreateUserDialog() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(
-            messages.success(`${formData.name} account`, "created"),
-          );
+          toast.success(success(formData.name));
           setIsLoading(false);
           form.reset();
           router.refresh();
@@ -1356,12 +1364,14 @@ export function AdminCreateUserDialog() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="label-required">Username</FormLabel>
+                  <FormLabel className="label-required">
+                    {fields.name.label}
+                  </FormLabel>
                   <FormFloating icon={<UserRound />}>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter your Username"
+                        placeholder={fields.name.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1377,13 +1387,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    Email Address
+                    {fields.email.label}
                   </FormLabel>
                   <FormFloating icon={<Mail />}>
                     <FormControl>
                       <Input
                         type="text"
-                        placeholder="Enter your Email Address"
+                        placeholder={fields.email.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1398,12 +1408,14 @@ export function AdminCreateUserDialog() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="label-required">Password</FormLabel>
+                  <FormLabel className="label-required">
+                    {fields.password.label}
+                  </FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Enter your Password"
+                        placeholder={fields.password.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1419,13 +1431,13 @@ export function AdminCreateUserDialog() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="label-required">
-                    Confirm Password
+                    {fields.confirmPassword.label}
                   </FormLabel>
                   <FormFloating icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Confirm your Password"
+                        placeholder={fields.confirmPassword.placeholder}
                         {...field}
                       />
                     </FormControl>
@@ -1440,7 +1452,9 @@ export function AdminCreateUserDialog() {
               name="role"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="label-required">Role</FormLabel>
+                  <FormLabel className="label-required">
+                    {fields.role}
+                  </FormLabel>
                   <Select
                     value={field.value as Role}
                     onValueChange={field.onChange}
@@ -1536,7 +1550,7 @@ function AdminChangeUserRoleForm({
           name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Change {`${data.name}'s`} Role</FormLabel>
+              <FormLabel>{fields.changeRole(data.name)}</FormLabel>
               <Select
                 value={field.value as Role}
                 onValueChange={field.onChange}
@@ -1583,7 +1597,7 @@ function AdminRevokeUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = dialogs.adminRevokeSessions;
+  const { trigger, title, desc, success } = comps.adminRevokeSessions;
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1645,7 +1659,7 @@ function AdminRemoveUserDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { title, desc } = dialogs.adminRemove;
+  const { title, desc } = comps.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1715,7 +1729,7 @@ function AdminActionRevokeUserSessionsDialog({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { trigger, titleMultiple, descMultiple, successMultiple } =
-    dialogs.adminRevokeSessions;
+    comps.adminRevokeSessions;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1779,7 +1793,7 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { titleMultiple, descMultiple, successMultiple } = dialogs.adminRemove;
+  const { titleMultiple, descMultiple, successMultiple } = comps.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);

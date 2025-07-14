@@ -1,5 +1,6 @@
 "use client";
 
+import { baseContent, tableText } from "@/lib/content";
 import { filterFn } from "@/lib/filters";
 import { Role, rolesMeta } from "@/lib/permission";
 import { capitalize, formatDate } from "@/lib/utils";
@@ -65,6 +66,9 @@ function cellCheckbox<R>(row: Row<R>, disabled: boolean = false) {
   );
 }
 
+const columnText = tableText.column;
+const fields = baseContent.auth.fields;
+
 const createUserColumn = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
@@ -75,14 +79,14 @@ export const getUserColumn = (currentUserId: string) => [
     enableSorting: false,
   }),
   createUserColumn.display({
-    id: "number",
-    header: "No",
+    id: columnText.num.toLowerCase(),
+    header: columnText.num,
     cell: ({ row }) => cellNum(row.index + 1),
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
-    id: "Avatar",
-    header: "Avatar",
+    id: fields.avatar.toLowerCase(),
+    header: fields.avatar,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-20" />
@@ -90,8 +94,8 @@ export const getUserColumn = (currentUserId: string) => [
     ),
   }),
   createUserColumn.accessor(({ email }) => email, {
-    id: "email",
-    header: ({ column }) => headerButton(column, "Email"),
+    id: fields.email.label.toLowerCase(),
+    header: ({ column }) => headerButton(column, fields.email.label),
     cell: ({ row }) => {
       const { id, email, emailVerified } = row.original;
       if (id === currentUserId) {
@@ -105,14 +109,14 @@ export const getUserColumn = (currentUserId: string) => [
       return <UserDetailSheet data={row.original} />;
     },
     filterFn: filterFn("text"),
-    meta: { displayName: "Email", type: "text", icon: Mail },
+    meta: { displayName: fields.email.label, type: "text", icon: Mail },
   }),
   createUserColumn.accessor(({ name }) => name, {
-    id: "name",
-    header: ({ column }) => headerButton(column, "Name"),
+    id: fields.name.label.toLowerCase(),
+    header: ({ column }) => headerButton(column, fields.name.label),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
-    meta: { displayName: "Name", type: "text", icon: UserRound },
+    meta: { displayName: fields.name.label, type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
@@ -130,13 +134,17 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
-    id: "Created At",
-    header: ({ column }) => headerButton(column, "Created At"),
+    id: "createdAt",
+    header: ({ column }) => headerButton(column, columnText.createdAt),
     cell: ({ row }) =>
       row.original.createdAt
         ? formatDate(row.original.createdAt, "PPPp")
         : null,
     filterFn: filterFn("date"),
-    meta: { displayName: "Created At", type: "date", icon: CalendarCheck2 },
+    meta: {
+      displayName: columnText.createdAt,
+      type: "date",
+      icon: CalendarCheck2,
+    },
   }),
 ];

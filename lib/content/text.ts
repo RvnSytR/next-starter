@@ -47,6 +47,11 @@ export const tableText = {
     noResult: "No Result",
   },
 
+  column: {
+    num: "No",
+    createdAt: "Created At",
+  },
+
   rowsPerPage: "Rows per page",
   rowSelection: (selected: number, totalRows: number) =>
     `${selected} of ${totalRows} row(s) ${commonText.selected}.`,
