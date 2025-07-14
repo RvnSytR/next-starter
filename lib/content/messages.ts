@@ -1,5 +1,10 @@
 import { Action, FieldType, FileType, mediaMeta } from "../const";
-import { aOrAn, capitalize, formatDateDistanceToNow } from "../utils";
+import {
+  aOrAn,
+  capitalize,
+  formatDate,
+  formatDateDistanceToNow,
+} from "../utils";
 
 export const messages = {
   loading: "Just a moment...",
@@ -9,6 +14,9 @@ export const messages = {
 
   thingAgo: (thing: string, time: Date) =>
     `${thing} ${formatDateDistanceToNow(time)} ago.`,
+  createdAgo: (time: Date) =>
+    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
+
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
     `${browser ?? "A browser"} on ${os ?? "an unknown OS"}`,
   tooManyRequest: "Too many requests. Please try again later.",

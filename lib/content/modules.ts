@@ -1,12 +1,9 @@
-import { formatDate, formatDateDistanceToNow } from "../utils";
 import { messages } from "./messages";
 
 const auth = {
   verified: "This user has verified their email.",
   current: (thing: "user" | "session") => `Current ${thing}`,
   lastSeen: (time: Date) => messages.thingAgo("Last seen", time),
-  createdAgo: (time: Date) =>
-    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
 
   signIn: (name?: string) =>
     `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,

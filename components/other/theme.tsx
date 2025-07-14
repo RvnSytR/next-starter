@@ -11,8 +11,7 @@ export function ThemeToggle({
   className,
   ...props
 }: Omit<ButtonProps, "onClick">) {
-  const { theme, setTheme } = useTheme();
-  const Icon = theme === "dark" ? Moon : Sun;
+  const { setTheme } = useTheme();
   return (
     <Button
       size={size}
@@ -21,7 +20,8 @@ export function ThemeToggle({
       onClick={() => setTheme((prev) => (prev === "dark" ? "light" : "dark"))}
       {...props}
     >
-      <Icon />
+      <Sun className="flex dark:hidden" />
+      <Moon className="hidden dark:flex" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

@@ -24,7 +24,6 @@ import { zodAuth, zodFile } from "@/lib/zod";
 import {
   deleteProfilePicture,
   deleteUsers,
-  redirectAction,
   revokeUserSessions,
 } from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
@@ -289,7 +288,6 @@ export function SignOnGithubButton() {
 
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
   const schema = zodAuth.pick({
     email: true,
@@ -304,19 +302,19 @@ export function SignInForm() {
 
   const formHandler = (formData: z.infer<typeof schema>) => {
     setIsLoading(true);
-    authClient.signIn.email(formData, {
-      onError: ({ error }) => {
-        toast.error(error.message);
-        setIsLoading(false);
+    authClient.signIn.email(
+      { ...formData, callbackURL: signInRoute },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(content.signIn);
+        },
       },
-      onSuccess: () => {
-        toast.success(content.signIn);
-        setIsAuthenticated(true);
-      },
-    });
+    );
   };
-
-  if (isAuthenticated) redirectAction(signInRoute);
 
   return (
     <Form {...form}>
@@ -1160,7 +1158,7 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
     { label: cFields.email.label, content: data.email },
     {
       label: tableText.column.createdAt,
-      content: content.createdAgo(data.createdAt),
+      content: messages.createdAgo(data.createdAt),
     },
   ];
 
