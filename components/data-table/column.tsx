@@ -22,6 +22,9 @@ import {
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
+const columnText = tableText.column;
+const cAuthFields = baseContent.auth.fields;
+
 function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
   return (
     <div className="flex justify-start">
@@ -66,9 +69,6 @@ function cellCheckbox<R>(row: Row<R>, disabled: boolean = false) {
   );
 }
 
-const columnText = tableText.column;
-const authFields = baseContent.auth.fields;
-
 const createUserColumn = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
@@ -79,14 +79,14 @@ export const getUserColumn = (currentUserId: string) => [
     enableSorting: false,
   }),
   createUserColumn.display({
-    id: columnText.num.toLowerCase(),
+    id: columnText.num,
     header: columnText.num,
     cell: ({ row }) => cellNum(row.index + 1),
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
-    id: authFields.avatar.toLowerCase(),
-    header: authFields.avatar,
+    id: cAuthFields.avatar,
+    header: cAuthFields.avatar,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-20" />
@@ -94,8 +94,8 @@ export const getUserColumn = (currentUserId: string) => [
     ),
   }),
   createUserColumn.accessor(({ email }) => email, {
-    id: authFields.email.label.toLowerCase(),
-    header: ({ column }) => headerButton(column, authFields.email.label),
+    id: cAuthFields.email.label,
+    header: ({ column }) => headerButton(column, cAuthFields.email.label),
     cell: ({ row }) => {
       const { id, email, emailVerified } = row.original;
       if (id === currentUserId) {
@@ -109,22 +109,26 @@ export const getUserColumn = (currentUserId: string) => [
       return <UserDetailSheet data={row.original} />;
     },
     filterFn: filterFn("text"),
-    meta: { displayName: authFields.email.label, type: "text", icon: Mail },
+    meta: { displayName: cAuthFields.email.label, type: "text", icon: Mail },
   }),
   createUserColumn.accessor(({ name }) => name, {
-    id: authFields.name.label.toLowerCase(),
-    header: ({ column }) => headerButton(column, authFields.name.label),
+    id: cAuthFields.name.label,
+    header: ({ column }) => headerButton(column, cAuthFields.name.label),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
-    meta: { displayName: authFields.name.label, type: "text", icon: UserRound },
+    meta: {
+      displayName: cAuthFields.name.label,
+      type: "text",
+      icon: UserRound,
+    },
   }),
   createUserColumn.accessor(({ role }) => role, {
-    id: "role",
-    header: ({ column }) => headerButton(column, authFields.role),
+    id: cAuthFields.role,
+    header: ({ column }) => headerButton(column, cAuthFields.role),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
-      displayName: authFields.role,
+      displayName: cAuthFields.role,
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
@@ -134,7 +138,7 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
-    id: "createdAt",
+    id: columnText.createdAt,
     header: ({ column }) => headerButton(column, columnText.createdAt),
     cell: ({ row }) =>
       row.original.createdAt

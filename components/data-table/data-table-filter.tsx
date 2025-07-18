@@ -54,7 +54,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { DateRange } from "react-day-picker";
+import { DateRange, TZDate } from "react-day-picker";
 
 export function DataTableFilter<TData, TValue>({
   table,
@@ -90,8 +90,10 @@ export function DataTableFilter<TData, TValue>({
 }
 
 export function ActiveFiltersMobileContainer({
+  className,
   children,
 }: {
+  className?: string;
   children: React.ReactNode;
 }) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -135,7 +137,12 @@ export function ActiveFiltersMobileContainer({
   useEffect(() => checkScroll(), [children]);
 
   return (
-    <div className="w-full border-t border-b border-dashed shadow-xs">
+    <div
+      className={cn(
+        "w-full border-t border-b border-dashed shadow-xs",
+        className,
+      )}
+    >
       <div
         ref={scrollContainerRef}
         onScroll={checkScroll}
@@ -1445,7 +1452,7 @@ export function FilterValueDateController<TData, TValue>({
     : undefined;
 
   const [date, setDate] = useState<DateRange | undefined>({
-    from: filter?.values[0] ?? new Date(),
+    from: filter?.values[0] ?? new TZDate(),
     to: filter?.values[1] ?? undefined,
   });
 

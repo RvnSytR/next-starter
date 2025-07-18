@@ -34,9 +34,11 @@ const tickFormatter = (str: string) => str.slice(0, 3);
 export function PieChart({
   label,
   data,
+  className,
 }: {
   label: string;
   data: { nameKey: string; dataKey: number; fill: string }[];
+  className?: string;
 }) {
   return (
     <ChartContainer
@@ -54,6 +56,7 @@ export function PieChart({
         "aspect-square",
         "[&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 [&_.recharts-pie-label-text]:hidden md:[&_.recharts-pie-label-text]:flex",
         "[&_.recharts-pie-label-line]:animate-fade [&_.recharts-pie-label-line]:animate-delay-1250 [&_.recharts-pie-label-line]:hidden md:[&_.recharts-pie-label-line]:flex",
+        className,
       )}
     >
       <PieChartComp>
@@ -80,9 +83,13 @@ export function PieChart({
   );
 }
 
-export function AreaChart({ config, data }: TimelineChart) {
+export function AreaChart({
+  config,
+  data,
+  className,
+}: TimelineChart & { className?: string }) {
   return (
-    <ChartContainer config={config}>
+    <ChartContainer config={config} className={className}>
       <AreaChartComp
         accessibilityLayer
         margin={{ right: 6 }}
@@ -139,9 +146,13 @@ export function AreaChart({ config, data }: TimelineChart) {
   );
 }
 
-export function BarChart({ config, data }: TimelineChart) {
+export function BarChart({
+  config,
+  data,
+  className,
+}: TimelineChart & { className?: string }) {
   return (
-    <ChartContainer config={config}>
+    <ChartContainer config={config} className={className}>
       <BarChartComp
         accessibilityLayer
         margin={{ top: 30 }}

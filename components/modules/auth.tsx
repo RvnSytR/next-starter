@@ -1179,25 +1179,21 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
           </div>
         </SheetHeader>
 
-        <div className="flex flex-col gap-y-2 px-4">
-          <Separator className="my-2" />
+        <div className="flex flex-col items-start gap-y-3 px-4">
+          <Separator />
 
-          <div className="flex items-start gap-x-4">
-            <div className="flex flex-col gap-y-4">
-              <div className="flex items-center gap-x-2">
-                <UserRoleBadge role={data.role as Role} />
-                {data.emailVerified && <UserVerifiedBadge />}
-              </div>
-
-              <SectionSheetDetails data={details} />
-            </div>
+          <div className="mb-1 flex items-center gap-x-2">
+            <UserRoleBadge role={data.role as Role} />
+            {data.emailVerified && <UserVerifiedBadge />}
           </div>
 
-          <Separator className="my-2" />
+          <SectionSheetDetails data={details} />
+
+          <Separator />
 
           <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
 
-          <Separator className="my-2" />
+          <Separator />
 
           {/* // TODO */}
           <Button variant="outline_primary" disabled>

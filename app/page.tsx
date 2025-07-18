@@ -11,7 +11,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="container flex flex-col gap-y-8 py-12 md:py-24">
+    <div className="container flex flex-col gap-y-8 py-8 md:py-16">
       <div className="flex flex-col items-center gap-y-4">
         <R />
 

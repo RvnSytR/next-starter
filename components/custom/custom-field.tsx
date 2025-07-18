@@ -1,6 +1,6 @@
 import { FileType, mediaMeta } from "@/lib/const";
-import { buttonText, commonText } from "@/lib/content";
-import { cn, formatDate, toByte, toMegabytes } from "@/lib/utils";
+import { buttonText, datePickerText } from "@/lib/content";
+import { cn, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -81,31 +81,18 @@ export function InputRadioGroup({
 }
 
 export function InputDate({
-  placeholder = buttonText.datePicker.single,
+  placeholder = datePickerText.single.trigger,
   ...props
 }: CalendarProps & { placeholder?: string }) {
   let isSelected = false;
 
   if (props.mode) {
     const { mode, selected } = props;
-    placeholder = buttonText.datePicker[mode];
-
-    if (selected) isSelected = true;
-    if (mode === "single" && selected) {
-      placeholder = formatDate(selected, "PPPP");
-    } else if (mode === "multiple" && selected) {
-      const maxDisplay = 2;
-      const formattedDates = selected.map((date) => formatDate(date, "PPP"));
-
-      if (selected.length <= maxDisplay) {
-        placeholder = formattedDates.join(", ");
-      } else {
-        placeholder = `${formattedDates.slice(0, maxDisplay).join(", ")} +${selected.length - maxDisplay} ${commonText.more}`;
-      }
-    } else if (mode === "range" && selected && selected.from) {
-      placeholder = selected.to
-        ? `${formatDate(selected.from, "PPP")} - ${formatDate(selected.to, "PPP")}`
-        : formatDate(selected.from, "PPP");
+    const { trigger, value } = datePickerText[mode];
+    placeholder = trigger;
+    if (selected) {
+      isSelected = true;
+      placeholder = value(selected as never);
     }
   }
 

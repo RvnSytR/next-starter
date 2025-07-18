@@ -56,12 +56,14 @@ export function SectionTagline({ className }: { className?: string }) {
 export function SectionSheetDetails({
   data,
 }: {
-  data: { label: string; content: ReactNode }[];
+  data: { label: string; content: ReactNode; className?: string }[];
 }) {
-  return data.map(({ label, content }, index) => (
+  return data.map(({ label, content, className }, index) => (
     <div key={index} className="grid gap-y-1">
       <Label>{label}</Label>
-      <div className="text-muted-foreground text-sm">{content}</div>
+      <div className={cn("text-muted-foreground text-sm", className)}>
+        {content}
+      </div>
     </div>
   ));
 }

@@ -1,10 +1,36 @@
+import { DateRange } from "react-day-picker";
 import { FileType } from "../const";
-import { aOrAn } from "../utils";
+import { aOrAn, formatDate } from "../utils";
 
 export const commonText = {
-  more: "more",
   selected: "selected",
   verified: "verified",
+};
+
+export const datePickerText = {
+  single: {
+    trigger: "Select Date",
+    value: (date: Date) => formatDate(date, "PPPP"),
+  },
+  multiple: {
+    trigger: "Select Dates",
+    value: (dates: Date[]) => {
+      const maxDisplay = 2;
+      const formattedDates = dates.map((date) => formatDate(date, "PPP"));
+      if (dates.length <= maxDisplay) return formattedDates.join(", ");
+      return `${formattedDates.slice(0, maxDisplay).join(", ")} +${dates.length - maxDisplay} more`;
+    },
+  },
+  range: {
+    trigger: "Select Date Range",
+    value: (dateRange: DateRange) => {
+      const { from, to } = dateRange;
+      if (from && to)
+        return `${formatDate(from, "PPP")} - ${formatDate(to, "PPP")}`;
+      if (from) return formatDate(from, "PPP");
+      return "Select Date Range";
+    },
+  },
 };
 
 export const buttonText = {
@@ -12,12 +38,6 @@ export const buttonText = {
   signOn: (social: string) => `Continue with ${social}`,
   signOut: "Sign Out",
   signUp: "Create Account",
-
-  datePicker: {
-    multiple: "Select Dates",
-    range: "Select Date Range",
-    single: "Select Date",
-  },
 
   fileInput: {
     placeholder: (fileType: FileType, multiple: boolean = false) =>

@@ -27,7 +27,7 @@ import {
   Columns3,
   ListRestart,
 } from "lucide-react";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { RefreshButton } from "../custom/custom-button";
 import { Button, buttonVariants } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
@@ -77,6 +77,13 @@ export type OtherDataTableProps<TData> = ToolBoxProps & {
   caption?: string;
   noResult?: string[];
   className?: string;
+  classNames?: {
+    toolbox?: string;
+    filterContainer?: string;
+    tableContainer?: string;
+    table?: string;
+    footer?: string;
+  };
 };
 
 export function DataTable<TData>({
@@ -85,6 +92,7 @@ export function DataTable<TData>({
   caption,
   noResult,
   className,
+  classNames,
   onRowSelection,
   enableRowSelection,
   ...props
@@ -147,21 +155,26 @@ export function DataTable<TData>({
   }, [selectedRows]);
 
   return (
-    <Fragment>
-      <ToolBox table={table} {...props}>
+    <div className={cn("flex flex-col gap-y-4", className)}>
+      <ToolBox table={table} className={classNames?.toolbox} {...props}>
         {selectedRows.length > 0 && children}
       </ToolBox>
 
       {table.getState().columnFilters.length > 0 && (
-        <ActiveFiltersMobileContainer>
+        <ActiveFiltersMobileContainer className={classNames?.filterContainer}>
           <FilterActions table={table} />
           <Separator orientation="vertical" className="h-4" />
           <ActiveFilters table={table} />
         </ActiveFiltersMobileContainer>
       )}
 
-      <div className={cn("bg-background/50 rounded-lg border", className)}>
-        <Table>
+      <div
+        className={cn(
+          "bg-background/50 rounded-lg border",
+          classNames?.tableContainer,
+        )}
+      >
+        <Table className={classNames?.table}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -214,7 +227,9 @@ export function DataTable<TData>({
         </Table>
       </div>
 
-      <div className="flex flex-col items-center gap-4">
+      <div
+        className={cn("flex flex-col items-center gap-4", classNames?.footer)}
+      >
         {caption && <small className="text-muted-foreground">{caption}</small>}
 
         <div className="flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
@@ -235,7 +250,7 @@ export function DataTable<TData>({
           </div>
         </div>
       </div>
-    </Fragment>
+    </div>
   );
 }
 
@@ -243,10 +258,17 @@ function ToolBox<TData>({
   table,
   withRefresh = false,
   searchPlaceholder,
+  className,
   children,
-}: TableProps<TData> & ToolBoxProps & { children: ReactNode }) {
+}: TableProps<TData> &
+  ToolBoxProps & { className?: string; children: ReactNode }) {
   return (
-    <div className="flex w-full flex-col gap-2 lg:flex-row lg:justify-between">
+    <div
+      className={cn(
+        "flex w-full flex-col gap-2 lg:flex-row lg:justify-between",
+        className,
+      )}
+    >
       <div className={cn("flex items-center gap-x-2 [&_button]:grow")}>
         <FilterSelector table={table} />
         <View table={table} />
