@@ -150,8 +150,7 @@ export function UserRoleBadge({
           variant={isAdmin ? "outline_primary" : "outline"}
           className="capitalize"
         >
-          <RoleIcon />
-          {displayName ?? role}
+          <RoleIcon /> {displayName ?? role}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>{desc}</TooltipContent>
@@ -180,8 +179,7 @@ export function UserVerifiedBadge({
     <Tooltip>
       <TooltipTrigger className={className} asChild>
         <Badge variant="outline_rvns" className={cn("capitalize", className)}>
-          <BadgeCheck className={classNames?.icon} />
-          {commonText.verified}
+          <BadgeCheck className={classNames?.icon} /> {commonText.verified}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>{content.verified}</TooltipContent>
@@ -1125,8 +1123,7 @@ export function DeleteMyAccountButton({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert />
-            {title}
+            <TriangleAlert /> {title}
           </AlertDialogTitle>
           <AlertDialogDescription>{desc}</AlertDialogDescription>
         </AlertDialogHeader>
@@ -1179,7 +1176,7 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
           </div>
         </SheetHeader>
 
-        <div className="flex flex-col items-start gap-y-3 px-4">
+        <div className="flex flex-col gap-y-3 px-4">
           <Separator />
 
           <div className="mb-1 flex items-center gap-x-2">
@@ -1197,16 +1194,14 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
 
           {/* // TODO */}
           <Button variant="outline_primary" disabled>
-            <Layers2 />
-            Impersonate Session
+            <Layers2 /> Impersonate Session
           </Button>
 
           <AdminRevokeUserSessionsDialog {...data} />
 
           {/* // TODO */}
           <Button variant="outline_destructive" disabled>
-            <Ban />
-            Ban {data.name}
+            <Ban /> Ban {data.name}
           </Button>
         </div>
 
@@ -1241,8 +1236,7 @@ export function UserDataTable({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">
-                <Settings2 />
-                {buttonText.action}
+                <Settings2 /> {buttonText.action}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -1260,8 +1254,7 @@ export function UserDataTable({
               {/* // TODO */}
               <DropdownMenuItem asChild>
                 <Button size="sm" variant="ghost_destructive" disabled>
-                  <Ban />
-                  Ban
+                  <Ban /> Ban
                 </Button>
               </DropdownMenuItem>
 
@@ -1614,16 +1607,14 @@ function AdminRevokeUserSessionsDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline_warning" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <MonitorOff />}
-          {trigger}
+          {isLoading ? <Spinner /> : <MonitorOff />} {trigger}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-warning flex items-center gap-x-2">
-            <Info />
-            {title(name)}
+            <Info /> {title(name)}
           </AlertDialogTitle>
           <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
         </AlertDialogHeader>
@@ -1681,7 +1672,7 @@ function AdminRemoveUserDialog({
       <AlertDialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           {isLoading ? <Spinner /> : <Trash2 />}
-          {buttonText.remove}
+          {`${buttonText.remove} ${name}`}
         </Button>
       </AlertDialogTrigger>
 

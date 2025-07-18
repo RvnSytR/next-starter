@@ -1,5 +1,9 @@
-import { FileType, mediaMeta } from "@/lib/const";
-import { buttonText, datePickerText } from "@/lib/content";
+import { FileType } from "@/lib/const";
+import {
+  buttonText,
+  datePickerText,
+  getFileInputMetaAndText,
+} from "@/lib/content";
 import { cn, toByte, toMegabytes } from "@/lib/utils";
 import { Calendar as CalendarIcon, Dot, Upload, X } from "lucide-react";
 import Image from "next/image";
@@ -46,6 +50,45 @@ export function FormFloating({
   );
 }
 
+export function DatePicker({
+  placeholder = datePickerText.single.trigger,
+  withControl = false,
+  ...props
+}: CalendarProps & { placeholder?: string; withControl?: boolean }) {
+  let isSelected = false;
+
+  if (props.mode) {
+    const { mode, selected } = props;
+    const { trigger, value } = datePickerText[mode];
+    placeholder = trigger;
+    if (selected) {
+      isSelected = true;
+      placeholder = value(selected as never);
+    }
+  }
+
+  const trigger = (
+    <Button
+      variant="outline"
+      className={cn(!isSelected && "text-muted-foreground")}
+    >
+      <CalendarIcon /> {placeholder}
+    </Button>
+  );
+
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        {withControl ? <FormControl>{trigger}</FormControl> : trigger}
+      </PopoverTrigger>
+
+      <PopoverContent className="size-fit p-0">
+        <Calendar {...props} />
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 export function InputRadioGroup({
   defaultValue,
   radioItems,
@@ -80,47 +123,11 @@ export function InputRadioGroup({
   );
 }
 
-export function InputDate({
-  placeholder = datePickerText.single.trigger,
-  ...props
-}: CalendarProps & { placeholder?: string }) {
-  let isSelected = false;
-
-  if (props.mode) {
-    const { mode, selected } = props;
-    const { trigger, value } = datePickerText[mode];
-    placeholder = trigger;
-    if (selected) {
-      isSelected = true;
-      placeholder = value(selected as never);
-    }
-  }
-
-  return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <FormControl>
-          <Button
-            variant="outline"
-            className={cn(!isSelected && "text-muted-foreground")}
-          >
-            <CalendarIcon /> {placeholder}
-          </Button>
-        </FormControl>
-      </PopoverTrigger>
-
-      <PopoverContent className="size-fit p-0">
-        <Calendar {...props} />
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 export function InputFile({
   value: files,
   onChange,
   accept = "file",
-  maxFileSize: size,
+  maxFileSize: sizeProp,
   className,
   placeholder,
   multiple = false,
@@ -132,10 +139,12 @@ export function InputFile({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const fileMedia = mediaMeta[accept];
-  const fileSize = size ? { mb: size, byte: toByte(size) } : fileMedia.size;
+  const { meta, text } = getFileInputMetaAndText(accept);
+  const fileSize = sizeProp
+    ? { mb: sizeProp, byte: toByte(sizeProp) }
+    : meta.size;
   const isFiles = files.length > 0;
-  const Icon = fileMedia.icon;
+  const Icon = meta.icon;
 
   const resetFiles = () => onChange([]);
 
@@ -184,7 +193,7 @@ export function InputFile({
           tabIndex={-1}
           ref={inputRef}
           multiple={multiple}
-          accept={fileMedia.mimeType.join(", ")}
+          accept={meta.mimeType.join(", ")}
           className={cn(
             "absolute size-full opacity-0 group-hover:cursor-pointer",
             isFiles ? "-z-1" : "z-0",
@@ -206,7 +215,7 @@ export function InputFile({
           className="flex flex-col gap-y-4 p-4"
         >
           <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <p>Total {`${accept}s : ${files.length}`}</p>
+            <p>{text.total(files.length)}</p>
 
             <div className="flex gap-x-2 *:grow">
               <Button
@@ -215,8 +224,7 @@ export function InputFile({
                 className="h-8"
                 onClick={resetFiles}
               >
-                <X />
-                {buttonText.clear}
+                <X /> {buttonText.clear}
               </Button>
               <Button
                 type="button"
@@ -226,7 +234,7 @@ export function InputFile({
                   if (inputRef.current) inputRef.current.click();
                 }}
               >
-                <Upload /> Add {accept}
+                <Upload /> {text.add}
               </Button>
             </div>
           </div>
@@ -244,8 +252,8 @@ export function InputFile({
               const isImage = file.type.startsWith("image/");
               const isInvalid =
                 file.size > fileSize.byte ||
-                (!fileMedia.mimeType.includes("*") &&
-                  !fileMedia.mimeType.includes(file.type));
+                (!meta.mimeType.includes("*") &&
+                  !meta.mimeType.includes(file.type));
 
               const url = URL.createObjectURL(file);
 
@@ -316,16 +324,14 @@ export function InputFile({
 
           <div className="flex flex-col items-center gap-y-2">
             <small className="font-medium">
-              {placeholder ??
-                buttonText.fileInput.placeholder(accept, multiple)}
+              {placeholder ?? text.placeholder(multiple)}
             </small>
 
             <small className="text-muted-foreground flex items-center text-xs">
-              {buttonText.fileInput.size(fileSize.mb)}
-              {fileMedia.extensions.length > 0 && (
+              {text.size(fileSize.mb)}
+              {meta.extensions.length > 0 && (
                 <>
-                  <Dot />
-                  {`( ${fileMedia.extensions.join(" ")} )`}
+                  <Dot /> {`( ${meta.extensions.join(" ")} )`}
                 </>
               )}
             </small>

@@ -22,8 +22,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import {
+  DatePicker,
   FormFloating,
-  InputDate,
   InputFile,
   InputRadioGroup,
 } from "../custom/custom-field";
@@ -209,10 +209,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Date Single</FormLabel>
-                <InputDate
+                <DatePicker
                   mode="single"
                   selected={field.value}
                   onSelect={field.onChange}
+                  withControl
                 />
                 <FormMessage />
               </FormItem>
@@ -226,10 +227,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Date Multiple</FormLabel>
-                <InputDate
+                <DatePicker
                   mode="multiple"
                   selected={field.value}
                   onSelect={field.onChange}
+                  withControl
                 />
                 <FormMessage />
               </FormItem>
@@ -243,10 +245,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Date Range</FormLabel>
-                <InputDate
+                <DatePicker
                   mode="range"
                   selected={field.value}
                   onSelect={field.onChange}
+                  withControl
                 />
                 <FormMessage />
               </FormItem>

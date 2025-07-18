@@ -1,6 +1,28 @@
 import { DateRange } from "react-day-picker";
-import { FileType } from "../const";
+import { FileType, mediaMeta } from "../const";
 import { aOrAn, formatDate } from "../utils";
+
+export const buttonText = {
+  signIn: "Sign In",
+  signOn: (social: string) => `Continue with ${social}`,
+  signOut: "Sign Out",
+  signUp: "Create Account",
+
+  upload: (file: string = "", multiple: boolean = false) =>
+    `Upload ${multiple ? `${file}s` : file}`,
+
+  action: "Action",
+  back: "Back",
+  cancel: "Cancel",
+  clear: "Clear",
+  confirm: "Confirm",
+  filter: "Filter",
+  refresh: "Refresh",
+  remove: "Remove",
+  reset: "Reset",
+  save: "Save Changes",
+  view: "View",
+};
 
 export const commonText = {
   selected: "selected",
@@ -33,34 +55,6 @@ export const datePickerText = {
   },
 };
 
-export const buttonText = {
-  signIn: "Sign In",
-  signOn: (social: string) => `Continue with ${social}`,
-  signOut: "Sign Out",
-  signUp: "Create Account",
-
-  fileInput: {
-    placeholder: (fileType: FileType, multiple: boolean = false) =>
-      `Drag & drop ${multiple ? `${fileType}s` : `${aOrAn(fileType)} ${fileType}`} here or click to upload`,
-    size: (mb: number) => `Up to ${mb} MB`,
-  },
-
-  upload: (file: string = "", multiple: boolean = false) =>
-    `Upload ${multiple ? `${file}s` : file}`,
-
-  action: "Action",
-  back: "Back",
-  cancel: "Cancel",
-  clear: "Clear",
-  confirm: "Confirm",
-  filter: "Filter",
-  refresh: "Refresh",
-  remove: "Remove",
-  reset: "Reset",
-  save: "Save Changes",
-  view: "View",
-};
-
 export const tableText = {
   default: {
     placeholder: "Search something...",
@@ -77,4 +71,18 @@ export const tableText = {
     `${selected} of ${totalRows} row(s) ${commonText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
     `Page ${pageNumber} of ${totalPage}`,
+};
+
+export const getFileInputMetaAndText = (fileType: FileType) => {
+  const meta = mediaMeta[fileType];
+  return {
+    meta,
+    text: {
+      add: `Add ${fileType}`,
+      total: (length: number) => `Total ${fileType} : ${length}`,
+      placeholder: (multiple: boolean = false) =>
+        `Drag & drop ${multiple ? `${fileType}s` : `${aOrAn(fileType)} ${fileType}`} here or click to upload`,
+      size: (mb: number) => `Up to ${mb} MB`,
+    },
+  };
 };
