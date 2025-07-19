@@ -1142,9 +1142,65 @@ export function DeleteMyAccountButton({
   );
 }
 
-/*
- * --- USER ---
- */
+export function UserDataTable({
+  data,
+  currentUserId,
+  ...props
+}: OtherDataTableProps<UserWithRole> & {
+  data: UserWithRole[];
+  currentUserId: string;
+}) {
+  const columns = getUserColumn(currentUserId);
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      enableRowSelection={({ original }) => original.id !== currentUserId}
+      onRowSelection={(data, table) => {
+        const filteredData = data.map(({ original }) => original);
+
+        const clearRowSelection = () => table.resetRowSelection();
+
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button size="sm" variant="outline">
+                <Settings2 /> {buttonText.action}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${commonText.selected}`}</DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
+
+              <DropdownMenuItem asChild>
+                <AdminActionRevokeUserSessionsDialog
+                  ids={filteredData.map(({ id }) => id)}
+                  onSuccess={clearRowSelection}
+                />
+              </DropdownMenuItem>
+
+              {/* // TODO */}
+              <DropdownMenuItem asChild>
+                <Button size="sm" variant="ghost_destructive" disabled>
+                  <Ban /> Ban
+                </Button>
+              </DropdownMenuItem>
+
+              <DropdownMenuItem asChild>
+                <AdminActionRemoveUsersDialog
+                  data={filteredData}
+                  onSuccess={clearRowSelection}
+                />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      }}
+      {...props}
+    />
+  );
+}
 
 export function UserDetailSheet({ data }: { data: UserWithRole }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -1213,68 +1269,8 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
   );
 }
 
-export function UserDataTable({
-  data,
-  currentUserId,
-  ...props
-}: OtherDataTableProps<UserWithRole> & {
-  data: UserWithRole[];
-  currentUserId: string;
-}) {
-  const columns = getUserColumn(currentUserId);
-  return (
-    <DataTable
-      data={data}
-      columns={columns}
-      enableRowSelection={({ original }) => original.id !== currentUserId}
-      onRowSelection={(data, table) => {
-        const filteredData = data.map(({ original }) => original);
-
-        const clearRowSelection = () => table.resetRowSelection();
-
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
-                <Settings2 /> {buttonText.action}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${commonText.selected}`}</DropdownMenuLabel>
-
-              <DropdownMenuSeparator />
-
-              <DropdownMenuItem asChild>
-                <AdminActionRevokeUserSessionsDialog
-                  ids={filteredData.map(({ id }) => id)}
-                  onSuccess={clearRowSelection}
-                />
-              </DropdownMenuItem>
-
-              {/* // TODO */}
-              <DropdownMenuItem asChild>
-                <Button size="sm" variant="ghost_destructive" disabled>
-                  <Ban /> Ban
-                </Button>
-              </DropdownMenuItem>
-
-              <DropdownMenuItem asChild>
-                <AdminActionRemoveUsersDialog
-                  data={filteredData}
-                  onSuccess={clearRowSelection}
-                />
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      }}
-      {...props}
-    />
-  );
-}
-
 /*
- * --- ADMIN ACTION ---
+ * --- ADMIN ---
  */
 
 export function AdminCreateUserDialog() {
@@ -1699,10 +1695,6 @@ function AdminRemoveUserDialog({
     </AlertDialog>
   );
 }
-
-/*
- * --- ADMIN ROW SELECTION ACTIONS ---
- */
 
 function AdminActionRevokeUserSessionsDialog({
   ids,

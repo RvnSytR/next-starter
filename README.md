@@ -8,7 +8,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
 - Database and S3 integration
 - Ready-to-use components, and styling
 - Centralized content, DB state, project constant and overall project structure (write once, use anywhere)
-- Handy utility functions, action and S3 helpers
+- Handy utility functions, actions and S3 helpers
 
 ## 🛠️ Tech Stack
 
