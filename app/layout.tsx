@@ -5,9 +5,25 @@ import { cn } from "@/lib/utils";
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
-import { Inter } from "next/font/google";
+import { Geist, Geist_Mono, Lora } from "next/font/google";
 
-const font = Inter({ subsets: ["latin"], display: "swap" });
+const geistFont = Geist({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist",
+});
+
+const loraFont = Lora({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-lora",
+});
+
+const geistMonoFont = Geist_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-geist-mono",
+});
 
 export const metadata: Metadata = {
   title: appInfo.name,
@@ -31,7 +47,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang={appInfo.lang} suppressHydrationWarning>
-      <body className={cn(font.className, "relative min-h-dvh")}>
+      <body
+        className={cn(
+          geistFont.variable,
+          loraFont.variable,
+          geistMonoFont.variable,
+        )}
+      >
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

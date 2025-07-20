@@ -28,7 +28,6 @@ import {
 } from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UserWithRole } from "better-auth/plugins";
 import {
   BadgeCheck,
   Ban,
@@ -1146,8 +1145,8 @@ export function UserDataTable({
   data,
   currentUserId,
   ...props
-}: OtherDataTableProps<UserWithRole> & {
-  data: UserWithRole[];
+}: OtherDataTableProps<Session["user"]> & {
+  data: Session["user"][];
   currentUserId: string;
 }) {
   const columns = getUserColumn(currentUserId);
@@ -1202,7 +1201,7 @@ export function UserDataTable({
   );
 }
 
-export function UserDetailSheet({ data }: { data: UserWithRole }) {
+export function UserDetailSheet({ data }: { data: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const { title, desc } = content.detail;
@@ -1235,7 +1234,7 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
         <div className="flex flex-col gap-y-3 px-4">
           <Separator />
 
-          <div className="mb-1 flex items-center gap-x-2">
+          <div className="flex items-center gap-x-2">
             <UserRoleBadge role={data.role as Role} />
             {data.emailVerified && <UserVerifiedBadge />}
           </div>
@@ -1489,7 +1488,7 @@ function AdminChangeUserRoleForm({
   data,
   setIsOpen,
 }: {
-  data: UserWithRole;
+  data: Session["user"];
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();

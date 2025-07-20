@@ -30,13 +30,24 @@ export async function getListSession() {
   return await auth.api.listSessions({ headers: await headers() });
 }
 
-export async function getUserList() {
-  return await auth.api.listUsers({
+export async function getUserList(): Promise<{
+  users: Session["user"][];
+  total: number;
+}> {
+  const { total, users } = await auth.api.listUsers({
     headers: await headers(),
     query: { sortBy: "createdAt", sortDirection: "desc" },
   });
-}
 
+  return {
+    total,
+    users: users.map(({ role, banned, ...rest }) => ({
+      role: role as Role,
+      banned,
+      ...rest,
+    })),
+  };
+}
 export async function revokeUserSessions(ids: string[]) {
   return Promise.all(
     ids.map(async (id) => {
