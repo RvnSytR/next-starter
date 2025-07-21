@@ -1,42 +1,34 @@
 import { cn } from "@/lib/utils";
-import {
-  Loader,
-  LoaderCircle,
-  LucideIcon,
-  LucideProps,
-  RefreshCw,
-} from "lucide-react";
+import { LoaderCircle, LucideProps, SVGAttributes } from "lucide-react";
+import { ReactNode } from "react";
 
-type Spinner = "loader" | "circle" | "refresh";
-type Icon = React.SVGAttributes<SVGSVGElement>;
+export type LoaderPropsWithLoading = LoaderProps & { loading: boolean };
+export type LoaderProps = LucideProps & {
+  icon?: { base?: ReactNode; loader?: ReactNode };
+};
 
-export function Spinner({
-  spinnerType = "circle",
-  animate = true,
+export function Loader({
+  loading,
+  icon,
   className,
   ...props
-}: Omit<LucideProps, "ref"> & {
-  spinnerType?: Spinner;
-  animate?: boolean;
-}) {
-  const LoaderComponent = (
-    {
-      loader: Loader,
-      circle: LoaderCircle,
-      refresh: RefreshCw,
-    } satisfies Record<Spinner, LucideIcon>
-  )[spinnerType];
-
-  return (
-    <LoaderComponent
-      aria-label="loading"
-      className={cn(animate && "animate-infinite animate-spin", className)}
+}: LoaderPropsWithLoading) {
+  const loadingIcon = (
+    <LoaderCircle
+      className={cn("animate-infinite animate-spin", className)}
       {...props}
     />
   );
+
+  const iconNode = loading
+    ? (icon?.loader ?? loadingIcon)
+    : (icon?.base ?? null);
+
+  if (!iconNode) return;
+  return iconNode;
 }
 
-export function GithubIcon({ ...props }: Icon) {
+export function GithubIcon({ ...props }: SVGAttributes) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -55,7 +47,7 @@ export function GithubIcon({ ...props }: Icon) {
   );
 }
 
-export function GoogleIcon({ ...props }: Icon) {
+export function GoogleIcon({ ...props }: SVGAttributes) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

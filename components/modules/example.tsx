@@ -1,8 +1,8 @@
-import { CopyButton } from "@/components/custom/custom-button";
+import { CopyButton } from "@/components/other/buttons";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
-import { AreaChart, BarChart, PieChart } from "../custom/custom-chart";
+import { AreaChart, BarChart, PieChart } from "../other/charts";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { ExampleForm } from "./example-form";
 
@@ -32,7 +32,7 @@ const areaAndPieChartConfig = {
 };
 
 const code = {
-  pieChart: `import { PieChart } from "@/components/custom/custom-chart";
+  pieChart: `import { PieChart } from "@/components/other/charts";
 
 export default function ExamplePieChart() {
   const data = [
@@ -50,7 +50,7 @@ export default function ExamplePieChart() {
   );
 }`,
 
-  timelineChart: `import { AreaChart, BarChart } from "@/components/custom/custom-chart";
+  timelineChart: `import { AreaChart, BarChart } from "@/components/other/charts";
 
 export function ExampleAreaAndPieChart() {
   const data = [
@@ -213,14 +213,14 @@ function Comp({ content }: { content: CompCardContent[] }) {
 export function Example() {
   const tabs: { section: string; content: CompCardContent[] }[] = [
     {
-      section: "Custom Charts",
+      section: "Modified Charts",
       content: [
         { title: "Pie Chart", key: "pieChart" },
         { title: "Area and Bar Chart", key: "timelineChart" },
       ],
     },
     {
-      section: "Form",
+      section: "Form Example",
       content: [{ title: "Full Form Example", key: "form" }],
     },
   ];

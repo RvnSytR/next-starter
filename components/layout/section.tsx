@@ -2,11 +2,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ReactNode } from "react";
+import { ThemeToggle } from "../other/buttons";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
 } from "../other/dynamic-breadcrumb";
-import { ThemeToggle } from "../other/theme";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
@@ -23,10 +23,7 @@ export function Section({
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
-
-        <div className="flex items-center gap-x-2">
-          <ThemeToggle />
-        </div>
+        <ThemeToggle size="iconsm" />
       </header>
 
       <div

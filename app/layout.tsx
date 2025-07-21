@@ -1,4 +1,4 @@
-import { GridPattern } from "@/components/other-ui/grid-pattern";
+import { GridPattern } from "@/components/other/grid-pattern";
 import { Toaster } from "@/components/ui/sonner";
 import { appInfo } from "@/lib/const";
 import { cn } from "@/lib/utils";

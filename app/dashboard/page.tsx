@@ -1,5 +1,5 @@
 import { Section } from "@/components/layout/section";
-import { R } from "@/components/other-ui/r";
+import { R } from "@/components/other/motion";
 import { checkAndGetAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
@@ -12,7 +12,9 @@ export default async function Page() {
       className="items-center justify-center"
     >
       <R />
-      <p>{JSON.stringify(session, null, 2)}</p>
+      <p className="animate-fade delay-500">
+        {JSON.stringify(session, null, 2)}
+      </p>
     </Section>
   );
 }

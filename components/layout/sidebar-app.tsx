@@ -5,8 +5,8 @@ import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { LinkLoader, RefreshButton } from "../custom/custom-button";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/auth";
+import { LinkLoader, RefreshButton } from "../other/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -150,7 +150,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
               <SidebarMenuItem>
                 <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
-                    <LinkLoader defaultIcon={MenuIcon && <MenuIcon />} />
+                    <LinkLoader icon={{ base: MenuIcon && <MenuIcon /> }} />
                     <span className="line-clamp-1">{displayName}</span>
                   </Link>
                 </SCMenuButton>
@@ -218,7 +218,7 @@ function Footer() {
             ) : (
               <SidebarMenuButton size="sm" tooltip={displayName} asChild>
                 <Link href={url}>
-                  <LinkLoader defaultIcon={FooterIcon && <FooterIcon />} />
+                  <LinkLoader icon={{ base: FooterIcon && <FooterIcon /> }} />
                   {displayName}
                 </Link>
               </SidebarMenuButton>

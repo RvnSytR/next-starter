@@ -1,7 +1,6 @@
-import { LinkLoader } from "@/components/custom/custom-button";
 import { Example } from "@/components/modules/example";
-import { R } from "@/components/other-ui/r";
-import { ThemeToggle } from "@/components/other/theme";
+import { LinkLoader, ThemeToggle } from "@/components/other/buttons";
+import { R } from "@/components/other/motion";
 import { Button } from "@/components/ui/button";
 import { Route } from "@/lib/const";
 import { ArrowRight } from "lucide-react";
@@ -16,12 +15,12 @@ export default function Page() {
         <R />
 
         <div className="animate-fade flex flex-wrap gap-2 delay-750">
-          <ThemeToggle size="icon" variant="outline_primary" />
+          <ThemeToggle variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>
             <Link href={"/dashboard" satisfies Route}>
               Go To Dashboard
-              <LinkLoader defaultIcon={<ArrowRight />} />
+              <LinkLoader icon={{ base: <ArrowRight /> }} />
             </Link>
           </Button>
         </div>

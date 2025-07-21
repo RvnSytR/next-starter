@@ -5,10 +5,9 @@ const auth = {
   current: (thing: "user" | "session") => `Current ${thing}`,
   lastSeen: (time: Date) => messages.thingAgo("Last seen", time),
 
-  signIn: (name?: string) =>
-    `Signed in successfully${name ? ` — welcome ${name}!` : "!"}`,
+  signIn: "Signed in successfully — Welcome!",
   signUp: "You're all set! Sign in to continue.",
-  signOut: "You've been signed out. See you soon!",
+  signOut: "Signed out successfully — Goodbye!",
   changeRole: (name: string, role: string) =>
     `${name}'s role is now set to ${role}.`,
 
@@ -68,7 +67,7 @@ const auth = {
 
     personalInfo: {
       noChanges: messages.noChanges("profile"),
-      success: messages.success("profile", "updated"),
+      success: messages.success("Profile", "updated"),
     },
 
     revokeSession: {

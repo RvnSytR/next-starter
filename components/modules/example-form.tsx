@@ -21,12 +21,8 @@ import {
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import {
-  DatePicker,
-  FormFloating,
-  InputFile,
-  InputRadioGroup,
-} from "../custom/custom-field";
+import { DatePicker } from "../other/date-picker";
+import { InputFile, InputRadioGroup, InputWrapper } from "../other/inputs";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -115,11 +111,11 @@ export function ExampleForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="label-required">Text</FormLabel>
-                <FormFloating icon={<LockKeyhole />}>
+                <InputWrapper icon={<LockKeyhole />}>
                   <FormControl>
                     <Input type="text" {...field} />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -132,7 +128,7 @@ export function ExampleForm() {
             render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Numeric</FormLabel>
-                <FormFloating icon={getCurrencySymbol("id")}>
+                <InputWrapper icon={getCurrencySymbol("id")}>
                   <FormControl>
                     <Input
                       type="text"
@@ -142,7 +138,7 @@ export function ExampleForm() {
                       {...rest}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -155,7 +151,7 @@ export function ExampleForm() {
             render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Phone</FormLabel>
-                <FormFloating icon="+62" extraPadding>
+                <InputWrapper icon="+62" extraPadding>
                   <FormControl>
                     <Input
                       type="text"
@@ -165,7 +161,7 @@ export function ExampleForm() {
                       {...rest}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -321,8 +317,8 @@ export function ExampleForm() {
 
         <div className="flex gap-2">
           <Button type="submit">
-            {/* {loading ? <Spinner /> : <Save />} */}
             <Save />
+            {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
             {buttonText.save}
           </Button>
 

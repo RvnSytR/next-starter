@@ -54,8 +54,8 @@ export function PieChart({
       }}
       className={cn(
         "aspect-square",
-        "[&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000 [&_.recharts-pie-label-text]:hidden md:[&_.recharts-pie-label-text]:flex",
-        "[&_.recharts-pie-label-line]:animate-fade [&_.recharts-pie-label-line]:animate-delay-1250 [&_.recharts-pie-label-line]:hidden md:[&_.recharts-pie-label-line]:flex",
+        "[&_.recharts-pie-label-text]:animate-fade [&_.recharts-pie-label-text]:animate-delay-1000",
+        "[&_.recharts-pie-label-line]:animate-fade [&_.recharts-pie-label-line]:animate-delay-1250",
         className,
       )}
     >

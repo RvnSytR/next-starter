@@ -60,11 +60,11 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
-import { FormFloating } from "../custom/custom-field";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SectionSheetDetails } from "../layout/section";
-import { GithubIcon, Spinner } from "../other/icon";
+import { GithubIcon, Loader } from "../other/icon";
+import { InputWrapper } from "../other/inputs";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -245,7 +245,7 @@ export function SignOutButton() {
         });
       }}
     >
-      {isLoading ? <Spinner /> : <LogOut />}
+      <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
       {buttonText.signOut}
     </SidebarMenuButton>
   );
@@ -271,13 +271,13 @@ export function SignOnGithubButton() {
               setIsLoading(false);
             },
             onSuccess: () => {
-              toast.success(content.signIn());
+              toast.success(content.signIn);
             },
           },
         );
       }}
     >
-      {isLoading ? <Spinner /> : <GithubIcon />}
+      <Loader loading={isLoading} icon={{ base: <GithubIcon /> }} />
       {buttonText.signOn("Github")}
     </Button>
   );
@@ -324,7 +324,7 @@ export function SignInForm() {
               <FormLabel className="label-required">
                 {cFields.email.label}
               </FormLabel>
-              <FormFloating icon={<Mail />}>
+              <InputWrapper icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
@@ -332,7 +332,7 @@ export function SignInForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -346,7 +346,7 @@ export function SignInForm() {
               <FormLabel className="label-required">
                 {cFields.password.label}
               </FormLabel>
-              <FormFloating icon={<LockKeyhole />}>
+              <InputWrapper icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -354,7 +354,7 @@ export function SignInForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -377,7 +377,7 @@ export function SignInForm() {
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Spinner />}
+          <Loader loading={isLoading} />
           {buttonText.signIn}
         </Button>
       </form>
@@ -438,7 +438,7 @@ export function SignUpForm() {
               <FormLabel className="label-required">
                 {cFields.name.label}
               </FormLabel>
-              <FormFloating icon={<UserRound />}>
+              <InputWrapper icon={<UserRound />}>
                 <FormControl>
                   <Input
                     type="text"
@@ -446,7 +446,7 @@ export function SignUpForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -460,7 +460,7 @@ export function SignUpForm() {
               <FormLabel className="label-required">
                 {cFields.email.label}
               </FormLabel>
-              <FormFloating icon={<Mail />}>
+              <InputWrapper icon={<Mail />}>
                 <FormControl>
                   <Input
                     type="text"
@@ -468,7 +468,7 @@ export function SignUpForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -482,7 +482,7 @@ export function SignUpForm() {
               <FormLabel className="label-required">
                 {cFields.password.label}
               </FormLabel>
-              <FormFloating icon={<LockKeyhole />}>
+              <InputWrapper icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -490,7 +490,7 @@ export function SignUpForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -504,7 +504,7 @@ export function SignUpForm() {
               <FormLabel className="label-required">
                 {cFields.confirmPassword.label}
               </FormLabel>
-              <FormFloating icon={<LockKeyhole />}>
+              <InputWrapper icon={<LockKeyhole />}>
                 <FormControl>
                   <Input
                     type="password"
@@ -512,7 +512,7 @@ export function SignUpForm() {
                     {...field}
                   />
                 </FormControl>
-              </FormFloating>
+              </InputWrapper>
               <FormMessage />
             </FormItem>
           )}
@@ -545,7 +545,7 @@ export function SignUpForm() {
         />
 
         <Button type="submit" disabled={isLoading}>
-          {isLoading && <Spinner />}
+          <Loader loading={isLoading} />
           {buttonText.signUp}
         </Button>
       </form>
@@ -648,7 +648,7 @@ export function ProfilePicture({
             disabled={isChange || isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
           >
-            {isChange && <Spinner />}
+            <Loader loading={isChange} />
             {buttonText.upload("avatar")}
           </Button>
 
@@ -660,7 +660,7 @@ export function ProfilePicture({
                 variant="outline_destructive"
                 disabled={!image || isChange || isRemoved}
               >
-                {isRemoved && <Spinner />}
+                <Loader loading={isRemoved} />
                 {buttonText.remove}
               </Button>
             </AlertDialogTrigger>
@@ -732,11 +732,11 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>{cFields.email.label}</FormLabel>
-                <FormFloating icon={<Mail />}>
+                <InputWrapper icon={<Mail />}>
                   <FormControl>
                     <Input type="text" disabled {...field} />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -750,7 +750,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
                 <FormLabel className="label-required">
                   {cFields.name.label}
                 </FormLabel>
-                <FormFloating icon={<UserRound />}>
+                <InputWrapper icon={<UserRound />}>
                   <FormControl>
                     <Input
                       type="text"
@@ -758,7 +758,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
                       {...field}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -767,7 +767,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
 
         <CardFooter className="border-t">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? <Spinner /> : <Save />}
+            <Loader loading={isLoading} icon={{ base: <Save /> }} />
             {buttonText.save}
           </Button>
 
@@ -835,7 +835,7 @@ export function ChangePasswordForm() {
                 <FormLabel className="label-required">
                   {cFields.currentPassword.label}
                 </FormLabel>
-                <FormFloating icon={<LockKeyholeOpen />}>
+                <InputWrapper icon={<LockKeyholeOpen />}>
                   <FormControl>
                     <Input
                       type="password"
@@ -843,7 +843,7 @@ export function ChangePasswordForm() {
                       {...field}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -857,7 +857,7 @@ export function ChangePasswordForm() {
                 <FormLabel className="label-required">
                   {cFields.newPassword.label}
                 </FormLabel>
-                <FormFloating icon={<LockKeyhole />}>
+                <InputWrapper icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
@@ -865,7 +865,7 @@ export function ChangePasswordForm() {
                       {...field}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -879,7 +879,7 @@ export function ChangePasswordForm() {
                 <FormLabel className="label-required">
                   {cFields.confirmPassword.label}
                 </FormLabel>
-                <FormFloating icon={<LockKeyhole />}>
+                <InputWrapper icon={<LockKeyhole />}>
                   <FormControl>
                     <Input
                       type="password"
@@ -887,7 +887,7 @@ export function ChangePasswordForm() {
                       {...field}
                     />
                   </FormControl>
-                </FormFloating>
+                </InputWrapper>
                 <FormMessage />
               </FormItem>
             )}
@@ -912,7 +912,7 @@ export function ChangePasswordForm() {
 
         <CardFooter className="border-t">
           <Button type="submit" disabled={isLoading}>
-            {isLoading ? <Spinner /> : <Save />}
+            <Loader loading={isLoading} icon={{ base: <Save /> }} />
             {buttonText.save}
           </Button>
 
@@ -1014,7 +1014,7 @@ export function ActiveSessionButton({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button size="iconsm" variant="outline" disabled={isLoading}>
-              {isLoading ? <Spinner /> : <LogOut />}
+              <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -1062,7 +1062,7 @@ export function RevokeOtherSessionsButton() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <MonitorOff />}
+          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
           {trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1114,7 +1114,7 @@ export function DeleteMyAccountButton({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <Trash2 />}
+          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
           {trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1349,7 +1349,7 @@ export function AdminCreateUserDialog() {
                   <FormLabel className="label-required">
                     {cFields.name.label}
                   </FormLabel>
-                  <FormFloating icon={<UserRound />}>
+                  <InputWrapper icon={<UserRound />}>
                     <FormControl>
                       <Input
                         type="text"
@@ -1357,7 +1357,7 @@ export function AdminCreateUserDialog() {
                         {...field}
                       />
                     </FormControl>
-                  </FormFloating>
+                  </InputWrapper>
                   <FormMessage />
                 </FormItem>
               )}
@@ -1371,7 +1371,7 @@ export function AdminCreateUserDialog() {
                   <FormLabel className="label-required">
                     {cFields.email.label}
                   </FormLabel>
-                  <FormFloating icon={<Mail />}>
+                  <InputWrapper icon={<Mail />}>
                     <FormControl>
                       <Input
                         type="text"
@@ -1379,7 +1379,7 @@ export function AdminCreateUserDialog() {
                         {...field}
                       />
                     </FormControl>
-                  </FormFloating>
+                  </InputWrapper>
                   <FormMessage />
                 </FormItem>
               )}
@@ -1393,7 +1393,7 @@ export function AdminCreateUserDialog() {
                   <FormLabel className="label-required">
                     {cFields.password.label}
                   </FormLabel>
-                  <FormFloating icon={<LockKeyhole />}>
+                  <InputWrapper icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
@@ -1401,7 +1401,7 @@ export function AdminCreateUserDialog() {
                         {...field}
                       />
                     </FormControl>
-                  </FormFloating>
+                  </InputWrapper>
                   <FormMessage />
                 </FormItem>
               )}
@@ -1415,7 +1415,7 @@ export function AdminCreateUserDialog() {
                   <FormLabel className="label-required">
                     {cFields.confirmPassword.label}
                   </FormLabel>
-                  <FormFloating icon={<LockKeyhole />}>
+                  <InputWrapper icon={<LockKeyhole />}>
                     <FormControl>
                       <Input
                         type="password"
@@ -1423,7 +1423,7 @@ export function AdminCreateUserDialog() {
                         {...field}
                       />
                     </FormControl>
-                  </FormFloating>
+                  </InputWrapper>
                   <FormMessage />
                 </FormItem>
               )}
@@ -1473,7 +1473,7 @@ export function AdminCreateUserDialog() {
             <DialogFooter>
               <DialogClose>{buttonText.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? <Spinner /> : <Icon />}
+                <Loader loading={isLoading} icon={{ base: <Icon /> }} />
                 {trigger}
               </Button>
             </DialogFooter>
@@ -1565,7 +1565,10 @@ function AdminChangeUserRoleForm({
         />
 
         <Button type="submit" size="sm" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <CircleFadingArrowUp />}
+          <Loader
+            loading={isLoading}
+            icon={{ base: <CircleFadingArrowUp /> }}
+          />
           {buttonText.save}
         </Button>
       </form>
@@ -1602,7 +1605,8 @@ function AdminRevokeUserSessionsDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline_warning" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <MonitorOff />} {trigger}
+          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
+          {trigger}
         </Button>
       </AlertDialogTrigger>
 
@@ -1666,7 +1670,7 @@ function AdminRemoveUserDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <Trash2 />}
+          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
           {`${buttonText.remove} ${name}`}
         </Button>
       </AlertDialogTrigger>
@@ -1729,7 +1733,7 @@ function AdminActionRevokeUserSessionsDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <MonitorOff />}
+          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
           {trigger}
         </Button>
       </AlertDialogTrigger>
@@ -1795,7 +1799,7 @@ function AdminActionRemoveUsersDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
-          {isLoading ? <Spinner /> : <Trash2 />}
+          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
           {buttonText.remove}
         </Button>
       </AlertDialogTrigger>

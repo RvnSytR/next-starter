@@ -3,7 +3,7 @@
 import { tableText } from "@/lib/content";
 import { Search } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { FormFloating } from "../custom/custom-field";
+import { InputWrapper } from "../other/inputs";
 import { CommandShortcut } from "../ui/command";
 import { Input } from "../ui/input";
 import { TableProps, ToolBoxProps } from "./data-table";
@@ -30,7 +30,7 @@ export function DataTableSearch<TData>({
   }, []);
 
   return (
-    <FormFloating icon={<Search />} className={className}>
+    <InputWrapper icon={<Search />} className={className}>
       <Input
         ref={searchRef}
         placeholder={searchPlaceholder}
@@ -41,6 +41,6 @@ export function DataTableSearch<TData>({
       <CommandShortcut className="absolute inset-y-0 right-3 hidden items-center select-none lg:flex">
         ⌘+K
       </CommandShortcut>
-    </FormFloating>
+    </InputWrapper>
   );
 }
