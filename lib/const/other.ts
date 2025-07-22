@@ -11,10 +11,13 @@ export type FieldType =
   | "array"
   | "object";
 
-export type FileType = "file" | "image" | "document";
-//   | "archive"
-//   | "audio"
-//   | "video";
+export type FileType =
+  | "file"
+  | "image"
+  | "document"
+  | "archive"
+  | "audio"
+  | "video";
 
 export const languages = ["en", "id", "es", "fr", "de", "ar"] as const;
 export type Languages = (typeof languages)[number];

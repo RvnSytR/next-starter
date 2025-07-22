@@ -1,6 +1,5 @@
 "use server";
 
-import { FileType, mediaMeta } from "@/lib/const";
 import {
   DeleteObjectCommand,
   GetObjectCommand,
@@ -12,7 +11,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-const bucket = process.env.S3_BUCKET_NAME!;
+const Bucket = process.env.S3_BUCKET_NAME!;
 const endpoint = process.env.S3_ENDPOINT!;
 const region = { singapore: "ap-southeast-1", jakarta: "ap-southeast-3" };
 
@@ -28,11 +27,9 @@ const s3 = new S3Client({
 
 export async function uploadFiles({
   files,
-  contentType,
   ...props
 }: Omit<PutObjectCommandInput, "Key" | "Bucket" | "Body" | "ContentType"> & {
   files: File[] | { key: string; file: File }[];
-  contentType: FileType;
 }): Promise<{ key: string; res: PutObjectCommandOutput }[]> {
   return Promise.all(
     files.map(async (item) => {
@@ -49,9 +46,9 @@ export async function uploadFiles({
 
       const command = new PutObjectCommand({
         Key: key,
-        Bucket: bucket,
+        Bucket,
         Body: Buffer.from(await file.arrayBuffer()),
-        ContentType: mediaMeta[contentType].mimeType.join(", "),
+        ContentType: file.type,
         ...props,
       });
 
@@ -60,29 +57,28 @@ export async function uploadFiles({
   );
 }
 
-export async function listFiles() {
-  return await s3.send(new ListObjectsV2Command({ Bucket: bucket }));
+export async function getAllFiles(MaxKeys = 1000, ContinuationToken?: string) {
+  const param = { Bucket, MaxKeys, ContinuationToken };
+  return await s3.send(new ListObjectsV2Command(param));
 }
 
-export async function getFileSignedUrl(key: string) {
-  return await getSignedUrl(
-    s3,
-    new GetObjectCommand({ Bucket: bucket, Key: key }),
-  );
+export async function getFileSignedUrl(Key: string) {
+  return await getSignedUrl(s3, new GetObjectCommand({ Bucket, Key }));
 }
 
 export async function getFilePublicUrl(key: string) {
-  return `${endpoint}/${bucket}/${key}`;
+  return `${endpoint}/${Bucket}/${key}`;
 }
 
-export async function getFileKeyFromPublicUrl(key: string) {
-  return key.replace(`${endpoint}/${bucket}/`, "");
+export async function extractKeyFromPublicUrl(url: string) {
+  const parsed = new URL(url);
+  const parts = parsed.pathname.split("/");
+  const key = parts.slice(2).join("/");
+  return key;
 }
 
-export async function deleteFile(key: string[]) {
+export async function deleteFiles(key: string[]) {
   return Promise.all(
-    key.map((item) =>
-      s3.send(new DeleteObjectCommand({ Bucket: bucket, Key: item })),
-    ),
+    key.map((item) => s3.send(new DeleteObjectCommand({ Bucket, Key: item }))),
   );
 }

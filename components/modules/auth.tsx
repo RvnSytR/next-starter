@@ -580,12 +580,7 @@ export function ProfilePicture({
     const url = await getFilePublicUrl(key);
 
     if (image && url !== image) await deleteProfilePicture(image);
-
-    await uploadFiles({
-      files: [{ key, file }],
-      contentType,
-      ACL: "public-read",
-    });
+    await uploadFiles({ files: [{ key, file }], ACL: "public-read" });
 
     authClient.updateUser(
       { image: url },

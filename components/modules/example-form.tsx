@@ -95,7 +95,7 @@ export function ExampleForm() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     console.log(formData.file);
-    // const res = await uploadFiles({ files: formData.file, contentType: fileType });
+    // const res = await uploadFiles({ files: formData.file });
     toast(<p>{JSON.stringify(formData, null, 2)}</p>);
   };
 

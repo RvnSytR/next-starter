@@ -5,7 +5,7 @@ import { Route, RouteRole, routesMeta } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { deleteFile, getFileKeyFromPublicUrl } from "../s3";
+import { deleteFiles, extractKeyFromPublicUrl } from "../s3";
 
 export async function checkAndGetAuthorizedSession(route: Route) {
   const routeMeta = routesMeta[route];
@@ -60,7 +60,7 @@ export async function revokeUserSessions(ids: string[]) {
 }
 
 export async function deleteProfilePicture(image: string) {
-  await deleteFile([await getFileKeyFromPublicUrl(image)]);
+  await deleteFiles([await extractKeyFromPublicUrl(image)]);
 }
 
 export async function deleteUsers(
