@@ -14,10 +14,7 @@ export function Loader({
   ...props
 }: LoaderPropsWithLoading) {
   const loadingIcon = (
-    <LoaderCircle
-      className={cn("animate-infinite animate-spin", className)}
-      {...props}
-    />
+    <LoaderCircle className={cn("animate-spin", className)} {...props} />
   );
 
   const iconNode = loading

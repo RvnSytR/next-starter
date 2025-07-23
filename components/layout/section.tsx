@@ -42,7 +42,7 @@ export function SectionTagline({ className }: { className?: string }) {
   return (
     <small className={cn("text-muted-foreground", className)}>
       {"Built by "}
-      <Link href="https://github.com/RvnSytR" className="link">
+      <Link href="https://github.com/RvnSytR" className="link-underline">
         RvnS
       </Link>
       {" under heavy caffeine influence."}

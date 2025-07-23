@@ -81,7 +81,7 @@ export function RefreshButton({
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
   const Icon = RefreshCcw;
-  const iconCn = "animate-infinite animate-reverse animate-spin";
+  const iconCn = "animate-reverse animate-spin";
 
   return (
     <Button
