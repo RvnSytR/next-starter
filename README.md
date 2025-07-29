@@ -75,10 +75,13 @@ bun run dev
 
 ## 💡 Tips
 
-To avoid default imports for Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
+To avoid default imports for `next/router` and Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
 
 ```json
 {
-  "typescript.preferences.autoImportFileExcludePatterns": ["radix-ui"]
+  "typescript.preferences.autoImportFileExcludePatterns": [
+    "next/router",
+    "radix-ui"
+  ]
 }
 ```
