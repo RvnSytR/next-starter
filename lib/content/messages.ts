@@ -1,77 +1,78 @@
 import { Action, FieldType, FileType, mediaMeta } from "../const";
 import {
-  aOrAn,
-  capitalize,
   formatDate,
   formatDateDistanceToNow,
+  getActionLabel,
+  getFileTypeLabel,
 } from "../utils";
 
 export const messages = {
-  loading: "Just a moment...",
-  error: "Uh-oh! Something went wrong. Please try again later.",
+  loading: "Tunggu sebentar...",
+  error: "Uh—oh! Terjadi kesalahan. Silakan coba lagi nanti.",
   success: (thing: string, action: Action) =>
-    `${thing} has been ${action} successfully.`.trim(),
+    `${thing} berhasil ${getActionLabel(action)}.`.trim(),
 
   thingAgo: (thing: string, time: Date) =>
-    `${thing} ${formatDateDistanceToNow(time)} ago.`,
+    `${thing} ${formatDateDistanceToNow(time)} yang lalu.`,
   createdAgo: (time: Date) =>
-    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} ago.`,
+    `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} yang lalu.`,
 
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
-    `${browser ?? "A browser"} on ${os ?? "an unknown OS"}`,
-  tooManyRequest: "Too many requests. Please try again later.",
+    `${browser ?? "Sebuah browser"} di ${os ?? "sistem operasi yang tidak diketahui"}`,
+  tooManyRequest: "Terlalu banyak permintaan. Silakan coba lagi nanti.",
 
   invalid: {
-    email: "That doesn't look like a valid email address.",
-    text: "Please enter valid text.",
-    number: "Please enter a valid number.",
-    color: "That doesn't appear to be a valid color code.",
-    phone: "Please enter a valid phone number.",
-    URL: "That URL doesn't seem valid.",
-    time: "Please enter a valid time.",
-    date: "Please enter a valid date.",
-    dateMultiple: "Some of the dates entered are invalid.",
+    email: "Alamat email tidak valid.",
+    text: "Silakan masukkan teks yang valid.",
+    number: "Silakan masukkan angka yang valid.",
+    color: "Kode warna tidak valid.",
+    phone: "Silakan masukkan nomor telepon yang valid.",
+    URL: "URL tidak valid.",
+    time: "Silakan masukkan waktu yang valid.",
+    date: "Silakan masukkan tanggal yang valid.",
+    dateMultiple: "Beberapa tanggal yang dimasukkan tidak valid.",
     dateRange: {
-      field: "Please select a valid date range.",
-      from: "Please choose a valid start date.",
-      to: "Please choose a valid end date.",
+      field: "Silakan pilih rentang tanggal yang valid.",
+      from: "Silakan pilih tanggal mulai yang valid.",
+      to: "Silakan pilih tanggal akhir yang valid.",
     },
 
     ageRange: (min: number, max: number) =>
-      `Age must be between ${min} and ${max}.`,
+      `Usia harus antara ${min} dan ${max}.`,
 
-    fileType: (file: FileType = "file", withAccepted: boolean = false) =>
-      `That's not a valid ${file} type.${
+    fileType: (fileType: FileType = "file", withAccepted: boolean = false) =>
+      `Tipe ${getFileTypeLabel(fileType)} tidak valid. ${
         withAccepted
-          ? " Accepted types: " + mediaMeta[file].extensions.join(", ")
+          ? "Tipe yang diterima: " + mediaMeta[fileType].extensions.join(", ")
           : ""
       }`.trim(),
 
-    selection: (field: string) => `That's not a valid option for ${field}.`,
+    selection: (field: string) => `Pilihan untuk ${field} tidak valid.`,
   },
 
   tooShort: (field: string, min: number) =>
-    `${field} needs to be at least ${min} characters.`,
+    `${field} harus terdiri dari minimal ${min} karakter.`,
   tooLong: (field: string, max: number) =>
-    `${field} can't be longer than ${max} characters.`,
+    `${field} tidak boleh lebih dari ${max} karakter.`,
   outOfRange: (field: string, min: number, max: number) =>
-    `${field} must be between ${min} and ${max} characters.`,
+    `${field} harus antara ${min} dan ${max} karakter.`,
 
   invalidField: (field: string, fieldType: FieldType) =>
-    `${field} must be a valid ${fieldType}.`,
+    `${field} harus berupa ${fieldType} yang valid.`,
   requiredAndInvalidField: (field: string, fieldType: FieldType) =>
-    `${field} is required and must be a valid ${fieldType}.`,
+    `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
-  fileRequired: (file: FileType = "file", multiple: boolean = false) =>
-    `Please upload ${multiple ? "one or more" : aOrAn(file)} ${file}.`,
-  fileTooLarge: (file: FileType = "file", maxSizeMB: number) =>
-    `${capitalize(file)} size must be under ${maxSizeMB} MB.`,
+  fileRequired: (fileType: FileType = "file", multiple: boolean = false) =>
+    `Silakan unggah ${multiple ? "satu atau lebih" : ""} ${getFileTypeLabel(fileType)}.`,
+  fileTooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
+    `Ukuran ${getFileTypeLabel(fileType)} harus kurang dari ${maxSizeMB} MB.`,
 
-  noChanges: (thing: string) => `No changes were made to your ${thing}.`,
-  mustSelectOne: (field: string) => `Please choose one ${field}.`,
+  noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
+  mustSelectOne: (field: string) => `Silakan pilih satu ${field}.`,
 
-  duplicate: (thing: string) => `This ${thing} already exists.`,
-  conflict: (thing: string) => `There's a conflict with an existing ${thing}.`,
+  duplicate: (thing: string) => `${thing} ini sudah ada.`,
+  conflict: (thing: string) =>
+    `Terdapat konflik dengan ${thing} yang sudah ada.`,
   deleteForbidden: (thing: string, x: string) =>
-    `This ${thing} cannot be deleted because it is currently assigned to ${x}.`,
+    `${thing} ini tidak dapat dihapus karena saat ini digunakan oleh ${x}.`,
 };

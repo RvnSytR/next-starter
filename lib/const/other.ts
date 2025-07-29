@@ -1,6 +1,6 @@
 import { LucideIcon, Mars, Venus } from "lucide-react";
 
-export type Action = "created" | "updated" | "removed";
+export type Action = "created" | "updated" | "removed" | "uploaded";
 export type Toast = "success" | "error" | "info" | "warning";
 
 export type FieldType =

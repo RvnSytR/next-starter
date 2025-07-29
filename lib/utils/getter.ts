@@ -1,7 +1,9 @@
 import {
+  Action,
   allRoutes,
   appInfo,
   dashboardMenu,
+  FileType,
   Menu,
   Route,
   RouteRole,
@@ -11,6 +13,22 @@ import { Role } from "../permission";
 
 export function getTitle(r: Route) {
   return `${routesMeta[r].displayName} | ${appInfo.name}`;
+}
+
+export function getActionLabel(action: Action) {
+  if (action === "created") return "dibuat";
+  if (action === "removed") return "dihapus";
+  if (action === "updated") return "diperbarui";
+  if (action === "uploaded") return "diunggah";
+}
+
+export function getFileTypeLabel(fileType: FileType) {
+  if (fileType === "file") return "berkas";
+  if (fileType === "image") return "gambar";
+  if (fileType === "document") return "dokumen";
+  if (fileType === "archive") return "arsip";
+  if (fileType === "audio") return "audio";
+  if (fileType === "video") return "video";
 }
 
 export function getRandomString(length: number) {

@@ -44,15 +44,15 @@ export const rolesMeta: Record<
 > = {
   user: {
     icon: UserRound,
-    desc: "Standard user with basic access and permissions.",
+    desc: "Pengguna standar dengan akses dan izin dasar.",
   },
   admin: {
     icon: UserRoundCheck,
-    desc: "Administrator with full access and management capabilities.",
+    desc: "Administrator dengan akses penuh dan kemampuan pengelolaan.",
   },
   customRoleExample: {
-    displayName: "Custom Role Example",
+    displayName: "Contoh Peran Kustom",
     icon: FlaskConical,
-    desc: "A sample custom role for demonstration or testing purposes.",
+    desc: "Peran kustom contoh untuk tujuan demonstrasi atau pengujian.",
   },
 };

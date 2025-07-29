@@ -1,86 +1,87 @@
 import { DateRange } from "react-day-picker";
 import { FileType, mediaMeta } from "../const";
-import { aOrAn, formatDate } from "../utils";
+import { formatDate, getFileTypeLabel } from "../utils";
 
 export const buttonText = {
-  signIn: "Sign In",
-  signOn: (social: string) => `Continue with ${social}`,
-  signOut: "Sign Out",
-  signUp: "Create Account",
+  signIn: "Masuk",
+  signOn: (social: string) => `Lanjutkan dengan ${social}`,
+  signOut: "Keluar",
+  signUp: "Buat Akun",
 
   upload: (file: string = "", multiple: boolean = false) =>
-    `Upload ${multiple ? `${file}s` : file}`,
+    `Unggah ${multiple ? `${file}s` : file}`,
 
-  action: "Action",
-  back: "Back",
-  cancel: "Cancel",
-  clear: "Clear",
-  confirm: "Confirm",
+  action: "Tindakan",
+  back: "Kembali",
+  cancel: "Batal",
+  clear: "Bersihkan",
+  confirm: "Konfirmasi",
   filter: "Filter",
-  refresh: "Refresh",
-  remove: "Remove",
-  reset: "Reset",
-  save: "Save Changes",
-  view: "View",
+  refresh: "Muat Ulang",
+  remove: "Hapus",
+  reset: "Atur Ulang",
+  save: "Simpan Perubahan",
+  view: "Lihat",
 };
 
 export const commonText = {
-  selected: "selected",
-  verified: "verified",
+  selected: "dipilih",
+  verified: "terverifikasi",
 };
 
 export const datePickerText = {
   single: {
-    trigger: "Select Date",
+    trigger: "Pilih Tanggal",
     value: (date: Date) => formatDate(date, "PPPP"),
   },
   multiple: {
-    trigger: "Select Dates",
+    trigger: "Pilih Tanggal",
     value: (dates: Date[]) => {
       const maxDisplay = 2;
       const formattedDates = dates.map((date) => formatDate(date, "PPP"));
       if (dates.length <= maxDisplay) return formattedDates.join(", ");
-      return `${formattedDates.slice(0, maxDisplay).join(", ")} +${dates.length - maxDisplay} more`;
+      return `${formattedDates.slice(0, maxDisplay).join(", ")} +${dates.length - maxDisplay} lainnya`;
     },
   },
   range: {
-    trigger: "Select Date Range",
+    trigger: "Pilih Rentang Tanggal",
     value: (dateRange: DateRange) => {
       const { from, to } = dateRange;
       if (from && to)
         return `${formatDate(from, "PPP")} - ${formatDate(to, "PPP")}`;
       if (from) return formatDate(from, "PPP");
-      return "Select Date Range";
+      return "Pilih Rentang Tanggal";
     },
   },
 };
 
 export const tableText = {
-  placeholder: "Search something...",
-  noResult: "No Result",
+  placeholder: "Cari sesuatu...",
+  noResult: "Tidak ada hasil",
 
-  rowsPerPage: "Rows per page",
+  rowsPerPage: "Baris per halaman",
   rowSelection: (selected: number, totalRows: number) =>
-    `${selected} of ${totalRows} row(s) ${commonText.selected}.`,
+    `${selected} dari ${totalRows} baris ${commonText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
-    `Page ${pageNumber} of ${totalPage}`,
+    `Halaman ${pageNumber} dari ${totalPage}`,
 
   column: {
     num: "No",
-    createdAt: "Created At",
+    createdAt: "Dibuat Pada",
   },
 };
 
 export const getFileInputMetaAndText = (fileType: FileType) => {
   const meta = mediaMeta[fileType];
+  const label = getFileTypeLabel(fileType);
   return {
     meta,
     text: {
-      add: `Add ${fileType}`,
-      total: (length: number) => `Total ${fileType} : ${length}`,
+      add: `Tambah ${label}`,
+      total: (length: number) => `Total ${label} : ${length}`,
       placeholder: (multiple: boolean = false) =>
-        `Drag & drop ${multiple ? `${fileType}s` : `${aOrAn(fileType)} ${fileType}`} here or click to upload`,
-      size: (mb: number) => `Up to ${mb} MB`,
+        `Seret & lepaskan ${multiple ? "satu atau lebih" : ""} ${label} di sini atau klik untuk mengunggah`,
+      size: (mb: number) => `Hingga ${mb} MB`,
     },
   };
 };

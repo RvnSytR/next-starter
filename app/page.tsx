@@ -19,8 +19,7 @@ export default function Page() {
 
           <Button variant="outline_primary" asChild>
             <Link href={"/dashboard" satisfies Route}>
-              Go To Dashboard
-              <LinkLoader icon={{ base: <ArrowRight /> }} />
+              Ke Dashboard <LinkLoader icon={{ base: <ArrowRight /> }} />
             </Link>
           </Button>
         </div>

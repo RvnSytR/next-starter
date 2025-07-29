@@ -2,34 +2,34 @@ import { appInfo } from "../const";
 
 const signIn = {
   title: appInfo.name,
-  desc: `Access the ${appInfo.name} Dashboard securely by entering your credentials.`,
+  desc: `Akses Dashboard ${appInfo.name} dengan aman menggunakan kredensial Anda.`,
 };
 
 const users = {
-  title: "User Management",
-  desc: "Manage and view details of all registered users.",
-  searchPlaceholder: "Search user...",
+  title: "Pengguna",
+  desc: "Kelola dan lihat detail semua pengguna yang terdaftar.",
+  searchPlaceholder: "Cari pengguna...",
 };
 
 const profile = {
   info: {
-    title: "Personal Information",
-    desc: `Update and manage your ${appInfo.name} profile details.`,
+    title: "Informasi Pribadi",
+    desc: `Perbarui dan kelola detail profil ${appInfo.name} Anda.`,
   },
 
   password: {
-    title: "Change Password",
-    desc: "Ensure your new password is strong and secure.",
+    title: "Ubah Kata Sandi",
+    desc: "Pastikan kata sandi baru Anda kuat dan aman.",
   },
 
   activeSession: {
-    title: "Active Sessions",
-    desc: "Review and manage devices and sessions currently logged into your account.",
+    title: "Sesi Aktif",
+    desc: "Tinjau dan kelola perangkat serta sesi yang saat ini masuk ke akun Anda.",
   },
 
   deleteAccount: {
-    title: "Delete Account",
-    desc: "Caution: Deleting your account is permanent and cannot be undone.",
+    title: "Hapus Akun",
+    desc: "Peringatan: Menghapus akun Anda bersifat permanen dan tidak dapat dibatalkan.",
   },
 };
 

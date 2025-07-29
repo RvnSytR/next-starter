@@ -18,12 +18,12 @@ const pieChartData = [
 ];
 
 const areaAndPieChartData = [
-  { xLabel: "January", dataKeys: { key1: 186, key2: 80 } },
-  { xLabel: "February", dataKeys: { key1: 305, key2: 200 } },
-  { xLabel: "March", dataKeys: { key1: 237, key2: 120 } },
+  { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
+  { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
+  { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
   { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
-  { xLabel: "May", dataKeys: { key1: 209, key2: 130 } },
-  { xLabel: "June", dataKeys: { key1: 214, key2: 140 } },
+  { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
+  { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
 ];
 
 const areaAndPieChartConfig = {
@@ -36,11 +36,12 @@ const code = {
 
 export default function ExamplePieChart() {
   const data = [
-    { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
-    { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
-    { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
-    { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
-    { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
+    { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
+    { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
+    { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
+    { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
+    { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
+    { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
   ];
 
   return (
@@ -54,12 +55,12 @@ export default function ExamplePieChart() {
 
 export function ExampleAreaAndPieChart() {
   const data = [
-    { xLabel: "January", dataKeys: { key1: 186, key2: 80 } },
-    { xLabel: "February", dataKeys: { key1: 305, key2: 200 } },
-    { xLabel: "March", dataKeys: { key1: 237, key2: 120 } },
+    { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
+    { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
+    { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
     { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
-    { xLabel: "May", dataKeys: { key1: 209, key2: 130 } },
-    { xLabel: "June", dataKeys: { key1: 214, key2: 140 } },
+    { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
+    { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
   ];
 
   const config = {
@@ -87,6 +88,7 @@ import { Form } from "@/components/ui/form";
 import { buttonText } from "@/lib/content";
 import { zodDateRange, zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays } from "date-fns";
 import { RotateCcw, Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -116,9 +118,9 @@ export function ExampleForm() {
       text: "Some Text",
       numeric: 100000,
       phone: 81234567890,
-      // date: new TZDate(),
-      // dateMultiple: [new TZDate()],
-      // dateRange: { from: new TZDate(), to: addDays(new TZDate(), 6) },
+      date: new Date(),
+      dateMultiple: [new Date()],
+      dateRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "Spade",
       radio: "Spade",
       file: [],
@@ -213,15 +215,15 @@ function Comp({ content }: { content: CompCardContent[] }) {
 export function Example() {
   const tabs: { section: string; content: CompCardContent[] }[] = [
     {
-      section: "Modified Charts",
+      section: "Charts",
       content: [
         { title: "Pie Chart", key: "pieChart" },
         { title: "Area and Bar Chart", key: "timelineChart" },
       ],
     },
     {
-      section: "Form Example",
-      content: [{ title: "Full Form Example", key: "form" }],
+      section: "Contoh Form",
+      content: [{ title: "Contoh penggunaan Form", key: "form" }],
     },
   ];
 

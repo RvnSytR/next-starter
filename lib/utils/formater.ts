@@ -1,9 +1,5 @@
 import { appInfo, Languages, languagesMeta } from "../const";
 
-export function aOrAn(word: string) {
-  return /^[aiueo]/i.test(word) ? "an" : "a";
-}
-
 export function capitalize(str: string) {
   return str
     .split(" ")

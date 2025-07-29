@@ -19,24 +19,24 @@ export type Menu = { section: string; content: MenuContent[] };
 
 export const dashboardMenu: Menu[] = [
   {
-    section: "General",
+    section: "Umum",
     content: [
       { route: "/dashboard", icon: LayoutDashboard },
       { route: "/dashboard/users", icon: UsersRound },
     ],
   },
   {
-    section: "Settings",
+    section: "Pengaturan",
     content: [
       {
         route: "/dashboard/profile",
         icon: UserRound,
         subMenu: [
-          { label: "Personal Information" },
-          { label: "Change Password" },
-          { label: "Active Session" },
+          { label: "Informasi Pribadi" },
+          { label: "Ubah Kata Sandi" },
+          { label: "Sesi Aktif" },
           {
-            label: "Delete Account",
+            label: "Hapus Akun",
             className: "text-destructive hover:text-destructive",
           },
         ],
@@ -49,6 +49,11 @@ export const dashboardfooterMenu: (Omit<MenuContent, "route" | "subMenu"> & {
   url: string;
   displayName: string;
 })[] = [
-  { url: "/", displayName: "Home", icon: ExternalLink },
-  { url: "/somewhere", displayName: "Help", icon: CircleHelp, disabled: true },
+  { url: "/", displayName: "Beranda", icon: ExternalLink },
+  {
+    url: "/somewhere",
+    displayName: "Bantuan",
+    icon: CircleHelp,
+    disabled: true,
+  },
 ];

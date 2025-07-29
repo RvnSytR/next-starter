@@ -38,7 +38,7 @@ export function InputWrapper({
       )}
       {...props}
     >
-      <div className="text-muted-foreground absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
+      <div className="absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
         {typeof icon === "string" ? icon.slice(0, 3) : icon}
       </div>
       {children}

@@ -1,11 +1,11 @@
 import { Languages } from "./other";
 
 export const appInfo = {
-  name: "Project Title",
-  description: "Project Description",
+  name: "Nama Proyek",
+  description: "Deskripsi Proyek",
   keywords: ["next starter"],
 
   // logo: "/some-image.png"
 
-  lang: "en" satisfies Languages as Languages,
+  lang: "id" satisfies Languages as Languages,
 };

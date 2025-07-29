@@ -9,6 +9,7 @@ import {
 } from "@/lib/utils";
 import { zodDateRange, zodFile } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays } from "date-fns";
 import {
   Club,
   Diamond,
@@ -84,9 +85,9 @@ export function ExampleForm() {
       text: "Some Text",
       numeric: 100000,
       phone: 81234567890,
-      // date: new TZDate(),
-      // dateMultiple: [new TZDate()],
-      // dateRange: { from: new TZDate(), to: addDays(new TZDate(), 6) },
+      date: new Date(),
+      dateMultiple: [new Date()],
+      dateRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "Spade",
       radio: "Spade",
       file: [],
