@@ -7,7 +7,7 @@ import {
   RevokeOtherSessionsButton,
   UserRoleBadge,
   UserVerifiedBadge,
-} from "@/components/modules/auth";
+} from "@/components/modules/user";
 import {
   Card,
   CardAction,

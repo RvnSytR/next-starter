@@ -1,5 +1,3 @@
-import { enUS } from "date-fns/locale";
-import { en } from "zod/locales";
 import { Languages } from "./other";
 
 export const appInfo = {
@@ -10,5 +8,4 @@ export const appInfo = {
   // logo: "/some-image.png"
 
   lang: "en" satisfies Languages as Languages,
-  i18n: { date: enUS, zod: en },
 };

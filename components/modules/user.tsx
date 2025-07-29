@@ -20,7 +20,13 @@ import {
   userRoles,
 } from "@/lib/permission";
 import { capitalize, cn } from "@/lib/utils";
-import { zodAuth, zodFile } from "@/lib/zod";
+import {
+  zodAuthSignUp,
+  zodFile,
+  zodUser,
+  zodUserChangePassword,
+  zodUserCreate,
+} from "@/lib/zod";
 import {
   deleteProfilePicture,
   deleteUsers,
@@ -129,7 +135,7 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const content = baseContent.auth;
+const content = baseContent.user;
 const cFields = content.fields;
 const cComps = content.components;
 
@@ -164,7 +170,7 @@ export function UserVerifiedBadge({
 }: {
   withoutText?: boolean;
   className?: string;
-  classNames?: { tooltip?: string; icon?: string };
+  classNames?: { badge?: string; icon?: string; content?: string };
 }) {
   if (withoutText) {
     return (
@@ -177,11 +183,16 @@ export function UserVerifiedBadge({
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
-        <Badge variant="outline_rvns" className={cn("capitalize", className)}>
+        <Badge
+          variant="outline_rvns"
+          className={cn("capitalize", classNames?.badge)}
+        >
           <BadgeCheck className={classNames?.icon} /> {commonText.verified}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent>{content.verified}</TooltipContent>
+      <TooltipContent className={classNames?.content}>
+        {content.verified}
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -286,7 +297,7 @@ export function SignOnGithubButton() {
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodAuth.pick({
+  const schema = zodUser.pick({
     email: true,
     password: true,
     rememberMe: true,
@@ -387,19 +398,7 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const schema = zodAuth
-    .pick({
-      name: true,
-      email: true,
-      password: true,
-      confirmPassword: true,
-      isAgree: true,
-    })
-    .refine((sc) => sc.password === sc.confirmPassword, {
-      message: content.confirmPassword,
-      path: ["confirmPassword"],
-    });
+  const schema = zodAuthSignUp;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -689,7 +688,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
 
   const { name, email } = props;
   const { noChanges, success } = cComps.personalInfo;
-  const schema = zodAuth.pick({ name: true, email: true });
+  const schema = zodUser.pick({ name: true, email: true });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -780,17 +779,7 @@ export function ChangePasswordForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = z
-    .object({
-      currentPassword: zodAuth.shape.password,
-      newPassword: zodAuth.shape.password,
-      confirmPassword: zodAuth.shape.confirmPassword,
-      revokeOtherSessions: zodAuth.shape.revokeOtherSessions,
-    })
-    .refine((sc) => sc.newPassword === sc.confirmPassword, {
-      message: content.confirmPassword,
-      path: ["confirmPassword"],
-    });
+  const schema = zodUserChangePassword;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -1226,7 +1215,7 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
           </div>
         </SheetHeader>
 
-        <div className="flex flex-col gap-y-3 px-4">
+        <div className="flex flex-col gap-y-3 overflow-y-auto px-4">
           <Separator />
 
           <div className="flex items-center gap-x-2">
@@ -1272,21 +1261,9 @@ export function AdminCreateUserDialog() {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const schema = zodUserCreate;
   const Icon = UserRoundPlus;
   const { trigger, title, desc, success } = cComps.adminCreate;
-
-  const schema = zodAuth
-    .pick({
-      name: true,
-      email: true,
-      password: true,
-      confirmPassword: true,
-      role: true,
-    })
-    .refine((sc) => sc.password === sc.confirmPassword, {
-      message: content.confirmPassword,
-      path: ["confirmPassword"],
-    });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -1489,7 +1466,7 @@ function AdminChangeUserRoleForm({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodAuth.pick({ role: true });
+  const schema = zodUser.pick({ role: true });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

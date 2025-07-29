@@ -1,8 +1,12 @@
 import { z } from "zod";
-import { appInfo, FileType, mediaMeta } from "./const";
+import { id } from "zod/locales";
+import { FileType, mediaMeta } from "./const";
 import { baseContent, messages } from "./content";
 
-z.config(appInfo.i18n.zod());
+const cUser = baseContent.user;
+const cUserFields = cUser.fields;
+
+z.config(id());
 
 export const zodDateRange = z.object(
   {
@@ -35,31 +39,41 @@ export const zodFile = (
   });
 };
 
-export const zodAuth = z.object({
+export const zodUser = z.object({
   id: z.string(),
   role: z.string().optional(),
   name: z
-    .string({ error: messages.requiredAndInvalidField("Name", "string") })
+    .string({
+      error: messages.requiredAndInvalidField(cUserFields.name.label, "string"),
+    })
     .trim()
-    .min(1, { error: messages.tooShort("Name", 1) }),
+    .min(1, { error: messages.tooShort(cUserFields.name.label, 1) }),
   email: z
     .email({ error: messages.invalid.email })
     .trim()
-    .min(1, { error: messages.tooShort("Email", 1) })
-    .max(255, { error: messages.tooShort("Email", 255) }),
+    .min(1, { error: messages.tooShort(cUserFields.email.label, 1) })
+    .max(255, { error: messages.tooShort(cUserFields.email.label, 255) }),
   password: z
-    .string({ error: messages.requiredAndInvalidField("Password", "string") })
+    .string({
+      error: messages.requiredAndInvalidField(
+        cUserFields.password.label,
+        "string",
+      ),
+    })
     .trim()
-    .min(1, { error: messages.tooShort("Password", 1) })
-    .min(8, { error: messages.tooShort("Password", 8) })
-    .max(255, { error: messages.tooShort("Password", 255) }),
+    .min(1, { error: messages.tooShort(cUserFields.password.label, 1) })
+    .min(8, { error: messages.tooShort(cUserFields.password.label, 8) })
+    .max(255, { error: messages.tooShort(cUserFields.password.label, 255) }),
   confirmPassword: z
     .string({
-      error: messages.requiredAndInvalidField("Confirm Password", "string"),
+      error: messages.requiredAndInvalidField(
+        cUserFields.confirmPassword.label,
+        "string",
+      ),
     })
-    .min(1, { error: messages.tooShort("Confirm Password", 1) }),
+    .min(1, { error: messages.tooShort(cUserFields.confirmPassword.label, 1) }),
   rememberMe: z.boolean({
-    error: messages.requiredAndInvalidField("Remember Me", "boolean"),
+    error: messages.requiredAndInvalidField(cUserFields.rememberMe, "boolean"),
   }),
   revokeOtherSessions: z.boolean({
     error: messages.requiredAndInvalidField(
@@ -71,5 +85,43 @@ export const zodAuth = z.object({
     .boolean({
       error: messages.requiredAndInvalidField("Agreement", "boolean"),
     })
-    .refine((v) => v === true, { error: baseContent.auth.agreement }),
+    .refine((v) => v, { error: cUser.agreement }),
 });
+
+export const zodAuthSignUp = zodUser
+  .pick({
+    name: true,
+    email: true,
+    password: true,
+    confirmPassword: true,
+    isAgree: true,
+  })
+  .refine((sc) => sc.password === sc.confirmPassword, {
+    message: cUser.confirmPassword,
+    path: ["confirmPassword"],
+  });
+
+export const zodUserChangePassword = z
+  .object({
+    currentPassword: zodUser.shape.password,
+    newPassword: zodUser.shape.password,
+    confirmPassword: zodUser.shape.confirmPassword,
+    revokeOtherSessions: zodUser.shape.revokeOtherSessions,
+  })
+  .refine((sc) => sc.newPassword === sc.confirmPassword, {
+    message: cUser.confirmPassword,
+    path: ["confirmPassword"],
+  });
+
+export const zodUserCreate = zodUser
+  .pick({
+    name: true,
+    email: true,
+    password: true,
+    confirmPassword: true,
+    role: true,
+  })
+  .refine((sc) => sc.password === sc.confirmPassword, {
+    message: cUser.confirmPassword,
+    path: ["confirmPassword"],
+  });

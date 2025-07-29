@@ -56,21 +56,19 @@ export const datePickerText = {
 };
 
 export const tableText = {
-  default: {
-    placeholder: "Search something...",
-    noResult: "No Result",
-  },
-
-  column: {
-    num: "No",
-    createdAt: "Created At",
-  },
+  placeholder: "Search something...",
+  noResult: "No Result",
 
   rowsPerPage: "Rows per page",
   rowSelection: (selected: number, totalRows: number) =>
     `${selected} of ${totalRows} row(s) ${commonText.selected}.`,
   pagenation: (pageNumber: number, totalPage: number) =>
     `Page ${pageNumber} of ${totalPage}`,
+
+  column: {
+    num: "No",
+    createdAt: "Created At",
+  },
 };
 
 export const getFileInputMetaAndText = (fileType: FileType) => {

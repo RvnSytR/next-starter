@@ -1,6 +1,6 @@
 import { messages } from "./messages";
 
-const auth = {
+const user = {
   verified: "This user has verified their email.",
   current: (thing: "user" | "session") => `Current ${thing}`,
   lastSeen: (time: Date) => messages.thingAgo("Last seen", time),
@@ -29,11 +29,11 @@ const auth = {
     rememberMe: "Remember me",
     profilePic: "Profile Picture",
     role: "Role",
+
     changeRole: (name: string) => `Change ${name}'s Role`,
 
     email: { label: "Email address", placeholder: "Enter your email address" },
-    name: { label: "Name", placeholder: "Enter your name" },
-
+    name: { label: "Username", placeholder: "Enter your username" },
     password: { label: "Password", placeholder: "Enter your password" },
     currentPassword: {
       label: "Current Password",
@@ -47,7 +47,6 @@ const auth = {
       label: "Confirm Password",
       placeholder: "Confirm your password",
     },
-
     agreement: {
       label: "Accept terms and conditions",
       placeholder: "I agree to the terms of service and privacy policy.",
@@ -131,4 +130,4 @@ const auth = {
   },
 };
 
-export const baseContent = { auth };
+export const baseContent = { user };

@@ -1,32 +1,10 @@
 import { format, formatDistanceToNow, isAfter, isBefore } from "date-fns";
-import { appInfo } from "../const";
+import { id } from "date-fns/locale";
 
-const locale = appInfo.i18n.date;
+const locale = id;
 
 export function isDateInRange(from: Date, to: Date, date: Date) {
   return isBefore(from, date) && isAfter(to, date);
-}
-
-export function calculateAge(birthDate: Date): number | string {
-  const today = new Date();
-
-  if (isNaN(birthDate.getTime())) {
-    throw new Error("Invalid date format. Please provide a valid date.");
-  }
-
-  if (birthDate > today) {
-    throw new Error("Invalid date. The date cannot be in the future.");
-  }
-
-  let age = today.getFullYear() - birthDate.getFullYear();
-  const monthDifference = today.getMonth() - birthDate.getMonth();
-  const dayDifference = today.getDate() - birthDate.getDate();
-
-  if (monthDifference < 0 || (monthDifference === 0 && dayDifference < 0)) {
-    age--;
-  }
-
-  return age;
 }
 
 export function formatDate(date: Date, formatStr: string) {

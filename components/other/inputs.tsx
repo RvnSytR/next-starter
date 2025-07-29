@@ -1,12 +1,15 @@
 import { FileType } from "@/lib/const";
 import { buttonText, getFileInputMetaAndText } from "@/lib/content";
 import { cn, toByte, toMegabytes } from "@/lib/utils";
-import { Dot, Upload, X } from "lucide-react";
+import { Dot, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import {
   ComponentProps,
   DragEvent,
+  Fragment,
+  KeyboardEvent,
+  MouseEvent,
   ReactNode,
   useCallback,
   useRef,
@@ -15,7 +18,6 @@ import { Button } from "../ui/button";
 import { FormControl, FormItem } from "../ui/form";
 import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
-import { Separator } from "../ui/separator";
 
 export function InputWrapper({
   icon,
@@ -83,23 +85,24 @@ export function InputFile({
   onChange,
   accept = "file",
   maxFileSize: sizeProp,
-  className,
+  classNames,
   placeholder,
   multiple = false,
-}: Pick<ComponentProps<"input">, "className" | "placeholder" | "multiple"> & {
+}: Pick<ComponentProps<"input">, "placeholder" | "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
   maxFileSize?: number;
+  classNames?: { container?: string; dropzone?: string; files?: string };
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { meta, text } = getFileInputMetaAndText(accept);
+  const Icon = meta.icon;
+  const isFiles = files.length > 0;
   const fileSize = sizeProp
     ? { mb: sizeProp, byte: toByte(sizeProp) }
     : meta.size;
-  const isFiles = files.length > 0;
-  const Icon = meta.icon;
 
   const resetFiles = () => onChange([]);
 
@@ -126,22 +129,27 @@ export function InputFile({
     if (e.currentTarget.contains(e.relatedTarget as Node)) return;
   }, []);
 
+  const handleOnDrop = useCallback((e: DragEvent<HTMLElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    changeHandler(e.dataTransfer.files);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    inputRef.current?.click();
+  }, []);
+
+  const handleOnKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      inputRef.current?.click();
+    }
+  }, []);
+
   return (
-    <div
-      tabIndex={0}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          inputRef.current?.click();
-        }
-      }}
-      className={cn(
-        "border-input dark:bg-input/30 relative rounded-md border bg-transparent shadow-xs transition-[border]",
-        "group focus-visible:border-ring focus-visible:ring-ring/50 focus:outline-none focus-visible:ring-[3px]",
-        !isFiles && "hover:border-foreground hover:cursor-pointer",
-        className,
-      )}
-    >
+    <div className={cn("flex w-full flex-col gap-y-3", classNames?.container)}>
       <FormControl>
         <Input
           type="file"
@@ -149,117 +157,113 @@ export function InputFile({
           ref={inputRef}
           multiple={multiple}
           accept={meta.mimeType.join(", ")}
-          className={cn(
-            "absolute size-full opacity-0 group-hover:cursor-pointer",
-            isFiles ? "-z-1" : "z-0",
-          )}
+          className={cn("absolute -z-1 opacity-0")}
           onChange={({ target }) => changeHandler(target.files)}
         />
       </FormControl>
 
-      {isFiles ? (
+      <div
+        tabIndex={0}
+        onClick={handleOnClick}
+        onKeyDown={handleOnKeyDown}
+        onDrop={handleOnDrop}
+        onDragEnter={handleDragEnterAndOver}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragEnterAndOver}
+        className={cn(
+          "group border-input flex flex-col items-center gap-y-2 rounded-md border border-dashed px-4 py-8 text-center outline-none",
+          "focus-visible:border-ring focus-visible:ring-ring/50 hover:cursor-pointer focus-visible:ring-[3px]",
+          classNames?.dropzone,
+        )}
+      >
         <div
-          onDragEnter={handleDragEnterAndOver}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragEnterAndOver}
-          onDrop={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            changeHandler(e.dataTransfer.files);
-          }}
-          className="flex flex-col gap-y-4 p-4"
+          className={cn(
+            "text-muted-foreground rounded-full border p-3 transition",
+            "group-hover:text-foreground group-hover:border-muted-foreground group-focus:text-foreground group-focus:border-muted-foreground",
+          )}
         >
-          <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-            <p>{text.total(files.length)}</p>
+          <Icon />
+        </div>
 
-            <div className="flex gap-x-2 *:grow">
-              <Button
-                type="button"
-                variant="outline_destructive"
-                className="h-8"
-                onClick={resetFiles}
-              >
-                <X /> {buttonText.clear}
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                className="h-8"
-                onClick={() => {
-                  if (inputRef.current) inputRef.current.click();
-                }}
-              >
-                <Upload /> {text.add}
-              </Button>
-            </div>
+        <div className="flex flex-col items-center gap-y-2">
+          <small className="font-medium">
+            {placeholder ?? text.placeholder(multiple)}
+          </small>
+
+          <small className="text-muted-foreground flex items-center text-xs">
+            {text.size(fileSize.mb)}
+            {meta.extensions.length > 0 && (
+              <>
+                <Dot /> {`( ${meta.extensions.join(" ")} )`}
+              </>
+            )}
+          </small>
+        </div>
+      </div>
+
+      {isFiles && (
+        <Fragment>
+          <div className="flex items-center justify-between gap-2">
+            {multiple && <p>{text.total(files.length)}</p>}
+
+            <Button
+              type="button"
+              size="sm"
+              variant="outline_destructive"
+              onClick={resetFiles}
+            >
+              <X /> {buttonText.clear}
+            </Button>
           </div>
 
-          <Separator className="flex md:hidden" />
-
-          <div
-            className={cn(
-              multiple
-                ? "grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6"
-                : "flex justify-center",
-            )}
-          >
+          <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
             {files.map((file, index) => {
+              const url = URL.createObjectURL(file);
               const isImage = file.type.startsWith("image/");
               const isInvalid =
                 file.size > fileSize.byte ||
-                (!meta.mimeType.includes("*") &&
-                  !meta.mimeType.includes(file.type));
-
-              const url = URL.createObjectURL(file);
+                (accept !== "file" && !meta.mimeType.includes(file.type));
 
               return (
-                <div
-                  key={index}
-                  className={cn(
-                    "relative flex flex-col rounded-md border shadow-xs",
-                    !multiple && "max-w-1/2 md:max-w-1/4 lg:max-w-1/6",
-                  )}
-                >
+                <div key={index} className="relative rounded-md border">
                   <Button
                     type="button"
                     onClick={() => removeFile(index)}
-                    size="iconsm"
+                    size="iconxs"
                     variant="destructive"
-                    className="absolute -top-2 -right-2 size-5 rounded-full"
+                    className="absolute -top-2 -right-2 z-10 rounded-full"
                   >
                     <X />
                   </Button>
 
-                  {isImage ? (
-                    <Image
-                      src={url}
-                      alt={file.name}
-                      className="aspect-square size-full rounded-t-md object-cover"
-                      width={100}
-                      height={100}
-                    />
-                  ) : (
-                    <div className="bg-accent flex aspect-square size-full items-center justify-center rounded-t-md">
-                      <Icon className="size-5" />
-                    </div>
-                  )}
+                  <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
+                    {isImage ? (
+                      <Image
+                        src={url}
+                        alt={file.name}
+                        className="size-full object-cover transition-transform"
+                        width={100}
+                        height={100}
+                      />
+                    ) : (
+                      <Icon />
+                    )}
+                  </div>
 
-                  <div className="text-muted-foreground flex flex-col items-start gap-0.5 border-t p-2.5 break-all">
+                  <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
                     <Link
                       href={url}
                       target="_blank"
                       className={cn(
-                        "line-clamp-1 text-sm font-medium",
-                        isInvalid
-                          ? "text-destructive"
-                          : "hover:text-foreground",
+                        "text-sm font-medium hover:underline",
+                        isInvalid && "text-destructive",
                       )}
                     >
                       {file.name}
                     </Link>
                     <small
                       className={cn(
-                        "line-clamp-1 text-xs",
+                        "text-muted-foreground text-xs",
                         isInvalid && "text-destructive",
                       )}
                     >
@@ -270,28 +274,7 @@ export function InputFile({
               );
             })}
           </div>
-        </div>
-      ) : (
-        <div className="flex flex-col items-center gap-y-4 px-4 pt-8 pb-10 text-center">
-          <div className="group-hover:text-foreground group-hover:border-muted-foreground group-focus:border-muted-foreground text-muted-foreground rounded-full border p-3 transition">
-            <Icon />
-          </div>
-
-          <div className="flex flex-col items-center gap-y-2">
-            <small className="font-medium">
-              {placeholder ?? text.placeholder(multiple)}
-            </small>
-
-            <small className="text-muted-foreground flex items-center text-xs">
-              {text.size(fileSize.mb)}
-              {meta.extensions.length > 0 && (
-                <>
-                  <Dot /> {`( ${meta.extensions.join(" ")} )`}
-                </>
-              )}
-            </small>
-          </div>
-        </div>
+        </Fragment>
       )}
     </div>
   );

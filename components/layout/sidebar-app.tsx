@@ -5,7 +5,7 @@ import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/auth";
+import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { LinkLoader, RefreshButton } from "../other/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {

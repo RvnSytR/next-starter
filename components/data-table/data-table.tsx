@@ -168,19 +168,14 @@ export function DataTable<TData>({
         </ActiveFiltersMobileContainer>
       )}
 
-      <div
-        className={cn(
-          "bg-background/50 rounded-lg border",
-          classNames?.tableContainer,
-        )}
-      >
+      <div className={cn("rounded-lg border", classNames?.tableContainer)}>
         <Table className={classNames?.table}>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead key={header.id} className="text-center">
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -219,7 +214,7 @@ export function DataTable<TData>({
                 >
                   {noResult
                     ? noResult.map((item) => item + "\n")
-                    : tableText.default.noResult}
+                    : tableText.noResult}
                 </TableCell>
               </TableRow>
             )}

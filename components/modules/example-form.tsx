@@ -253,54 +253,47 @@ export function ExampleForm() {
           />
         </div>
 
-        {/* Radio */}
-        <div className="grid gap-x-2 gap-y-4 md:grid-cols-2">
-          {/* Custom Radio Group */}
-          <FormField
-            control={form.control}
-            name="radio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">
-                  Custom Radio Group
-                </FormLabel>
-                <InputRadioGroup
-                  defaultValue={field.value}
-                  onValueChange={field.onChange}
-                  className="grid grid-cols-2 md:flex md:grid-cols-4"
-                  radioItems={selectAndRadioData}
-                />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        {/* Custom Radio Group */}
+        <FormField
+          control={form.control}
+          name="radio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="label-required">
+                Custom Radio Group
+              </FormLabel>
+              <InputRadioGroup
+                defaultValue={field.value}
+                onValueChange={field.onChange}
+                className="grid grid-cols-2 md:flex md:grid-cols-4"
+                radioItems={selectAndRadioData}
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          {/* Radio Group */}
-          <FormField
-            control={form.control}
-            name="radio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Radio Group</FormLabel>
-                <RadioGroup
-                  value={field.value}
-                  onValueChange={field.onChange}
-                  className="h-full"
-                >
-                  {selectAndRadioData.map((item, index) => (
-                    <FormItem key={index} className="flex-row items-center">
-                      <FormControl>
-                        <RadioGroupItem value={item.value} />
-                      </FormControl>
-                      <FormLabel>{item.value}</FormLabel>
-                    </FormItem>
-                  ))}
-                </RadioGroup>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        {/* Radio Group */}
+        <FormField
+          control={form.control}
+          name="radio"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className="label-required">Radio Group</FormLabel>
+              <RadioGroup value={field.value} onValueChange={field.onChange}>
+                {selectAndRadioData.map((item, index) => (
+                  <FormItem key={index} className="flex-row items-center">
+                    <FormControl>
+                      <RadioGroupItem value={item.value} />
+                    </FormControl>
+                    <FormLabel>{item.value}</FormLabel>
+                  </FormItem>
+                ))}
+              </RadioGroup>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         {/* Files */}
         <FormField

@@ -22,7 +22,7 @@ type MediaProps = Record<
 
 export const mediaMeta: MediaProps = {
   file: {
-    mimeType: ["application/octet-stream"],
+    mimeType: ["*/*"],
     extensions: [],
     size: { mb: 2, byte: toByte(2) },
     icon: Upload,

@@ -2,7 +2,7 @@ import { Section } from "@/components/layout/section";
 import {
   AdminCreateUserDialog,
   UserDataTable,
-} from "@/components/modules/auth";
+} from "@/components/modules/user";
 import {
   CardAction,
   CardDescription,

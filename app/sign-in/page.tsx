@@ -3,7 +3,7 @@ import {
   SignInForm,
   SignOnGithubButton,
   SignUpForm,
-} from "@/components/modules/auth";
+} from "@/components/modules/user";
 import {
   Card,
   CardContent,

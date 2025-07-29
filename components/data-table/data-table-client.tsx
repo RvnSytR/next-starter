@@ -10,7 +10,7 @@ import { TableProps, ToolBoxProps } from "./data-table";
 
 export function DataTableSearch<TData>({
   table,
-  searchPlaceholder = tableText.default.placeholder,
+  searchPlaceholder = tableText.placeholder,
   className,
 }: TableProps<TData> &
   Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {
