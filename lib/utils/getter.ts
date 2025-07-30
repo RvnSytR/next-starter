@@ -78,6 +78,7 @@ export function getActiveRoute(pathname: string) {
   }
 
   paths.push("/");
+
   for (const p of paths) {
     const activeRoute = allRoutes.find((item) => item === p);
     if (activeRoute) return activeRoute;

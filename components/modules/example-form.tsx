@@ -152,13 +152,14 @@ export function ExampleForm() {
             render={({ field: { value, onChange, ...rest } }) => (
               <FormItem>
                 <FormLabel className="label-required">Phone</FormLabel>
-                <InputWrapper icon="+62" extraPadding>
+                <InputWrapper icon="+62">
                   <FormControl>
                     <Input
                       type="text"
                       inputMode="numeric"
                       value={formatPhone(value)}
                       onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                      className="pl-11"
                       {...rest}
                     />
                   </FormControl>

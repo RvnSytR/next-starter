@@ -187,7 +187,7 @@ function Comp({ content }: { content: CompCardContent[] }) {
         <Tabs defaultValue="preview">
           <TabsList>
             <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="Code">Code</TabsTrigger>
+            <TabsTrigger value="Code">Kode</TabsTrigger>
           </TabsList>
 
           <TabsContent value="preview">{comp[key]}</TabsContent>
@@ -215,14 +215,14 @@ function Comp({ content }: { content: CompCardContent[] }) {
 export function Example() {
   const tabs: { section: string; content: CompCardContent[] }[] = [
     {
-      section: "Charts",
+      section: "Chart Usage",
       content: [
         { title: "Pie Chart", key: "pieChart" },
         { title: "Area and Bar Chart", key: "timelineChart" },
       ],
     },
     {
-      section: "Contoh Form",
+      section: "Form Usage",
       content: [{ title: "Contoh penggunaan Form", key: "form" }],
     },
   ];

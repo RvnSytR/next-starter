@@ -292,11 +292,15 @@
   }
 
   form {
-    @apply flex flex-col gap-y-4;
+    @apply flex flex-col gap-x-2 gap-y-4;
   }
 }
 
 @layer base {
+  .label-required {
+    @apply after:text-destructive after:content-['*'];
+  }
+
   .link {
     @apply after:bg-primary hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
   }
@@ -307,9 +311,5 @@
 
   .link-underline {
     @apply text-foreground underline underline-offset-2;
-  }
-
-  .label-required {
-    @apply after:text-destructive after:content-['*'];
   }
 }

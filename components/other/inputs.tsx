@@ -21,24 +21,21 @@ import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
 
 export function InputWrapper({
   icon,
-  extraPadding = false,
   className,
   children,
   ...props
 }: ComponentProps<"div"> & {
   icon: ReactNode;
-  extraPadding?: boolean;
 }) {
   return (
     <div
       className={cn(
-        "relative h-fit [&_svg:not([class*='size-'])]:size-4",
-        extraPadding ? "[&_input]:pl-11" : "[&_input]:pl-9",
+        "relative h-fit [&_input:not([class*='pl-'])]:pl-9 [&_svg:not([class*='size-'])]:size-4",
         className,
       )}
       {...props}
     >
-      <div className="absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
+      <div className="text-muted-foreground absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
         {typeof icon === "string" ? icon.slice(0, 3) : icon}
       </div>
       {children}

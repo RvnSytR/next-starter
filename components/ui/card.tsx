@@ -52,6 +52,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="card-action"
       className={cn(
         "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        "[&_form]:gap-y-6",
         className,
       )}
       {...props}
