@@ -115,15 +115,16 @@ export function InputFile({
     else onChange(newFiles.map((f) => f));
   };
 
-  const handleDragEnterAndOver = useCallback((e: DragEvent<HTMLElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
+  const handleOnKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      inputRef.current?.click();
+    }
   }, []);
 
-  const handleDragLeave = useCallback((e: DragEvent<HTMLElement>) => {
+  const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
-    e.stopPropagation();
-    if (e.currentTarget.contains(e.relatedTarget as Node)) return;
+    inputRef.current?.click();
   }, []);
 
   const handleOnDrop = useCallback((e: DragEvent<HTMLElement>) => {
@@ -133,20 +134,18 @@ export function InputFile({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+  const handleDragEnterAndOver = useCallback((e: DragEvent<HTMLElement>) => {
     e.preventDefault();
-    inputRef.current?.click();
-  }, []);
-
-  const handleOnKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      inputRef.current?.click();
-    }
+    e.stopPropagation();
   }, []);
 
   return (
-    <div className={cn("flex w-full flex-col gap-y-3", classNames?.container)}>
+    <div
+      className={cn(
+        "relative flex w-full flex-col gap-y-3",
+        classNames?.container,
+      )}
+    >
       <FormControl>
         <Input
           type="file"
@@ -165,7 +164,6 @@ export function InputFile({
         onKeyDown={handleOnKeyDown}
         onDrop={handleOnDrop}
         onDragEnter={handleDragEnterAndOver}
-        onDragLeave={handleDragLeave}
         onDragOver={handleDragEnterAndOver}
         className={cn(
           "group border-input flex flex-col items-center gap-y-2 rounded-md border border-dashed px-4 py-8 text-center outline-none",
@@ -182,20 +180,18 @@ export function InputFile({
           <Icon />
         </div>
 
-        <div className="flex flex-col items-center gap-y-2">
-          <small className="font-medium">
-            {placeholder ?? text.placeholder(multiple)}
-          </small>
+        <small className="font-medium">
+          {placeholder ?? text.placeholder(multiple)}
+        </small>
 
-          <small className="text-muted-foreground flex items-center text-xs">
-            {text.size(fileSize.mb)}
-            {meta.extensions.length > 0 && (
-              <>
-                <Dot /> {`( ${meta.extensions.join(" ")} )`}
-              </>
-            )}
-          </small>
-        </div>
+        <small className="text-muted-foreground flex items-center text-xs">
+          {text.size(fileSize.mb)}
+          {meta.extensions.length > 0 && (
+            <>
+              <Dot /> {`( ${meta.extensions.join(" ")} )`}
+            </>
+          )}
+        </small>
       </div>
 
       {isFiles && (

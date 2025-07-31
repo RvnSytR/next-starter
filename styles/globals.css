@@ -147,7 +147,6 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   --font-sans: var(--font-geist);
-  --font-serif: var(--font-lora);
   --font-mono: var(--font-geist-mono);
 
   --color-rvns: var(--rvns);
