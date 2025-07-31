@@ -103,28 +103,28 @@ export function InputFile({
 
   const resetFiles = () => onChange([]);
 
-  const removeFile = (fileIndex: number) => {
-    const filteredFiles = files.filter((_, index) => index !== fileIndex);
+  const removeFile = (index: number) => {
+    const filteredFiles = files.filter((_, i) => i !== index);
     onChange(filteredFiles);
   };
 
   const changeHandler = (fileList: FileList | null) => {
-    if (!fileList) return;
-    const newFiles = Array.from(fileList);
-    if (isFiles) onChange([...files, ...newFiles]);
-    else onChange(newFiles.map((f) => f));
+    if (!fileList || !fileList.length) return;
+    const fileArray = Array.from(fileList);
+    if (isFiles) onChange([...files, ...fileArray]);
+    else onChange(fileArray);
   };
+
+  const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    inputRef.current?.click();
+  }, []);
 
   const handleOnKeyDown = useCallback((e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
       inputRef.current?.click();
     }
-  }, []);
-
-  const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    inputRef.current?.click();
   }, []);
 
   const handleOnDrop = useCallback((e: DragEvent<HTMLElement>) => {
@@ -197,7 +197,7 @@ export function InputFile({
       {isFiles && (
         <Fragment>
           <div className="flex items-center justify-between gap-2">
-            {multiple && <p>{text.total(files.length)}</p>}
+            {multiple && <small>{text.total(files.length)}</small>}
 
             <Button
               type="button"
@@ -211,7 +211,7 @@ export function InputFile({
 
           <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
             {files.map((file, index) => {
-              const url = URL.createObjectURL(file);
+              const objectURL = URL.createObjectURL(file);
               const isImage = file.type.startsWith("image/");
               const isInvalid =
                 file.size > fileSize.byte ||
@@ -232,9 +232,9 @@ export function InputFile({
                   <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
                     {isImage ? (
                       <Image
-                        src={url}
+                        src={objectURL}
                         alt={file.name}
-                        className="size-full object-cover transition-transform"
+                        className="size-full object-cover object-center"
                         width={100}
                         height={100}
                       />
@@ -245,7 +245,7 @@ export function InputFile({
 
                   <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
                     <Link
-                      href={url}
+                      href={objectURL}
                       target="_blank"
                       className={cn(
                         "text-sm font-medium hover:underline",

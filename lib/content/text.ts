@@ -8,8 +8,7 @@ export const buttonText = {
   signOut: "Keluar",
   signUp: "Buat Akun",
 
-  upload: (file: string = "", multiple: boolean = false) =>
-    `Unggah ${multiple ? `${file}s` : file}`,
+  upload: (thing: string = "") => `Unggah ${thing}`,
 
   action: "Tindakan",
   back: "Kembali",
