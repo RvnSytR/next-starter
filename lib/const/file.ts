@@ -8,11 +8,19 @@ import {
   Video,
 } from "lucide-react";
 import { toByte } from "../utils";
-import { FileType } from "./other";
 
-type MediaProps = Record<
+export type FileType =
+  | "file"
+  | "image"
+  | "document"
+  | "archive"
+  | "audio"
+  | "video";
+
+type FileMetaProps = Record<
   FileType,
   {
+    displayName: string;
     mimeType: string[];
     extensions: string[];
     size: { mb: number; byte: number };
@@ -20,8 +28,9 @@ type MediaProps = Record<
   }
 >;
 
-export const mediaMeta: MediaProps = {
+export const fileMeta: FileMetaProps = {
   file: {
+    displayName: "berkas",
     mimeType: ["*/*"],
     extensions: [],
     size: { mb: 2, byte: toByte(2) },
@@ -29,6 +38,7 @@ export const mediaMeta: MediaProps = {
   },
 
   image: {
+    displayName: "gambar",
     mimeType: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
     extensions: [".png", ".jpg", ".jpeg", ".svg", ".webp"],
     size: { mb: 2, byte: toByte(2) },
@@ -36,6 +46,7 @@ export const mediaMeta: MediaProps = {
   },
 
   document: {
+    displayName: "dokumen",
     mimeType: [
       "application/pdf",
       "application/msword",
@@ -51,6 +62,7 @@ export const mediaMeta: MediaProps = {
   },
 
   archive: {
+    displayName: "arsip",
     mimeType: [
       "application/zip",
       "application/x-rar-compressed",
@@ -63,6 +75,7 @@ export const mediaMeta: MediaProps = {
   },
 
   audio: {
+    displayName: "audio",
     mimeType: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/flac"],
     extensions: [".mp3", ".wav", ".ogg", ".flac"],
     size: { mb: 10, byte: toByte(10) },
@@ -70,6 +83,7 @@ export const mediaMeta: MediaProps = {
   },
 
   video: {
+    displayName: "video",
     mimeType: [
       "video/mp4",
       "video/x-msvideo",

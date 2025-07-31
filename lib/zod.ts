@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { id } from "zod/locales";
-import { FileType, mediaMeta } from "./const";
+import { FileType, fileMeta } from "./const";
 import { baseContent, messages } from "./content";
 
 const cUser = baseContent.user;
@@ -20,7 +20,7 @@ export const zodFile = (
   type: FileType,
   options?: { optional?: boolean; max?: number },
 ) => {
-  const { size, mimeType } = mediaMeta[type];
+  const { size, mimeType } = fileMeta[type];
   const maxFileSize = options?.max ?? size.byte;
 
   let schema = z.array(

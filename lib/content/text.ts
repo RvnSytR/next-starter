@@ -1,6 +1,6 @@
 import { DateRange } from "react-day-picker";
-import { FileType, mediaMeta } from "../const";
-import { formatDate, getFileTypeLabel } from "../utils";
+import { fileMeta, FileType } from "../const";
+import { formatDate } from "../utils";
 
 export const buttonText = {
   signIn: "Masuk",
@@ -72,15 +72,14 @@ export const tableText = {
 };
 
 export const getFileInputMetaAndText = (fileType: FileType) => {
-  const meta = mediaMeta[fileType];
-  const label = getFileTypeLabel(fileType);
+  const meta = fileMeta[fileType];
   return {
     meta,
     text: {
-      add: `Tambah ${label}`,
-      total: (length: number) => `Total ${label} : ${length}`,
+      add: `Tambah ${meta.displayName}`,
+      total: (length: number) => `Total ${meta.displayName} : ${length}`,
       placeholder: (multiple: boolean = false) =>
-        `Seret & lepaskan ${multiple ? "satu atau lebih" : ""} ${label} di sini atau klik untuk mengunggah`,
+        `Seret & lepaskan ${multiple ? "satu atau lebih" : ""} ${meta.displayName} di sini atau klik untuk mengunggah`,
       size: (mb: number) => `Hingga ${mb} MB`,
     },
   };

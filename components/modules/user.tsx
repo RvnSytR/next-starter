@@ -3,7 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { dashboardRoute, mediaMeta, signInRoute } from "@/lib/const";
+import { dashboardRoute, fileMeta, signInRoute } from "@/lib/const";
 import {
   baseContent,
   buttonText,
@@ -624,7 +624,7 @@ export function ProfilePicture({
       <input
         type="file"
         ref={inputAvatarRef}
-        accept={mediaMeta[contentType].mimeType.join(", ")}
+        accept={fileMeta[contentType].mimeType.join(", ")}
         className="hidden"
         onChange={(e) => {
           const fileList = e.currentTarget.files;

@@ -1,16 +1,11 @@
-import { Action, FieldType, FileType, mediaMeta } from "../const";
-import {
-  formatDate,
-  formatDateDistanceToNow,
-  getActionLabel,
-  getFileTypeLabel,
-} from "../utils";
+import { Action, actionMeta, FieldType, fileMeta, FileType } from "../const";
+import { formatDate, formatDateDistanceToNow } from "../utils";
 
 export const messages = {
   loading: "Tunggu sebentar...",
   error: "Uh—oh! Terjadi kesalahan. Silakan coba lagi nanti.",
   success: (thing: string, action: Action) =>
-    `${thing} berhasil ${getActionLabel(action)}.`.trim(),
+    `${thing} berhasil ${actionMeta[action].displayName}.`.trim(),
 
   thingAgo: (thing: string, time: Date) =>
     `${thing} ${formatDateDistanceToNow(time)} yang lalu.`,
@@ -41,9 +36,9 @@ export const messages = {
       `Usia harus antara ${min} dan ${max}.`,
 
     fileType: (fileType: FileType = "file", withAccepted: boolean = false) =>
-      `Tipe ${getFileTypeLabel(fileType)} tidak valid. ${
+      `Tipe ${fileMeta[fileType].displayName} tidak valid. ${
         withAccepted
-          ? "Tipe yang diterima: " + mediaMeta[fileType].extensions.join(", ")
+          ? "Tipe yang diterima: " + fileMeta[fileType].extensions.join(", ")
           : ""
       }`.trim(),
 
@@ -63,9 +58,9 @@ export const messages = {
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
   fileRequired: (fileType: FileType = "file", multiple: boolean = false) =>
-    `Silakan unggah ${multiple ? "satu atau lebih" : ""} ${getFileTypeLabel(fileType)}.`,
+    `Silakan unggah ${multiple ? "satu atau lebih" : ""} ${fileMeta[fileType].displayName}.`,
   fileTooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
-    `Ukuran ${getFileTypeLabel(fileType)} harus kurang dari ${maxSizeMB} MB.`,
+    `Ukuran ${fileMeta[fileType].displayName} harus kurang dari ${maxSizeMB} MB.`,
 
   noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
   mustSelectOne: (field: string) => `Silakan pilih satu ${field}.`,

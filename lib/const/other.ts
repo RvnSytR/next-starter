@@ -1,6 +1,5 @@
 import { LucideIcon, Mars, Venus } from "lucide-react";
 
-export type Action = "created" | "updated" | "removed" | "uploaded";
 export type Toast = "success" | "error" | "info" | "warning";
 
 export type FieldType =
@@ -11,13 +10,13 @@ export type FieldType =
   | "array"
   | "object";
 
-export type FileType =
-  | "file"
-  | "image"
-  | "document"
-  | "archive"
-  | "audio"
-  | "video";
+export type Action = "created" | "updated" | "removed" | "uploaded";
+export const actionMeta: Record<Action, { displayName: string }> = {
+  created: { displayName: "dibuat" },
+  removed: { displayName: "dihapus" },
+  updated: { displayName: "diperbarui" },
+  uploaded: { displayName: "diunggah" },
+};
 
 export const languages = ["en", "id", "es", "fr", "de", "ar"] as const;
 export type Languages = (typeof languages)[number];
@@ -35,17 +34,17 @@ export const languagesMeta: Record<
 
 export const gender = ["male", "female"] as const;
 export type Gender = (typeof gender)[number];
-export const genderMetadata: Record<
+export const genderMeta: Record<
   Gender,
   { displayName: string; icon: LucideIcon; className: string }
 > = {
   male: {
-    displayName: "Male",
+    displayName: "Laki-laki",
     icon: Mars,
     className: "border-sky-500 text-sky-500",
   },
   female: {
-    displayName: "Female",
+    displayName: "Perempuan",
     icon: Venus,
     className: "border-pink-500 text-pink-500",
   },
