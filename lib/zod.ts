@@ -20,7 +20,7 @@ export const zodFile = (
   type: FileType,
   options?: { optional?: boolean; max?: number },
 ) => {
-  const { size, mimeType } = fileMeta[type];
+  const { size, mimeTypes } = fileMeta[type];
   const maxFileSize = options?.max ?? size.byte;
 
   let schema = z.array(
@@ -28,7 +28,7 @@ export const zodFile = (
       .file()
       .min(1)
       .max(maxFileSize, { error: messages.fileTooLarge(type, size.mb) })
-      .mime(mimeType, { error: messages.invalid.fileType(type) }),
+      .mime(mimeTypes, { error: messages.invalid.fileType(type) }),
   );
 
   if (!options?.optional)

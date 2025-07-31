@@ -624,7 +624,7 @@ export function ProfilePicture({
       <input
         type="file"
         ref={inputAvatarRef}
-        accept={fileMeta[contentType].mimeType.join(", ")}
+        accept={fileMeta[contentType].mimeTypes.join(", ")}
         className="hidden"
         onChange={(e) => {
           const fileList = e.currentTarget.files;

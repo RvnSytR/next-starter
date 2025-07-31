@@ -152,7 +152,7 @@ export function InputFile({
           tabIndex={-1}
           ref={inputRef}
           multiple={multiple}
-          accept={meta.mimeType.join(", ")}
+          accept={meta.mimeTypes.join(", ")}
           className={cn("absolute -z-1 opacity-0")}
           onChange={({ target }) => changeHandler(target.files)}
         />
@@ -215,7 +215,7 @@ export function InputFile({
               const isImage = file.type.startsWith("image/");
               const isInvalid =
                 file.size > fileSize.byte ||
-                (accept !== "file" && !meta.mimeType.includes(file.type));
+                (accept !== "file" && !meta.mimeTypes.includes(file.type));
 
               return (
                 <div key={index} className="relative rounded-md border">

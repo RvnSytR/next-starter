@@ -21,7 +21,7 @@ type FileMetaProps = Record<
   FileType,
   {
     displayName: string;
-    mimeType: string[];
+    mimeTypes: string[];
     extensions: string[];
     size: { mb: number; byte: number };
     icon: LucideIcon;
@@ -31,7 +31,7 @@ type FileMetaProps = Record<
 export const fileMeta: FileMetaProps = {
   file: {
     displayName: "berkas",
-    mimeType: ["*/*"],
+    mimeTypes: ["*/*"],
     extensions: [],
     size: { mb: 2, byte: toByte(2) },
     icon: Upload,
@@ -39,7 +39,7 @@ export const fileMeta: FileMetaProps = {
 
   image: {
     displayName: "gambar",
-    mimeType: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
+    mimeTypes: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
     extensions: [".png", ".jpg", ".jpeg", ".svg", ".webp"],
     size: { mb: 2, byte: toByte(2) },
     icon: Image,
@@ -47,7 +47,7 @@ export const fileMeta: FileMetaProps = {
 
   document: {
     displayName: "dokumen",
-    mimeType: [
+    mimeTypes: [
       "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -63,7 +63,7 @@ export const fileMeta: FileMetaProps = {
 
   archive: {
     displayName: "arsip",
-    mimeType: [
+    mimeTypes: [
       "application/zip",
       "application/x-rar-compressed",
       "application/x-7z-compressed",
@@ -76,7 +76,7 @@ export const fileMeta: FileMetaProps = {
 
   audio: {
     displayName: "audio",
-    mimeType: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/flac"],
+    mimeTypes: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/flac"],
     extensions: [".mp3", ".wav", ".ogg", ".flac"],
     size: { mb: 10, byte: toByte(10) },
     icon: Headphones,
@@ -84,7 +84,7 @@ export const fileMeta: FileMetaProps = {
 
   video: {
     displayName: "video",
-    mimeType: [
+    mimeTypes: [
       "video/mp4",
       "video/x-msvideo",
       "video/x-matroska",
