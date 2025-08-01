@@ -215,14 +215,14 @@ function Comp({ content }: { content: CompCardContent[] }) {
 export function Example() {
   const tabs: { section: string; content: CompCardContent[] }[] = [
     {
-      section: "Chart Usage",
+      section: "Chart",
       content: [
         { title: "Pie Chart", key: "pieChart" },
         { title: "Area and Bar Chart", key: "timelineChart" },
       ],
     },
     {
-      section: "Form Usage",
+      section: "Form",
       content: [{ title: "Contoh penggunaan Form", key: "form" }],
     },
   ];

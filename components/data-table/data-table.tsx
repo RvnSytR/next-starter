@@ -237,7 +237,7 @@ export function DataTable<TData>({
               <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
 
               <small className="tabular-nums">
-                {tableText.pagenation(pageNumber, totalPage)}
+                {tableText.pagination(pageNumber, totalPage)}
               </small>
             </div>
 
@@ -333,7 +333,7 @@ function View<TData>({ table }: TableProps<TData>) {
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="flex w-fit flex-col gap-y-1 p-1">
+      <PopoverContent className="flex flex-col gap-y-1 p-1">
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())

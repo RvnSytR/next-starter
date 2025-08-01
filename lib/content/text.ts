@@ -55,18 +55,18 @@ export const datePickerText = {
 };
 
 export const tableText = {
-  placeholder: "Cari sesuatu...",
-  noResult: "Tidak ada hasil",
+  placeholder: "Cari...",
+  noResult: "Tidak ada hasil yang ditemukan",
 
   rowsPerPage: "Baris per halaman",
   rowSelection: (selected: number, totalRows: number) =>
     `${selected} dari ${totalRows} baris ${commonText.selected}.`,
-  pagenation: (pageNumber: number, totalPage: number) =>
+  pagination: (pageNumber: number, totalPage: number) =>
     `Halaman ${pageNumber} dari ${totalPage}`,
 
   column: {
     num: "No",
-    createdAt: "Dibuat Pada",
+    createdAt: "Tanggal Dibuat",
   },
 };
 
@@ -76,10 +76,10 @@ export const getFileInputMetaAndText = (fileType: FileType) => {
     meta,
     text: {
       add: `Tambah ${meta.displayName}`,
-      total: (length: number) => `Total ${meta.displayName} : ${length}`,
+      total: (length: number) => `Total ${meta.displayName}: ${length}`,
       placeholder: (multiple: boolean = false) =>
-        `Seret & lepaskan ${multiple ? "satu atau lebih" : ""} ${meta.displayName} di sini atau klik untuk mengunggah`,
-      size: (mb: number) => `Hingga ${mb} MB`,
+        `Seret dan lepaskan ${multiple ? "beberapa" : "satu"} ${meta.displayName} di sini, atau klik untuk mengunggah`,
+      size: (mb: number) => `Maksimal ${mb} MB`,
     },
   };
 };

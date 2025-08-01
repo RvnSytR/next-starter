@@ -2,8 +2,8 @@ import { Action, actionMeta, FieldType, fileMeta, FileType } from "../const";
 import { formatDate, formatDateDistanceToNow } from "../utils";
 
 export const messages = {
-  loading: "Tunggu sebentar...",
-  error: "Uh—oh! Terjadi kesalahan. Silakan coba lagi nanti.",
+  loading: "Mohon tunggu sebentar...",
+  error: "Terjadi kesalahan. Silakan coba lagi nanti.",
   success: (thing: string, action: Action) =>
     `${thing} berhasil ${actionMeta[action].displayName}.`.trim(),
 
@@ -13,32 +13,32 @@ export const messages = {
     `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} yang lalu.`,
 
   browserOnOS: (browser: string | undefined, os: string | undefined) =>
-    `${browser ?? "Sebuah browser"} di ${os ?? "sistem operasi yang tidak diketahui"}`,
-  tooManyRequest: "Terlalu banyak permintaan. Silakan coba lagi nanti.",
+    `${browser ?? "Browser tidak diketahui"} di ${os ?? "sistem operasi yang tidak diketahui"}`,
+  tooManyRequest: "Terlalu banyak permintaan. Silakan coba beberapa saat lagi.",
 
   invalid: {
     email: "Alamat email tidak valid.",
-    text: "Silakan masukkan teks yang valid.",
-    number: "Silakan masukkan angka yang valid.",
+    text: "Masukkan teks yang valid.",
+    number: "Masukkan angka yang valid.",
+    phone: "Masukkan nomor telepon yang valid.",
     color: "Kode warna tidak valid.",
-    phone: "Silakan masukkan nomor telepon yang valid.",
     URL: "URL tidak valid.",
-    time: "Silakan masukkan waktu yang valid.",
-    date: "Silakan masukkan tanggal yang valid.",
+    time: "Masukkan waktu yang valid.",
+    date: "Masukkan tanggal yang valid.",
     dateMultiple: "Beberapa tanggal yang dimasukkan tidak valid.",
     dateRange: {
-      field: "Silakan pilih rentang tanggal yang valid.",
-      from: "Silakan pilih tanggal mulai yang valid.",
-      to: "Silakan pilih tanggal akhir yang valid.",
+      field: "Pilih rentang tanggal yang valid.",
+      from: "Pilih tanggal mulai yang valid.",
+      to: "Pilih tanggal akhir yang valid.",
     },
 
     ageRange: (min: number, max: number) =>
-      `Usia harus antara ${min} dan ${max}.`,
+      `Usia harus antara ${min} hingga ${max} tahun.`,
 
     fileType: (fileType: FileType = "file", withAccepted: boolean = false) =>
-      `Tipe ${fileMeta[fileType].displayName} tidak valid. ${
+      `Tipe ${fileMeta[fileType].displayName} tidak valid.${
         withAccepted
-          ? "Tipe yang diterima: " + fileMeta[fileType].extensions.join(", ")
+          ? " Format yang didukung: " + fileMeta[fileType].extensions.join(", ")
           : ""
       }`.trim(),
 
@@ -48,9 +48,9 @@ export const messages = {
   tooShort: (field: string, min: number) =>
     `${field} harus terdiri dari minimal ${min} karakter.`,
   tooLong: (field: string, max: number) =>
-    `${field} tidak boleh lebih dari ${max} karakter.`,
+    `${field} tidak boleh melebihi ${max} karakter.`,
   outOfRange: (field: string, min: number, max: number) =>
-    `${field} harus antara ${min} dan ${max} karakter.`,
+    `${field} harus antara ${min} hingga ${max} karakter.`,
 
   invalidField: (field: string, fieldType: FieldType) =>
     `${field} harus berupa ${fieldType} yang valid.`,
@@ -58,16 +58,16 @@ export const messages = {
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
   fileRequired: (fileType: FileType = "file", multiple: boolean = false) =>
-    `Silakan unggah ${multiple ? "satu atau lebih" : ""} ${fileMeta[fileType].displayName}.`,
+    `Unggah ${multiple ? "satu atau lebih" : ""} ${fileMeta[fileType].displayName}.`,
   fileTooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
-    `Ukuran ${fileMeta[fileType].displayName} harus kurang dari ${maxSizeMB} MB.`,
+    `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
 
   noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
-  mustSelectOne: (field: string) => `Silakan pilih satu ${field}.`,
+  mustSelectOne: (field: string) => `Pilih salah satu ${field}.`,
 
-  duplicate: (thing: string) => `${thing} ini sudah ada.`,
+  duplicate: (thing: string) => `${thing} ini sudah tersedia.`,
   conflict: (thing: string) =>
-    `Terdapat konflik dengan ${thing} yang sudah ada.`,
+    `Terjadi konflik dengan ${thing} yang sudah ada.`,
   deleteForbidden: (thing: string, x: string) =>
-    `${thing} ini tidak dapat dihapus karena saat ini digunakan oleh ${x}.`,
+    `${thing} ini tidak dapat dihapus karena sedang digunakan oleh ${x}.`,
 };

@@ -7,7 +7,7 @@ const createRoutes = <T extends Record<string, RouteMeta>>(routes: T) => routes;
 
 export const routesMeta = createRoutes({
   "/sign-in": { displayName: "Masuk" },
-  "/dashboard": { displayName: "Overview", role: "all" },
+  "/dashboard": { displayName: "Ringkasan", role: "all" },
   "/dashboard/profile": { displayName: "Profil Saya", role: "all" },
   "/dashboard/users": { displayName: "Pengguna", role: ["admin"] },
 });

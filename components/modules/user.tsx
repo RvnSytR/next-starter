@@ -44,6 +44,7 @@ import {
   Layers2,
   LockKeyhole,
   LockKeyholeOpen,
+  LogIn,
   LogOut,
   Mail,
   Monitor,
@@ -388,7 +389,7 @@ export function SignInForm() {
         />
 
         <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} />
+          <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
           {buttonText.signIn}
         </Button>
       </form>
@@ -544,7 +545,7 @@ export function SignUpForm() {
         />
 
         <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} />
+          <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
           {buttonText.signUp}
         </Button>
       </form>

@@ -7,21 +7,21 @@ const user = {
   lastSeen: (time: Date) => messages.thingAgo("Terakhir terlihat", time),
 
   signIn: "Berhasil masuk — Selamat datang!",
-  signUp: "Semua sudah siap! Silakan masuk untuk melanjutkan.",
+  signUp: "Akun berhasil dibuat! Silakan masuk untuk melanjutkan.",
   signOut: "Berhasil keluar — Sampai jumpa!",
   changeRole: (name: string, role: string) =>
-    `Peran ${name} sekarang diatur menjadi ${role}.`,
+    `Role ${name} kini diatur sebagai ${role}.`,
 
   confirmPassword: "Kata sandi tidak cocok — silakan periksa kembali.",
   updatePassword: messages.success("kata sandi", "updated"),
 
   agreement:
-    "Anda perlu menyetujui Ketentuan Layanan dan Kebijakan Privasi untuk melanjutkan.",
+    "Anda harus menyetujui Ketentuan Layanan dan Kebijakan Privasi untuk melanjutkan.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 
   detail: {
     title: (name: string) => `Detail ${name}`,
-    desc: (name: string) => `Lihat informasi detail untuk ${name}.`,
+    desc: (name: string) => `Lihat informasi lengkap tentang ${name}.`,
   },
 
   fields: {
@@ -29,38 +29,41 @@ const user = {
     avatar: "Avatar",
     rememberMe: "Ingat saya",
     profilePic: "Foto Profil",
-    role: "Peran",
+    role: "Role",
 
-    changeRole: (name: string) => `Ubah peran ${name}`,
+    changeRole: (name: string) => `Ubah role ${name}`,
 
-    email: { label: "Alamat email", placeholder: "Masukkan alamat email Anda" },
+    email: { label: "Alamat Email", placeholder: "Masukkan alamat email Anda" },
     name: {
-      label: "Nama pengguna",
+      label: "Nama Pengguna",
       placeholder: "Masukkan nama pengguna Anda",
     },
-    password: { label: "Kata sandi", placeholder: "Masukkan kata sandi Anda" },
+    password: {
+      label: "Kata Sandi",
+      placeholder: "Masukkan kata sandi Anda",
+    },
     currentPassword: {
       label: "Kata Sandi Saat Ini",
-      placeholder: "Masukkan kata sandi saat ini Anda",
+      placeholder: "Masukkan kata sandi saat ini",
     },
     newPassword: {
       label: "Kata Sandi Baru",
-      placeholder: "Masukkan kata sandi baru Anda",
+      placeholder: "Masukkan kata sandi baru",
     },
     confirmPassword: {
       label: "Konfirmasi Kata Sandi",
-      placeholder: "Konfirmasi kata sandi Anda",
+      placeholder: "Konfirmasi kata sandi baru Anda",
     },
     agreement: {
       label: "Setujui syarat dan ketentuan",
-      placeholder: "Saya menyetujui ketentuan layanan dan kebijakan privasi.",
+      placeholder: "Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi.",
     },
   },
 
   components: {
     profilePic: {
       title: "Hapus Foto Profil",
-      desc: "Ini akan menghapus foto profil Anda saat ini. Anda yakin ingin melanjutkan?",
+      desc: "Ini akan menghapus foto profil Anda saat ini. Yakin ingin melanjutkan?",
       success: (isUpdate?: boolean) =>
         messages.success("Foto profil Anda", isUpdate ? "updated" : "removed"),
     },
@@ -73,28 +76,28 @@ const user = {
     revokeSession: {
       trigger: "Cabut Sesi",
       title: "Cabut Sesi Aktif",
-      desc: "Ini akan langsung keluar dari perangkat yang dipilih. Anda yakin ingin melanjutkan?",
+      desc: "Sesi ini akan segera dihentikan dari perangkat yang dipilih. Yakin ingin melanjutkan?",
       success: "Sesi ini telah dicabut.",
     },
 
     revokeAllOtherSession: {
       trigger: "Cabut Sesi Lain",
       title: "Cabut Semua Sesi Lain",
-      desc: "Ini akan keluar dari semua sesi aktif kecuali sesi saat ini. Anda yakin ingin melanjutkan?",
+      desc: "Semua sesi aktif lainnya akan dihentikan, kecuali sesi saat ini. Yakin ingin melanjutkan?",
       success: "Semua sesi aktif lainnya telah dicabut.",
     },
 
     delete: {
       trigger: "Hapus Akun",
       title: "Hapus Akun Anda",
-      desc: "Menghapus akun Anda akan secara permanen menghapus semua data yang terkait. Harap berhati-hati karena tindakan ini tidak dapat dibatalkan.",
+      desc: "Tindakan ini akan secara permanen menghapus semua data akun Anda. Harap berhati-hati karena tidak dapat dibatalkan.",
       success: messages.success("akun", "removed"),
     },
 
     adminCreate: {
       trigger: "Buat Pengguna",
       title: "Buat Pengguna Baru",
-      desc: "Buat pengguna baru dengan memasukkan detail mereka. Pastikan semua bidang yang diperlukan telah diisi.",
+      desc: "Isi detail pengguna baru dengan lengkap. Pastikan semua bidang wajib diisi.",
       success: (name: string) => messages.success(`akun ${name}`, "created"),
     },
 
@@ -103,25 +106,25 @@ const user = {
 
       title: (name: string) => `Cabut Semua Sesi Aktif untuk ${name}`,
       desc: (name: string) =>
-        `Ini akan langsung keluar dari semua sesi aktif milik ${name}. Anda yakin ingin melanjutkan?`,
+        `Tindakan ini akan langsung menghentikan semua sesi aktif milik ${name}. Yakin ingin melanjutkan?`,
       success: (name?: string) =>
         `Semua sesi aktif ${name ? `milik ${name}` : "pengguna"} telah dicabut.`,
 
       titleMultiple: (length: number) => `Cabut Sesi untuk ${length} Pengguna`,
       descMultiple: (length: number) =>
-        `Ini akan langsung keluar dari semua sesi aktif untuk ${length} pengguna yang dipilih. Anda yakin ingin melanjutkan?`,
+        `Ini akan menghentikan semua sesi aktif dari ${length} pengguna yang dipilih. Yakin ingin melanjutkan?`,
       successMultiple: (success: number, length: number) =>
-        `${success} dari ${length} sesi aktif pengguna berhasil dicabut.`,
+        `${success} dari ${length} sesi pengguna berhasil dicabut.`,
     },
 
     adminRemove: {
       title: (name: string) => `Hapus Akun ${name}`,
       desc: (name: string) =>
-        `Ini akan secara permanen menghapus akun ${name} dan semua data yang terkait. Harap berhati-hati karena tindakan ini tidak dapat dibatalkan.`,
+        `Tindakan ini akan menghapus akun ${name} beserta seluruh datanya secara permanen. Harap berhati-hati karena tidak dapat dibatalkan.`,
 
       titleMultiple: (length: number) => `Hapus ${length} Akun`,
       descMultiple: (length: number) =>
-        `Ini akan secara permanen menghapus ${length} akun pengguna yang dipilih dan semua data yang terkait. Harap berhati-hati karena tindakan ini tidak dapat dibatalkan.`,
+        `Ini akan menghapus ${length} akun yang dipilih beserta seluruh datanya secara permanen. Harap berhati-hati karena tidak dapat dibatalkan.`,
       successMultiple: (success: number, length: number) =>
         messages.success(`${success} dari ${length} akun pengguna`, "removed"),
     },

@@ -1,29 +1,15 @@
 import { LinkLoader } from "@/components/other/buttons";
 import { Button } from "@/components/ui/button";
-import { Home } from "lucide-react";
 import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-6 mask-radial-from-75% mask-alpha md:gap-y-2">
-      <div className="flex flex-col items-center gap-x-4 text-shadow-sm md:flex-row">
-        <h1 className="animate-fade-right text-primary text-8xl md:text-9xl">
-          404
-        </h1>
-        <h2 className="animate-fade-left text-center leading-tight font-extrabold md:text-start md:text-5xl md:whitespace-pre-line">
-          {"Oops, looks like\nthere's nobody here!"}
-        </h2>
-      </div>
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-4 mask-radial-from-75% mask-alpha">
+      <p className="text-xl font-light">404 | Halaman Tidak Ditemukan</p>
 
-      <Button
-        size="lg"
-        variant="ghost"
-        className="hover:border-primary animate-fade-up h-12 rounded-full border-4 font-semibold shadow-sm"
-        asChild
-      >
+      <Button variant="link" className="font-light" asChild>
         <Link href="/">
-          <LinkLoader icon={{ base: <Home /> }} />
-          Go To Main Page
+          <LinkLoader /> Kembali ke Halaman Utama
         </Link>
       </Button>
     </div>

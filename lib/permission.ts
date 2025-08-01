@@ -48,11 +48,11 @@ export const rolesMeta: Record<
   },
   admin: {
     icon: UserRoundCheck,
-    desc: "Administrator dengan akses penuh dan kemampuan pengelolaan.",
+    desc: "Administrator dengan akses penuh dan kontrol pengelolaan sistem.",
   },
   customRoleExample: {
     displayName: "Contoh Peran Kustom",
     icon: FlaskConical,
-    desc: "Peran kustom contoh untuk tujuan demonstrasi atau pengujian.",
+    desc: "Peran kustom untuk keperluan demonstrasi atau pengujian.",
   },
 };
