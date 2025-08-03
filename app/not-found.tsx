@@ -9,7 +9,7 @@ export default function NotFound() {
 
       <Button variant="link" className="font-light" asChild>
         <Link href="/">
-          <LinkLoader /> Kembali ke Halaman Utama
+          <LinkLoader /> Kembali ke Beranda
         </Link>
       </Button>
     </div>

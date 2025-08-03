@@ -137,10 +137,19 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
   );
 }
 
-function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
+function FormMessage({
+  className,
+  children,
+  ...props
+}: React.ComponentProps<"p">) {
   const { error, formMessageId } = useFormField();
-  const body = error ? String(error?.message ?? "") : props.children;
-  if (!body) return null;
+
+  let message = error ? String(error?.message ?? "") : children;
+  if (error && Array.isArray(error)) {
+    message = error.filter(Boolean).find(({ message }) => !!message).message;
+  }
+
+  if (!message) return null;
 
   return (
     <p
@@ -149,7 +158,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
       className={cn("text-destructive text-sm", className)}
       {...props}
     >
-      {body}
+      {message}
     </p>
   );
 }

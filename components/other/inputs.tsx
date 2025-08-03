@@ -1,6 +1,7 @@
 import { FileType } from "@/lib/const";
 import { buttonText, getFileInputMetaAndText } from "@/lib/content";
 import { cn, toByte, toMegabytes } from "@/lib/utils";
+import { zodFile } from "@/lib/zod";
 import { Dot, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -78,7 +79,7 @@ export function InputRadioGroup({
 }
 
 export function InputFile({
-  value: files,
+  value,
   onChange,
   accept = "file",
   maxFileSize: sizeProp,
@@ -96,7 +97,7 @@ export function InputFile({
 
   const { meta, text } = getFileInputMetaAndText(accept);
   const Icon = meta.icon;
-  const isFiles = files.length > 0;
+  const isFiles = value.length > 0;
   const fileSize = sizeProp
     ? { mb: sizeProp, byte: toByte(sizeProp) }
     : meta.size;
@@ -104,14 +105,14 @@ export function InputFile({
   const resetFiles = () => onChange([]);
 
   const removeFile = (index: number) => {
-    const filteredFiles = files.filter((_, i) => i !== index);
+    const filteredFiles = value.filter((_, i) => i !== index);
     onChange(filteredFiles);
   };
 
   const changeHandler = (fileList: FileList | null) => {
     if (!fileList || !fileList.length) return;
     const fileArray = Array.from(fileList);
-    if (isFiles) onChange([...files, ...fileArray]);
+    if (isFiles) onChange([...value, ...fileArray]);
     else onChange(fileArray);
   };
 
@@ -180,9 +181,7 @@ export function InputFile({
           <Icon />
         </div>
 
-        <small className="font-medium">
-          {placeholder ?? text.placeholder(multiple)}
-        </small>
+        <small className="font-medium">{placeholder ?? text.placeholder}</small>
 
         <small className="text-muted-foreground flex items-center text-xs">
           {text.size(fileSize.mb)}
@@ -197,7 +196,7 @@ export function InputFile({
       {isFiles && (
         <Fragment>
           <div className="flex items-center justify-between gap-2">
-            {multiple && <small>{text.total(files.length)}</small>}
+            {multiple && <small>{text.total(value.length)}</small>}
 
             <Button
               type="button"
@@ -210,12 +209,10 @@ export function InputFile({
           </div>
 
           <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
-            {files.map((file, index) => {
+            {value.map((file, index) => {
               const objectURL = URL.createObjectURL(file);
               const isImage = file.type.startsWith("image/");
-              const isInvalid =
-                file.size > fileSize.byte ||
-                (accept !== "file" && !meta.mimeTypes.includes(file.type));
+              const res = zodFile(accept, { multiple }).safeParse([file]);
 
               return (
                 <div key={index} className="relative rounded-md border">
@@ -249,7 +246,7 @@ export function InputFile({
                       target="_blank"
                       className={cn(
                         "text-sm font-medium hover:underline",
-                        isInvalid && "text-destructive",
+                        !res.success && "text-destructive",
                       )}
                     >
                       {file.name}
@@ -257,7 +254,7 @@ export function InputFile({
                     <small
                       className={cn(
                         "text-muted-foreground text-xs",
-                        isInvalid && "text-destructive",
+                        !res.success && "text-destructive",
                       )}
                     >
                       {toMegabytes(file.size).toFixed(2)} MB

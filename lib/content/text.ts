@@ -77,8 +77,7 @@ export const getFileInputMetaAndText = (fileType: FileType) => {
     text: {
       add: `Tambah ${meta.displayName}`,
       total: (length: number) => `Total ${meta.displayName}: ${length}`,
-      placeholder: (multiple: boolean = false) =>
-        `Seret dan lepaskan ${multiple ? "beberapa" : "satu"} ${meta.displayName} di sini, atau klik untuk mengunggah`,
+      placeholder: `Seret dan lepaskan ${meta.displayName} di sini, atau klik untuk mengunggah`,
       size: (mb: number) => `Maksimal ${mb} MB`,
     },
   };

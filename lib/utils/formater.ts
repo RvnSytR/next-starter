@@ -38,14 +38,6 @@ export function toKebabCase(str: string) {
     .replace(/\s+/g, "-");
 }
 
-export function formatNumber(
-  number: number,
-  props?: { lang?: Languages; options?: Intl.NumberFormatOptions },
-) {
-  const locale = languagesMeta[props?.lang ?? appInfo.lang].locale;
-  return new Intl.NumberFormat(locale, props?.options).format(number);
-}
-
 export function getCurrencySymbol(lang: Languages): string {
   const { locale, currency } = languagesMeta[lang];
   const formatted = new Intl.NumberFormat(locale, {
@@ -55,6 +47,14 @@ export function getCurrencySymbol(lang: Languages): string {
     maximumFractionDigits: 0,
   }).format(1);
   return formatted.replace(/[\d\s.,]/g, "").trim();
+}
+
+export function formatNumber(
+  number: number,
+  props?: { lang?: Languages; options?: Intl.NumberFormatOptions },
+) {
+  const locale = languagesMeta[props?.lang ?? appInfo.lang].locale;
+  return new Intl.NumberFormat(locale, props?.options).format(number);
 }
 
 export function formatPhone(number: number, prefix?: "+62" | "0") {

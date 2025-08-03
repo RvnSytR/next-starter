@@ -75,8 +75,8 @@ export function ExampleForm() {
     dateRange: zodDateRange,
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile(fileType),
-    // file: zodFile("file", { optional: true }),
+    file: zodFile(fileType, { optional: false, multiple: true, max: 5 }),
+    // optionalFile: zodFile(fileType, { optional: true }),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -304,7 +304,7 @@ export function ExampleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">File</FormLabel>
-              <InputFile accept={fileType} multiple {...field} />
+              <InputFile accept={"file"} multiple {...field} />
               <FormMessage />
             </FormItem>
           )}

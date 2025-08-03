@@ -13,7 +13,7 @@ const user = {
     `Role ${name} kini diatur sebagai ${role}.`,
 
   confirmPassword: "Kata sandi tidak cocok — silakan periksa kembali.",
-  updatePassword: messages.success("kata sandi", "updated"),
+  updatePassword: messages.success("Kata sandi", "updated"),
 
   agreement:
     "Anda harus menyetujui Ketentuan Layanan dan Kebijakan Privasi untuk melanjutkan.",
@@ -91,14 +91,14 @@ const user = {
       trigger: "Hapus Akun",
       title: "Hapus Akun Anda",
       desc: "Tindakan ini akan secara permanen menghapus semua data akun Anda. Harap berhati-hati karena tidak dapat dibatalkan.",
-      success: messages.success("akun", "removed"),
+      success: messages.success("Akun", "removed"),
     },
 
     adminCreate: {
       trigger: "Buat Pengguna",
       title: "Buat Pengguna Baru",
       desc: "Isi detail pengguna baru dengan lengkap. Pastikan semua bidang wajib diisi.",
-      success: (name: string) => messages.success(`akun ${name}`, "created"),
+      success: (name: string) => messages.success(`Akun ${name}`, "created"),
     },
 
     adminRevokeSessions: {

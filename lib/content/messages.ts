@@ -35,32 +35,41 @@ export const messages = {
     ageRange: (min: number, max: number) =>
       `Usia harus antara ${min} hingga ${max} tahun.`,
 
-    fileType: (fileType: FileType = "file", withAccepted: boolean = false) =>
-      `Tipe ${fileMeta[fileType].displayName} tidak valid.${
-        withAccepted
-          ? " Format yang didukung: " + fileMeta[fileType].extensions.join(", ")
-          : ""
-      }`.trim(),
+    fileType: (fileType: FileType = "file") =>
+      `Tipe ${fileMeta[fileType].displayName} tidak valid.`,
 
     selection: (field: string) => `Pilihan untuk ${field} tidak valid.`,
   },
 
-  tooShort: (field: string, min: number) =>
-    `${field} harus terdiri dari minimal ${min} karakter.`,
-  tooLong: (field: string, max: number) =>
-    `${field} tidak boleh melebihi ${max} karakter.`,
-  outOfRange: (field: string, min: number, max: number) =>
-    `${field} harus antara ${min} hingga ${max} karakter.`,
+  tooShort: (field: string, min: number, thing: string = "karakter") =>
+    `${field} harus terdiri dari minimal ${min} ${thing}.`,
+  tooLong: (field: string, max: number, thing: string = "karakter") =>
+    `${field} tidak boleh melebihi ${max} ${thing}.`,
+  outOfRange: (
+    field: string,
+    min: number,
+    max: number,
+    thing: string = "karakter",
+  ) => `${field} harus antara ${min} hingga ${max} ${thing}.`,
 
   invalidField: (field: string, fieldType: FieldType) =>
     `${field} harus berupa ${fieldType} yang valid.`,
   requiredAndInvalidField: (field: string, fieldType: FieldType) =>
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
-  fileRequired: (fileType: FileType = "file", multiple: boolean = false) =>
-    `Unggah ${multiple ? "satu atau lebih" : ""} ${fileMeta[fileType].displayName}.`,
+  fileRequired: (
+    fileType: FileType = "file",
+    options?: { optional?: boolean; multiple?: boolean },
+  ) => {
+    const optional = options?.optional ?? false;
+    const multiple = options?.multiple ?? false;
+    const message = `${optional ? "" : "minimal "}${multiple ? "satu atau lebih" : "satu"} `;
+    return `Silakan unggah ${message}${fileMeta[fileType].displayName}.`;
+  },
   fileTooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
     `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
+  fileTooLong: (fileType: FileType = "file", max: number) =>
+    `Jumlah maksimum ${fileMeta[fileType].displayName} yang dapat diunggah adalah ${max}.`,
 
   noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
   mustSelectOne: (field: string) => `Pilih salah satu ${field}.`,

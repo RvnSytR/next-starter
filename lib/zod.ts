@@ -18,25 +18,32 @@ export const zodDateRange = z.object(
 
 export const zodFile = (
   type: FileType,
-  options?: { optional?: boolean; max?: number },
+  options?: {
+    optional?: boolean;
+    multiple?: boolean;
+    maxFileSize?: number;
+    max?: number;
+  },
 ) => {
   const { size, mimeTypes } = fileMeta[type];
-  const maxFileSize = options?.max ?? size.byte;
+  const { invalid, fileRequired, fileTooLarge, fileTooLong } = messages;
+
+  const maxFileSize = options?.maxFileSize ?? size.byte;
+  const optional = options?.optional ?? false;
+  const max = options?.max;
 
   let schema = z.array(
     z
       .file()
+      .mime(mimeTypes, { error: invalid.fileType(type) })
       .min(1)
-      .max(maxFileSize, { error: messages.fileTooLarge(type, size.mb) })
-      .mime(mimeTypes, { error: messages.invalid.fileType(type) }),
+      .max(maxFileSize, { error: fileTooLarge(type, size.mb) }),
   );
 
-  if (!options?.optional)
-    schema = schema.min(1, { error: messages.fileRequired(type) });
+  if (!optional) schema = schema.min(1, { error: fileRequired(type, options) });
+  if (max) schema = schema.max(max, { error: fileTooLong(type, max) });
 
-  return schema.refine((f) => f.every(({ size }) => size <= maxFileSize), {
-    error: messages.fileTooLarge(type, size.mb),
-  });
+  return schema;
 };
 
 export const zodUser = z.object({
@@ -52,7 +59,7 @@ export const zodUser = z.object({
     .email({ error: messages.invalid.email })
     .trim()
     .min(1, { error: messages.tooShort(cUserFields.email.label, 1) })
-    .max(255, { error: messages.tooShort(cUserFields.email.label, 255) }),
+    .max(255, { error: messages.tooLong(cUserFields.email.label, 255) }),
   password: z
     .string({
       error: messages.requiredAndInvalidField(
@@ -61,9 +68,8 @@ export const zodUser = z.object({
       ),
     })
     .trim()
-    .min(1, { error: messages.tooShort(cUserFields.password.label, 1) })
     .min(8, { error: messages.tooShort(cUserFields.password.label, 8) })
-    .max(255, { error: messages.tooShort(cUserFields.password.label, 255) }),
+    .max(255, { error: messages.tooLong(cUserFields.password.label, 255) }),
   confirmPassword: z
     .string({
       error: messages.requiredAndInvalidField(
