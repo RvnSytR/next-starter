@@ -17,13 +17,10 @@ export const messages = {
   tooManyRequest: "Terlalu banyak permintaan. Silakan coba beberapa saat lagi.",
 
   invalid: {
-    email: "Alamat email tidak valid.",
-    text: "Masukkan teks yang valid.",
-    number: "Masukkan angka yang valid.",
-    phone: "Masukkan nomor telepon yang valid.",
-    color: "Kode warna tidak valid.",
-    URL: "URL tidak valid.",
-    time: "Masukkan waktu yang valid.",
+    email: "Masukkan alamat email yang valid.",
+    color: "Masukkan kode warna yang valid.",
+    URL: "Masukkan URL yang valid.",
+
     date: "Masukkan tanggal yang valid.",
     dateMultiple: "Beberapa tanggal yang dimasukkan tidak valid.",
     dateRange: {
