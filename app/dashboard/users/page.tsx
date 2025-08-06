@@ -1,4 +1,4 @@
-import { Section } from "@/components/layout/section";
+import { DashboardMain } from "@/components/layout/section";
 import {
   AdminCreateUserDialog,
   UserDataTable,
@@ -26,7 +26,7 @@ export default async function Page() {
   const data = await getUserList();
 
   return (
-    <Section currentPage={routeMeta.displayName} className="pt-6">
+    <DashboardMain currentPage={routeMeta.displayName} className="pt-6">
       <CardHeader className="px-0">
         <CardTitle>{title}</CardTitle>
         <CardDescription>{desc}</CardDescription>
@@ -42,6 +42,6 @@ export default async function Page() {
         currentUserId={session.user.id}
         searchPlaceholder={searchPlaceholder}
       />
-    </Section>
+    </DashboardMain>
   );
 }

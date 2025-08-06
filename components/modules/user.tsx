@@ -69,7 +69,7 @@ import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
-import { SectionSheetDetails } from "../layout/section";
+import { SheetDetails } from "../layout/section";
 import { GithubIcon, Loader } from "../other/icon";
 import { InputWrapper } from "../other/inputs";
 import {
@@ -239,7 +239,8 @@ export function SignOutButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <SidebarMenuButton
-      className="text-destructive hover:text-destructive"
+      variant="outline_destructive"
+      className="text-destructive hover:text-destructive justify-center"
       disabled={isLoading}
       onClick={() => {
         setIsLoading(true);
@@ -1224,7 +1225,7 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
             {data.emailVerified && <UserVerifiedBadge />}
           </div>
 
-          <SectionSheetDetails data={details} />
+          <SheetDetails data={details} />
 
           <Separator />
 

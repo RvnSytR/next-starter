@@ -1,4 +1,4 @@
-import { SectionTagline } from "@/components/layout/section";
+import { Tagline } from "@/components/layout/section";
 import {
   SignInForm,
   SignOnGithubButton,
@@ -60,7 +60,7 @@ export default function Page() {
         </CardContent>
 
         <CardFooter className="justify-center text-center">
-          <SectionTagline />
+          <Tagline />
         </CardFooter>
       </Card>
     </main>

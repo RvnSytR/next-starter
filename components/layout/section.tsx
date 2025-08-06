@@ -10,21 +10,21 @@ import {
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 
-export function Section({
+export function DashboardMain({
   className,
   children,
   ...props
 }: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
   return (
     <>
-      <header className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-2 border-b p-4 shadow-xs backdrop-blur-xs">
+      <nav className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-4 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
         <ThemeToggle size="iconsm" />
-      </header>
+      </nav>
 
       <div
         className={cn(
@@ -38,7 +38,7 @@ export function Section({
   );
 }
 
-export function SectionTagline({ className }: { className?: string }) {
+export function Tagline({ className }: { className?: string }) {
   return (
     <small className={cn("text-muted-foreground", className)}>
       {"Built by "}
@@ -50,7 +50,7 @@ export function SectionTagline({ className }: { className?: string }) {
   );
 }
 
-export function SectionSheetDetails({
+export function SheetDetails({
   data,
 }: {
   data: { label: string; content: ReactNode; className?: string }[];

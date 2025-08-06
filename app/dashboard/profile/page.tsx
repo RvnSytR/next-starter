@@ -1,4 +1,4 @@
-import { Section } from "@/components/layout/section";
+import { DashboardMain } from "@/components/layout/section";
 import {
   ActiveSessionButton,
   ChangePasswordForm,
@@ -36,7 +36,7 @@ export default async function Page() {
   const sessionList = await getListSession();
 
   return (
-    <Section currentPage={routeMeta.displayName} className="items-center">
+    <DashboardMain currentPage={routeMeta.displayName} className="items-center">
       <Card
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-xl"
@@ -95,6 +95,6 @@ export default async function Page() {
           <DeleteMyAccountButton {...user} />
         </CardContent>
       </Card>
-    </Section>
+    </DashboardMain>
   );
 }

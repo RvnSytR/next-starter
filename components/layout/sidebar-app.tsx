@@ -42,6 +42,8 @@ export const sidebarMenuButtonVariants = cva(
         default: "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
         outline:
           "bg-background shadow-[0_0_0_1px_hsl(var(--sidebar-border))] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground hover:shadow-[0_0_0_1px_hsl(var(--sidebar-accent))]",
+        outline_destructive:
+          "text-destructive border border-destructive/30 bg-background shadow-xs hover:border-destructive dark:bg-destructive/5 dark:hover:bg-destructive/20 focus-visible:border-destructive focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40",
       },
       size: {
         default: "h-8 text-sm",
@@ -61,7 +63,7 @@ export function SidebarApp({
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <Head {...props} />
+          <Header {...props} />
           <SidebarSeparator />
         </SidebarHeader>
 
@@ -81,7 +83,7 @@ export function SidebarApp({
   );
 }
 
-function Head({
+function Header({
   name,
   email,
   image,
