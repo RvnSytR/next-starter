@@ -565,7 +565,7 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const { title, desc, success } = cComps.profilePic;
+  const { title, desc, success } = cComps.avatar;
 
   const schema = zodFile(contentType);
 
@@ -635,7 +635,7 @@ export function ProfilePicture({
       />
 
       <div className="flex flex-col gap-y-2">
-        <Label>{cFields.profilePic}</Label>
+        <Label>{cFields.avatar}</Label>
         <div className="flex gap-x-2">
           <Button
             type="button"
@@ -1190,7 +1190,7 @@ export function UserDataTable({
 export function UserDetailSheet({ data }: { data: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { title, desc } = content.detail;
+  const { title, desc } = cComps.detail;
   const details = [
     { label: cFields.userId, content: `${data.id.slice(0, 19)}...` },
     { label: cFields.email.label, content: data.email },

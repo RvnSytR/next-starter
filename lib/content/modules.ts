@@ -19,17 +19,11 @@ const user = {
     "Anda harus menyetujui Ketentuan Layanan dan Kebijakan Privasi untuk melanjutkan.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 
-  detail: {
-    title: (name: string) => `Detail ${name}`,
-    desc: (name: string) => `Lihat informasi lengkap tentang ${name}.`,
-  },
-
   fields: {
     userId: "ID Pengguna",
-    avatar: "Avatar",
-    rememberMe: "Ingat saya",
-    profilePic: "Foto Profil",
+    avatar: "Foto Profil",
     role: "Role",
+    rememberMe: "Ingat saya",
 
     changeRole: (name: string) => `Ubah role ${name}`,
 
@@ -61,6 +55,11 @@ const user = {
   },
 
   components: {
+    detail: {
+      title: (name: string) => `Detail ${name}`,
+      desc: (name: string) => `Lihat informasi lengkap tentang ${name}.`,
+    },
+
     profilePic: {
       title: "Hapus Foto Profil",
       desc: "Ini akan menghapus foto profil Anda saat ini. Yakin ingin melanjutkan?",
