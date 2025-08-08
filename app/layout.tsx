@@ -2,7 +2,7 @@ import { GridPattern } from "@/components/other/grid-pattern";
 import { Toaster } from "@/components/ui/sonner";
 import { appInfo } from "@/lib/const";
 import { cn } from "@/lib/utils";
-import "@/styles/globals.css";
+import "@/styles/global.css";
 import { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";

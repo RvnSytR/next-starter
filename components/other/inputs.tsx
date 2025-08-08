@@ -78,7 +78,7 @@ export function InputRadioGroup({
   );
 }
 
-export function InputFile({
+export function FileDropzone({
   value,
   onChange,
   accept = "file",

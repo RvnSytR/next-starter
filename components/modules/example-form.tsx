@@ -23,7 +23,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { DatePicker } from "../other/date-picker";
-import { InputFile, InputRadioGroup, InputWrapper } from "../other/inputs";
+import { FileDropzone, InputRadioGroup, InputWrapper } from "../other/inputs";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -304,7 +304,7 @@ export function ExampleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">File</FormLabel>
-              <InputFile accept={"file"} multiple {...field} />
+              <FileDropzone accept={"file"} multiple {...field} />
               <FormMessage />
             </FormItem>
           )}

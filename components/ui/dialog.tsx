@@ -53,18 +53,18 @@ function DialogOverlay({
 }
 
 function DialogContent({
-  overlayClassName,
-  closeButtonClassName,
+  showCloseButton = true,
+  classNames,
   className,
   children,
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
-  overlayClassName?: string;
-  closeButtonClassName?: string;
+  showCloseButton?: boolean;
+  classNames?: { overlay?: string; closeButton?: string };
 }) {
   return (
     <DialogPortal data-slot="dialog-portal">
-      <DialogOverlay className={overlayClassName}>
+      <DialogOverlay className={classNames?.overlay}>
         <DialogPrimitive.Content
           data-slot="dialog-content"
           className={cn(
@@ -74,15 +74,18 @@ function DialogContent({
           {...props}
         >
           {children}
-          <DialogPrimitive.Close
-            className={cn(
-              "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-              closeButtonClassName,
-            )}
-          >
-            <XIcon />
-            <span className="sr-only">Close</span>
-          </DialogPrimitive.Close>
+          {showCloseButton && (
+            <DialogPrimitive.Close
+              data-slot="dialog-close"
+              className={cn(
+                "ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+                classNames?.closeButton,
+              )}
+            >
+              <XIcon />
+              <span className="sr-only">Close</span>
+            </DialogPrimitive.Close>
+          )}
         </DialogPrimitive.Content>
       </DialogOverlay>
     </DialogPortal>

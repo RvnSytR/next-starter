@@ -22,6 +22,7 @@ export const zodFile = (
     optional?: boolean;
     multiple?: boolean;
     maxFileSize?: number;
+    min?: number;
     max?: number;
   },
 ) => {
@@ -30,9 +31,10 @@ export const zodFile = (
 
   const maxFileSize = options?.maxFileSize ?? size.byte;
   const optional = options?.optional ?? false;
+  const min = options?.min ?? 1;
   const max = options?.max;
 
-  let schema = z.array(
+  let sc = z.array(
     z
       .file()
       .mime(mimeTypes, { error: invalid.fileType(type) })
@@ -40,10 +42,10 @@ export const zodFile = (
       .max(maxFileSize, { error: fileTooLarge(type, size.mb) }),
   );
 
-  if (!optional) schema = schema.min(1, { error: fileRequired(type, options) });
-  if (max) schema = schema.max(max, { error: fileTooLong(type, max) });
+  if (!optional) sc = sc.min(min, { error: fileRequired(type, options) });
+  if (max) sc = sc.max(max, { error: fileTooLong(type, max) });
 
-  return schema;
+  return sc;
 };
 
 export const zodUser = z.object({
@@ -103,7 +105,7 @@ export const zodAuthSignUp = zodUser
     isAgree: true,
   })
   .refine((sc) => sc.password === sc.confirmPassword, {
-    message: cUser.confirmPassword,
+    message: cUser.passwordNotMatch,
     path: ["confirmPassword"],
   });
 
@@ -115,7 +117,7 @@ export const zodUserChangePassword = z
     revokeOtherSessions: zodUser.shape.revokeOtherSessions,
   })
   .refine((sc) => sc.newPassword === sc.confirmPassword, {
-    message: cUser.confirmPassword,
+    message: cUser.passwordNotMatch,
     path: ["confirmPassword"],
   });
 
@@ -128,6 +130,6 @@ export const zodUserCreate = zodUser
     role: true,
   })
   .refine((sc) => sc.password === sc.confirmPassword, {
-    message: cUser.confirmPassword,
+    message: cUser.passwordNotMatch,
     path: ["confirmPassword"],
   });

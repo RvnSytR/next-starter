@@ -12,7 +12,7 @@ const user = {
   changeRole: (name: string, role: string) =>
     `Role ${name} kini diatur sebagai ${role}.`,
 
-  confirmPassword: "Kata sandi tidak cocok — silakan periksa kembali.",
+  passwordNotMatch: "Kata sandi tidak cocok — silakan periksa kembali.",
   updatePassword: messages.success("Kata sandi", "updated"),
 
   agreement:
@@ -60,7 +60,7 @@ const user = {
       desc: (name: string) => `Lihat informasi lengkap tentang ${name}.`,
     },
 
-    profilePic: {
+    avatar: {
       title: "Hapus Foto Profil",
       desc: "Ini akan menghapus foto profil Anda saat ini. Yakin ingin melanjutkan?",
       success: (isUpdate?: boolean) =>
