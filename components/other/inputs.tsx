@@ -8,7 +8,6 @@ import Link from "next/link";
 import {
   ComponentProps,
   DragEvent,
-  Fragment,
   KeyboardEvent,
   MouseEvent,
   ReactNode,
@@ -112,7 +111,7 @@ export function FileDropzone({
   const changeHandler = (fileList: FileList | null) => {
     if (!fileList || !fileList.length) return;
     const fileArray = Array.from(fileList);
-    if (isFiles) onChange([...value, ...fileArray]);
+    if (isFiles && multiple) onChange([...value, ...fileArray]);
     else onChange(fileArray);
   };
 
@@ -193,78 +192,78 @@ export function FileDropzone({
         </small>
       </div>
 
+      {isFiles && multiple && (
+        <div className="flex items-center justify-between gap-2">
+          <small>{text.total(value.length)}</small>
+
+          <Button
+            type="button"
+            size="sm"
+            variant="outline_destructive"
+            onClick={resetFiles}
+          >
+            <X /> {buttonText.clear}
+          </Button>
+        </div>
+      )}
+
       {isFiles && (
-        <Fragment>
-          <div className="flex items-center justify-between gap-2">
-            {multiple && <small>{text.total(value.length)}</small>}
+        <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
+          {value.map((file, index) => {
+            const objectURL = URL.createObjectURL(file);
+            const isImage = file.type.startsWith("image/");
+            const res = zodFile(accept, { multiple }).safeParse([file]);
 
-            <Button
-              type="button"
-              size="sm"
-              variant="outline_destructive"
-              onClick={resetFiles}
-            >
-              <X /> {buttonText.clear}
-            </Button>
-          </div>
+            return (
+              <div key={index} className="relative rounded-md border">
+                <Button
+                  type="button"
+                  onClick={() => removeFile(index)}
+                  size="iconxs"
+                  variant="destructive"
+                  className="absolute -top-2 -right-2 z-10 rounded-full"
+                >
+                  <X />
+                </Button>
 
-          <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
-            {value.map((file, index) => {
-              const objectURL = URL.createObjectURL(file);
-              const isImage = file.type.startsWith("image/");
-              const res = zodFile(accept, { multiple }).safeParse([file]);
-
-              return (
-                <div key={index} className="relative rounded-md border">
-                  <Button
-                    type="button"
-                    onClick={() => removeFile(index)}
-                    size="iconxs"
-                    variant="destructive"
-                    className="absolute -top-2 -right-2 z-10 rounded-full"
-                  >
-                    <X />
-                  </Button>
-
-                  <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
-                    {isImage ? (
-                      <Image
-                        src={objectURL}
-                        alt={file.name}
-                        className="size-full object-cover object-center"
-                        width={100}
-                        height={100}
-                      />
-                    ) : (
-                      <Icon />
-                    )}
-                  </div>
-
-                  <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
-                    <Link
-                      href={objectURL}
-                      target="_blank"
-                      className={cn(
-                        "text-sm font-medium hover:underline",
-                        !res.success && "text-destructive",
-                      )}
-                    >
-                      {file.name}
-                    </Link>
-                    <small
-                      className={cn(
-                        "text-muted-foreground text-xs",
-                        !res.success && "text-destructive",
-                      )}
-                    >
-                      {toMegabytes(file.size).toFixed(2)} MB
-                    </small>
-                  </div>
+                <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
+                  {isImage ? (
+                    <Image
+                      src={objectURL}
+                      alt={file.name}
+                      className="size-full object-cover object-center"
+                      width={100}
+                      height={100}
+                    />
+                  ) : (
+                    <Icon />
+                  )}
                 </div>
-              );
-            })}
-          </div>
-        </Fragment>
+
+                <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
+                  <Link
+                    href={objectURL}
+                    target="_blank"
+                    className={cn(
+                      "text-sm font-medium hover:underline",
+                      !res.success && "text-destructive",
+                    )}
+                  >
+                    {file.name}
+                  </Link>
+                  <small
+                    className={cn(
+                      "text-muted-foreground text-xs",
+                      !res.success && "text-destructive",
+                    )}
+                  >
+                    {toMegabytes(file.size).toFixed(2)} MB
+                  </small>
+                </div>
+              </div>
+            );
+          })}
+        </div>
       )}
     </div>
   );

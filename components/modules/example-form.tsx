@@ -75,7 +75,12 @@ export function ExampleForm() {
     dateRange: zodDateRange,
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile(fileType, { optional: false, multiple: true, max: 5 }),
+    file: zodFile(fileType, {
+      // optional: true,
+      // multiple: true,
+      // min: 2,
+      // max: 5,
+    }),
     // optionalFile: zodFile(fileType, { optional: true }),
   });
 
@@ -304,7 +309,7 @@ export function ExampleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">File</FormLabel>
-              <FileDropzone accept={"file"} multiple {...field} />
+              <FileDropzone accept={fileType} multiple {...field} />
               <FormMessage />
             </FormItem>
           )}

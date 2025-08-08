@@ -38,6 +38,21 @@ export const messages = {
     selection: (field: string) => `Pilihan untuk ${field} tidak valid.`,
   },
 
+  file: {
+    tooShort: (
+      fileType: FileType = "file",
+      options?: { multiple?: boolean; min?: number },
+    ) => {
+      const multiple = options?.multiple ?? false;
+      const min = options?.min ?? 1;
+      return `Silakan unggah minimal ${multiple ? `${min} atau lebih` : min} ${fileMeta[fileType].displayName}.`;
+    },
+    tooLong: (fileType: FileType = "file", max: number) =>
+      `Jumlah maksimum ${fileMeta[fileType].displayName} yang dapat diunggah adalah ${max}.`,
+    tooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
+      `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
+  },
+
   tooShort: (field: string, min: number, thing: string = "karakter") =>
     `${field} harus terdiri dari minimal ${min} ${thing}.`,
   tooLong: (field: string, max: number, thing: string = "karakter") =>
@@ -53,20 +68,6 @@ export const messages = {
     `${field} harus berupa ${fieldType} yang valid.`,
   requiredAndInvalidField: (field: string, fieldType: FieldType) =>
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
-
-  fileRequired: (
-    fileType: FileType = "file",
-    options?: { optional?: boolean; multiple?: boolean },
-  ) => {
-    const optional = options?.optional ?? false;
-    const multiple = options?.multiple ?? false;
-    const message = `${optional ? "" : "minimal "}${multiple ? "satu atau lebih" : "satu"} `;
-    return `Silakan unggah ${message}${fileMeta[fileType].displayName}.`;
-  },
-  fileTooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
-    `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
-  fileTooLong: (fileType: FileType = "file", max: number) =>
-    `Jumlah maksimum ${fileMeta[fileType].displayName} yang dapat diunggah adalah ${max}.`,
 
   noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
   mustSelectOne: (field: string) => `Pilih salah satu ${field}.`,

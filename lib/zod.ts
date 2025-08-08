@@ -27,7 +27,7 @@ export const zodFile = (
   },
 ) => {
   const { size, mimeTypes } = fileMeta[type];
-  const { invalid, fileRequired, fileTooLarge, fileTooLong } = messages;
+  const { invalid, file } = messages;
 
   const maxFileSize = options?.maxFileSize ?? size.byte;
   const optional = options?.optional ?? false;
@@ -39,11 +39,11 @@ export const zodFile = (
       .file()
       .mime(mimeTypes, { error: invalid.fileType(type) })
       .min(1)
-      .max(maxFileSize, { error: fileTooLarge(type, size.mb) }),
+      .max(maxFileSize, { error: file.tooLarge(type, size.mb) }),
   );
 
-  if (!optional) sc = sc.min(min, { error: fileRequired(type, options) });
-  if (max) sc = sc.max(max, { error: fileTooLong(type, max) });
+  if (!optional) sc = sc.min(min, { error: file.tooShort(type, options) });
+  if (max) sc = sc.max(max, { error: file.tooLong(type, max) });
 
   return sc;
 };
