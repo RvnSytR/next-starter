@@ -161,7 +161,7 @@ export function ExampleForm() {
                   <FormControl>
                     <Input
                       type="text"
-                      inputMode="numeric"
+                      inputMode="tel"
                       value={formatPhone(value)}
                       onChange={(e) => onChange(sanitizeNumber(e.target.value))}
                       className="pl-11"

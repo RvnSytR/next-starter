@@ -32,13 +32,14 @@ export const messages = {
     ageRange: (min: number, max: number) =>
       `Usia harus antara ${min} hingga ${max} tahun.`,
 
-    fileType: (fileType: FileType = "file") =>
-      `Tipe ${fileMeta[fileType].displayName} tidak valid.`,
-
     selection: (field: string) => `Pilihan untuk ${field} tidak valid.`,
   },
 
   file: {
+    type: (fileType: FileType = "file") =>
+      `Tipe ${fileMeta[fileType].displayName} tidak valid.`,
+    tooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
+      `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
     tooShort: (
       fileType: FileType = "file",
       options?: { multiple?: boolean; min?: number },
@@ -49,8 +50,6 @@ export const messages = {
     },
     tooLong: (fileType: FileType = "file", max: number) =>
       `Jumlah maksimum ${fileMeta[fileType].displayName} yang dapat diunggah adalah ${max}.`,
-    tooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
-      `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
   },
 
   tooShort: (field: string, min: number, thing: string = "karakter") =>

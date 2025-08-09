@@ -89,7 +89,7 @@ const user = {
     delete: {
       trigger: "Hapus Akun",
       title: "Hapus Akun Anda",
-      desc: "Tindakan ini akan secara permanen menghapus semua data akun Anda. Harap berhati-hati karena tidak dapat dibatalkan.",
+      desc: "Tindakan ini akan secara permanen menghapus semua data akun Anda. Harap berhati-hati karena aksi ini tidak dapat dibatalkan.",
       success: messages.success("Akun", "removed"),
     },
 
@@ -119,11 +119,11 @@ const user = {
     adminRemove: {
       title: (name: string) => `Hapus Akun ${name}`,
       desc: (name: string) =>
-        `Tindakan ini akan menghapus akun ${name} beserta seluruh datanya secara permanen. Harap berhati-hati karena tidak dapat dibatalkan.`,
+        `Tindakan ini akan menghapus akun ${name} beserta seluruh datanya secara permanen. Harap berhati-hati karena aksi ini tidak dapat dibatalkan.`,
 
       titleMultiple: (length: number) => `Hapus ${length} Akun`,
       descMultiple: (length: number) =>
-        `Ini akan menghapus ${length} akun yang dipilih beserta seluruh datanya secara permanen. Harap berhati-hati karena tidak dapat dibatalkan.`,
+        `Ini akan menghapus ${length} akun yang dipilih beserta seluruh datanya secara permanen. Harap berhati-hati karena aksi ini tidak dapat dibatalkan.`,
       successMultiple: (success: number, length: number) =>
         messages.success(`${success} dari ${length} akun pengguna`, "removed"),
     },
