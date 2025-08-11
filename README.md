@@ -2,7 +2,7 @@
 
 A lightweight, opinionated starter template for **Next.js 15 (App Router)** with just the tools and configurations I use in most projects. Designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
 
-## ✨ Features
+## Features
 
 - Authentication with user dashboard and RBAC
 - Database and S3 integration
@@ -10,7 +10,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
 - Centralized content, DB state, project constant and overall project structure (write once, use anywhere)
 - Handy utility functions, actions and S3 helpers
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 - Framework and Language
   - [Next.js 15](https://nextjs.org)
@@ -34,7 +34,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
   - [Motion](https://motion.dev)
   - [Prettier](https://prettier.io)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Installation
 
@@ -73,7 +73,7 @@ npm run dev
 bun run dev
 ```
 
-## 💡 Tips
+## Tips
 
 To avoid default imports for `next/router` and Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
 
