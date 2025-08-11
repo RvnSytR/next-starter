@@ -107,7 +107,7 @@ export function DataTable<TData>({
   const [rowSelection, setRowSelection] = useState({});
 
   const [children, setChildren] = useState<ReactNode>(null);
-  const rowsLimitArr = [20, 30, 40, 50, 100];
+  const rowsLimitArr = [5, 10, 20, 30, 40, 50, 100];
 
   const table = useReactTable({
     data,
@@ -132,7 +132,7 @@ export function DataTable<TData>({
     onRowSelectionChange: setRowSelection,
     enableRowSelection,
 
-    initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[0] } },
+    initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[2] } },
     state: {
       sorting,
       globalFilter,
@@ -210,7 +210,7 @@ export function DataTable<TData>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-muted-foreground text-center whitespace-pre-line"
+                  className="text-muted-foreground py-4 text-center whitespace-pre-line"
                 >
                   {noResult
                     ? noResult.map((item) => item + "\n")

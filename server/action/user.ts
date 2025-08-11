@@ -48,6 +48,7 @@ export async function getUserList(): Promise<{
     })),
   };
 }
+
 export async function revokeUserSessions(ids: string[]) {
   return Promise.all(
     ids.map(async (id) => {

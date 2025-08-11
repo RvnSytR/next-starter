@@ -44,7 +44,7 @@ import {
 } from "@/lib/filters";
 import { cn, formatDate, take, uniq } from "@/lib/utils";
 import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
-import { isEqual } from "date-fns";
+import { endOfDay, isEqual } from "date-fns";
 import { ArrowRight, Ellipsis, ListFilter, X } from "lucide-react";
 import {
   cloneElement,
@@ -1460,13 +1460,12 @@ export function FilterValueDateController<TData, TValue>({
     const start = value?.from;
     const end =
       start && value && value.to && !isEqual(start, value.to)
-        ? value.to
+        ? endOfDay(value.to)
         : undefined;
 
     setDate({ from: start, to: end });
 
     const isRange = start && end;
-
     const newValues = isRange ? [start, end] : start ? [start] : [];
 
     column.setFilterValue((old: undefined | FilterModel<"date", TData>) => {
