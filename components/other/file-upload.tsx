@@ -1,6 +1,6 @@
 import { FileType } from "@/lib/const";
 import { buttonText, getFileInputMetaAndText } from "@/lib/content";
-import { cn, toByte, toMegabytes } from "@/lib/utils";
+import { cn, toMegabytes } from "@/lib/utils";
 import { zodFile } from "@/lib/zod";
 import { Dot, X } from "lucide-react";
 import Image from "next/image";
@@ -10,78 +10,18 @@ import {
   DragEvent,
   KeyboardEvent,
   MouseEvent,
-  ReactNode,
   useCallback,
   useRef,
 } from "react";
 import { Button } from "../ui/button";
-import { FormControl, FormItem } from "../ui/form";
+import { FormControl } from "../ui/form";
 import { Input } from "../ui/input";
-import { RadioGroup, RadioGroupItem, RadioGroupProps } from "../ui/radio-group";
 
-export function InputWrapper({
-  icon,
-  className,
-  children,
-  ...props
-}: ComponentProps<"div"> & {
-  icon: ReactNode;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative h-fit [&_input:not([class*='pl-'])]:pl-9 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
-      {...props}
-    >
-      <div className="text-muted-foreground absolute inset-y-0 flex items-center justify-center pl-3 text-center text-sm">
-        {typeof icon === "string" ? icon.slice(0, 3) : icon}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-export function InputRadioGroup({
-  defaultValue,
-  radioItems,
-  ...props
-}: RadioGroupProps & {
-  radioItems: {
-    value: string;
-    label?: string;
-    icon?: ReactNode;
-    className?: string;
-    checkedClassName?: string;
-  }[];
-}) {
-  return (
-    <RadioGroup defaultValue={defaultValue} {...props}>
-      {radioItems.map((item) => (
-        <FormItem key={item.value} className="grow">
-          <FormControl>
-            <RadioGroupItem
-              value={item.value}
-              currentValue={defaultValue}
-              className={item.className}
-              checkedClassName={item.checkedClassName}
-            >
-              {item.icon}
-              {item.label ?? item.value}
-            </RadioGroupItem>
-          </FormControl>
-        </FormItem>
-      ))}
-    </RadioGroup>
-  );
-}
-
-export function FileDropzone({
+export function FileUpload({
   value,
   onChange,
   accept = "file",
-  maxFileSize: sizeProp,
+  maxSize,
   classNames,
   placeholder,
   multiple = false,
@@ -89,7 +29,7 @@ export function FileDropzone({
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
-  maxFileSize?: number;
+  maxSize?: number;
   classNames?: { container?: string; dropzone?: string; files?: string };
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -97,22 +37,22 @@ export function FileDropzone({
   const { meta, text } = getFileInputMetaAndText(accept);
   const Icon = meta.icon;
   const isFiles = value.length > 0;
-  const fileSize = sizeProp
-    ? { mb: sizeProp, byte: toByte(sizeProp) }
+  const fileSize = maxSize
+    ? { mb: toMegabytes(maxSize), bytes: maxSize }
     : meta.size;
-
-  const resetFiles = () => onChange([]);
-
-  const removeFile = (index: number) => {
-    const filteredFiles = value.filter((_, i) => i !== index);
-    onChange(filteredFiles);
-  };
 
   const changeHandler = (fileList: FileList | null) => {
     if (!fileList || !fileList.length) return;
     const fileArray = Array.from(fileList);
     if (isFiles && multiple) onChange([...value, ...fileArray]);
     else onChange(fileArray);
+  };
+
+  const resetFiles = () => onChange([]);
+
+  const removeFile = (index: number) => {
+    const filteredFiles = value.filter((_, i) => i !== index);
+    onChange(filteredFiles);
   };
 
   const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
@@ -210,9 +150,11 @@ export function FileDropzone({
       {isFiles && (
         <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
           {value.map((file, index) => {
-            const objectURL = URL.createObjectURL(file);
+            const fileURL = URL.createObjectURL(file);
             const isImage = file.type.startsWith("image/");
-            const res = zodFile(accept, { multiple }).safeParse([file]);
+
+            const schema = zodFile(accept, { maxSize: fileSize.bytes });
+            const res = schema.safeParse([file]);
 
             return (
               <div key={index} className="relative rounded-md border">
@@ -229,7 +171,7 @@ export function FileDropzone({
                 <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
                   {isImage ? (
                     <Image
-                      src={objectURL}
+                      src={fileURL}
                       alt={file.name}
                       className="size-full object-cover object-center"
                       width={100}
@@ -242,7 +184,7 @@ export function FileDropzone({
 
                 <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
                   <Link
-                    href={objectURL}
+                    href={fileURL}
                     target="_blank"
                     className={cn(
                       "text-sm font-medium hover:underline",

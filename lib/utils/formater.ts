@@ -22,12 +22,12 @@ export function sanitizeNumber(str: string): number {
   return Number(normalized.replace(/[^\d]/g, "") || "0");
 }
 
-export function toByte(mb: number) {
+export function toBytes(mb: number) {
   return mb * 1024 * 1024;
 }
 
-export function toMegabytes(byte: number) {
-  return byte / 1024 / 1024;
+export function toMegabytes(bytes: number) {
+  return bytes / 1024 / 1024;
 }
 
 export function toKebabCase(str: string) {

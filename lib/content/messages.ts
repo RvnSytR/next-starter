@@ -38,7 +38,7 @@ export const messages = {
   file: {
     type: (fileType: FileType = "file") =>
       `Tipe ${fileMeta[fileType].displayName} tidak valid.`,
-    tooLarge: (fileType: FileType = "file", maxSizeMB: number) =>
+    tooLarge: (fileType: FileType = "file", maxSizeMB: string | number) =>
       `Ukuran ${fileMeta[fileType].displayName} tidak boleh melebihi ${maxSizeMB} MB.`,
     tooShort: (
       fileType: FileType = "file",

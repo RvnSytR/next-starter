@@ -2,6 +2,7 @@ import { z } from "zod";
 import { id } from "zod/locales";
 import { FileType, fileMeta } from "./const";
 import { baseContent, messages } from "./content";
+import { toMegabytes } from "./utils";
 
 const cUser = baseContent.user;
 const cUserFields = cUser.fields;
@@ -20,26 +21,25 @@ export const zodFile = (
   type: FileType,
   options?: {
     optional?: boolean;
-    multiple?: boolean;
-    maxFileSize?: number;
     min?: number;
     max?: number;
+    maxSize?: number;
   },
 ) => {
   const { size, mimeTypes } = fileMeta[type];
   const { type: fileType, tooLarge, tooShort, tooLong } = messages.file;
 
-  const maxFileSize = options?.maxFileSize ?? size.byte;
   const optional = options?.optional ?? false;
   const min = options?.min ?? 1;
   const max = options?.max;
+  const maxSize = options?.maxSize ?? size.bytes;
 
   let sc = z.array(
     z
       .file()
       .mime(mimeTypes, { error: fileType(type) })
       .min(1)
-      .max(maxFileSize, { error: tooLarge(type, size.mb) }),
+      .max(maxSize, { error: tooLarge(type, toMegabytes(maxSize).toFixed(2)) }),
   );
 
   if (!optional) sc = sc.min(min, { error: tooShort(type, options) });

@@ -7,7 +7,7 @@ import {
   Upload,
   Video,
 } from "lucide-react";
-import { toByte } from "../utils";
+import { toBytes } from "../utils";
 
 export type FileType =
   | "file"
@@ -23,7 +23,7 @@ type FileMetaProps = Record<
     displayName: string;
     mimeTypes: string[];
     extensions: string[];
-    size: { mb: number; byte: number };
+    size: { mb: number; bytes: number };
     icon: LucideIcon;
   }
 >;
@@ -33,7 +33,7 @@ export const fileMeta: FileMetaProps = {
     displayName: "berkas",
     mimeTypes: ["*/*"],
     extensions: [],
-    size: { mb: 2, byte: toByte(2) },
+    size: { mb: 2, bytes: toBytes(2) },
     icon: Upload,
   },
 
@@ -41,7 +41,7 @@ export const fileMeta: FileMetaProps = {
     displayName: "gambar",
     mimeTypes: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
     extensions: [".png", ".jpg", ".jpeg", ".svg", ".webp"],
-    size: { mb: 2, byte: toByte(2) },
+    size: { mb: 2, bytes: toBytes(2) },
     icon: Image,
   },
 
@@ -57,7 +57,7 @@ export const fileMeta: FileMetaProps = {
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     ],
     extensions: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"],
-    size: { mb: 2, byte: toByte(2) },
+    size: { mb: 2, bytes: toBytes(2) },
     icon: FileText,
   },
 
@@ -70,7 +70,7 @@ export const fileMeta: FileMetaProps = {
       "application/x-tar",
     ],
     extensions: [".zip", ".rar", ".7z", ".tar"],
-    size: { mb: 20, byte: toByte(20) },
+    size: { mb: 20, bytes: toBytes(20) },
     icon: FileArchive,
   },
 
@@ -78,7 +78,7 @@ export const fileMeta: FileMetaProps = {
     displayName: "audio",
     mimeTypes: ["audio/mpeg", "audio/wav", "audio/ogg", "audio/flac"],
     extensions: [".mp3", ".wav", ".ogg", ".flac"],
-    size: { mb: 10, byte: toByte(10) },
+    size: { mb: 10, bytes: toBytes(10) },
     icon: Headphones,
   },
 
@@ -92,7 +92,7 @@ export const fileMeta: FileMetaProps = {
       "video/webm",
     ],
     extensions: [".mp4", ".avi", ".mkv", ".ogg", ".webm"],
-    size: { mb: 50, byte: toByte(50) },
+    size: { mb: 50, bytes: toBytes(50) },
     icon: Video,
   },
 };

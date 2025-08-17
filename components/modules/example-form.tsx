@@ -23,7 +23,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { DatePicker } from "../other/date-picker";
-import { FileDropzone, InputRadioGroup, InputWrapper } from "../other/inputs";
+import { FileUpload } from "../other/file-upload";
+import { InputWrapper } from "../other/input-wrapper";
 import { Button } from "../ui/button";
 import {
   Form,
@@ -77,11 +78,10 @@ export function ExampleForm() {
     radio: z.enum(card),
     file: zodFile(fileType, {
       optional: true,
-      // multiple: true,
+      // maxSize: toBytes(1),
       // min: 2,
       // max: 5,
     }),
-    // optionalFile: zodFile(fileType, { optional: true }),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -260,26 +260,6 @@ export function ExampleForm() {
           />
         </div>
 
-        {/* Custom Radio Group */}
-        <FormField
-          control={form.control}
-          name="radio"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                Custom Radio Group
-              </FormLabel>
-              <InputRadioGroup
-                defaultValue={field.value}
-                onValueChange={field.onChange}
-                className="grid grid-cols-2 md:flex md:grid-cols-4"
-                radioItems={selectAndRadioData}
-              />
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         {/* Radio Group */}
         <FormField
           control={form.control}
@@ -309,7 +289,12 @@ export function ExampleForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="label-required">File</FormLabel>
-              <FileDropzone accept={fileType} multiple {...field} />
+              <FileUpload
+                accept={fileType}
+                // maxSize={toBytes(1)}
+                multiple
+                {...field}
+              />
               <FormMessage />
             </FormItem>
           )}

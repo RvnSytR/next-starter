@@ -65,7 +65,7 @@ import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SheetDetails } from "../layout/section";
 import { GithubIcon, Loader } from "../other/icon";
-import { InputWrapper } from "../other/inputs";
+import { InputWrapper } from "../other/input-wrapper";
 import {
   AlertDialog,
   AlertDialogAction,
