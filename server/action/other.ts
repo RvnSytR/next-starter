@@ -1,6 +1,10 @@
 "use server";
 
+import { Role } from "@/lib/permission";
+import { Route, RouteRole, routesMeta } from "@/lib/routes";
 import { headers } from "next/headers";
+import { notFound } from "next/navigation";
+import { getSession } from "./user";
 
 export async function getCustomHeaders() {
   const req = await headers();
@@ -9,4 +13,20 @@ export async function getCustomHeaders() {
   const pathname = req.get("x-pathname");
 
   return { url, origin, pathname };
+}
+
+export async function requireAuthorizedSession(route: Route) {
+  const meta = routesMeta[route];
+  if (!("role" in meta)) notFound();
+
+  const session = await getSession();
+  if (!session) notFound();
+
+  const routeRole = meta.role as RouteRole;
+  const userRole = session.user.role as Role;
+  const isAuthorized = routeRole === "all" || routeRole.includes(userRole);
+
+  if (!isAuthorized) notFound();
+
+  return { session, meta };
 }

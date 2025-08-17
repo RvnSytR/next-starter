@@ -1,26 +1,9 @@
 "use server";
 
 import { auth, Session } from "@/lib/auth";
-import { Route, RouteRole, routesMeta } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
 import { deleteFiles, extractKeyFromPublicUrl } from "../s3";
-
-export async function checkAndGetAuthorizedSession(route: Route) {
-  const routeMeta = routesMeta[route];
-  if (!("role" in routeMeta)) notFound();
-
-  const session = await getSession();
-  if (!session) notFound();
-
-  const routeRole = routeMeta.role as RouteRole;
-  const userRole = session.user.role as Role;
-  const isAuthorized = routeRole === "all" || routeRole.includes(userRole);
-
-  if (!isAuthorized) notFound();
-  return { session, routeMeta };
-}
 
 export async function getSession() {
   return await auth.api.getSession({ headers: await headers() });

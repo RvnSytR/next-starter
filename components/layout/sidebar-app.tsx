@@ -1,6 +1,7 @@
 import { Session } from "@/lib/auth";
-import { dashboardfooterMenu, Route, routesMeta } from "@/lib/const";
+import { dashboardfooterMenu } from "@/lib/const";
 import { Role } from "@/lib/permission";
+import { Route, routesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";

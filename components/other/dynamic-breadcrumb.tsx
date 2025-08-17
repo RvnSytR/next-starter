@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Route, routesMeta } from "@/lib/const";
+import { Route, routesMeta } from "@/lib/routes";
 import Link from "next/link";
 import { Fragment } from "react";
 import {

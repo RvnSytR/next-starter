@@ -22,12 +22,15 @@ const user = {
   fields: {
     userId: "ID Pengguna",
     avatar: "Foto Profil",
-    role: "Role",
     rememberMe: "Ingat saya",
 
+    role: "Role",
     changeRole: (name: string) => `Ubah role ${name}`,
 
-    email: { label: "Alamat Email", placeholder: "Masukkan alamat email Anda" },
+    email: {
+      label: "Alamat Email",
+      placeholder: "Masukkan alamat email Anda",
+    },
     name: {
       label: "Nama Pengguna",
       placeholder: "Masukkan nama pengguna Anda",

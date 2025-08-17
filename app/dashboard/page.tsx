@@ -1,14 +1,13 @@
 import { DashboardMain } from "@/components/layout/section";
 import { R } from "@/components/other/motion";
-import { checkAndGetAuthorizedSession } from "@/server/action";
+import { requireAuthorizedSession } from "@/server/action";
 
 export default async function Page() {
-  const { session, routeMeta } =
-    await checkAndGetAuthorizedSession("/dashboard");
+  const { session, meta } = await requireAuthorizedSession("/dashboard");
 
   return (
     <DashboardMain
-      currentPage={routeMeta.displayName}
+      currentPage={meta.displayName}
       className="items-center justify-center"
     >
       <R />

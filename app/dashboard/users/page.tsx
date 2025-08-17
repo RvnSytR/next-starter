@@ -10,26 +10,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { pages } from "@/lib/content";
 import { getTitle } from "@/lib/utils";
-import { checkAndGetAuthorizedSession, getUserList } from "@/server/action";
+import { getUserList, requireAuthorizedSession } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/users") };
 
 export default async function Page() {
-  const { session, routeMeta } =
-    await checkAndGetAuthorizedSession("/dashboard/users");
-
-  const { title, desc, searchPlaceholder } = pages.users;
+  const { session, meta } = await requireAuthorizedSession("/dashboard/users");
 
   const data = await getUserList();
 
   return (
-    <DashboardMain currentPage={routeMeta.displayName} className="pt-6">
+    <DashboardMain currentPage={meta.displayName} className="pt-6">
       <CardHeader className="px-0">
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{desc}</CardDescription>
+        <CardTitle>{meta.displayName}</CardTitle>
+        <CardDescription>
+          Kelola dan lihat detail semua pengguna yang telah terdaftar.
+        </CardDescription>
         <CardAction>
           <AdminCreateUserDialog />
         </CardAction>
@@ -40,7 +38,7 @@ export default async function Page() {
       <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
-        searchPlaceholder={searchPlaceholder}
+        searchPlaceholder="Cari Pengguna..."
       />
     </DashboardMain>
   );

@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { pages } from "@/lib/content";
+import { appInfo } from "@/lib/const";
 import { getTitle } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -27,23 +27,25 @@ export default function Page() {
         <CardHeader className="text-center">
           <CardTitle className="mx-auto">
             <Link href="/">
-              <h3>{pages.signIn.title}</h3>
+              <h3>{appInfo.name}</h3>
             </Link>
           </CardTitle>
-          <CardDescription>{pages.signIn.desc}</CardDescription>
+          <CardDescription>
+            Masuk ke Dashboard {appInfo.name} dengan aman menggunakan akun Anda.
+          </CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-4">
-          <Tabs defaultValue="sign-in">
+          <Tabs defaultValue="masuk">
             <TabsList className="w-full">
-              <TabsTrigger value="sign-in">Sign In</TabsTrigger>
-              <TabsTrigger value="sign-up">Sign Up</TabsTrigger>
+              <TabsTrigger value="masuk">Masuk</TabsTrigger>
+              <TabsTrigger value="daftar">Daftar</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="sign-in">
+            <TabsContent value="masuk">
               <SignInForm />
             </TabsContent>
-            <TabsContent value="sign-up">
+            <TabsContent value="daftar">
               <SignUpForm />
             </TabsContent>
           </Tabs>
@@ -51,7 +53,7 @@ export default function Page() {
           <div className="flex items-center gap-x-4">
             <div className="grow border-t before:border-t" />
             <small className="text-muted-foreground text-xs font-medium">
-              Or
+              Atau
             </small>
             <div className="grow border-t after:border-t" />
           </div>

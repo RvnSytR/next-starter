@@ -1,9 +1,9 @@
+import { Tagline } from "@/components/layout/section";
 import { SidebarApp } from "@/components/layout/sidebar-app";
 import { getTitle } from "@/lib/utils";
 import { getSession } from "@/server/action";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Tagline } from "../../components/layout/section";
 
 export const metadata: Metadata = { title: getTitle("/dashboard") };
 

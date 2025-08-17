@@ -2,7 +2,7 @@ import { Example } from "@/components/modules/example";
 import { LinkLoader, ThemeToggle } from "@/components/other/buttons";
 import { R } from "@/components/other/motion";
 import { Button } from "@/components/ui/button";
-import { Route } from "@/lib/const";
+import { dashboardRoute } from "@/lib/routes";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -18,7 +18,7 @@ export default function Page() {
           <ThemeToggle variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>
-            <Link href={"/dashboard" satisfies Route}>
+            <Link href={dashboardRoute}>
               Ke Dashboard <LinkLoader icon={{ base: <ArrowRight /> }} />
             </Link>
           </Button>

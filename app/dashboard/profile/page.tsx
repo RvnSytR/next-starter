@@ -17,10 +17,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { pages } from "@/lib/content";
+import { appInfo } from "@/lib/const";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
-import { checkAndGetAuthorizedSession, getListSession } from "@/server/action";
+import { getListSession, requireAuthorizedSession } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
@@ -28,22 +28,21 @@ export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
 export default async function Page() {
   const {
     session: { session, user },
-    routeMeta,
-  } = await checkAndGetAuthorizedSession("/dashboard/profile");
-
-  const { info, password, activeSession, deleteAccount } = pages.profile;
-
+    meta,
+  } = await requireAuthorizedSession("/dashboard/profile");
   const sessionList = await getListSession();
 
   return (
-    <DashboardMain currentPage={routeMeta.displayName} className="items-center">
+    <DashboardMain currentPage={meta.displayName} className="items-center">
       <Card
         id="personal-information"
         className="w-full scroll-m-20 lg:max-w-xl"
       >
         <CardHeader className="border-b">
-          <CardTitle>{info.title}</CardTitle>
-          <CardDescription>{info.desc}</CardDescription>
+          <CardTitle>Informasi Pribadi</CardTitle>
+          <CardDescription>
+            Perbarui dan kelola informasi profil {appInfo.name} Anda.
+          </CardDescription>
           <CardAction className="flex flex-col items-end gap-1.5 md:flex-row">
             {user.emailVerified && <UserVerifiedBadge />}
             <UserRoleBadge role={user.role as Role} />
@@ -55,8 +54,10 @@ export default async function Page() {
 
       <Card id="change-password" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
-          <CardTitle>{password.title}</CardTitle>
-          <CardDescription>{password.desc}</CardDescription>
+          <CardTitle>Ubah Kata Sandi</CardTitle>
+          <CardDescription>
+            Gunakan kata sandi yang kuat untuk menjaga keamanan akun Anda.
+          </CardDescription>
         </CardHeader>
 
         <ChangePasswordForm />
@@ -64,8 +65,10 @@ export default async function Page() {
 
       <Card id="active-session" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
-          <CardTitle>{activeSession.title}</CardTitle>
-          <CardDescription>{activeSession.desc}</CardDescription>
+          <CardTitle>Sesi Aktif</CardTitle>
+          <CardDescription>
+            Tinjau dan kelola sesi yang saat ini sedang masuk ke akun Anda.
+          </CardDescription>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-2">
@@ -85,10 +88,11 @@ export default async function Page() {
 
       <Card id="delete-account" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
-          <CardTitle className="text-destructive">
-            {deleteAccount.title}
-          </CardTitle>
-          <CardDescription>{deleteAccount.desc}</CardDescription>
+          <CardTitle className="text-destructive">Hapus Akun</CardTitle>
+          <CardDescription>
+            Peringatan: Tindakan ini bersifat permanen dan tidak dapat
+            dibatalkan.
+          </CardDescription>
         </CardHeader>
 
         <CardContent>

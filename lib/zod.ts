@@ -50,7 +50,7 @@ export const zodFile = (
 
 export const zodUser = z.object({
   id: z.string(),
-  role: z.string().optional(),
+  role: z.string(),
   name: z
     .string({
       error: messages.requiredAndInvalidField(cUserFields.name.label, "string"),

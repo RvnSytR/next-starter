@@ -3,7 +3,7 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { dashboardRoute, fileMeta, signInRoute } from "@/lib/const";
+import { fileMeta } from "@/lib/const";
 import {
   baseContent,
   buttonText,
@@ -11,14 +11,8 @@ import {
   messages,
   tableText,
 } from "@/lib/content";
-import {
-  adminRoles,
-  allRoles,
-  defaultRole,
-  Role,
-  rolesMeta,
-  userRoles,
-} from "@/lib/permission";
+import { allRoles, Role, rolesMeta, userRoles } from "@/lib/permission";
+import { dashboardRoute, signInRoute } from "@/lib/routes";
 import { capitalize, cn } from "@/lib/utils";
 import {
   zodAuthSignUp,
@@ -147,15 +141,11 @@ export function UserRoleBadge({
   role: Role;
   className?: string;
 }) {
-  const isAdmin = adminRoles.includes(role);
-  const { displayName, icon: RoleIcon, desc } = rolesMeta[role];
+  const { displayName, desc, icon: RoleIcon, badgeVariant } = rolesMeta[role];
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
-        <Badge
-          variant={isAdmin ? "outline_primary" : "outline"}
-          className="capitalize"
-        >
+        <Badge variant={badgeVariant} className="capitalize">
           <RoleIcon /> {displayName ?? role}
         </Badge>
       </TooltipTrigger>
@@ -173,23 +163,21 @@ export function UserVerifiedBadge({
   className?: string;
   classNames?: { badge?: string; icon?: string; content?: string };
 }) {
-  if (withoutText) {
-    return (
-      <BadgeCheck
-        className={cn("text-rvns size-4 shrink-0", classNames?.icon)}
-      />
-    );
-  }
-
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
-        <Badge
-          variant="outline_rvns"
-          className={cn("capitalize", classNames?.badge)}
-        >
-          <BadgeCheck className={classNames?.icon} /> {commonText.verified}
-        </Badge>
+        {withoutText ? (
+          <BadgeCheck
+            className={cn("text-rvns size-4 shrink-0", classNames?.icon)}
+          />
+        ) : (
+          <Badge
+            variant="outline_rvns"
+            className={cn("capitalize", classNames?.badge)}
+          >
+            <BadgeCheck className={classNames?.icon} /> {commonText.verified}
+          </Badge>
+        )}
       </TooltipTrigger>
       <TooltipContent className={classNames?.content}>
         {content.verified}
@@ -207,29 +195,18 @@ export function UserAvatar({
   className?: string;
   classNames?: { image?: string; fallback?: string };
 }) {
-  const fallbackName = name.slice(0, 2);
   return (
     <Avatar className={cn("rounded-xl", className)}>
-      {image ? (
-        <>
-          <AvatarImage
-            className={cn("rounded-xl", classNames?.image)}
-            src={image}
-          />
-          <AvatarFallback className={cn("rounded-xl", classNames?.fallback)}>
-            {fallbackName}
-          </AvatarFallback>
-        </>
-      ) : (
-        <span
-          className={cn(
-            "bg-muted flex size-full items-center justify-center transition-transform hover:scale-125",
-            classNames?.fallback,
-          )}
-        >
-          {fallbackName}
-        </span>
+      {image && (
+        <AvatarImage
+          src={image}
+          className={cn("rounded-xl", classNames?.image)}
+        />
       )}
+
+      <AvatarFallback className={cn("rounded-xl", classNames?.fallback)}>
+        {name.slice(0, 2)}
+      </AvatarFallback>
     </Avatar>
   );
 }
@@ -718,7 +695,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-6">
+      <form onSubmit={form.handleSubmit(formHandler)}>
         <CardContent className="flex flex-col gap-y-4">
           <ProfilePicture {...props} />
 
@@ -811,7 +788,7 @@ export function ChangePasswordForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-6">
+      <form onSubmit={form.handleSubmit(formHandler)}>
         <CardContent className="flex flex-col gap-y-4">
           <FormField
             control={form.control}
@@ -1192,7 +1169,7 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
 
   const { title, desc } = cComps.detail;
   const details = [
-    { label: cFields.userId, content: `${data.id.slice(0, 19)}...` },
+    { label: cFields.userId, content: data.id.slice(0, 7) },
     { label: cFields.email.label, content: data.email },
     {
       label: tableText.column.createdAt,
@@ -1472,13 +1449,13 @@ function AdminChangeUserRoleForm({
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { role: data.role ?? defaultRole },
+    defaultValues: { role: data.role },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
     const newRole = formData.role as Role;
     if (newRole === data.role)
-      return toast.info(messages.noChanges(`${name}'s role`));
+      return toast.info(messages.noChanges(`${data.name}'s role`));
 
     setIsLoading(true);
     authClient.admin.setRole(

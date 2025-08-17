@@ -1,13 +1,6 @@
-import {
-  allRoutes,
-  appInfo,
-  dashboardMenu,
-  Menu,
-  Route,
-  RouteRole,
-  routesMeta,
-} from "../const";
+import { appInfo, dashboardMenu, Menu } from "../const";
 import { Role } from "../permission";
+import { allRoutes, Route, RouteRole, routesMeta } from "../routes";
 
 export function getTitle(r: Route) {
   return `${routesMeta[r].displayName} | ${appInfo.name}`;
@@ -37,10 +30,10 @@ export function getMenuByRole(
 ): Menu[] {
   const filteredMenu = menu.map(({ section, content }) => {
     const filteredContent = content.filter(({ route }) => {
-      const routeMeta = routesMeta[route];
-      if (!("role" in routeMeta)) return true;
+      const meta = routesMeta[route];
+      if (!("role" in meta)) return true;
 
-      const currentRole = routeMeta.role as RouteRole;
+      const currentRole = meta.role as RouteRole;
       return currentRole === "all" || currentRole.includes(role);
     });
 
