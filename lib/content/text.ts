@@ -1,6 +1,4 @@
-import { DateRange } from "react-day-picker";
 import { fileMeta, FileType } from "../const";
-import { formatDate } from "../utils";
 
 export const buttonText = {
   signIn: "Masuk",
@@ -26,32 +24,6 @@ export const buttonText = {
 export const commonText = {
   selected: "dipilih",
   verified: "terverifikasi",
-};
-
-export const datePickerText = {
-  single: {
-    trigger: "Pilih Tanggal",
-    value: (date: Date) => formatDate(date, "PPPP"),
-  },
-  multiple: {
-    trigger: "Pilih Tanggal",
-    value: (dates: Date[]) => {
-      const maxDisplay = 2;
-      const formattedDates = dates.map((date) => formatDate(date, "PPP"));
-      if (dates.length <= maxDisplay) return formattedDates.join(", ");
-      return `${formattedDates.slice(0, maxDisplay).join(", ")} +${dates.length - maxDisplay} lainnya`;
-    },
-  },
-  range: {
-    trigger: "Pilih Rentang Tanggal",
-    value: (dateRange: DateRange) => {
-      const { from, to } = dateRange;
-      if (from && to)
-        return `${formatDate(from, "PPP")} - ${formatDate(to, "PPP")}`;
-      if (from) return formatDate(from, "PPP");
-      return "Pilih Rentang Tanggal";
-    },
-  },
 };
 
 export const tableText = {

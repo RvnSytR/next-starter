@@ -79,14 +79,14 @@ const user = {
       trigger: "Cabut Sesi",
       title: "Cabut Sesi Aktif",
       desc: "Sesi ini akan segera dihentikan dari perangkat yang dipilih. Yakin ingin melanjutkan?",
-      success: "Sesi ini telah dicabut.",
+      success: "Sesi ini berhasil dicabut.",
     },
 
     revokeAllOtherSession: {
       trigger: "Cabut Sesi Lain",
       title: "Cabut Semua Sesi Lain",
       desc: "Semua sesi aktif lainnya akan dihentikan, kecuali sesi saat ini. Yakin ingin melanjutkan?",
-      success: "Semua sesi aktif lainnya telah dicabut.",
+      success: "Semua sesi aktif lainnya berhasil dicabut.",
     },
 
     delete: {
@@ -110,7 +110,7 @@ const user = {
       desc: (name: string) =>
         `Tindakan ini akan langsung menghentikan semua sesi aktif milik ${name}. Yakin ingin melanjutkan?`,
       success: (name?: string) =>
-        `Semua sesi aktif ${name ? `milik ${name}` : "pengguna"} telah dicabut.`,
+        `Semua sesi aktif ${name ? `milik ${name}` : "pengguna"} berhasil dicabut.`,
 
       titleMultiple: (length: number) => `Cabut Sesi untuk ${length} Pengguna`,
       descMultiple: (length: number) =>

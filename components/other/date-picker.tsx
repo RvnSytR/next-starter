@@ -1,13 +1,15 @@
-import { datePickerText } from "@/lib/content";
-import { cn } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
+import { isSameDay } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { Button } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
 import { FormControl } from "../ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
+const defaultPlaceholder = "Pilih Tanggal";
+
 export function DatePicker({
-  placeholder = datePickerText.single.trigger,
+  placeholder = defaultPlaceholder,
   withControl = false,
   ...props
 }: CalendarProps & { placeholder?: string; withControl?: boolean }) {
@@ -15,11 +17,40 @@ export function DatePicker({
 
   if (props.mode) {
     const { mode, selected } = props;
-    const { trigger, value } = datePickerText[mode];
-    placeholder = trigger;
-    if (selected) {
-      isSelected = true;
-      placeholder = value(selected as never);
+
+    if (mode === "single") {
+      isSelected = !!selected;
+      placeholder = selected
+        ? formatDate(selected, "PPPP")
+        : defaultPlaceholder;
+    }
+
+    if (mode === "multiple") {
+      placeholder = defaultPlaceholder;
+
+      if (selected && selected.length > 0) {
+        isSelected = true;
+        const max = 1;
+        const { length } = selected;
+        const dates = selected.map((date) => formatDate(date, "PPP"));
+
+        placeholder = dates.slice(0, max).join(", ");
+        if (length > max) placeholder += `, dan ${length - max} lainnya`;
+      }
+    }
+
+    if (mode === "range") {
+      placeholder = "Pilih Rentang Tanggal";
+
+      if (selected?.from) {
+        isSelected = true;
+        const { from, to } = selected;
+
+        placeholder =
+          to && !isSameDay(from, to)
+            ? `${formatDate(from, "PPP")} - ${formatDate(to, "PPP")}`
+            : formatDate(from, "PPP");
+      }
     }
   }
 
