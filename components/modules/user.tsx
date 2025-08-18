@@ -141,12 +141,12 @@ export function UserRoleBadge({
   role: Role;
   className?: string;
 }) {
-  const { displayName, desc, icon: RoleIcon, badgeVariant } = rolesMeta[role];
+  const { displayName, desc, icon: Icon, badgeVariant } = rolesMeta[role];
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
         <Badge variant={badgeVariant} className="capitalize">
-          <RoleIcon /> {displayName ?? role}
+          <Icon /> {displayName ?? role}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>{desc}</TooltipContent>
@@ -1399,16 +1399,15 @@ export function AdminCreateUserDialog() {
                     </FormControl>
 
                     <SelectContent>
-                      {allRoles.map((item, index) => {
-                        const { displayName, icon: RoleIcon } = rolesMeta[item];
+                      {allRoles.map((item) => {
+                        const { displayName, icon: Icon } = rolesMeta[item];
                         return (
                           <SelectItem
-                            key={index}
+                            key={item}
                             value={item}
                             className="capitalize"
                           >
-                            <RoleIcon />
-                            {displayName ?? capitalize(item)}
+                            <Icon /> {displayName ?? capitalize(item)}
                           </SelectItem>
                         );
                       })}
@@ -1495,16 +1494,15 @@ function AdminChangeUserRoleForm({
                 </FormControl>
 
                 <SelectContent>
-                  {allRoles.map((item, index) => {
-                    const { displayName, icon: RoleIcon } = rolesMeta[item];
+                  {allRoles.map((item) => {
+                    const { displayName, icon: Icon } = rolesMeta[item];
                     return (
                       <SelectItem
-                        key={index}
+                        key={item}
                         value={item}
                         className="capitalize"
                       >
-                        <RoleIcon />
-                        {displayName ?? capitalize(item)}
+                        <Icon /> {displayName ?? capitalize(item)}
                       </SelectItem>
                     );
                   })}

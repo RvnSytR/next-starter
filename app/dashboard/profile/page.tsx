@@ -72,9 +72,9 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent className="flex flex-col gap-y-2">
-          {sessionList.map((item, index) => (
+          {sessionList.map((item) => (
             <ActiveSessionButton
-              key={index}
+              key={item.id}
               currentSessionId={session.id}
               {...item}
             />

@@ -157,7 +157,7 @@ export function FileUpload({
             const res = schema.safeParse([file]);
 
             return (
-              <div key={index} className="relative rounded-md border">
+              <div key={fileURL} className="relative rounded-md border">
                 <Button
                   type="button"
                   onClick={() => removeFile(index)}

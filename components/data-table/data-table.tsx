@@ -337,11 +337,11 @@ function View<TData>({ table }: TableProps<TData>) {
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())
-          .map((column, index) => {
+          .map((column) => {
             const cbId = `cb${column.id}`;
             return (
               <Label
-                key={index}
+                key={cbId}
                 htmlFor={cbId}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
@@ -427,8 +427,8 @@ function RowsPerPage<TData>({
         </SelectTrigger>
 
         <SelectContent>
-          {rowsLimitArr.map((item, index) => (
-            <SelectItem key={index} value={String(item)}>
+          {rowsLimitArr.map((item) => (
+            <SelectItem key={item} value={String(item)}>
               {item}
             </SelectItem>
           ))}

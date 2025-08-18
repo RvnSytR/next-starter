@@ -180,8 +180,8 @@ const comp: Record<Key, React.ReactNode> = {
 };
 
 function Comp({ content }: { content: CompCardContent[] }) {
-  return content.map(({ title, key }, index) => (
-    <Card key={index}>
+  return content.map(({ title, key }) => (
+    <Card key={key}>
       <CardContent className="flex flex-col gap-y-4">
         <CardTitle>{title}</CardTitle>
         <Tabs defaultValue="preview">
@@ -235,9 +235,9 @@ export function Example() {
     >
       <ScrollArea className="pb-2 md:hidden">
         <TabsList className="w-full rounded-none border-b bg-transparent p-0">
-          {tabs.map(({ section }, index) => (
+          {tabs.map(({ section }) => (
             <TabsTrigger
-              key={index}
+              key={section}
               value={section}
               className={cn(
                 "relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5",
@@ -252,9 +252,9 @@ export function Example() {
       </ScrollArea>
 
       <TabsList className="hidden h-full flex-col items-start justify-start rounded-none border-l bg-transparent p-0 md:flex">
-        {tabs.map(({ section }, index) => (
+        {tabs.map(({ section }) => (
           <TabsTrigger
-            key={index}
+            key={section}
             value={section}
             className={cn(
               "relative w-full justify-start rounded-none after:absolute after:inset-y-0 after:-start-0.5 after:w-0.5",
@@ -267,8 +267,8 @@ export function Example() {
       </TabsList>
 
       <div className="w-full">
-        {tabs.map(({ section, content }, index) => (
-          <TabsContent key={index} value={section} className="space-y-4">
+        {tabs.map(({ section, content }) => (
+          <TabsContent key={section} value={section} className="space-y-4">
             <Comp content={content} />
           </TabsContent>
         ))}

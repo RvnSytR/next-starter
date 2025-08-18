@@ -135,13 +135,13 @@ function Content({ role }: Pick<SidebarData, "role">) {
       <SidebarGroupLabel>{section}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {content.map(({ route, icon: MenuIcon, disabled, subMenu }, index) => {
+        {content.map(({ route, icon: Icon, disabled, subMenu }) => {
           const { displayName } = routesMeta[route];
           if (disabled) {
             return (
-              <SidebarMenuItem key={index}>
+              <SidebarMenuItem key={route}>
                 <SidebarMenuButton disabled>
-                  {MenuIcon && <MenuIcon />}
+                  {Icon && <Icon />}
                   <span className="line-clamp-1">{displayName}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -149,11 +149,11 @@ function Content({ role }: Pick<SidebarData, "role">) {
           }
 
           return (
-            <SCCollapsible key={index} route={route} asChild>
+            <SCCollapsible key={route} route={route} asChild>
               <SidebarMenuItem>
                 <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
-                    <LinkLoader icon={{ base: MenuIcon && <MenuIcon /> }} />
+                    <LinkLoader icon={{ base: Icon && <Icon /> }} />
                     <span className="line-clamp-1">{displayName}</span>
                   </Link>
                 </SCMenuButton>
@@ -210,25 +210,23 @@ function Footer() {
         </SidebarMenuButton>
       </SidebarMenuItem>
 
-      {dashboardfooterMenu.map(
-        ({ icon: FooterIcon, displayName, url, disabled }, index) => (
-          <SidebarMenuItem key={index}>
-            {disabled ? (
-              <SidebarMenuButton size="sm" disabled>
-                {FooterIcon && <FooterIcon />}
+      {dashboardfooterMenu.map(({ url, displayName, icon: Icon, disabled }) => (
+        <SidebarMenuItem key={url}>
+          {disabled ? (
+            <SidebarMenuButton size="sm" disabled>
+              {Icon && <Icon />}
+              {displayName}
+            </SidebarMenuButton>
+          ) : (
+            <SidebarMenuButton size="sm" tooltip={displayName} asChild>
+              <Link href={url}>
+                <LinkLoader icon={{ base: Icon && <Icon /> }} />
                 {displayName}
-              </SidebarMenuButton>
-            ) : (
-              <SidebarMenuButton size="sm" tooltip={displayName} asChild>
-                <Link href={url}>
-                  <LinkLoader icon={{ base: FooterIcon && <FooterIcon /> }} />
-                  {displayName}
-                </Link>
-              </SidebarMenuButton>
-            )}
-          </SidebarMenuItem>
-        ),
-      )}
+              </Link>
+            </SidebarMenuButton>
+          )}
+        </SidebarMenuItem>
+      ))}
 
       <SidebarSeparator />
 

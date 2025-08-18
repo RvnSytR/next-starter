@@ -48,21 +48,21 @@ import {
 export function ExampleForm() {
   const card = ["Spade", "Heart", "Diamond", "Club"] as const;
   const selectAndRadioData = [
-    { value: "Spade", icon: <Spade /> },
+    { value: "Spade", icon: Spade },
     {
       value: "Heart",
-      icon: <Heart />,
-      checkedClassName: "text-pink-500 border-pink-500",
+      icon: Heart,
+      cn: "text-pink-500 border-pink-500",
     },
     {
       value: "Diamond",
-      icon: <Diamond />,
-      checkedClassName: "text-sky-500 border-sky-500",
+      icon: Diamond,
+      cn: "text-sky-500 border-sky-500",
     },
     {
       value: "Club",
-      icon: <Club />,
-      checkedClassName: "text-green-500 border-green-500",
+      icon: Club,
+      cn: "text-green-500 border-green-500",
     },
   ];
 
@@ -189,10 +189,10 @@ export function ExampleForm() {
                   </FormControl>
 
                   <SelectContent>
-                    {selectAndRadioData.map((item, index) => (
-                      <SelectItem key={index} value={item.value}>
-                        {item.icon}
-                        {item.value}
+                    {selectAndRadioData.map(({ value, icon: Icon }) => (
+                      <SelectItem key={value} value={value}>
+                        <Icon />
+                        {value}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -268,12 +268,26 @@ export function ExampleForm() {
             <FormItem>
               <FormLabel className="label-required">Radio Group</FormLabel>
               <RadioGroup value={field.value} onValueChange={field.onChange}>
-                {selectAndRadioData.map((item, index) => (
-                  <FormItem key={index} className="flex-row items-center">
+                {selectAndRadioData.map(({ value, icon: Icon }) => (
+                  <FormItem
+                    key={value}
+                    className="has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
+                  >
                     <FormControl>
-                      <RadioGroupItem value={item.value} />
+                      <RadioGroupItem
+                        value={value}
+                        className="order-1 after:absolute after:inset-0"
+                      />
                     </FormControl>
-                    <FormLabel>{item.value}</FormLabel>
+
+                    <div className="grid grow gap-2">
+                      <FormLabel className="flex items-center">
+                        <Icon /> {value}
+                      </FormLabel>
+                      <small className="text-muted-foreground text-xs">
+                        You can use this card with a label and a description.
+                      </small>
+                    </div>
                   </FormItem>
                 ))}
               </RadioGroup>
@@ -291,8 +305,8 @@ export function ExampleForm() {
               <FormLabel className="label-required">File</FormLabel>
               <FileUpload
                 accept={fileType}
-                // maxSize={toBytes(1)}
                 multiple
+                // maxSize={toBytes(1)}
                 {...field}
               />
               <FormMessage />

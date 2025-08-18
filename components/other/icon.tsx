@@ -13,12 +13,12 @@ export function Loader({
   className,
   ...props
 }: LoaderPropsWithLoading) {
-  const loadingIcon = (
+  const loaderIcon = (
     <LoaderCircle className={cn("animate-spin", className)} {...props} />
   );
 
   const iconNode = loading
-    ? (icon?.loader ?? loadingIcon)
+    ? (icon?.loader ?? loaderIcon)
     : (icon?.base ?? null);
 
   if (!iconNode) return;

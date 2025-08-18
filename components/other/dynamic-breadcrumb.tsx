@@ -46,7 +46,7 @@ export function DynamicBreadcrumb({
           if (isMobile && index !== 0) return;
 
           return (
-            <Fragment key={index}>
+            <Fragment key={url}>
               <BreadcrumbItem className="shrink-0">
                 <BreadcrumbLink asChild>
                   <Link href={url} className="link">
@@ -72,7 +72,7 @@ export function DynamicBreadcrumb({
                     if (isMobile && index === 0) return;
 
                     return (
-                      <DropdownMenuItem key={index} asChild>
+                      <DropdownMenuItem key={url} asChild>
                         <Link href={url}>{displayName}</Link>
                       </DropdownMenuItem>
                     );
