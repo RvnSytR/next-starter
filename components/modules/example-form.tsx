@@ -271,7 +271,7 @@ export function ExampleForm() {
                 {selectAndRadioData.map(({ value, icon: Icon }) => (
                   <FormItem
                     key={value}
-                    className="has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
+                    className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
                   >
                     <FormControl>
                       <RadioGroupItem
@@ -302,7 +302,7 @@ export function ExampleForm() {
           name="file"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="label-required">File</FormLabel>
+              <FormLabel>File</FormLabel>
               <FileUpload
                 accept={fileType}
                 multiple

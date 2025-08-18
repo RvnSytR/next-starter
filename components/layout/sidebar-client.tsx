@@ -1,6 +1,6 @@
 "use client";
 
-import { Route } from "@/lib/const";
+import { Route } from "@/lib/routes";
 import { getActiveRoute } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";

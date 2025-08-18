@@ -106,8 +106,8 @@ export function FileUpload({
         onDragEnter={handleDragEnterAndOver}
         onDragOver={handleDragEnterAndOver}
         className={cn(
-          "group border-input flex flex-col items-center gap-y-2 rounded-md border border-dashed px-4 py-8 text-center outline-none",
-          "focus-visible:border-ring focus-visible:ring-ring/50 hover:cursor-pointer focus-visible:ring-[3px]",
+          "group border-input dark:bg-input/30 flex flex-col items-center gap-y-2 rounded-md border px-4 py-8 text-center outline-none hover:cursor-pointer",
+          "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
           classNames?.dropzone,
         )}
       >
