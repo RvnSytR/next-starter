@@ -96,7 +96,7 @@ export const zodUser = z.object({
     .refine((v) => v, { error: cUser.agreement }),
 });
 
-export const zodAuthSignUp = zodUser
+export const zodUserSignUp = zodUser
   .pick({
     name: true,
     email: true,

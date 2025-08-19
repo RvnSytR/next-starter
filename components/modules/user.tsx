@@ -15,11 +15,11 @@ import { allRoles, Role, rolesMeta, userRoles } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
 import { capitalize, cn } from "@/lib/utils";
 import {
-  zodAuthSignUp,
   zodFile,
   zodUser,
   zodUserChangePassword,
   zodUserCreate,
+  zodUserSignUp,
 } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -377,7 +377,7 @@ export function SignInForm() {
 
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const schema = zodAuthSignUp;
+  const schema = zodUserSignUp;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),

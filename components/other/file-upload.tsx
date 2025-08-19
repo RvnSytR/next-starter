@@ -168,7 +168,7 @@ export function FileUpload({
                   <X />
                 </Button>
 
-                <div className="bg-muted flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
+                <div className="dark:bg-input/30 flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
                   {isImage ? (
                     <Image
                       src={fileURL}

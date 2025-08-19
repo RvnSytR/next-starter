@@ -1,5 +1,6 @@
 "use client";
 
+import { FileType } from "@/lib/const";
 import { buttonText } from "@/lib/content";
 import {
   formatNumber,
@@ -66,7 +67,7 @@ export function ExampleForm() {
     },
   ];
 
-  const fileType = "image";
+  const fileType: FileType = "image";
   const schema = z.object({
     text: z.string().min(1),
     numeric: z.number(),

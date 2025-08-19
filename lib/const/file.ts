@@ -28,15 +28,7 @@ type FileMetaProps = Record<
   }
 >;
 
-export const fileMeta: FileMetaProps = {
-  file: {
-    displayName: "berkas",
-    mimeTypes: ["*/*"],
-    extensions: [],
-    size: { mb: 2, bytes: toBytes(2) },
-    icon: Upload,
-  },
-
+const meta: Omit<FileMetaProps, "file"> = {
   image: {
     displayName: "gambar",
     mimeTypes: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
@@ -95,4 +87,16 @@ export const fileMeta: FileMetaProps = {
     size: { mb: 50, bytes: toBytes(50) },
     icon: Video,
   },
+};
+
+export const fileMeta: FileMetaProps = {
+  file: {
+    displayName: "berkas",
+    mimeTypes: Object.values(meta).flatMap((item) => item.mimeTypes),
+    extensions: Object.values(meta).flatMap((item) => item.extensions),
+    size: { mb: 2, bytes: toBytes(2) },
+    icon: Upload,
+  },
+
+  ...meta,
 };
