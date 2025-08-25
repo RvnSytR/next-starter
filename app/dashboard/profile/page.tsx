@@ -17,7 +17,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appInfo } from "@/lib/const";
+import { appMeta } from "@/lib/meta";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
 import { getListSession, requireAuthorizedSession } from "@/server/action";
@@ -41,7 +41,7 @@ export default async function Page() {
         <CardHeader className="border-b">
           <CardTitle>Informasi Pribadi</CardTitle>
           <CardDescription>
-            Perbarui dan kelola informasi profil {appInfo.name} Anda.
+            Perbarui dan kelola informasi profil {appMeta.name} Anda.
           </CardDescription>
           <CardAction className="flex flex-col items-end gap-1.5 md:flex-row">
             {user.emailVerified && <UserVerifiedBadge />}
@@ -81,7 +81,7 @@ export default async function Page() {
           ))}
         </CardContent>
 
-        <CardFooter className="border-t">
+        <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
           <RevokeOtherSessionsButton />
         </CardFooter>
       </Card>

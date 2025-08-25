@@ -1,9 +1,10 @@
-import { appInfo, dashboardMenu, Menu } from "../const";
+import { dashboardMenu, Menu } from "../menu";
+import { appMeta, Languages, languagesMeta } from "../meta";
 import { Role } from "../permission";
 import { allRoutes, Route, RouteRole, routesMeta } from "../routes";
 
 export function getTitle(r: Route) {
-  return `${routesMeta[r].displayName} | ${appInfo.name}`;
+  return `${routesMeta[r].displayName} | ${appMeta.name}`;
 }
 
 export function getRandomString(length: number) {
@@ -22,6 +23,17 @@ export function getRandomColor(withHash?: boolean) {
   let color = withHash ? "#" : "";
   for (let i = 0; i < 6; i++) color += letters[Math.floor(Math.random() * 16)];
   return color;
+}
+
+export function getCurrencySymbol(lang: Languages): string {
+  const { locale, currency } = languagesMeta[lang];
+  const formatted = new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(1);
+  return formatted.replace(/[\d\s.,]/g, "").trim();
 }
 
 export function getMenuByRole(

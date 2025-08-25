@@ -89,12 +89,13 @@ const meta: Omit<FileMetaProps, "file"> = {
   },
 };
 
+const maxFileSize = Math.max(...Object.values(meta).map(({ size }) => size.mb));
 export const fileMeta: FileMetaProps = {
   file: {
     displayName: "berkas",
     mimeTypes: Object.values(meta).flatMap((item) => item.mimeTypes),
     extensions: Object.values(meta).flatMap((item) => item.extensions),
-    size: { mb: 2, bytes: toBytes(2) },
+    size: { mb: maxFileSize, bytes: toBytes(maxFileSize) },
     icon: Upload,
   },
 

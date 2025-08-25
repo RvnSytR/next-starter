@@ -1,7 +1,7 @@
-import { FileType } from "@/lib/const";
-import { buttonText, getFileInputMetaAndText } from "@/lib/content";
+import { actions } from "@/lib/content";
+import { fileMeta, FileType } from "@/lib/meta";
 import { cn, toMegabytes } from "@/lib/utils";
-import { zodFile } from "@/lib/zod";
+import { zodSchemas } from "@/lib/zod";
 import { Dot, X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -23,9 +23,8 @@ export function FileUpload({
   accept = "file",
   maxSize,
   classNames,
-  placeholder,
   multiple = false,
-}: Pick<ComponentProps<"input">, "placeholder" | "multiple"> & {
+}: Pick<ComponentProps<"input">, "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
@@ -34,12 +33,18 @@ export function FileUpload({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { meta, text } = getFileInputMetaAndText(accept);
-  const Icon = meta.icon;
+  const {
+    displayName,
+    mimeTypes,
+    extensions,
+    size,
+    icon: Icon,
+  } = fileMeta[accept];
+
   const isFiles = value.length > 0;
   const fileSize = maxSize
     ? { mb: toMegabytes(maxSize), bytes: maxSize }
-    : meta.size;
+    : size;
 
   const changeHandler = (fileList: FileList | null) => {
     if (!fileList || !fileList.length) return;
@@ -48,12 +53,13 @@ export function FileUpload({
     else onChange(fileArray);
   };
 
-  const resetFiles = () => onChange([]);
-
   const removeFile = (index: number) => {
     const filteredFiles = value.filter((_, i) => i !== index);
     onChange(filteredFiles);
   };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const resetFiles = useCallback(() => onChange([]), []);
 
   const handleOnClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -92,7 +98,7 @@ export function FileUpload({
           tabIndex={-1}
           ref={inputRef}
           multiple={multiple}
-          accept={meta.mimeTypes.join(", ")}
+          accept={mimeTypes.join(", ")}
           className={cn("absolute -z-1 opacity-0")}
           onChange={({ target }) => changeHandler(target.files)}
         />
@@ -120,13 +126,15 @@ export function FileUpload({
           <Icon />
         </div>
 
-        <small className="font-medium">{placeholder ?? text.placeholder}</small>
+        <small className="font-medium">
+          Seret dan lepaskan {displayName} di sini, atau klik untuk mengunggah
+        </small>
 
         <small className="text-muted-foreground flex items-center text-xs">
-          {text.size(fileSize.mb)}
-          {meta.extensions.length > 0 && (
+          Maksimal {fileSize.mb} MB
+          {extensions.length > 0 && (
             <>
-              <Dot /> {`( ${meta.extensions.join(" ")} )`}
+              <Dot /> {`( ${extensions.join(" ")} )`}
             </>
           )}
         </small>
@@ -134,7 +142,9 @@ export function FileUpload({
 
       {isFiles && multiple && (
         <div className="flex items-center justify-between gap-2">
-          <small>{text.total(value.length)}</small>
+          <small>
+            Total {displayName}: {length}
+          </small>
 
           <Button
             type="button"
@@ -142,7 +152,7 @@ export function FileUpload({
             variant="outline_destructive"
             onClick={resetFiles}
           >
-            <X /> {buttonText.clear}
+            <X /> {actions.clear}
           </Button>
         </div>
       )}
@@ -153,7 +163,7 @@ export function FileUpload({
             const fileURL = URL.createObjectURL(file);
             const isImage = file.type.startsWith("image/");
 
-            const schema = zodFile(accept, { maxSize: fileSize.bytes });
+            const schema = zodSchemas.file(accept, { maxSize: fileSize.bytes });
             const res = schema.safeParse([file]);
 
             return (

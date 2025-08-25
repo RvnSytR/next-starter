@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { appInfo } from "@/lib/const";
+import { appMeta } from "@/lib/meta";
 import { getTitle } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -27,11 +27,11 @@ export default function Page() {
         <CardHeader className="text-center">
           <CardTitle className="mx-auto">
             <Link href="/">
-              <h3>{appInfo.name}</h3>
+              <h3>{appMeta.name}</h3>
             </Link>
           </CardTitle>
           <CardDescription>
-            Masuk ke Dashboard {appInfo.name} dengan aman menggunakan akun Anda.
+            Masuk ke Dashboard {appMeta.name} dengan aman menggunakan akun Anda.
           </CardDescription>
         </CardHeader>
 

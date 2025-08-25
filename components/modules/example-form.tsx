@@ -1,41 +1,20 @@
 "use client";
 
-import { FileType } from "@/lib/const";
-import { buttonText } from "@/lib/content";
-import {
-  formatNumber,
-  formatPhone,
-  getCurrencySymbol,
-  sanitizeNumber,
-} from "@/lib/utils";
-import { zodDateRange, zodFile } from "@/lib/zod";
+import { actions } from "@/lib/content";
+import { fieldsMeta, FileType } from "@/lib/meta";
+import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
-import {
-  Club,
-  Diamond,
-  Heart,
-  LockKeyhole,
-  RotateCcw,
-  Save,
-  Spade,
-} from "lucide-react";
+import { Club, Diamond, Heart, Save, Spade } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { ResetButton } from "../other/buttons";
 import { DatePicker } from "../other/date-picker";
+import { Field, FieldWrapper } from "../other/field";
 import { FileUpload } from "../other/file-upload";
-import { InputWrapper } from "../other/input-wrapper";
 import { Button } from "../ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
@@ -46,38 +25,26 @@ import {
 } from "../ui/select";
 // import { uploadFiles } from "@/server/s3";
 
-export function ExampleForm() {
-  const card = ["Spade", "Heart", "Diamond", "Club"] as const;
-  const selectAndRadioData = [
-    { value: "Spade", icon: Spade },
-    {
-      value: "Heart",
-      icon: Heart,
-      cn: "text-pink-500 border-pink-500",
-    },
-    {
-      value: "Diamond",
-      icon: Diamond,
-      cn: "text-sky-500 border-sky-500",
-    },
-    {
-      value: "Club",
-      icon: Club,
-      cn: "text-green-500 border-green-500",
-    },
-  ];
+const card = ["Spade", "Heart", "Diamond", "Club"] as const;
+const selectAndRadioData = [
+  { value: "Spade", icon: Spade },
+  { value: "Heart", icon: Heart },
+  { value: "Diamond", icon: Diamond },
+  { value: "Club", icon: Club },
+];
 
+export function ExampleForm() {
   const fileType: FileType = "image";
   const schema = z.object({
-    text: z.string().min(1),
+    text: zodSchemas.string("Text field"),
     numeric: z.number(),
     phone: z.number(),
-    date: z.date(),
-    dateMultiple: z.array(z.date()).min(1),
-    dateRange: zodDateRange,
+    date: zodSchemas.date,
+    dateMultiple: zodSchemas.dateMultiple.min(1),
+    dateRange: zodSchemas.dateRange,
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile(fileType, {
+    file: zodSchemas.file(fileType, {
       optional: true,
       // maxSize: toBytes(1),
       // min: 2,
@@ -88,7 +55,7 @@ export function ExampleForm() {
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      text: "Some Text",
+      text: "Hello World",
       numeric: 100000,
       phone: 81234567890,
       date: new Date(),
@@ -116,15 +83,7 @@ export function ExampleForm() {
             control={form.control}
             name="text"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Text</FormLabel>
-                <InputWrapper icon={<LockKeyhole />}>
-                  <FormControl>
-                    <Input type="text" {...field} />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
+              <Field field={field} {...fieldsMeta.example.text} />
             )}
           />
 
@@ -132,22 +91,8 @@ export function ExampleForm() {
           <FormField
             control={form.control}
             name="numeric"
-            render={({ field: { value, onChange, ...rest } }) => (
-              <FormItem>
-                <FormLabel className="label-required">Numeric</FormLabel>
-                <InputWrapper icon={getCurrencySymbol("id")}>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      inputMode="numeric"
-                      value={formatNumber(value)}
-                      onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-                      {...rest}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
+            render={({ field }) => (
+              <Field field={field} {...fieldsMeta.example.numeric} />
             )}
           />
 
@@ -155,23 +100,8 @@ export function ExampleForm() {
           <FormField
             control={form.control}
             name="phone"
-            render={({ field: { value, onChange, ...rest } }) => (
-              <FormItem>
-                <FormLabel className="label-required">Phone</FormLabel>
-                <InputWrapper icon="+62">
-                  <FormControl>
-                    <Input
-                      type="text"
-                      inputMode="tel"
-                      value={formatPhone(value)}
-                      onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-                      className="pl-11"
-                      {...rest}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
+            render={({ field }) => (
+              <Field field={field} {...fieldsMeta.example.phone} />
             )}
           />
 
@@ -180,8 +110,7 @@ export function ExampleForm() {
             control={form.control}
             name="select"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Select</FormLabel>
+              <FieldWrapper label="Select" required>
                 <Select value={field.value} onValueChange={field.onChange}>
                   <FormControl>
                     <SelectTrigger>
@@ -192,14 +121,12 @@ export function ExampleForm() {
                   <SelectContent>
                     {selectAndRadioData.map(({ value, icon: Icon }) => (
                       <SelectItem key={value} value={value}>
-                        <Icon />
-                        {value}
+                        <Icon /> {value}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <FormMessage />
-              </FormItem>
+              </FieldWrapper>
             )}
           />
         </div>
@@ -211,16 +138,14 @@ export function ExampleForm() {
             control={form.control}
             name="date"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Date Single</FormLabel>
+              <FieldWrapper label="Date" required>
                 <DatePicker
                   mode="single"
                   selected={field.value}
                   onSelect={field.onChange}
                   withControl
                 />
-                <FormMessage />
-              </FormItem>
+              </FieldWrapper>
             )}
           />
 
@@ -229,16 +154,14 @@ export function ExampleForm() {
             control={form.control}
             name="dateMultiple"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Date Multiple</FormLabel>
+              <FieldWrapper label="Date Multiple" required>
                 <DatePicker
                   mode="multiple"
                   selected={field.value}
                   onSelect={field.onChange}
                   withControl
                 />
-                <FormMessage />
-              </FormItem>
+              </FieldWrapper>
             )}
           />
 
@@ -247,16 +170,14 @@ export function ExampleForm() {
             control={form.control}
             name="dateRange"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">Date Range</FormLabel>
+              <FieldWrapper label="Date Range" required>
                 <DatePicker
                   mode="range"
                   selected={field.value}
                   onSelect={field.onChange}
                   withControl
                 />
-                <FormMessage />
-              </FormItem>
+              </FieldWrapper>
             )}
           />
         </div>
@@ -266,8 +187,7 @@ export function ExampleForm() {
           control={form.control}
           name="radio"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">Radio Group</FormLabel>
+            <FieldWrapper label="Radio Group" required>
               <RadioGroup value={field.value} onValueChange={field.onChange}>
                 {selectAndRadioData.map(({ value, icon: Icon }) => (
                   <FormItem
@@ -292,8 +212,7 @@ export function ExampleForm() {
                   </FormItem>
                 ))}
               </RadioGroup>
-              <FormMessage />
-            </FormItem>
+            </FieldWrapper>
           )}
         />
 
@@ -302,36 +221,26 @@ export function ExampleForm() {
           control={form.control}
           name="file"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>File</FormLabel>
+            <FieldWrapper label="File Upload">
               <FileUpload
                 accept={fileType}
                 multiple
                 // maxSize={toBytes(1)}
                 {...field}
               />
-              <FormMessage />
-            </FormItem>
+            </FieldWrapper>
           )}
         />
 
         <div className="flex gap-2">
           <Button type="submit">
-            <Save />
             {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
-            {buttonText.save}
+            <Save /> {actions.save}
           </Button>
 
-          <Button type="reset" variant="outline" onClick={() => form.reset()}>
-            <RotateCcw />
-            {buttonText.reset}
-          </Button>
+          <ResetButton fn={form.reset} />
         </div>
       </form>
     </Form>
   );
-}
-
-export function ExampleInputFile() {
-  return;
 }

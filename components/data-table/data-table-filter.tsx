@@ -23,7 +23,7 @@ import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { buttonText } from "@/lib/content";
+import { actions } from "@/lib/content";
 import {
   ColumnDataType,
   ColumnOption,
@@ -175,7 +175,7 @@ export function FilterActions<TData>({
         table.setGlobalFilter("");
       }}
     >
-      <X /> {buttonText.clear}
+      <X /> {actions.clear}
     </Button>
   );
 }

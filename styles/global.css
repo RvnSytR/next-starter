@@ -5,9 +5,14 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --rvns: oklch(0.6799 0.1156 200.65);
-  --success: oklch(74.34% 0.2523 142.43);
-  --warning: oklch(0.828 0.189 84.429);
+  --rvns: oklch(0.9001 0.1568 185.22);
+
+  --success: var(--color-green-500);
+  --warning: var(--color-yellow-500);
+
+  --radius: 0.75rem;
+  --tracking-normal: 0em;
+  --spacing: 0.25rem;
 
   --background: oklch(0.99 0 0);
   --foreground: oklch(0 0 0);
@@ -41,10 +46,6 @@
   --sidebar-border: oklch(0.94 0 0);
   --sidebar-ring: oklch(0 0 0);
 
-  --radius: 0.75rem;
-  --tracking-normal: 0em;
-  --spacing: 0.25rem;
-
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-sm:
@@ -61,9 +62,6 @@
 }
 
 .dark {
-  --success: oklch(78.03% 0.2188 141.65);
-  --warning: oklch(0.828 0.189 84.429);
-
   --background: oklch(0 0 0);
   --foreground: oklch(1 0 0);
   --card: oklch(0.14 0 0);
@@ -112,9 +110,23 @@
 }
 
 @theme inline {
+  --font-sans: var(--font-geist);
+  --font-mono: var(--font-geist-mono);
+
   --color-rvns: var(--rvns);
+
   --color-success: var(--success);
   --color-warning: var(--warning);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --breakpoint-3xl: 112rem; /* 1792px */
+  --breakpoint-4xl: 128rem; /* 2048px */
+  --breakpoint-5xl: 144rem; /* 2304px */
+  --breakpoint-6xl: 160rem; /* 2560px */
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -148,11 +160,6 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-
   --shadow-2xs: var(--shadow-2xs);
   --shadow-xs: var(--shadow-xs);
   --shadow-sm: var(--shadow-sm);
@@ -161,14 +168,6 @@
   --shadow-lg: var(--shadow-lg);
   --shadow-xl: var(--shadow-xl);
   --shadow-2xl: var(--shadow-2xl);
-
-  --breakpoint-3xl: 112rem; /* 1792px */
-  --breakpoint-4xl: 128rem; /* 2048px */
-  --breakpoint-5xl: 144rem; /* 2304px */
-  --breakpoint-6xl: 160rem; /* 2560px */
-
-  --font-sans: var(--font-geist);
-  --font-mono: var(--font-geist-mono);
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
@@ -254,7 +253,7 @@
   }
 
   form {
-    @apply flex flex-col gap-x-2 gap-y-4;
+    @apply flex flex-col gap-x-2 gap-y-4 has-data-[slot=card-content]:gap-y-6;
   }
 }
 

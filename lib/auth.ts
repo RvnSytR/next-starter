@@ -3,11 +3,11 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin as adminPlugins } from "better-auth/plugins";
-import { appInfo } from "./const";
+import { appMeta } from "./meta";
 import { adminRoles, defaultRole, roles } from "./permission";
 
 export const auth = betterAuth({
-  appName: appInfo.name,
+  appName: appMeta.name,
   database: drizzleAdapter(db, { provider: "pg" }),
   emailAndPassword: { enabled: true, autoSignIn: false },
   plugins: [nextCookies(), adminPlugins({ roles, adminRoles })],

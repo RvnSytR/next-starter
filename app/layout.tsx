@@ -1,6 +1,6 @@
 import { GridPattern } from "@/components/other/grid-pattern";
 import { Toaster } from "@/components/ui/sonner";
-import { appInfo } from "@/lib/const";
+import { appMeta } from "@/lib/meta";
 import { cn } from "@/lib/utils";
 import "@/styles/global.css";
 import { Metadata, Viewport } from "next";
@@ -20,9 +20,9 @@ const geistMonoFont = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: appInfo.name,
-  description: appInfo.description,
-  keywords: appInfo.keywords,
+  title: appMeta.name,
+  description: appMeta.description,
+  keywords: appMeta.keywords,
   manifest: "/manifest.json",
 };
 
@@ -40,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={appInfo.lang} suppressHydrationWarning>
+    <html lang={appMeta.lang} suppressHydrationWarning>
       <body className={cn(geistFont.variable, geistMonoFont.variable)}>
         <ThemeProvider
           attribute="class"

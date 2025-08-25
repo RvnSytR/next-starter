@@ -1,5 +1,5 @@
 import { Session } from "@/lib/auth";
-import { dashboardfooterMenu } from "@/lib/const";
+import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { Route, routesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";

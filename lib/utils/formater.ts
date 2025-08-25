@@ -1,10 +1,10 @@
-import { appInfo, Languages, languagesMeta } from "../const";
+import { appMeta, Languages, languagesMeta } from "../meta";
 
-export function capitalize(str: string) {
-  return str
-    .split(" ")
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join(" ");
+export function capitalize(str: string, mode: "word" | "first" = "word") {
+  const handler = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
+  if (mode === "first") return handler(str);
+  return str.split(" ").map(handler).join(" ");
 }
 
 export function sanitizeNumber(str: string): number {
@@ -38,23 +38,13 @@ export function toKebabCase(str: string) {
     .replace(/\s+/g, "-");
 }
 
-export function getCurrencySymbol(lang: Languages): string {
-  const { locale, currency } = languagesMeta[lang];
-  const formatted = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(1);
-  return formatted.replace(/[\d\s.,]/g, "").trim();
-}
-
 export function formatNumber(
   number: number,
   props?: { lang?: Languages; options?: Intl.NumberFormatOptions },
 ) {
-  const locale = languagesMeta[props?.lang ?? appInfo.lang].locale;
-  return new Intl.NumberFormat(locale, props?.options).format(number);
+  const locale = languagesMeta[props?.lang ?? appMeta.lang].locale;
+  const value = new Intl.NumberFormat(locale, props?.options).format(number);
+  return value === "0" ? "" : value;
 }
 
 export function formatPhone(number: number, prefix?: "+62" | "0") {

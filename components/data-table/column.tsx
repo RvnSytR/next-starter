@@ -1,8 +1,8 @@
 "use client";
 
 import { Session } from "@/lib/auth";
-import { baseContent, tableText } from "@/lib/content";
 import { filterFn } from "@/lib/filters";
+import { fieldsMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
 import { capitalize, formatDate } from "@/lib/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
@@ -22,8 +22,7 @@ import {
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
-const columnText = tableText.column;
-const cUserFields = baseContent.user.fields;
+const userFields = fieldsMeta.user;
 
 function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
   return (
@@ -79,14 +78,14 @@ export const getUserColumn = (currentUserId: string) => [
     enableSorting: false,
   }),
   createUserColumn.display({
-    id: columnText.num,
-    header: columnText.num,
+    id: fieldsMeta.num,
+    header: fieldsMeta.num,
     cell: ({ row }) => cellNum(row.index + 1),
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
-    id: cUserFields.avatar,
-    header: cUserFields.avatar,
+    id: userFields.avatar,
+    header: userFields.avatar,
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-20" />
@@ -94,8 +93,8 @@ export const getUserColumn = (currentUserId: string) => [
     ),
   }),
   createUserColumn.accessor(({ email }) => email, {
-    id: cUserFields.email.label,
-    header: ({ column }) => headerButton(column, cUserFields.email.label),
+    id: userFields.email.label,
+    header: ({ column }) => headerButton(column, userFields.email.label),
     cell: ({ row }) => {
       const { id, email, emailVerified } = row.original;
       if (id === currentUserId) {
@@ -109,26 +108,26 @@ export const getUserColumn = (currentUserId: string) => [
       return <UserDetailSheet data={row.original} />;
     },
     filterFn: filterFn("text"),
-    meta: { displayName: cUserFields.email.label, type: "text", icon: Mail },
+    meta: { displayName: userFields.email.label, type: "text", icon: Mail },
   }),
   createUserColumn.accessor(({ name }) => name, {
-    id: cUserFields.name.label,
-    header: ({ column }) => headerButton(column, cUserFields.name.label),
+    id: userFields.name.label,
+    header: ({ column }) => headerButton(column, userFields.name.label),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
     meta: {
-      displayName: cUserFields.name.label,
+      displayName: userFields.name.label,
       type: "text",
       icon: UserRound,
     },
   }),
   createUserColumn.accessor(({ role }) => role, {
-    id: cUserFields.role,
-    header: ({ column }) => headerButton(column, cUserFields.role),
+    id: userFields.role,
+    header: ({ column }) => headerButton(column, userFields.role),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
-      displayName: cUserFields.role,
+      displayName: userFields.role,
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
@@ -138,15 +137,15 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
-    id: columnText.createdAt,
-    header: ({ column }) => headerButton(column, columnText.createdAt),
+    id: fieldsMeta.createdAt,
+    header: ({ column }) => headerButton(column, fieldsMeta.createdAt),
     cell: ({ row }) =>
       row.original.createdAt
         ? formatDate(row.original.createdAt, "PPPp")
         : null,
     filterFn: filterFn("date"),
     meta: {
-      displayName: columnText.createdAt,
+      displayName: fieldsMeta.createdAt,
       type: "date",
       icon: CalendarCheck2,
     },

@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonText, tableText } from "@/lib/content";
+import { actions } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -25,7 +25,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   Columns3,
-  ListRestart,
+  RotateCcw,
 } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
 import { RefreshButton } from "../other/buttons";
@@ -75,7 +75,6 @@ export type OtherDataTableProps<TData> = ToolBoxProps & {
     table: DataTableType<TData>,
   ) => ReactNode;
   caption?: string;
-  noResult?: string[];
   className?: string;
   classNames?: {
     toolbox?: string;
@@ -90,7 +89,6 @@ export function DataTable<TData>({
   data,
   columns,
   caption,
-  noResult,
   className,
   classNames,
   onRowSelection,
@@ -212,9 +210,7 @@ export function DataTable<TData>({
                   colSpan={columns.length}
                   className="text-muted-foreground py-4 text-center whitespace-pre-line"
                 >
-                  {noResult
-                    ? noResult.map((item) => item + "\n")
-                    : tableText.noResult}
+                  Tidak ada hasil yang ditemukan.
                 </TableCell>
               </TableRow>
             )}
@@ -229,19 +225,21 @@ export function DataTable<TData>({
 
         <div className="flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
           <small className="text-muted-foreground">
-            {tableText.rowSelection(selectedRows.length, filteredRows.length)}
+            {selectedRows.length} dari {filteredRows.length} baris dipilih.
           </small>
 
           <div className="flex flex-col items-center gap-4 lg:flex-row">
-            <div className="order-2 flex items-center gap-4 lg:order-1">
-              <RowsPerPage table={table} rowsLimitArr={rowsLimitArr} />
+            <RowsPerPage
+              table={table}
+              rowsLimitArr={rowsLimitArr}
+              className="order-3 lg:order-1"
+            />
 
-              <small className="tabular-nums">
-                {tableText.pagination(pageNumber, totalPage)}
-              </small>
-            </div>
+            <small className="order-2 tabular-nums">
+              Halaman {pageNumber} dari {totalPage}
+            </small>
 
-            <Pagination table={table} className="order-1 lg:order-2" />
+            <Pagination table={table} className="order-1 lg:order-3" />
           </div>
         </div>
       </div>
@@ -318,8 +316,7 @@ function Reset<TData>({
         table.resetSorting();
       }}
     >
-      <ListRestart />
-      {buttonText.reset}
+      <RotateCcw /> {actions.reset}
     </Button>
   );
 }
@@ -329,7 +326,7 @@ function View<TData>({ table }: TableProps<TData>) {
     <Popover>
       <PopoverTrigger asChild>
         <Button size="sm" variant="outline">
-          <Columns3 /> {buttonText.view}
+          <Columns3 /> {actions.view}
         </Button>
       </PopoverTrigger>
 
@@ -415,7 +412,7 @@ function RowsPerPage<TData>({
 }: TableProps<TData> & { rowsLimitArr: number[]; className?: string }) {
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
-      <Label>{tableText.rowsPerPage}</Label>
+      <Label>Baris per halaman</Label>
       <Select
         value={String(table.getState().pagination.pageSize)}
         onValueChange={(value) => {

@@ -83,39 +83,45 @@ export function ExampleAreaAndPieChart() {
 
   form: `"use client";
 
-import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { buttonText } from "@/lib/content";
-import { zodDateRange, zodFile } from "@/lib/zod";
+import { actions } from "@/lib/content";
+import { FileType } from "@/lib/meta";
+import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ResetButton } from "@/other/buttons";
+import { Button } from "@/ui/button";
+import { Form } from "@/ui/form";
 import { addDays } from "date-fns";
-import { RotateCcw, Save } from "lucide-react";
+import { Club, Diamond, Heart, Save, Spade } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 // import { uploadFiles } from "@/server/s3";
 
-export function ExampleForm() {
-  const card = ["Spade", "Heart", "Diamond", "Club"] as const;
+const card = ["Spade", "Heart", "Diamond", "Club"] as const;
 
-  const fileType = "image";
+export function ExampleForm() {
+  const fileType: FileType = "image";
   const schema = z.object({
-    text: z.string().min(1),
+    text: zodSchemas.string("Text field"),
     numeric: z.number(),
     phone: z.number(),
-    date: z.date(),
-    dateMultiple: z.array(z.date()),
-    dateRange: zodDateRange,
+    date: zodSchemas.date,
+    dateMultiple: zodSchemas.dateMultiple.min(1),
+    dateRange: zodSchemas.dateRange,
     select: z.enum(card),
     radio: z.enum(card),
-    file: zodFile(fileType),
-    // file: zodFile("file", { optional: true }),
+    file: zodSchemas.file(fileType, {
+      optional: true,
+      // maxSize: toBytes(1),
+      // min: 2,
+      // max: 5,
+    }),
   });
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      text: "Some Text",
+      text: "Hello World",
       numeric: 100000,
       phone: 81234567890,
       date: new Date(),
@@ -129,8 +135,7 @@ export function ExampleForm() {
 
   const formHandler = async (formData: z.infer<typeof schema>) => {
     console.log(formData.file);
-    // const res = await uploadFiles({ files: formData.file, contentType: fileType });
-
+    // const res = await uploadFiles({ files: formData.file });
     toast(<p>{JSON.stringify(formData, null, 2)}</p>);
   };
 
@@ -142,14 +147,10 @@ export function ExampleForm() {
         <div className="flex gap-2">
           <Button type="submit">
             {/* {loading ? <Spinner /> : <Save />} */}
-            <Save />
-            {buttonText.save}
+            <Save /> {actions.save}
           </Button>
 
-          <Button type="reset" variant="outline" onClick={() => form.reset()}>
-            <RotateCcw />
-            {buttonText.reset}
-          </Button>
+          <ResetButton fn={form.reset} />
         </div>
       </form>
     </Form>

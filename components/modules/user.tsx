@@ -3,24 +3,12 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
-import { fileMeta } from "@/lib/const";
-import {
-  baseContent,
-  buttonText,
-  commonText,
-  messages,
-  tableText,
-} from "@/lib/content";
-import { allRoles, Role, rolesMeta, userRoles } from "@/lib/permission";
+import { actions, messages } from "@/lib/content";
+import { fieldsMeta, fileMeta } from "@/lib/meta";
+import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
 import { capitalize, cn } from "@/lib/utils";
-import {
-  zodFile,
-  zodUser,
-  zodUserChangePassword,
-  zodUserCreate,
-  zodUserSignUp,
-} from "@/lib/zod";
+import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
   deleteUsers,
@@ -31,20 +19,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   BadgeCheck,
   Ban,
-  CircleFadingArrowUp,
-  Dot,
   Gamepad2,
   Info,
   Layers2,
-  LockKeyhole,
-  LockKeyholeOpen,
   LogIn,
   LogOut,
-  Mail,
   Monitor,
   MonitorOff,
   MonitorSmartphone,
-  RotateCcw,
   Save,
   Settings2,
   Smartphone,
@@ -52,7 +34,6 @@ import {
   Trash2,
   TriangleAlert,
   TvMinimal,
-  UserRound,
   UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -64,8 +45,9 @@ import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SheetDetails } from "../layout/section";
+import { ResetButton } from "../other/buttons";
+import { Field, FieldWrapper } from "../other/field";
 import { GithubIcon, Loader } from "../other/icon";
-import { InputWrapper } from "../other/input-wrapper";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -108,7 +90,6 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import {
   Select,
@@ -130,9 +111,15 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const content = baseContent.user;
-const cFields = content.fields;
-const cComps = content.components;
+const userFields = fieldsMeta.user;
+
+const sharedText = {
+  signIn: "Berhasil masuk - Selamat datang!",
+  signOn: (social: string) => `Lanjutkan dengan ${social}`,
+
+  passwordNotMatch: "Kata sandi tidak cocok - silakan periksa kembali.",
+  revokeSession: "Cabut Sesi",
+};
 
 export function UserRoleBadge({
   role,
@@ -175,12 +162,12 @@ export function UserVerifiedBadge({
             variant="outline_rvns"
             className={cn("capitalize", classNames?.badge)}
           >
-            <BadgeCheck className={classNames?.icon} /> {commonText.verified}
+            <BadgeCheck className={classNames?.icon} /> Terverifikasi
           </Badge>
         )}
       </TooltipTrigger>
       <TooltipContent className={classNames?.content}>
-        {content.verified}
+        Pengguna ini telah memverifikasi email mereka.
       </TooltipContent>
     </Tooltip>
   );
@@ -211,899 +198,6 @@ export function UserAvatar({
   );
 }
 
-export function SignOutButton() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  return (
-    <SidebarMenuButton
-      variant="outline_destructive"
-      className="text-destructive hover:text-destructive justify-center"
-      disabled={isLoading}
-      onClick={() => {
-        setIsLoading(true);
-        authClient.signOut({
-          fetchOptions: {
-            onError: ({ error }) => {
-              toast.error(error.message);
-              setIsLoading(false);
-            },
-            onSuccess: () => {
-              toast.success(content.signOut);
-              router.push(signInRoute);
-            },
-          },
-        });
-      }}
-    >
-      <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
-      {buttonText.signOut}
-    </SidebarMenuButton>
-  );
-}
-
-export function SignOnGithubButton() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  return (
-    <Button
-      variant="outline"
-      disabled={isLoading}
-      onClick={() => {
-        setIsLoading(true);
-        authClient.signIn.social(
-          {
-            provider: "github",
-            callbackURL: dashboardRoute,
-            errorCallbackURL: signInRoute,
-          },
-          {
-            onError: ({ error }) => {
-              toast.error(error.message);
-              setIsLoading(false);
-            },
-            onSuccess: () => {
-              toast.success(content.signIn);
-            },
-          },
-        );
-      }}
-    >
-      <Loader loading={isLoading} icon={{ base: <GithubIcon /> }} />
-      {buttonText.signOn("Github")}
-    </Button>
-  );
-}
-
-export function SignInForm() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const schema = zodUser.pick({
-    email: true,
-    password: true,
-    rememberMe: true,
-  });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: { email: "", password: "", rememberMe: false },
-  });
-
-  const formHandler = (formData: z.infer<typeof schema>) => {
-    setIsLoading(true);
-    authClient.signIn.email(
-      { ...formData, callbackURL: signInRoute },
-      {
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        },
-        onSuccess: () => {
-          toast.success(content.signIn);
-        },
-      },
-    );
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.email.label}
-              </FormLabel>
-              <InputWrapper icon={<Mail />}>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={cFields.email.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.password.label}
-              </FormLabel>
-              <InputWrapper icon={<LockKeyhole />}>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder={cFields.password.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="rememberMe"
-          render={({ field }) => (
-            <FormItem className="flex-row">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>{cFields.rememberMe}</FormLabel>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
-          {buttonText.signIn}
-        </Button>
-      </form>
-    </Form>
-  );
-}
-
-export function SignUpForm() {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const schema = zodUserSignUp;
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      isAgree: false,
-    },
-  });
-
-  const formHandler = (formData: z.infer<typeof schema>) => {
-    setIsLoading(true);
-    authClient.signUp.email(formData, {
-      onError: ({ error }) => {
-        toast.error(error.message);
-        setIsLoading(false);
-      },
-      onSuccess: () => {
-        toast.success(content.signUp);
-        setIsLoading(false);
-        form.reset();
-      },
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.name.label}
-              </FormLabel>
-              <InputWrapper icon={<UserRound />}>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={cFields.name.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.email.label}
-              </FormLabel>
-              <InputWrapper icon={<Mail />}>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={cFields.email.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.password.label}
-              </FormLabel>
-              <InputWrapper icon={<LockKeyhole />}>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder={cFields.password.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className="label-required">
-                {cFields.confirmPassword.label}
-              </FormLabel>
-              <InputWrapper icon={<LockKeyhole />}>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder={cFields.confirmPassword.placeholder}
-                    {...field}
-                  />
-                </FormControl>
-              </InputWrapper>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isAgree"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex gap-x-2.5">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-
-                <div className="flex flex-col items-start gap-y-1.5">
-                  <FormLabel>{cFields.agreement.label}</FormLabel>
-                  <small className="text-muted-foreground text-xs font-normal">
-                    {cFields.agreement.placeholder}
-                  </small>
-                </div>
-              </div>
-
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
-          {buttonText.signUp}
-        </Button>
-      </form>
-    </Form>
-  );
-}
-
-export function ProfilePicture({
-  id,
-  name,
-  image,
-}: Pick<Session["user"], "id" | "name" | "image">) {
-  const router = useRouter();
-  const inputAvatarRef = useRef<HTMLInputElement>(null);
-  const [isChange, setIsChange] = useState<boolean>(false);
-  const [isRemoved, setIsRemoved] = useState<boolean>(false);
-
-  const contentType = "image";
-  const { title, desc, success } = cComps.avatar;
-
-  const schema = zodFile(contentType);
-
-  const changeHandler = async (fileList: FileList) => {
-    setIsChange(true);
-    const files = Array.from(fileList).map((f) => f);
-
-    const parseRes = schema.safeParse(files);
-    if (!parseRes.success) return toast.error(parseRes.error.message);
-
-    const file = files[0];
-    const key = `${id}_${file.name}`;
-    const url = await getFilePublicUrl(key);
-
-    if (image && url !== image) await deleteProfilePicture(image);
-    await uploadFiles({ files: [{ key, file }], ACL: "public-read" });
-
-    authClient.updateUser(
-      { image: url },
-      {
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsChange(false);
-        },
-        onSuccess: () => {
-          toast.success(success(true));
-          setIsChange(false);
-          router.refresh();
-        },
-      },
-    );
-  };
-
-  const deleteHandler = async () => {
-    setIsRemoved(true);
-    if (image) await deleteProfilePicture(image);
-
-    await authClient.updateUser(
-      { image: null },
-      {
-        onError: ({ error }) => {
-          setIsRemoved(false);
-          toast.error(error.message);
-        },
-        onSuccess: () => {
-          setIsRemoved(false);
-          router.refresh();
-          toast.success(success());
-        },
-      },
-    );
-  };
-
-  return (
-    <div className="flex items-center gap-x-4">
-      <UserAvatar name={name} image={image} className="size-20 md:size-24" />
-
-      <input
-        type="file"
-        ref={inputAvatarRef}
-        accept={fileMeta[contentType].mimeTypes.join(", ")}
-        className="hidden"
-        onChange={(e) => {
-          const fileList = e.currentTarget.files;
-          if (fileList) changeHandler(fileList);
-        }}
-      />
-
-      <div className="flex flex-col gap-y-2">
-        <Label>{cFields.avatar}</Label>
-        <div className="flex gap-x-2">
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            disabled={isChange || isRemoved}
-            onClick={() => inputAvatarRef.current?.click()}
-          >
-            <Loader loading={isChange} />
-            {buttonText.upload("avatar")}
-          </Button>
-
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button
-                type="button"
-                size="sm"
-                variant="outline_destructive"
-                disabled={!image || isChange || isRemoved}
-              >
-                <Loader loading={isRemoved} />
-                {buttonText.remove}
-              </Button>
-            </AlertDialogTrigger>
-
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>{title}</AlertDialogTitle>
-                <AlertDialogDescription>{desc}</AlertDialogDescription>
-              </AlertDialogHeader>
-
-              <AlertDialogFooter>
-                <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-                <AlertDialogAction
-                  className={buttonVariants({ variant: "destructive" })}
-                  onClick={() => deleteHandler()}
-                >
-                  {buttonText.confirm}
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export function PersonalInformation({ ...props }: Session["user"]) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { name, email } = props;
-  const { noChanges, success } = cComps.personalInfo;
-  const schema = zodUser.pick({ name: true, email: true });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: { name: name, email: email },
-  });
-
-  const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(noChanges);
-    setIsLoading(true);
-    authClient.updateUser(
-      { name: newName },
-      {
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        },
-        onSuccess: () => {
-          toast.success(success);
-          setIsLoading(false);
-          router.refresh();
-        },
-      },
-    );
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <CardContent className="flex flex-col gap-y-4">
-          <ProfilePicture {...props} />
-
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{cFields.email.label}</FormLabel>
-                <InputWrapper icon={<Mail />}>
-                  <FormControl>
-                    <Input type="text" disabled {...field} />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">
-                  {cFields.name.label}
-                </FormLabel>
-                <InputWrapper icon={<UserRound />}>
-                  <FormControl>
-                    <Input
-                      type="text"
-                      placeholder={cFields.name.placeholder}
-                      {...field}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </CardContent>
-
-        <CardFooter className="border-t">
-          <Button type="submit" disabled={isLoading}>
-            <Loader loading={isLoading} icon={{ base: <Save /> }} />
-            {buttonText.save}
-          </Button>
-
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            <RotateCcw />
-            {buttonText.reset}
-          </Button>
-        </CardFooter>
-      </form>
-    </Form>
-  );
-}
-
-export function ChangePasswordForm() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const schema = zodUserChangePassword;
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      currentPassword: "",
-      newPassword: "",
-      confirmPassword: "",
-      revokeOtherSessions: false,
-    },
-  });
-
-  const formHandler = (formData: z.infer<typeof schema>) => {
-    setIsLoading(true);
-    authClient.changePassword(formData, {
-      onError: ({ error }) => {
-        toast.error(error.message);
-        setIsLoading(false);
-      },
-      onSuccess: () => {
-        toast.success(content.updatePassword);
-        setIsLoading(false);
-        form.reset();
-        router.refresh();
-      },
-    });
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <CardContent className="flex flex-col gap-y-4">
-          <FormField
-            control={form.control}
-            name="currentPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">
-                  {cFields.currentPassword.label}
-                </FormLabel>
-                <InputWrapper icon={<LockKeyholeOpen />}>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={cFields.currentPassword.placeholder}
-                      {...field}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="newPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">
-                  {cFields.newPassword.label}
-                </FormLabel>
-                <InputWrapper icon={<LockKeyhole />}>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={cFields.newPassword.placeholder}
-                      {...field}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="label-required">
-                  {cFields.confirmPassword.label}
-                </FormLabel>
-                <InputWrapper icon={<LockKeyhole />}>
-                  <FormControl>
-                    <Input
-                      type="password"
-                      placeholder={cFields.confirmPassword.placeholder}
-                      {...field}
-                    />
-                  </FormControl>
-                </InputWrapper>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="revokeOtherSessions"
-            render={({ field }) => (
-              <FormItem className="flex-row">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel>Sign out from other devices</FormLabel>
-              </FormItem>
-            )}
-          />
-        </CardContent>
-
-        <CardFooter className="border-t">
-          <Button type="submit" disabled={isLoading}>
-            <Loader loading={isLoading} icon={{ base: <Save /> }} />
-            {buttonText.save}
-          </Button>
-
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            <RotateCcw />
-            {buttonText.reset}
-          </Button>
-        </CardFooter>
-      </form>
-    </Form>
-  );
-}
-
-export function ActiveSessionButton({
-  currentSessionId,
-  id,
-  updatedAt,
-  ipAddress,
-  userAgent,
-  token,
-}: Session["session"] & { currentSessionId: string }) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const isCurrentSession = currentSessionId === id;
-  const parsedResult = new UAParser(userAgent!).getResult();
-
-  const { title, desc, success } = cComps.revokeSession;
-  const { browser, os, device } = parsedResult;
-  const { current, lastSeen } = content;
-
-  const DeviceIcons = {
-    mobile: Smartphone,
-    tablet: Tablet,
-    console: Gamepad2,
-    smarttv: TvMinimal,
-    wearable: MonitorSmartphone,
-    xr: MonitorSmartphone,
-    embedded: MonitorSmartphone,
-    other: Monitor,
-  }[device.type ?? "other"];
-
-  const clickHandler = () => {
-    setIsLoading(true);
-    authClient.revokeSession(
-      { token },
-      {
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        },
-        onSuccess: () => {
-          toast.success(success);
-          setIsLoading(false);
-          router.refresh();
-        },
-      },
-    );
-  };
-
-  return (
-    <div className="bg-card flex items-center gap-x-2 rounded-lg border p-2 shadow-xs">
-      <div className="flex grow items-center gap-x-2">
-        <div className="bg-muted aspect-square size-fit rounded-lg p-2">
-          <DeviceIcons className="shrink-0" />
-        </div>
-
-        <div className="flex flex-col">
-          <small className="font-medium">
-            {messages.browserOnOS(browser.name, os.name)}
-          </small>
-
-          <div className="text-muted-foreground flex items-center">
-            <small
-              className={cn(
-                "font-normal",
-                isCurrentSession ? "order-3" : "order-1",
-              )}
-            >
-              {ipAddress}
-            </small>
-
-            <Dot className="order-2 shrink-0" />
-
-            {isCurrentSession ? (
-              <small className="text-success order-1 font-medium">
-                {current("session")}
-              </small>
-            ) : (
-              <small className="order-3 line-clamp-1 font-normal">
-                {lastSeen(updatedAt)}
-              </small>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {!isCurrentSession && (
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button size="iconsm" variant="outline" disabled={isLoading}>
-              <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>{title}</AlertDialogTitle>
-              <AlertDialogDescription>{desc}</AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-              <AlertDialogAction onClick={clickHandler}>
-                {buttonText.confirm}
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      )}
-    </div>
-  );
-}
-
-export function RevokeOtherSessionsButton() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { trigger, title, desc, success } = cComps.revokeAllOtherSession;
-
-  const clickHandler = () => {
-    setIsLoading(true);
-    authClient.revokeOtherSessions({
-      fetchOptions: {
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        },
-        onSuccess: () => {
-          toast.success(success);
-          setIsLoading(false);
-          router.refresh();
-        },
-      },
-    });
-  };
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
-          {trigger}
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{desc}</AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-          <AlertDialogAction onClick={clickHandler}>
-            {buttonText.confirm}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
-
-export function DeleteMyAccountButton({
-  image,
-}: Pick<Session["user"], "image">) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { trigger, title, desc, success } = cComps.delete;
-
-  const clickHandler = async () => {
-    setIsLoading(true);
-    if (image) await deleteProfilePicture(image);
-
-    authClient.deleteUser(
-      { callbackURL: signInRoute },
-      {
-        onRequest: () => setIsLoading(true),
-        onError: ({ error }) => {
-          toast.error(error.message);
-          setIsLoading(false);
-        },
-        onSuccess: () => {
-          toast.success(success);
-          router.push(signInRoute);
-        },
-      },
-    );
-  };
-
-  return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button variant="outline_destructive" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
-          {trigger}
-        </Button>
-      </AlertDialogTrigger>
-
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> {title}
-          </AlertDialogTitle>
-          <AlertDialogDescription>{desc}</AlertDialogDescription>
-        </AlertDialogHeader>
-
-        <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-          <AlertDialogAction
-            className={buttonVariants({ variant: "destructive" })}
-            onClick={clickHandler}
-          >
-            {buttonText.confirm}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  );
-}
-
 export function UserDataTable({
   data,
   currentUserId,
@@ -1127,11 +221,13 @@ export function UserDataTable({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="sm" variant="outline">
-                <Settings2 /> {buttonText.action}
+                <Settings2 /> {actions.action}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuLabel className="text-center">{`${filteredData.length} ${commonText.selected}`}</DropdownMenuLabel>
+              <DropdownMenuLabel className="text-center">
+                Akun dipilih: {filteredData.length}
+              </DropdownMenuLabel>
 
               <DropdownMenuSeparator />
 
@@ -1167,12 +263,11 @@ export function UserDataTable({
 export function UserDetailSheet({ data }: { data: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { title, desc } = cComps.detail;
   const details = [
-    { label: cFields.userId, content: data.id.slice(0, 7) },
-    { label: cFields.email.label, content: data.email },
+    { label: userFields.id, content: data.id.slice(0, 7) },
+    { label: userFields.email.label, content: data.email },
     {
-      label: tableText.column.createdAt,
+      label: fieldsMeta.createdAt,
       content: messages.createdAgo(data.createdAt),
     },
   ];
@@ -1189,8 +284,10 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
           <UserAvatar {...data} className="size-12" />
 
           <div className="flex flex-col">
-            <SheetTitle className="text-base">{title(data.name)}</SheetTitle>
-            <SheetDescription>{desc(data.name)}</SheetDescription>
+            <SheetTitle className="text-base">Detail {data.name}</SheetTitle>
+            <SheetDescription>
+              Lihat informasi lengkap tentang akun {data.name}
+            </SheetDescription>
           </div>
         </SheetHeader>
 
@@ -1212,7 +309,7 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
 
           {/* // TODO */}
           <Button variant="outline_primary" disabled>
-            <Layers2 /> Impersonate Session
+            <Layers2 /> Tiru Sesi
           </Button>
 
           <AdminRevokeUserSessionsDialog {...data} />
@@ -1231,6 +328,760 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
   );
 }
 
+export function SignOutButton() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  return (
+    <SidebarMenuButton
+      variant="outline_destructive"
+      className="text-destructive hover:text-destructive justify-center"
+      disabled={isLoading}
+      onClick={() => {
+        setIsLoading(true);
+        authClient.signOut({
+          fetchOptions: {
+            onError: ({ error }) => {
+              toast.error(error.message);
+              setIsLoading(false);
+            },
+            onSuccess: () => {
+              toast.success("Berhasil keluar - Sampai jumpa!");
+              router.push(signInRoute);
+            },
+          },
+        });
+      }}
+    >
+      <Loader loading={isLoading} icon={{ base: <LogOut /> }} /> Keluar
+    </SidebarMenuButton>
+  );
+}
+
+export function SignOnGithubButton() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  return (
+    <Button
+      variant="outline"
+      disabled={isLoading}
+      onClick={() => {
+        setIsLoading(true);
+        authClient.signIn.social(
+          {
+            provider: "github",
+            callbackURL: dashboardRoute,
+            errorCallbackURL: signInRoute,
+          },
+          {
+            onError: ({ error }) => {
+              toast.error(error.message);
+              setIsLoading(false);
+            },
+            onSuccess: () => {
+              toast.success(sharedText.signIn);
+            },
+          },
+        );
+      }}
+    >
+      <Loader loading={isLoading} icon={{ base: <GithubIcon /> }} />
+      {sharedText.signOn("Github")}
+    </Button>
+  );
+}
+
+export function SignInForm() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = zodUser.pick({
+    email: true,
+    password: true,
+    rememberMe: true,
+  });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { email: "", password: "", rememberMe: false },
+  });
+
+  const formHandler = (formData: z.infer<typeof schema>) => {
+    setIsLoading(true);
+    authClient.signIn.email(
+      { ...formData, callbackURL: signInRoute },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(sharedText.signIn);
+        },
+      },
+    );
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => <Field field={field} {...userFields.email} />}
+        />
+
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <Field field={field} {...userFields.password} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="rememberMe"
+          render={({ field }) => (
+            <FormItem className="flex-row">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel>Ingat Saya</FormLabel>
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
+          Masuk ke Dashboard
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+export function SignUpForm() {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = zodUser
+    .pick({
+      name: true,
+      email: true,
+      newPassword: true,
+      confirmPassword: true,
+      agreement: true,
+    })
+    .refine((sc) => sc.newPassword === sc.confirmPassword, {
+      message: sharedText.passwordNotMatch,
+      path: ["confirmPassword"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: "",
+      email: "",
+      newPassword: "",
+      confirmPassword: "",
+      agreement: false,
+    },
+  });
+
+  const formHandler = ({ newPassword, ...rest }: z.infer<typeof schema>) => {
+    setIsLoading(true);
+    authClient.signUp.email(
+      { password: newPassword, ...rest },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(
+            "Akun berhasil dibuat! Silakan masuk untuk melanjutkan.",
+          );
+          setIsLoading(false);
+          form.reset();
+        },
+      },
+    );
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => <Field field={field} {...userFields.name} />}
+        />
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => <Field field={field} {...userFields.email} />}
+        />
+
+        <FormField
+          control={form.control}
+          name="newPassword"
+          render={({ field }) => (
+            <Field field={field} {...userFields.password} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <Field field={field} {...userFields.confirmPassword} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="agreement"
+          render={({ field }) => (
+            <FormItem>
+              <div className="flex gap-x-3">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+
+                <div className="flex flex-col items-start gap-y-1.5">
+                  <FormLabel>Setujui syarat dan ketentuan</FormLabel>
+                  <small className="text-muted-foreground text-xs font-normal">
+                    Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi.
+                  </small>
+                </div>
+              </div>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
+          Daftar Sekarang
+        </Button>
+      </form>
+    </Form>
+  );
+}
+
+export function ProfilePicture({
+  id,
+  name,
+  image,
+}: Pick<Session["user"], "id" | "name" | "image">) {
+  const router = useRouter();
+  const inputAvatarRef = useRef<HTMLInputElement>(null);
+  const [isChange, setIsChange] = useState<boolean>(false);
+  const [isRemoved, setIsRemoved] = useState<boolean>(false);
+
+  const contentType = "image";
+  const schema = zodSchemas.file(contentType);
+
+  const changeHandler = async (fileList: FileList) => {
+    setIsChange(true);
+    const files = Array.from(fileList).map((f) => f);
+
+    const parseRes = schema.safeParse(files);
+    if (!parseRes.success) return toast.error(parseRes.error.message);
+
+    const file = files[0];
+    const key = `${id}_${file.name}`;
+    const url = await getFilePublicUrl(key);
+
+    if (image && url !== image) await deleteProfilePicture(image);
+    await uploadFiles({ files: [{ key, file }], ACL: "public-read" });
+
+    authClient.updateUser(
+      { image: url },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsChange(false);
+        },
+        onSuccess: () => {
+          toast.success(messages.success("Foto profil Anda", "updated"));
+          setIsChange(false);
+          router.refresh();
+        },
+      },
+    );
+  };
+
+  const deleteHandler = async () => {
+    setIsRemoved(true);
+    if (image) await deleteProfilePicture(image);
+
+    await authClient.updateUser(
+      { image: null },
+      {
+        onError: ({ error }) => {
+          setIsRemoved(false);
+          toast.error(error.message);
+        },
+        onSuccess: () => {
+          setIsRemoved(false);
+          router.refresh();
+          toast.success(messages.success("Foto profil Anda", "removed"));
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="flex items-center gap-x-4">
+      <UserAvatar name={name} image={image} className="size-24" />
+
+      <input
+        type="file"
+        ref={inputAvatarRef}
+        accept={fileMeta[contentType].mimeTypes.join(", ")}
+        className="hidden"
+        onChange={(e) => {
+          const fileList = e.currentTarget.files;
+          if (fileList) changeHandler(fileList);
+        }}
+      />
+
+      <div className="flex flex-col gap-y-2">
+        <Label>{userFields.avatar}</Label>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            disabled={isChange || isRemoved}
+            onClick={() => inputAvatarRef.current?.click()}
+          >
+            <Loader loading={isChange} /> {actions.upload} Avatar
+          </Button>
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline_destructive"
+                disabled={!image || isChange || isRemoved}
+              >
+                <Loader loading={isRemoved} /> {actions.remove}
+              </Button>
+            </AlertDialogTrigger>
+
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Hapus Foto Profil</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Aksi ini akan menghapus foto profil Anda saat ini. Yakin ingin
+                  melanjutkan?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+
+              <AlertDialogFooter>
+                <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
+                <AlertDialogAction
+                  className={buttonVariants({ variant: "destructive" })}
+                  onClick={() => deleteHandler()}
+                >
+                  {actions.confirm}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function PersonalInformation({ ...props }: Session["user"]) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { name, email } = props;
+  const schema = zodUser.pick({ name: true, email: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { name, email },
+  });
+
+  const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
+    if (newName === name) return toast.info(messages.noChanges("profil"));
+
+    setIsLoading(true);
+    authClient.updateUser(
+      { name: newName },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(messages.success("Profil", "updated"));
+          setIsLoading(false);
+          router.refresh();
+        },
+      },
+    );
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        <CardContent className="flex flex-col gap-y-4">
+          <ProfilePicture {...props} />
+
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <Field field={field} {...userFields.email} />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => <Field field={field} {...userFields.name} />}
+          />
+        </CardContent>
+
+        <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
+          <Button type="submit" disabled={isLoading}>
+            <Loader loading={isLoading} icon={{ base: <Save /> }} />
+            {actions.update}
+          </Button>
+
+          <ResetButton fn={form.reset} />
+        </CardFooter>
+      </form>
+    </Form>
+  );
+}
+
+export function ChangePasswordForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const schema = zodUser
+    .pick({
+      currentPassword: true,
+      newPassword: true,
+      confirmPassword: true,
+      revokeOtherSessions: true,
+    })
+    .refine((sc) => sc.newPassword === sc.confirmPassword, {
+      message: sharedText.passwordNotMatch,
+      path: ["confirmPassword"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+      revokeOtherSessions: false,
+    },
+  });
+
+  const formHandler = (formData: z.infer<typeof schema>) => {
+    setIsLoading(true);
+    authClient.changePassword(formData, {
+      onError: ({ error }) => {
+        toast.error(error.message);
+        setIsLoading(false);
+      },
+      onSuccess: () => {
+        toast.success(messages.success(userFields.password.label, "updated"));
+        setIsLoading(false);
+        form.reset();
+        router.refresh();
+      },
+    });
+  };
+
+  return (
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(formHandler)}>
+        <CardContent className="flex flex-col gap-y-4">
+          <FormField
+            control={form.control}
+            name="currentPassword"
+            render={({ field }) => (
+              <Field field={field} {...userFields.currentPassword} />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <Field field={field} {...userFields.newPassword} />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <Field field={field} {...userFields.confirmPassword} />
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="revokeOtherSessions"
+            render={({ field }) => (
+              <FormItem className="flex-row">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel>Keluar dari perangkat lainnya</FormLabel>
+              </FormItem>
+            )}
+          />
+        </CardContent>
+
+        <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
+          <Button type="submit" disabled={isLoading}>
+            <Loader loading={isLoading} icon={{ base: <Save /> }} />
+            {actions.update}
+          </Button>
+
+          <ResetButton fn={form.reset} />
+        </CardFooter>
+      </form>
+    </Form>
+  );
+}
+
+export function ActiveSessionButton({
+  currentSessionId,
+  id,
+  updatedAt,
+  userAgent,
+  token,
+}: Session["session"] & { currentSessionId: string }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const isCurrentSession = currentSessionId === id;
+  const { browser, os, device } = new UAParser(userAgent!).getResult();
+
+  const DeviceIcons = {
+    mobile: Smartphone,
+    tablet: Tablet,
+    console: Gamepad2,
+    smarttv: TvMinimal,
+    wearable: MonitorSmartphone,
+    xr: MonitorSmartphone,
+    embedded: MonitorSmartphone,
+    other: Monitor,
+  }[device.type ?? "other"];
+
+  const clickHandler = () => {
+    setIsLoading(true);
+    authClient.revokeSession(
+      { token },
+      {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success("Sesi berhasil dicabut.");
+          setIsLoading(false);
+          router.refresh();
+        },
+      },
+    );
+  };
+
+  return (
+    <div className="bg-card flex items-center gap-x-4 rounded-lg border p-2 shadow-xs">
+      <div className="flex grow items-center gap-x-2">
+        <div className="bg-muted aspect-square size-fit rounded-lg p-2">
+          <DeviceIcons className="shrink-0" />
+        </div>
+
+        <div className="flex flex-col">
+          <small className="font-medium">
+            {`${browser.name ?? "Browser tidak diketahui"} di ${os.name ?? "sistem operasi yang tidak diketahui"}`}
+          </small>
+
+          {isCurrentSession ? (
+            <small className="text-success order-1 font-medium">
+              Sesi saat ini
+            </small>
+          ) : (
+            <small className="text-muted-foreground order-3 line-clamp-1 font-normal">
+              {messages.thingAgo("Terakhir terlihat", updatedAt)}
+            </small>
+          )}
+        </div>
+      </div>
+
+      {!isCurrentSession && (
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button
+              size="iconsm"
+              variant="outline_destructive"
+              disabled={isLoading}
+            >
+              <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>{sharedText.revokeSession}</AlertDialogTitle>
+              <AlertDialogDescription>
+                Sesi ini akan segera dihentikan dari perangkat yang dipilih.
+                Yakin ingin melanjutkan?
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
+              <AlertDialogAction onClick={clickHandler}>
+                {actions.confirm}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+      )}
+    </div>
+  );
+}
+
+export function RevokeOtherSessionsButton() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const clickHandler = () => {
+    setIsLoading(true);
+    authClient.revokeOtherSessions({
+      fetchOptions: {
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success("Semua sesi aktif lainnya berhasil dicabut.");
+          setIsLoading(false);
+          router.refresh();
+        },
+      },
+    });
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button variant="outline" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
+          Cabut Semua Sesi Lain
+        </Button>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="flex items-center gap-x-2">
+            <MonitorOff /> Cabut Semua Sesi Lain
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            Semua sesi aktif lainnya akan dihentikan, kecuali sesi saat ini.
+            Yakin ingin melanjutkan?
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
+          <AlertDialogAction onClick={clickHandler}>
+            {actions.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
+export function DeleteMyAccountButton({
+  image,
+}: Pick<Session["user"], "image">) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const clickHandler = async () => {
+    setIsLoading(true);
+    if (image) await deleteProfilePicture(image);
+
+    authClient.deleteUser(
+      { callbackURL: signInRoute },
+      {
+        onRequest: () => setIsLoading(true),
+        onError: ({ error }) => {
+          toast.error(error.message);
+          setIsLoading(false);
+        },
+        onSuccess: () => {
+          toast.success(messages.success("Akun", "removed"));
+          router.push(signInRoute);
+        },
+      },
+    );
+  };
+
+  return (
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
+        <Button
+          variant="outline_destructive"
+          className="w-full md:w-fit"
+          disabled={isLoading}
+        >
+          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+          Hapus Akun
+        </Button>
+      </AlertDialogTrigger>
+
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
+            <TriangleAlert /> Hapus Akun Anda
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            PERINGATAN : Tindakan ini akan secara permanen menghapus semua data
+            akun Anda. Harap berhati-hati karena aksi ini tidak dapat
+            dibatalkan.
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <AlertDialogFooter>
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
+          <AlertDialogAction
+            className={buttonVariants({ variant: "destructive" })}
+            onClick={clickHandler}
+          >
+            {actions.confirm}
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
+  );
+}
+
 /*
  * --- ADMIN ---
  */
@@ -1240,33 +1091,43 @@ export function AdminCreateUserDialog() {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUserCreate;
+  const schema = zodUser
+    .pick({
+      name: true,
+      email: true,
+      newPassword: true,
+      confirmPassword: true,
+      role: true,
+    })
+    .refine((sc) => sc.newPassword === sc.confirmPassword, {
+      message: sharedText.passwordNotMatch,
+      path: ["confirmPassword"],
+    });
+
   const Icon = UserRoundPlus;
-  const { trigger, title, desc, success } = cComps.adminCreate;
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
       email: "",
-      password: "",
+      newPassword: "",
       confirmPassword: "",
-      role: userRoles[0],
+      role: "user",
     },
   });
 
-  const formHandler = (formData: z.infer<typeof schema>) => {
-    const { role, ...restData } = formData;
+  const formHandler = ({ newPassword, ...rest }: z.infer<typeof schema>) => {
     setIsLoading(true);
     authClient.admin.createUser(
-      { role: role as Role, ...restData },
+      { password: newPassword, ...rest },
       {
         onError: ({ error }) => {
           toast.error(error.message);
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(success(formData.name));
+          toast.success(messages.success(`Akun ${rest.name}`, "created"));
           setIsLoading(false);
           form.reset();
           router.refresh();
@@ -1279,15 +1140,17 @@ export function AdminCreateUserDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button size={isMobile ? "iconsm" : "sm"}>
-          <Icon />
-          <span className="hidden md:flex">{trigger}</span>
+          <Icon /> <span className="hidden md:flex">Tambah Pengguna</span>
         </Button>
       </DialogTrigger>
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{desc}</DialogDescription>
+          <DialogTitle>Tambah Pengguna</DialogTitle>
+          <DialogDescription>
+            Isi detail pengguna baru dengan lengkap. Pastikan semua bidang wajib
+            diisi.
+          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -1296,21 +1159,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">
-                    {cFields.name.label}
-                  </FormLabel>
-                  <InputWrapper icon={<UserRound />}>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={cFields.name.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                  </InputWrapper>
-                  <FormMessage />
-                </FormItem>
+                <Field field={field} {...userFields.name} />
               )}
             />
 
@@ -1318,43 +1167,15 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">
-                    {cFields.email.label}
-                  </FormLabel>
-                  <InputWrapper icon={<Mail />}>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder={cFields.email.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                  </InputWrapper>
-                  <FormMessage />
-                </FormItem>
+                <Field field={field} {...userFields.email} />
               )}
             />
 
             <FormField
               control={form.control}
-              name="password"
+              name="newPassword"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">
-                    {cFields.password.label}
-                  </FormLabel>
-                  <InputWrapper icon={<LockKeyhole />}>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={cFields.password.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                  </InputWrapper>
-                  <FormMessage />
-                </FormItem>
+                <Field field={field} {...userFields.password} />
               )}
             />
 
@@ -1362,21 +1183,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">
-                    {cFields.confirmPassword.label}
-                  </FormLabel>
-                  <InputWrapper icon={<LockKeyhole />}>
-                    <FormControl>
-                      <Input
-                        type="password"
-                        placeholder={cFields.confirmPassword.placeholder}
-                        {...field}
-                      />
-                    </FormControl>
-                  </InputWrapper>
-                  <FormMessage />
-                </FormItem>
+                <Field field={field} {...userFields.confirmPassword} />
               )}
             />
 
@@ -1384,10 +1191,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="label-required">
-                    {cFields.role}
-                  </FormLabel>
+                <FieldWrapper label={userFields.role} required>
                   <Select
                     value={field.value as Role}
                     onValueChange={field.onChange}
@@ -1413,18 +1217,17 @@ export function AdminCreateUserDialog() {
                       })}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
+                </FieldWrapper>
               )}
             />
 
             <Separator />
 
             <DialogFooter>
-              <DialogClose>{buttonText.cancel}</DialogClose>
+              <DialogClose>{actions.cancel}</DialogClose>
               <Button type="submit" disabled={isLoading}>
                 <Loader loading={isLoading} icon={{ base: <Icon /> }} />
-                {trigger}
+                {actions.add}
               </Button>
             </DialogFooter>
           </form>
@@ -1448,7 +1251,7 @@ function AdminChangeUserRoleForm({
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { role: data.role },
+    defaultValues: { role: data.role as Role },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
@@ -1465,7 +1268,9 @@ function AdminChangeUserRoleForm({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(content.changeRole(data.name, newRole));
+          toast.success(
+            `Role ${data.name} berhasil diperbarui menjadi ${newRole}.`,
+          );
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1481,8 +1286,7 @@ function AdminChangeUserRoleForm({
           control={form.control}
           name="role"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>{cFields.changeRole(data.name)}</FormLabel>
+            <FieldWrapper label={`Ubah role ${data.name}`}>
               <Select
                 value={field.value as Role}
                 onValueChange={field.onChange}
@@ -1508,17 +1312,13 @@ function AdminChangeUserRoleForm({
                   })}
                 </SelectContent>
               </Select>
-              <FormMessage />
-            </FormItem>
+            </FieldWrapper>
           )}
         />
 
-        <Button type="submit" size="sm" disabled={isLoading}>
-          <Loader
-            loading={isLoading}
-            icon={{ base: <CircleFadingArrowUp /> }}
-          />
-          {buttonText.save}
+        <Button type="submit" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <Save /> }} />
+          {actions.update}
         </Button>
       </form>
     </Form>
@@ -1531,8 +1331,6 @@ function AdminRevokeUserSessionsDialog({
 }: Pick<Session["user"], "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, title, desc, success } = cComps.adminRevokeSessions;
-
   const clickHandler = () => {
     setIsLoading(true);
     authClient.admin.revokeUserSessions(
@@ -1543,7 +1341,7 @@ function AdminRevokeUserSessionsDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(success(name));
+          toast.success(`Semua sesi aktif milik ${name} berhasil dicabut.`);
           setIsLoading(false);
         },
       },
@@ -1555,26 +1353,29 @@ function AdminRevokeUserSessionsDialog({
       <AlertDialogTrigger asChild>
         <Button variant="outline_warning" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
-          {trigger}
+          {sharedText.revokeSession}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-warning flex items-center gap-x-2">
-            <Info /> {title(name)}
+            <Info /> Cabut Semua Sesi Aktif untuk {name}
           </AlertDialogTitle>
-          <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
+          <AlertDialogDescription>
+            Tindakan ini akan langsung menghentikan semua sesi aktif milik
+            {name}. Yakin ingin melanjutkan?
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
 
           <AlertDialogAction
             className={buttonVariants({ variant: "warning" })}
             onClick={clickHandler}
           >
-            {buttonText.confirm}
+            {actions.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1591,8 +1392,6 @@ function AdminRemoveUserDialog({
 }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const { title, desc } = cComps.adminRemove;
 
   const clickHandler = async () => {
     setIsLoading(true);
@@ -1620,27 +1419,29 @@ function AdminRemoveUserDialog({
       <AlertDialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
-          {`${buttonText.remove} ${name}`}
+          {`${actions.remove} ${name}`}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert />
-            {title(name)}
+            <TriangleAlert /> Hapus Akun {name}
           </AlertDialogTitle>
-          <AlertDialogDescription>{desc(name)}</AlertDialogDescription>
+          <AlertDialogDescription>
+            PERINGATAN: Tindakan ini akaPn menghapus akun {name} beserta seluruh
+            datanya secara permanen. Harap berhati-hati karena aksi ini tidak
+            dapat dibatalkan.
+          </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
           >
-            {buttonText.confirm}
+            {actions.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1657,9 +1458,6 @@ function AdminActionRevokeUserSessionsDialog({
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { trigger, titleMultiple, descMultiple, successMultiple } =
-    cComps.adminRevokeSessions;
-
   const clickHandler = async () => {
     setIsLoading(true);
     toast.promise(revokeUserSessions(ids), {
@@ -1673,7 +1471,7 @@ function AdminActionRevokeUserSessionsDialog({
         onSuccess();
 
         const successLength = res.filter(({ success }) => success).length;
-        return successMultiple(successLength, ids.length);
+        return `${successLength} dari ${ids.length} sesi pengguna berhasil dicabut.`;
       },
     });
   };
@@ -1683,28 +1481,28 @@ function AdminActionRevokeUserSessionsDialog({
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
-          {trigger}
+          {sharedText.revokeSession}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-x-2">
-            {titleMultiple(ids.length)}
+            Cabut Sesi untuk {ids.length} Pengguna
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {descMultiple(ids.length)}
+            Ini akan menghentikan semua sesi aktif dari {ids.length} pengguna
+            yang dipilih. Yakin ingin melanjutkan?
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
-
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
           >
-            {buttonText.confirm}
+            {actions.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -1722,8 +1520,6 @@ function AdminActionRemoveUsersDialog({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { titleMultiple, descMultiple, successMultiple } = cComps.adminRemove;
-
   const clickHandler = async () => {
     setIsLoading(true);
     toast.promise(deleteUsers(data), {
@@ -1739,7 +1535,10 @@ function AdminActionRemoveUsersDialog({
         router.refresh();
 
         const successLength = res.filter(({ success }) => success).length;
-        return successMultiple(successLength, data.length);
+        return messages.success(
+          `${successLength} dari ${data.length} akun pengguna`,
+          "removed",
+        );
       },
     });
   };
@@ -1749,28 +1548,30 @@ function AdminActionRemoveUsersDialog({
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
-          {buttonText.remove}
+          {actions.remove}
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> {titleMultiple(data.length)}
+            <TriangleAlert /> Hapus {data.length} Akun
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {descMultiple(data.length)}
+            PERINGATAN: Tindakan ini akan menghapus {data.length} akun yang
+            dipilih beserta seluruh datanya secara permanen. Harap berhati-hati
+            karena aksi ini tidak dapat dibatalkan.
           </AlertDialogDescription>
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel>{buttonText.cancel}</AlertDialogCancel>
+          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
 
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
           >
-            {buttonText.confirm}
+            {actions.confirm}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

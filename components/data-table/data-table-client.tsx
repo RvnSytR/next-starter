@@ -1,6 +1,5 @@
 "use client";
 
-import { tableText } from "@/lib/content";
 import { Search } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { InputWrapper } from "../other/input-wrapper";
@@ -10,7 +9,7 @@ import { TableProps, ToolBoxProps } from "./data-table";
 
 export function DataTableSearch<TData>({
   table,
-  searchPlaceholder = tableText.placeholder,
+  searchPlaceholder = "Cari...",
   className,
 }: TableProps<TData> &
   Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {

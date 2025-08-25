@@ -1,12 +1,21 @@
 "use client";
 
-import { buttonText } from "@/lib/content";
+import { actions } from "@/lib/content";
 import { cn, delay } from "@/lib/utils";
-import { ArrowUp, Check, Copy, Moon, RefreshCcw, Sun } from "lucide-react";
+import {
+  ArrowUp,
+  Check,
+  Copy,
+  Moon,
+  RefreshCcw,
+  RotateCcw,
+  Sun,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { UseFormReset } from "react-hook-form";
 import { Button, ButtonProps } from "../ui/button";
 import { Loader, LoaderProps } from "./icon";
 
@@ -22,7 +31,7 @@ export function ThemeToggle({
   size = "icon",
   variant = "ghost",
   ...props
-}: Omit<ButtonProps, "onClick">) {
+}: Omit<ButtonPropsWithoutChildren, "onClick">) {
   const { setTheme } = useTheme();
   return (
     <Button
@@ -34,6 +43,28 @@ export function ThemeToggle({
       <Sun className="flex dark:hidden" />
       <Moon className="hidden dark:flex" />
       <span className="sr-only">Toggle theme</span>
+    </Button>
+  );
+}
+
+export function ResetButton({
+  fn,
+  size = "default",
+  variant = "outline",
+  ...props
+}: Omit<ButtonPropsWithoutChildren, "type" | "onClick"> & {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  fn: UseFormReset<any>;
+}) {
+  return (
+    <Button
+      type="reset"
+      size={size}
+      variant={variant}
+      onClick={() => fn()}
+      {...props}
+    >
+      <RotateCcw /> {actions.reset}
     </Button>
   );
 }
@@ -72,7 +103,7 @@ export function CopyButton({
 }
 
 export function RefreshButton({
-  text = buttonText.refresh,
+  text = actions.refresh,
   disabled,
   onClick,
   ...props

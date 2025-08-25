@@ -1,135 +1,113 @@
 import { z } from "zod";
 import { id } from "zod/locales";
-import { FileType, fileMeta } from "./const";
-import { baseContent, messages } from "./content";
+import { messages } from "./content";
+import { fieldsMeta, fileMeta, FileType } from "./meta";
+import { allRoles } from "./permission";
 import { toMegabytes } from "./utils";
-
-const cUser = baseContent.user;
-const cUserFields = cUser.fields;
 
 z.config(id());
 
-export const zodDateRange = z.object(
-  {
-    from: z.date({ error: messages.invalid.dateRange.from }),
-    to: z.date({ error: messages.invalid.dateRange.to }),
+const { user: userFields } = fieldsMeta;
+
+export const zodSchemas = {
+  string: (field: string) => z.string().trim().min(1, messages.required(field)),
+
+  email: z
+    .email({ error: messages.invalid(userFields.email.label) })
+    .trim()
+    .min(1, { error: messages.required(userFields.email.label) })
+    .max(255, { error: messages.tooLong(userFields.email.label, 255) }),
+
+  password: z
+    .string()
+    .min(1, { error: messages.required(userFields.password.label) })
+    .min(8, { error: messages.tooShort(userFields.password.label, 8) })
+    .max(255, { error: messages.tooLong(userFields.password.label, 255) })
+    .regex(/[A-Z]/, {
+      error: `${userFields.password.label} harus mengandung huruf kapital. (A-Z)`,
+    })
+    .regex(/[a-z]/, {
+      error: `${userFields.password.label} harus mengandung huruf kecil. (a-z)`,
+    })
+    .regex(/[0-9]/, {
+      error: `${userFields.password.label} harus mengandung angka. (0-9)`,
+    })
+    .regex(/[^A-Za-z0-9]/, {
+      error: `${userFields.password.label} harus mengandung karakter khusus.`,
+    }),
+
+  date: z.date({ error: "Pilih tanggal yang valid." }),
+
+  dateMultiple: z.array(z.date({ error: "Pilih tanggal yang valid." }), {
+    error: "Beberapa tanggal yang dimasukkan tidak valid.",
+  }),
+
+  dateRange: z.object(
+    {
+      from: z.date({ error: "Pilih tanggal mulai yang valid." }),
+      to: z.date({ error: "Pilih tanggal akhir yang valid." }),
+    },
+    { error: "Pilih rentang tanggal yang valid." },
+  ),
+
+  file: (
+    type: FileType,
+    options?: {
+      optional?: boolean;
+      min?: number;
+      max?: number;
+      maxSize?: number;
+    },
+  ) => {
+    const { displayName, size, mimeTypes } = fileMeta[type];
+
+    const optional = options?.optional ?? false;
+    const min = options?.min ?? 1;
+    const max = options?.max;
+
+    const maxSize = options?.maxSize ?? size.bytes;
+    const maxSizeInMB = toMegabytes(maxSize).toFixed(2);
+
+    let schema = z.array(
+      z
+        .file()
+        .mime(mimeTypes, { error: `Tipe ${displayName} tidak valid.` })
+        .min(1)
+        .max(maxSize, {
+          error: `Ukuran ${displayName} tidak boleh melebihi ${maxSizeInMB} MB.`,
+        }),
+    );
+
+    if (!optional) {
+      const message = `Silakan unggah minimal ${min} ${displayName}.`;
+      schema = schema.min(min, { error: message });
+    }
+
+    if (max && max > 0) {
+      const message = `Jumlah maksimum ${displayName} yang dapat diunggah adalah ${max}.`;
+      schema = schema.max(max, { error: message });
+    }
+
+    return schema;
   },
-  { error: messages.invalid.dateRange.field },
-);
-
-export const zodFile = (
-  type: FileType,
-  options?: {
-    optional?: boolean;
-    min?: number;
-    max?: number;
-    maxSize?: number;
-  },
-) => {
-  const { size, mimeTypes } = fileMeta[type];
-  const { type: fileType, tooLarge, tooShort, tooLong } = messages.file;
-
-  const optional = options?.optional ?? false;
-  const min = options?.min ?? 1;
-  const max = options?.max;
-  const maxSize = options?.maxSize ?? size.bytes;
-
-  let sc = z.array(
-    z
-      .file()
-      .mime(mimeTypes, { error: fileType(type) })
-      .min(1)
-      .max(maxSize, { error: tooLarge(type, toMegabytes(maxSize).toFixed(2)) }),
-  );
-
-  if (!optional) sc = sc.min(min, { error: tooShort(type, options) });
-  if (max && max > 0) sc = sc.max(max, { error: tooLong(type, max) });
-
-  return sc;
 };
 
 export const zodUser = z.object({
-  id: z.string(),
-  role: z.string(),
+  role: z.enum(allRoles),
+  email: zodSchemas.email,
   name: z
-    .string({
-      error: messages.requiredAndInvalidField(cUserFields.name.label, "string"),
-    })
-    .trim()
-    .min(1, { error: messages.tooShort(cUserFields.name.label, 1) }),
-  email: z
-    .email({ error: messages.invalid.email })
-    .trim()
-    .min(1, { error: messages.tooShort(cUserFields.email.label, 1) })
-    .max(255, { error: messages.tooLong(cUserFields.email.label, 255) }),
-  password: z
-    .string({
-      error: messages.requiredAndInvalidField(
-        cUserFields.password.label,
-        "string",
-      ),
-    })
-    .trim()
-    .min(8, { error: messages.tooShort(cUserFields.password.label, 8) })
-    .max(255, { error: messages.tooLong(cUserFields.password.label, 255) }),
-  confirmPassword: z
-    .string({
-      error: messages.requiredAndInvalidField(
-        cUserFields.confirmPassword.label,
-        "string",
-      ),
-    })
-    .min(1, { error: messages.tooShort(cUserFields.confirmPassword.label, 1) }),
-  rememberMe: z.boolean({
-    error: messages.requiredAndInvalidField(cUserFields.rememberMe, "boolean"),
+    .string()
+    .min(1, { error: messages.tooShort(userFields.name.label, 1) }),
+
+  password: zodSchemas.string(userFields.password.label),
+  newPassword: zodSchemas.password,
+  confirmPassword: zodSchemas.string(userFields.confirmPassword.label),
+  currentPassword: zodSchemas.string(userFields.currentPassword.label),
+
+  rememberMe: z.boolean(),
+  revokeOtherSessions: z.boolean(),
+  agreement: z.boolean().refine((v) => v, {
+    error:
+      "Mohon setujui ketentuan layanan dan kebijakan privasi untuk melanjutkan.",
   }),
-  revokeOtherSessions: z.boolean({
-    error: messages.requiredAndInvalidField(
-      "Sign out from other devices",
-      "boolean",
-    ),
-  }),
-  isAgree: z
-    .boolean({
-      error: messages.requiredAndInvalidField("Agreement", "boolean"),
-    })
-    .refine((v) => v, { error: cUser.agreement }),
 });
-
-export const zodUserSignUp = zodUser
-  .pick({
-    name: true,
-    email: true,
-    password: true,
-    confirmPassword: true,
-    isAgree: true,
-  })
-  .refine((sc) => sc.password === sc.confirmPassword, {
-    message: cUser.passwordNotMatch,
-    path: ["confirmPassword"],
-  });
-
-export const zodUserChangePassword = z
-  .object({
-    currentPassword: zodUser.shape.password,
-    newPassword: zodUser.shape.password,
-    confirmPassword: zodUser.shape.confirmPassword,
-    revokeOtherSessions: zodUser.shape.revokeOtherSessions,
-  })
-  .refine((sc) => sc.newPassword === sc.confirmPassword, {
-    message: cUser.passwordNotMatch,
-    path: ["confirmPassword"],
-  });
-
-export const zodUserCreate = zodUser
-  .pick({
-    name: true,
-    email: true,
-    password: true,
-    confirmPassword: true,
-    role: true,
-  })
-  .refine((sc) => sc.password === sc.confirmPassword, {
-    message: cUser.passwordNotMatch,
-    path: ["confirmPassword"],
-  });

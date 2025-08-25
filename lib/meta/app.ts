@@ -1,6 +1,6 @@
 import { Languages } from "./other";
 
-export const appInfo = {
+export const appMeta = {
   name: "Nama Proyek",
   description: "Deskripsi Proyek",
   keywords: ["next starter"],
