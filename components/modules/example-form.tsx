@@ -12,18 +12,38 @@ import { z } from "zod";
 import { ResetButton } from "../other/buttons";
 import { DatePicker } from "../other/date-picker";
 import { FileUpload } from "../other/file-upload";
-import { FieldWrapper, InputField, SelectField } from "../other/form-fields";
+import {
+  FieldWrapper,
+  InputField,
+  RadioField,
+  SelectField,
+} from "../other/form-fields";
 import { Button } from "../ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Form, FormField } from "../ui/form";
 // import { uploadFiles } from "@/server/s3";
 
 const card = ["Spade", "Heart", "Diamond", "Club"] as const;
 const selectAndRadioData = [
-  { value: "Spade", icon: Spade },
-  { value: "Heart", icon: Heart },
-  { value: "Diamond", icon: Diamond },
-  { value: "Club", icon: Club },
+  {
+    value: "Spade",
+    desc: "Description for radio field Spade.",
+    icon: Spade,
+  },
+  {
+    value: "Heart",
+    desc: "Description for radio field Heart.",
+    icon: Heart,
+  },
+  {
+    value: "Diamond",
+    desc: "Description for radio field Diamond.",
+    icon: Diamond,
+  },
+  {
+    value: "Club",
+    desc: "Description for radio field Club.",
+    icon: Club,
+  },
 ];
 
 export function ExampleForm() {
@@ -168,32 +188,11 @@ export function ExampleForm() {
           control={form.control}
           name="radio"
           render={({ field }) => (
-            <FieldWrapper label="Radio Group" required>
-              <RadioGroup value={field.value} onValueChange={field.onChange}>
-                {selectAndRadioData.map(({ value, icon: Icon }) => (
-                  <FormItem
-                    key={value}
-                    className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
-                  >
-                    <FormControl>
-                      <RadioGroupItem
-                        value={value}
-                        className="order-1 after:absolute after:inset-0"
-                      />
-                    </FormControl>
-
-                    <div className="grid grow gap-2">
-                      <FormLabel className="flex items-center">
-                        <Icon /> {value}
-                      </FormLabel>
-                      <small className="text-muted-foreground text-xs">
-                        You can use this card with a label and a description.
-                      </small>
-                    </div>
-                  </FormItem>
-                ))}
-              </RadioGroup>
-            </FieldWrapper>
+            <RadioField
+              field={field}
+              data={selectAndRadioData}
+              {...fieldsMeta.example.radio}
+            />
           )}
         />
 

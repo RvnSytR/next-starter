@@ -3,6 +3,7 @@ import { LucideIcon } from "lucide-react";
 import { ControllerRenderProps } from "react-hook-form";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -118,6 +119,45 @@ export function SelectField({
           ))}
         </SelectContent>
       </Select>
+    </FieldWrapper>
+  );
+}
+
+export function RadioField({
+  field,
+  data,
+  ...props
+}: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  field: ControllerRenderProps<any>;
+  data: { value: string; desc?: string; icon?: LucideIcon }[];
+} & FieldWrapperProps) {
+  return (
+    <FieldWrapper {...props}>
+      <RadioGroup value={field.value} onValueChange={field.onChange}>
+        {data.map(({ value, desc, icon: Icon }) => (
+          <FormItem
+            key={value}
+            className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
+          >
+            <FormControl>
+              <RadioGroupItem
+                value={value}
+                className="order-1 after:absolute after:inset-0"
+              />
+            </FormControl>
+
+            <div className="grid grow gap-2">
+              <FormLabel className="flex items-center">
+                {Icon && <Icon />} {value}
+              </FormLabel>
+              {desc && (
+                <small className="text-muted-foreground text-xs">{desc}</small>
+              )}
+            </div>
+          </FormItem>
+        ))}
+      </RadioGroup>
     </FieldWrapper>
   );
 }

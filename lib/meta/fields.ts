@@ -39,6 +39,7 @@ export const fieldsMeta = {
       required: true,
     },
     select: { label: "Select", required: true },
+    radio: { label: "Radio", required: true },
   }),
 
   user: createFields({
