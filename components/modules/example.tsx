@@ -1,13 +1,11 @@
-import { CopyButton } from "@/components/other/buttons";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { AreaChart, BarChart, PieChart } from "../other/charts";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { ExampleForm } from "./example-form";
 
-type Key = keyof typeof code;
-type CompCardContent = { title: string; key: Key };
+type CompCardContent = { title: string; key: keyof typeof comp };
 
 const pieChartData = [
   { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
@@ -31,134 +29,7 @@ const areaAndPieChartConfig = {
   key2: { label: "Mobile", color: "var(--color-chart-2)" },
 };
 
-const code = {
-  pieChart: `import { PieChart } from "@/components/other/charts";
-
-export default function ExamplePieChart() {
-  const data = [
-    { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
-    { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
-    { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
-    { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
-    { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
-    { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
-  ];
-
-  return (
-    <div className="mx-auto aspect-square h-[20rem]">
-      <PieChart label="Kategori" data={data} />
-    </div>
-  );
-}`,
-
-  timelineChart: `import { AreaChart, BarChart } from "@/components/other/charts";
-
-export function ExampleAreaAndPieChart() {
-  const data = [
-    { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
-    { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
-    { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
-    { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
-    { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
-    { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
-  ];
-
-  const config = {
-    key1: { label: "Desktop", color: "var(--color-chart-1)" },
-    key2: { label: "Mobile", color: "var(--color-chart-2)" },
-  };
-
-  return (
-    <div className="flex w-full flex-col gap-2 md:flex-row">
-      <div className="md:basis-1/2">
-        <AreaChart config={config} data={data} />
-      </div>
-
-      <div className="md:basis-1/2">
-        <BarChart config={config} data={data} />
-      </div>
-    </div>
-  );
-}`,
-
-  form: `"use client";
-
-import { actions } from "@/lib/content";
-import { FileType } from "@/lib/meta";
-import { zodSchemas } from "@/lib/zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ResetButton } from "@/other/buttons";
-import { Button } from "@/ui/button";
-import { Form } from "@/ui/form";
-import { addDays } from "date-fns";
-import { Club, Diamond, Heart, Save, Spade } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
-// import { uploadFiles } from "@/server/s3";
-
-const card = ["Spade", "Heart", "Diamond", "Club"] as const;
-
-export function ExampleForm() {
-  const fileType: FileType = "image";
-  const schema = z.object({
-    text: zodSchemas.string("Text field"),
-    numeric: z.number(),
-    phone: z.number(),
-    date: zodSchemas.date,
-    dateMultiple: zodSchemas.dateMultiple.min(1),
-    dateRange: zodSchemas.dateRange,
-    select: z.enum(card),
-    radio: z.enum(card),
-    file: zodSchemas.file(fileType, {
-      optional: true,
-      // maxSize: toBytes(1),
-      // min: 2,
-      // max: 5,
-    }),
-  });
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
-    defaultValues: {
-      text: "Hello World",
-      numeric: 100000,
-      phone: 81234567890,
-      date: new Date(),
-      dateMultiple: [new Date()],
-      dateRange: { from: new Date(), to: addDays(new Date(), 6) },
-      select: "Spade",
-      radio: "Spade",
-      file: [],
-    },
-  });
-
-  const formHandler = async (formData: z.infer<typeof schema>) => {
-    console.log(formData.file);
-    // const res = await uploadFiles({ files: formData.file });
-    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
-  };
-
-  return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        {/* Fields */}
-
-        <div className="flex gap-2">
-          <Button type="submit">
-            {/* {loading ? <Spinner /> : <Save />} */}
-            <Save /> {actions.save}
-          </Button>
-
-          <ResetButton fn={form.reset} />
-        </div>
-      </form>
-    </Form>
-  );
-}`,
-};
-
-const comp: Record<Key, React.ReactNode> = {
+const comp = {
   pieChart: (
     <div className="mx-auto aspect-square h-[20rem]">
       <PieChart label="Kategori" data={pieChartData} />
@@ -180,54 +51,32 @@ const comp: Record<Key, React.ReactNode> = {
   form: <ExampleForm />,
 };
 
+const tabs: { section: string; content: CompCardContent[] }[] = [
+  {
+    section: "Chart",
+    content: [
+      { title: "Pie Chart", key: "pieChart" },
+      { title: "Area and Bar Chart", key: "timelineChart" },
+    ],
+  },
+  {
+    section: "Form",
+    content: [{ title: "Contoh penggunaan Form", key: "form" }],
+  },
+];
+
 function Comp({ content }: { content: CompCardContent[] }) {
   return content.map(({ title, key }) => (
     <Card key={key}>
-      <CardContent className="flex flex-col gap-y-4">
+      <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <Tabs defaultValue="preview">
-          <TabsList>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="Code">Kode</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="preview">{comp[key]}</TabsContent>
-
-          <TabsContent value="Code">
-            <ScrollArea className="bg-muted relative rounded-xl font-mono text-sm break-all whitespace-pre">
-              <div className="m-4">
-                <CopyButton
-                  size="iconsm"
-                  variant="outline"
-                  className="absolute top-2 right-2"
-                  value={code[key]}
-                />
-                {code[key]}
-              </div>
-              <ScrollBar orientation="horizontal" className="bg-accent" />
-            </ScrollArea>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-y-4">{comp[key]}</CardContent>
     </Card>
   ));
 }
 
 export function Example() {
-  const tabs: { section: string; content: CompCardContent[] }[] = [
-    {
-      section: "Chart",
-      content: [
-        { title: "Pie Chart", key: "pieChart" },
-        { title: "Area and Bar Chart", key: "timelineChart" },
-      ],
-    },
-    {
-      section: "Form",
-      content: [{ title: "Contoh penggunaan Form", key: "form" }],
-    },
-  ];
-
   return (
     <Tabs
       defaultValue={tabs[0].section}

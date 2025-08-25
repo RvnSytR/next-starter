@@ -191,6 +191,7 @@ export function ExampleForm() {
             <RadioField
               field={field}
               data={selectAndRadioData}
+              className="grid grid-cols-2 md:grid-cols-4"
               {...fieldsMeta.example.radio}
             />
           )}

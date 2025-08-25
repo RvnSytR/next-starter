@@ -126,15 +126,21 @@ export function SelectField({
 export function RadioField({
   field,
   data,
+  className,
   ...props
 }: {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   field: ControllerRenderProps<any>;
   data: { value: string; desc?: string; icon?: LucideIcon }[];
+  className?: string;
 } & FieldWrapperProps) {
   return (
     <FieldWrapper {...props}>
-      <RadioGroup value={field.value} onValueChange={field.onChange}>
+      <RadioGroup
+        value={field.value}
+        onValueChange={field.onChange}
+        className={className}
+      >
         {data.map(({ value, desc, icon: Icon }) => (
           <FormItem
             key={value}
