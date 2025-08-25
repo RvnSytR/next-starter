@@ -11,18 +11,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { ResetButton } from "../other/buttons";
 import { DatePicker } from "../other/date-picker";
-import { Field, FieldWrapper } from "../other/field";
 import { FileUpload } from "../other/file-upload";
+import { FieldWrapper, InputField, SelectField } from "../other/form-fields";
 import { Button } from "../ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 // import { uploadFiles } from "@/server/s3";
 
 const card = ["Spade", "Heart", "Diamond", "Club"] as const;
@@ -83,7 +76,7 @@ export function ExampleForm() {
             control={form.control}
             name="text"
             render={({ field }) => (
-              <Field field={field} {...fieldsMeta.example.text} />
+              <InputField field={field} {...fieldsMeta.example.text} />
             )}
           />
 
@@ -92,7 +85,7 @@ export function ExampleForm() {
             control={form.control}
             name="numeric"
             render={({ field }) => (
-              <Field field={field} {...fieldsMeta.example.numeric} />
+              <InputField field={field} {...fieldsMeta.example.numeric} />
             )}
           />
 
@@ -101,7 +94,7 @@ export function ExampleForm() {
             control={form.control}
             name="phone"
             render={({ field }) => (
-              <Field field={field} {...fieldsMeta.example.phone} />
+              <InputField field={field} {...fieldsMeta.example.phone} />
             )}
           />
 
@@ -110,23 +103,11 @@ export function ExampleForm() {
             control={form.control}
             name="select"
             render={({ field }) => (
-              <FieldWrapper label="Select" required>
-                <Select value={field.value} onValueChange={field.onChange}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-
-                  <SelectContent>
-                    {selectAndRadioData.map(({ value, icon: Icon }) => (
-                      <SelectItem key={value} value={value}>
-                        <Icon /> {value}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </FieldWrapper>
+              <SelectField
+                field={field}
+                data={selectAndRadioData}
+                {...fieldsMeta.example.select}
+              />
             )}
           />
         </div>

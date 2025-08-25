@@ -46,7 +46,7 @@ import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SheetDetails } from "../layout/section";
 import { ResetButton } from "../other/buttons";
-import { Field, FieldWrapper } from "../other/field";
+import { FieldWrapper, InputField } from "../other/fields";
 import { GithubIcon, Loader } from "../other/icon";
 import {
   AlertDialog,
@@ -425,14 +425,16 @@ export function SignInForm() {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => <Field field={field} {...userFields.email} />}
+          render={({ field }) => (
+            <InputField field={field} {...userFields.email} />
+          )}
         />
 
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
-            <Field field={field} {...userFields.password} />
+            <InputField field={field} {...userFields.password} />
           )}
         />
 
@@ -514,20 +516,24 @@ export function SignUpForm() {
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => <Field field={field} {...userFields.name} />}
+          render={({ field }) => (
+            <InputField field={field} {...userFields.name} />
+          )}
         />
 
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => <Field field={field} {...userFields.email} />}
+          render={({ field }) => (
+            <InputField field={field} {...userFields.email} />
+          )}
         />
 
         <FormField
           control={form.control}
           name="newPassword"
           render={({ field }) => (
-            <Field field={field} {...userFields.password} />
+            <InputField field={field} {...userFields.password} />
           )}
         />
 
@@ -535,7 +541,7 @@ export function SignUpForm() {
           control={form.control}
           name="confirmPassword"
           render={({ field }) => (
-            <Field field={field} {...userFields.confirmPassword} />
+            <InputField field={field} {...userFields.confirmPassword} />
           )}
         />
 
@@ -745,14 +751,16 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <Field field={field} {...userFields.email} />
+              <InputField field={field} {...userFields.email} />
             )}
           />
 
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => <Field field={field} {...userFields.name} />}
+            render={({ field }) => (
+              <InputField field={field} {...userFields.name} />
+            )}
           />
         </CardContent>
 
@@ -819,7 +827,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="currentPassword"
             render={({ field }) => (
-              <Field field={field} {...userFields.currentPassword} />
+              <InputField field={field} {...userFields.currentPassword} />
             )}
           />
 
@@ -827,7 +835,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="newPassword"
             render={({ field }) => (
-              <Field field={field} {...userFields.newPassword} />
+              <InputField field={field} {...userFields.newPassword} />
             )}
           />
 
@@ -835,7 +843,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <Field field={field} {...userFields.confirmPassword} />
+              <InputField field={field} {...userFields.confirmPassword} />
             )}
           />
 
@@ -1159,7 +1167,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <Field field={field} {...userFields.name} />
+                <InputField field={field} {...userFields.name} />
               )}
             />
 
@@ -1167,7 +1175,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <Field field={field} {...userFields.email} />
+                <InputField field={field} {...userFields.email} />
               )}
             />
 
@@ -1175,7 +1183,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="newPassword"
               render={({ field }) => (
-                <Field field={field} {...userFields.password} />
+                <InputField field={field} {...userFields.password} />
               )}
             />
 
@@ -1183,7 +1191,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <Field field={field} {...userFields.confirmPassword} />
+                <InputField field={field} {...userFields.confirmPassword} />
               )}
             />
 

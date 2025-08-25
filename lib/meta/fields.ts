@@ -1,4 +1,4 @@
-import { FieldProps } from "@/components/other/field";
+import { FieldProps } from "@/components/other/form-fields";
 import {
   LockKeyhole,
   LockKeyholeOpen,
@@ -38,6 +38,7 @@ export const fieldsMeta = {
       className: "pl-11",
       required: true,
     },
+    select: { label: "Select", required: true },
   }),
 
   user: createFields({
