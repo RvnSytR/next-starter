@@ -1,10 +1,11 @@
 import { Session } from "@/lib/auth";
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
-import { Route, routesMeta } from "@/lib/routes";
+import { getRoutesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
+import { Route } from "next";
 import Link from "next/link";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { LinkLoader, RefreshButton } from "../other/buttons";
@@ -98,7 +99,7 @@ function Header({
           className="group/head-button group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
           asChild
         >
-          <Link href={"/dashboard/profile" satisfies Route}>
+          <Link href={"/dashboard/profile"}>
             <UserAvatar
               name={name}
               image={image}
@@ -136,7 +137,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
       <SidebarMenu>
         {content.map(({ route, icon: Icon, disabled, subMenu }) => {
-          const { displayName } = routesMeta[route];
+          const { displayName } = getRoutesMeta(route);
           if (disabled) {
             return (
               <SidebarMenuItem key={route}>
@@ -172,7 +173,9 @@ function Content({ role }: Pick<SidebarData, "role">) {
                           <SidebarMenuSubItem key={idx}>
                             <SidebarMenuSubButton className={className} asChild>
                               <Link
-                                href={`${route}/#${toKebabCase(label)}`}
+                                href={
+                                  `${route}/#${toKebabCase(label)}` as Route
+                                }
                                 className="flex justify-between"
                               >
                                 <span className="line-clamp-1">{label}</span>

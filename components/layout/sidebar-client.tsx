@@ -1,7 +1,7 @@
 "use client";
 
-import { Route } from "@/lib/routes";
 import { getActiveRoute } from "@/lib/utils";
+import { Route } from "next";
 import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 import { ComponentProps, useEffect, useState } from "react";

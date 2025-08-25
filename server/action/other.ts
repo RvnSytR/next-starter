@@ -1,7 +1,8 @@
 "use server";
 
 import { Role } from "@/lib/permission";
-import { Route, RouteRole, routesMeta } from "@/lib/routes";
+import { getRoutesMeta, RouteRole } from "@/lib/routes";
+import { Route } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { getSession } from "./user";
@@ -16,7 +17,7 @@ export async function getCustomHeaders() {
 }
 
 export async function requireAuthorizedSession(route: Route) {
-  const meta = routesMeta[route];
+  const meta = getRoutesMeta(route);
   if (!("role" in meta)) notFound();
 
   const session = await getSession();

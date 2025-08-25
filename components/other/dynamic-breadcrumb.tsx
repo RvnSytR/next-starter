@@ -1,7 +1,8 @@
 "use client";
 
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Route, routesMeta } from "@/lib/routes";
+import { getRoutesMeta } from "@/lib/routes";
+import { Route } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
 import {
@@ -20,7 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 
-type DynamicBreadcrumbMeta = { url: string; displayName: string };
+type DynamicBreadcrumbMeta = { url: Route; displayName: string };
 type DynamicBreadcrumbData = Route | DynamicBreadcrumbMeta;
 export type DynamicBreadcrumbProps = {
   breadcrumb?: DynamicBreadcrumbData[];
@@ -29,7 +30,7 @@ export type DynamicBreadcrumbProps = {
 
 function getProps(data: DynamicBreadcrumbData): DynamicBreadcrumbMeta {
   return typeof data === "string"
-    ? { url: data, displayName: routesMeta[data].displayName }
+    ? { url: data, displayName: getRoutesMeta(data).displayName }
     : data;
 }
 

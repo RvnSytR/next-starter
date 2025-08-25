@@ -3,6 +3,7 @@ import { fileMeta, FileType } from "@/lib/meta";
 import { cn, toMegabytes } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
 import { Dot, X } from "lucide-react";
+import { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -194,7 +195,7 @@ export function FileUpload({
 
                 <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
                   <Link
-                    href={fileURL}
+                    href={fileURL as Route}
                     target="_blank"
                     className={cn(
                       "text-sm font-medium hover:underline",

@@ -9,9 +9,7 @@ export const metadata: Metadata = { title: getTitle("/dashboard") };
 
 export default async function DashboardLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
+}: LayoutProps<"/dashboard">) {
   const session = await getSession();
   if (!session) notFound();
   return (

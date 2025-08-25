@@ -6,7 +6,7 @@ import {
   UserRound,
   UsersRound,
 } from "lucide-react";
-import { Route } from "./routes";
+import { Route } from "next";
 
 type MenuContent = {
   route: Route;
@@ -47,12 +47,12 @@ export const dashboardMenu: Menu[] = [
 ];
 
 export const dashboardfooterMenu: (Omit<MenuContent, "route" | "subMenu"> & {
-  url: string;
+  url: Route;
   displayName: string;
 })[] = [
   { url: "/", displayName: "Beranda", icon: ExternalLink },
   {
-    url: "/somewhere",
+    url: "/sign-in",
     displayName: "Bantuan",
     icon: CircleHelp,
     disabled: true,

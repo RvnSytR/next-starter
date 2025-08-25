@@ -34,11 +34,7 @@ export const viewport: Viewport = {
   viewportFit: "cover",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang={appMeta.lang} suppressHydrationWarning>
       <body className={cn(geistFont.variable, geistMonoFont.variable)}>
