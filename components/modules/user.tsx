@@ -5,9 +5,9 @@ import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
 import { fieldsMeta, fileMeta } from "@/lib/meta";
-import { allRoles, Role, rolesMeta } from "@/lib/permission";
+import { Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
-import { capitalize, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -46,7 +46,7 @@ import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SheetDetails } from "../layout/section";
 import { ResetButton } from "../other/buttons";
-import { FieldWrapper, InputField } from "../other/fields";
+import { Field } from "../other/form-fields";
 import { GithubIcon, Loader } from "../other/icon";
 import {
   AlertDialog,
@@ -91,13 +91,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Label } from "../ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
@@ -425,16 +418,14 @@ export function SignInForm() {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <InputField field={field} {...userFields.email} />
-          )}
+          render={({ field }) => <Field field={field} {...userFields.email} />}
         />
 
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
-            <InputField field={field} {...userFields.password} />
+            <Field field={field} {...userFields.password} />
           )}
         />
 
@@ -516,24 +507,20 @@ export function SignUpForm() {
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => (
-            <InputField field={field} {...userFields.name} />
-          )}
+          render={({ field }) => <Field field={field} {...userFields.name} />}
         />
 
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => (
-            <InputField field={field} {...userFields.email} />
-          )}
+          render={({ field }) => <Field field={field} {...userFields.email} />}
         />
 
         <FormField
           control={form.control}
           name="newPassword"
           render={({ field }) => (
-            <InputField field={field} {...userFields.password} />
+            <Field field={field} {...userFields.newPassword} />
           )}
         />
 
@@ -541,7 +528,7 @@ export function SignUpForm() {
           control={form.control}
           name="confirmPassword"
           render={({ field }) => (
-            <InputField field={field} {...userFields.confirmPassword} />
+            <Field field={field} {...userFields.confirmPassword} />
           )}
         />
 
@@ -751,16 +738,14 @@ export function PersonalInformation({ ...props }: Session["user"]) {
             control={form.control}
             name="email"
             render={({ field }) => (
-              <InputField field={field} {...userFields.email} />
+              <Field field={field} {...userFields.email} />
             )}
           />
 
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => (
-              <InputField field={field} {...userFields.name} />
-            )}
+            render={({ field }) => <Field field={field} {...userFields.name} />}
           />
         </CardContent>
 
@@ -827,7 +812,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="currentPassword"
             render={({ field }) => (
-              <InputField field={field} {...userFields.currentPassword} />
+              <Field field={field} {...userFields.currentPassword} />
             )}
           />
 
@@ -835,7 +820,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="newPassword"
             render={({ field }) => (
-              <InputField field={field} {...userFields.newPassword} />
+              <Field field={field} {...userFields.newPassword} />
             )}
           />
 
@@ -843,7 +828,7 @@ export function ChangePasswordForm() {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <InputField field={field} {...userFields.confirmPassword} />
+              <Field field={field} {...userFields.confirmPassword} />
             )}
           />
 
@@ -922,7 +907,7 @@ export function ActiveSessionButton({
   return (
     <div className="bg-card flex items-center gap-x-4 rounded-lg border p-2 shadow-xs">
       <div className="flex grow items-center gap-x-2">
-        <div className="bg-muted aspect-square size-fit rounded-lg p-2">
+        <div className="bg-muted aspect-square size-fit rounded-md p-2">
           <DeviceIcons className="shrink-0" />
         </div>
 
@@ -1167,7 +1152,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="name"
               render={({ field }) => (
-                <InputField field={field} {...userFields.name} />
+                <Field field={field} {...userFields.name} />
               )}
             />
 
@@ -1175,7 +1160,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="email"
               render={({ field }) => (
-                <InputField field={field} {...userFields.email} />
+                <Field field={field} {...userFields.email} />
               )}
             />
 
@@ -1183,7 +1168,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="newPassword"
               render={({ field }) => (
-                <InputField field={field} {...userFields.password} />
+                <Field field={field} {...userFields.newPassword} />
               )}
             />
 
@@ -1191,7 +1176,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="confirmPassword"
               render={({ field }) => (
-                <InputField field={field} {...userFields.confirmPassword} />
+                <Field field={field} {...userFields.confirmPassword} />
               )}
             />
 
@@ -1199,33 +1184,7 @@ export function AdminCreateUserDialog() {
               control={form.control}
               name="role"
               render={({ field }) => (
-                <FieldWrapper label={userFields.role} required>
-                  <Select
-                    value={field.value as Role}
-                    onValueChange={field.onChange}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-
-                    <SelectContent>
-                      {allRoles.map((item) => {
-                        const { displayName, icon: Icon } = rolesMeta[item];
-                        return (
-                          <SelectItem
-                            key={item}
-                            value={item}
-                            className="capitalize"
-                          >
-                            <Icon /> {displayName ?? capitalize(item)}
-                          </SelectItem>
-                        );
-                      })}
-                    </SelectContent>
-                  </Select>
-                </FieldWrapper>
+                <Field field={field} {...userFields.role} />
               )}
             />
 
@@ -1293,35 +1252,7 @@ function AdminChangeUserRoleForm({
         <FormField
           control={form.control}
           name="role"
-          render={({ field }) => (
-            <FieldWrapper label={`Ubah role ${data.name}`}>
-              <Select
-                value={field.value as Role}
-                onValueChange={field.onChange}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-
-                <SelectContent>
-                  {allRoles.map((item) => {
-                    const { displayName, icon: Icon } = rolesMeta[item];
-                    return (
-                      <SelectItem
-                        key={item}
-                        value={item}
-                        className="capitalize"
-                      >
-                        <Icon /> {displayName ?? capitalize(item)}
-                      </SelectItem>
-                    );
-                  })}
-                </SelectContent>
-              </Select>
-            </FieldWrapper>
-          )}
+          render={({ field }) => <Field field={field} {...userFields.role} />}
         />
 
         <Button type="submit" disabled={isLoading}>

@@ -1,5 +1,13 @@
+import {
+  FieldIcon,
+  FieldProps,
+  FieldWrapperProps,
+  NumberFieldProps,
+  RadioFieldProps,
+  SelectFieldProps,
+  TextFieldProps,
+} from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
 import { ControllerRenderProps } from "react-hook-form";
 import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
@@ -13,24 +21,8 @@ import {
 } from "../ui/select";
 import { InputWrapper } from "./input-wrapper";
 
-export type FieldProps = {
-  type?: "text" | "email" | "password" | "number" | "tel";
-  className?: string;
-  required?: boolean;
-
-  label: string;
-  placeholder?: string;
-  icon?: string | LucideIcon;
-
-  classNames?: {
-    formItem?: string;
-    formMessage?: string;
-    label?: string;
-    inputWrapper?: string;
-  };
-};
-
-type FieldWrapperProps = Pick<FieldProps, "required" | "label" | "classNames">;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type FormField = { field: ControllerRenderProps<any> };
 
 export function FieldWrapper({
   label,
@@ -51,119 +43,148 @@ export function FieldWrapper({
   );
 }
 
-export function InputField({
-  field,
-  type: inputType = "text",
-  icon: Icon,
-  placeholder,
-  className,
-  ...props
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-}: FieldProps & { field: ControllerRenderProps<any> }) {
-  const commonProps = { placeholder, className };
-  let inputField = <Input type={inputType} {...commonProps} {...field} />;
+function getIconOrText(Icon: FieldIcon) {
+  return Icon && (typeof Icon === "string" ? Icon : <Icon />);
+}
 
-  if (inputType === "number" || inputType === "tel") {
-    const { value, onChange, ...rest } = field;
-    inputField = (
+function TextField({
+  field,
+  type,
+  icon,
+  ...props
+}: FormField & TextFieldProps) {
+  const iconOrText = icon && getIconOrText(icon);
+
+  const inputField = (
+    <FormControl>
+      <Input type={type} {...props} {...field} />
+    </FormControl>
+  );
+
+  return iconOrText ? (
+    <InputWrapper icon={iconOrText}>{inputField}</InputWrapper>
+  ) : (
+    inputField
+  );
+}
+
+function NumberField({
+  field: { value, onChange, ...restField },
+  type,
+  icon,
+  ...props
+}: FormField & NumberFieldProps) {
+  const iconOrText = icon && getIconOrText(icon);
+  const inputField = (
+    <FormControl>
       <Input
         type="text"
-        inputMode="numeric"
-        value={(inputType === "number" ? formatNumber : formatPhone)(value)}
+        inputMode={type === "number" ? "numeric" : "tel"}
+        value={(type === "number" ? formatNumber : formatPhone)(value)}
         onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-        {...commonProps}
-        {...rest}
+        {...props}
+        {...restField}
       />
-    );
+    </FormControl>
+  );
+
+  return iconOrText ? (
+    <InputWrapper icon={iconOrText}>{inputField}</InputWrapper>
+  ) : (
+    inputField
+  );
+}
+
+function SelectField({
+  field,
+  placeholder,
+  data,
+}: FormField & SelectFieldProps) {
+  return (
+    <Select value={field.value} onValueChange={field.onChange}>
+      <FormControl>
+        <SelectTrigger>
+          <SelectValue placeholder={placeholder} />
+        </SelectTrigger>
+      </FormControl>
+      <SelectContent>
+        {data.map(({ value, icon }) => (
+          <SelectItem key={value} value={value}>
+            {icon && getIconOrText(icon)} {value}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+}
+
+function RadioField({ field, className, data }: FormField & RadioFieldProps) {
+  return (
+    <RadioGroup
+      value={field.value}
+      onValueChange={field.onChange}
+      className={className}
+    >
+      {data.map(({ value, desc, icon }) => (
+        <FormItem
+          key={value}
+          className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row items-start rounded-md border p-4 shadow-xs"
+        >
+          <FormControl>
+            <RadioGroupItem
+              value={value}
+              className="order-1 after:absolute after:inset-0"
+            />
+          </FormControl>
+          <div className="grid grow gap-2">
+            <FormLabel className="flex items-center">
+              {icon && getIconOrText(icon)} {value}
+            </FormLabel>
+
+            {desc && (
+              <small className="text-muted-foreground text-xs text-balance">
+                {desc}
+              </small>
+            )}
+          </div>
+        </FormItem>
+      ))}
+    </RadioGroup>
+  );
+}
+
+export function Field({ ...props }: FormField & FieldProps) {
+  const { label, required, classNames, ...restProps } = props;
+
+  let comp: React.ReactNode;
+  const fieldWrapperProps = { label, required, classNames };
+
+  switch (restProps.type) {
+    case "number":
+    case "tel":
+      return (
+        <FieldWrapper {...fieldWrapperProps}>
+          <NumberField {...restProps} />
+        </FieldWrapper>
+      );
+
+    case "select":
+      return (
+        <FieldWrapper {...fieldWrapperProps}>
+          <SelectField {...restProps} />
+        </FieldWrapper>
+      );
+
+    case "radio": {
+      comp = <RadioField {...restProps} />;
+      break;
+    }
+
+    default: {
+      comp = <TextField {...restProps} />;
+      break;
+    }
   }
 
-  return (
-    <FieldWrapper {...props}>
-      {Icon ? (
-        <InputWrapper
-          icon={typeof Icon === "string" ? Icon : <Icon />}
-          className={props.classNames?.formMessage}
-        >
-          <FormControl>{inputField}</FormControl>
-        </InputWrapper>
-      ) : (
-        <FormControl>{inputField}</FormControl>
-      )}
-    </FieldWrapper>
-  );
-}
-
-export function SelectField({
-  field,
-  data,
-  ...props
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: ControllerRenderProps<any>;
-  data: { value: string; icon?: LucideIcon }[];
-} & FieldWrapperProps) {
-  return (
-    <FieldWrapper {...props}>
-      <Select value={field.value} onValueChange={field.onChange}>
-        <FormControl>
-          <SelectTrigger>
-            <SelectValue />
-          </SelectTrigger>
-        </FormControl>
-
-        <SelectContent>
-          {data.map(({ value, icon: Icon }) => (
-            <SelectItem key={value} value={value}>
-              {Icon && <Icon />} {value}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-    </FieldWrapper>
-  );
-}
-
-export function RadioField({
-  field,
-  data,
-  className,
-  ...props
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  field: ControllerRenderProps<any>;
-  data: { value: string; desc?: string; icon?: LucideIcon }[];
-  className?: string;
-} & FieldWrapperProps) {
-  return (
-    <FieldWrapper {...props}>
-      <RadioGroup
-        value={field.value}
-        onValueChange={field.onChange}
-        className={className}
-      >
-        {data.map(({ value, desc, icon: Icon }) => (
-          <FormItem
-            key={value}
-            className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row rounded-md border p-4 shadow-xs"
-          >
-            <FormControl>
-              <RadioGroupItem
-                value={value}
-                className="order-1 after:absolute after:inset-0"
-              />
-            </FormControl>
-
-            <div className="grid grow gap-2">
-              <FormLabel className="flex items-center">
-                {Icon && <Icon />} {value}
-              </FormLabel>
-              {desc && (
-                <small className="text-muted-foreground text-xs">{desc}</small>
-              )}
-            </div>
-          </FormItem>
-        ))}
-      </RadioGroup>
-    </FieldWrapper>
-  );
+  return <FieldWrapper {...fieldWrapperProps}>{comp}</FieldWrapper>;
 }

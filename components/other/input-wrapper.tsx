@@ -1,12 +1,11 @@
 import { cn } from "@/lib/utils";
-import { ComponentProps, ReactNode } from "react";
 
 export function InputWrapper({
   icon,
   className,
   children,
   ...props
-}: ComponentProps<"div"> & { icon: ReactNode }) {
+}: React.ComponentProps<"div"> & { icon: React.ReactNode }) {
   return (
     <div
       className={cn(

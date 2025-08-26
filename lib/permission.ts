@@ -32,18 +32,20 @@ export const userRoles: Role[] = allRoles.filter(
 export const rolesMeta: Record<
   Role,
   {
-    displayName?: string;
+    displayName: string;
     desc: string;
     icon: LucideIcon;
     badgeVariant: BadgeProps["variant"];
   }
 > = {
   user: {
+    displayName: "User",
     icon: UserRound,
     desc: "Pengguna standar dengan akses dan izin dasar.",
     badgeVariant: "outline",
   },
   admin: {
+    displayName: "Admin",
     icon: UserRoundCheck,
     desc: "Administrator dengan akses penuh dan kontrol pengelolaan sistem.",
     badgeVariant: "outline_primary",

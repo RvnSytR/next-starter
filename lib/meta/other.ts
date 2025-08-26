@@ -2,14 +2,6 @@ import { LucideIcon, Mars, Venus } from "lucide-react";
 
 export type Toast = "success" | "error" | "info" | "warning";
 
-export type FieldType =
-  | "string"
-  | "boolean"
-  | "number"
-  | "date"
-  | "array"
-  | "object";
-
 export const gender = ["male", "female"] as const;
 export type Gender = (typeof gender)[number];
 export const genderMeta: Record<
@@ -32,12 +24,12 @@ export const languages = ["en", "id", "es", "fr", "de", "ar"] as const;
 export type Languages = (typeof languages)[number];
 export const languagesMeta: Record<
   Languages,
-  { locale: string; currency: string }
+  { locale: string; currency: string; decimal: number; symbol: string }
 > = {
-  en: { locale: "en-US", currency: "USD" },
-  id: { locale: "id-ID", currency: "IDR" },
-  de: { locale: "de-DE", currency: "EUR" },
-  es: { locale: "es-ES", currency: "EUR" },
-  fr: { locale: "fr-FR", currency: "EUR" },
-  ar: { locale: "ar-SA", currency: "SAR" },
+  en: { locale: "en-US", currency: "USD", decimal: 2, symbol: "$" },
+  id: { locale: "id-ID", currency: "IDR", decimal: 0, symbol: "Rp" },
+  de: { locale: "de-DE", currency: "EUR", decimal: 2, symbol: "€" },
+  es: { locale: "es-ES", currency: "EUR", decimal: 2, symbol: "€" },
+  fr: { locale: "fr-FR", currency: "EUR", decimal: 2, symbol: "€" },
+  ar: { locale: "ar-SA", currency: "SAR", decimal: 2, symbol: "ر.س" },
 };

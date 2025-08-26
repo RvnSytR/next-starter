@@ -5,53 +5,27 @@ import { fieldsMeta, FileType } from "@/lib/meta";
 import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
-import { Club, Diamond, Heart, Save, Spade } from "lucide-react";
+import { Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ResetButton } from "../other/buttons";
 import { DatePicker } from "../other/date-picker";
 import { FileUpload } from "../other/file-upload";
-import {
-  FieldWrapper,
-  InputField,
-  RadioField,
-  SelectField,
-} from "../other/form-fields";
+import { Field, FieldWrapper } from "../other/form-fields";
 import { Button } from "../ui/button";
 import { Form, FormField } from "../ui/form";
 // import { uploadFiles } from "@/server/s3";
 
 const card = ["Spade", "Heart", "Diamond", "Club"] as const;
-const selectAndRadioData = [
-  {
-    value: "Spade",
-    desc: "Description for radio field Spade.",
-    icon: Spade,
-  },
-  {
-    value: "Heart",
-    desc: "Description for radio field Heart.",
-    icon: Heart,
-  },
-  {
-    value: "Diamond",
-    desc: "Description for radio field Diamond.",
-    icon: Diamond,
-  },
-  {
-    value: "Club",
-    desc: "Description for radio field Club.",
-    icon: Club,
-  },
-];
+const exampleFields = fieldsMeta.example;
 
 export function ExampleForm() {
   const fileType: FileType = "image";
   const schema = z.object({
     text: zodSchemas.string("Text field"),
-    numeric: z.number(),
-    phone: z.number(),
+    numeric: z.number().min(1),
+    phone: z.number().min(1),
     date: zodSchemas.date,
     dateMultiple: zodSchemas.dateMultiple.min(1),
     dateRange: zodSchemas.dateRange,
@@ -91,43 +65,49 @@ export function ExampleForm() {
       <form onSubmit={form.handleSubmit(formHandler)}>
         {/* General */}
         <div className="grid gap-x-2 gap-y-4 md:grid-cols-4">
-          {/* Text */}
+          {/* Example to dynamically render the form fields */}
+          {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
+            (field) => (
+              <FormField
+                key={field}
+                control={form.control}
+                name={field}
+                render={({ field }) => (
+                  <Field field={field} {...fieldsMeta.example[field]} />
+                )}
+              />
+            ),
+          )} */}
+
           <FormField
             control={form.control}
             name="text"
             render={({ field }) => (
-              <InputField field={field} {...fieldsMeta.example.text} />
+              <Field field={field} {...exampleFields.text} />
             )}
           />
 
-          {/* Numeric */}
           <FormField
             control={form.control}
             name="numeric"
             render={({ field }) => (
-              <InputField field={field} {...fieldsMeta.example.numeric} />
+              <Field field={field} {...exampleFields.numeric} />
             )}
           />
 
-          {/* Phone */}
           <FormField
             control={form.control}
             name="phone"
             render={({ field }) => (
-              <InputField field={field} {...fieldsMeta.example.phone} />
+              <Field field={field} {...exampleFields.phone} />
             )}
           />
 
-          {/* Select */}
           <FormField
             control={form.control}
             name="select"
             render={({ field }) => (
-              <SelectField
-                field={field}
-                data={selectAndRadioData}
-                {...fieldsMeta.example.select}
-              />
+              <Field field={field} {...exampleFields.select} />
             )}
           />
         </div>
@@ -188,12 +168,7 @@ export function ExampleForm() {
           control={form.control}
           name="radio"
           render={({ field }) => (
-            <RadioField
-              field={field}
-              data={selectAndRadioData}
-              className="grid grid-cols-2 md:grid-cols-4"
-              {...fieldsMeta.example.radio}
-            />
+            <Field field={field} {...fieldsMeta.example.radio} />
           )}
         />
 

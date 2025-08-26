@@ -1,6 +1,6 @@
 import { Route } from "next";
 import { dashboardMenu, Menu } from "../menu";
-import { appMeta, Languages, languagesMeta } from "../meta";
+import { appMeta } from "../meta";
 import { Role } from "../permission";
 import { allRoutes, getRoutesMeta, RouteRole } from "../routes";
 
@@ -24,17 +24,6 @@ export function getRandomColor(withHash?: boolean) {
   let color = withHash ? "#" : "";
   for (let i = 0; i < 6; i++) color += letters[Math.floor(Math.random() * 16)];
   return color;
-}
-
-export function getCurrencySymbol(lang: Languages): string {
-  const { locale, currency } = languagesMeta[lang];
-  const formatted = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(1);
-  return formatted.replace(/[\d\s.,]/g, "").trim();
 }
 
 export function getMenuByRole(

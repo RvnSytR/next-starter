@@ -4,7 +4,7 @@ import { Session } from "@/lib/auth";
 import { filterFn } from "@/lib/filters";
 import { fieldsMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
-import { capitalize, formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import {
   ArrowUpDown,
@@ -122,17 +122,17 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ role }) => role, {
-    id: userFields.role,
-    header: ({ column }) => headerButton(column, userFields.role),
+    id: userFields.role.label,
+    header: ({ column }) => headerButton(column, userFields.role.label),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
-      displayName: userFields.role,
+      displayName: userFields.role.label,
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
         const { displayName, icon } = rolesMeta[value as Role];
-        return { value, label: displayName ?? capitalize(value), icon: icon };
+        return { value, label: displayName, icon };
       },
     },
   }),
