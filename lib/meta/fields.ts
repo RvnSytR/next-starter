@@ -16,34 +16,11 @@ export type FieldType =
   | "array"
   | "object";
 
-export type InputTypeAttribute =
-  | "number"
-  // | "button"
-  | "checkbox"
-  | "color"
-  | "date"
-  | "datetime-local"
-  | "email"
-  // | "file"
-  | "hidden"
-  // | "image"
-  | "month"
-  | "password"
-  | "radio"
-  | "range"
-  // | "reset"
-  | "search"
-  | "submit"
-  | "tel"
-  | "text"
-  | "time"
-  | "url"
-  | "week";
-
 export type FieldIcon = string | LucideIcon;
 
 export type FieldWrapperProps = {
   label: string;
+  desc?: string;
   required?: boolean;
   classNames?: { label?: string; formItem?: string; formMessage?: string };
 };
@@ -52,14 +29,23 @@ export type BaseInputProps = {
   className?: string;
   placeholder?: string;
   icon?: FieldIcon;
-  wrapperClassName?: string;
 };
 
-export type TextFieldProps = BaseInputProps & {
-  type: Exclude<InputTypeAttribute, "number" | "tel" | "select" | "radio">;
+export type InputFieldProps = BaseInputProps & {
+  type:
+    | "text"
+    | "color"
+    | "date"
+    | "datetime-local"
+    | "email"
+    | "hidden"
+    | "password"
+    | "search"
+    | "time"
+    | "url";
 };
 
-export type NumberFieldProps = BaseInputProps & { type: "number" | "tel" };
+export type NumericFieldProps = BaseInputProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseInputProps, "placeholder"> & {
   type: "select";
@@ -72,23 +58,20 @@ export type RadioFieldProps = Pick<BaseInputProps, "className"> & {
 };
 
 export type FieldProps = FieldWrapperProps &
-  (TextFieldProps | NumberFieldProps | SelectFieldProps | RadioFieldProps);
-
-const createFields = <T extends Record<string, string | FieldProps>>(
-  fields: T,
-) => fields;
+  (InputFieldProps | NumericFieldProps | SelectFieldProps | RadioFieldProps);
 
 export const fieldsMeta = {
   num: "No",
   createdAt: "Tanggal Dibuat",
 
-  example: createFields({
+  example: {
     text: {
       type: "text",
       label: "Text",
       placeholder: "Masukkan Text",
       icon: TextIcon,
       required: true,
+      // desc: "Form Description",
     },
     numeric: {
       type: "number",
@@ -143,9 +126,9 @@ export const fieldsMeta = {
       ],
       required: true,
     },
-  }),
+  },
 
-  user: createFields({
+  user: {
     id: "ID Pengguna",
     avatar: "Foto Profil",
 
@@ -207,5 +190,5 @@ export const fieldsMeta = {
       required: true,
       className: "grid grid-cols-2",
     },
-  }),
-};
+  },
+} satisfies Record<string, string | Record<string, string | FieldProps>>;

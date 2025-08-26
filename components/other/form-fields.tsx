@@ -2,14 +2,20 @@ import {
   FieldIcon,
   FieldProps,
   FieldWrapperProps,
-  NumberFieldProps,
+  InputFieldProps,
+  NumericFieldProps,
   RadioFieldProps,
   SelectFieldProps,
-  TextFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { ControllerRenderProps } from "react-hook-form";
-import { FormControl, FormItem, FormLabel, FormMessage } from "../ui/form";
+import {
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
@@ -25,10 +31,12 @@ import { InputWrapper } from "./input-wrapper";
 type FormField = { field: ControllerRenderProps<any> };
 
 export function FieldWrapper({
+  desc,
   label,
   required = false,
   classNames,
   children,
+  ...props
 }: FieldWrapperProps & { children: React.ReactNode }) {
   return (
     <FormItem className={classNames?.formItem}>
@@ -38,6 +46,7 @@ export function FieldWrapper({
         {label}
       </FormLabel>
       {children}
+      {desc && <FormDescription>{desc}</FormDescription>}
       <FormMessage className={classNames?.formMessage} />
     </FormItem>
   );
@@ -52,7 +61,7 @@ function TextField({
   type,
   icon,
   ...props
-}: FormField & TextFieldProps) {
+}: FormField & InputFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
 
   const inputField = (
@@ -73,7 +82,7 @@ function NumberField({
   type,
   icon,
   ...props
-}: FormField & NumberFieldProps) {
+}: FormField & NumericFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
   const inputField = (
     <FormControl>
@@ -154,37 +163,26 @@ function RadioField({ field, className, data }: FormField & RadioFieldProps) {
 }
 
 export function Field({ ...props }: FormField & FieldProps) {
-  const { label, required, classNames, ...restProps } = props;
-
   let comp: React.ReactNode;
-  const fieldWrapperProps = { label, required, classNames };
 
-  switch (restProps.type) {
+  switch (props.type) {
     case "number":
     case "tel":
-      return (
-        <FieldWrapper {...fieldWrapperProps}>
-          <NumberField {...restProps} />
-        </FieldWrapper>
-      );
+      comp = <NumberField {...props} />;
+      break;
 
     case "select":
-      return (
-        <FieldWrapper {...fieldWrapperProps}>
-          <SelectField {...restProps} />
-        </FieldWrapper>
-      );
-
-    case "radio": {
-      comp = <RadioField {...restProps} />;
+      comp = <SelectField {...props} />;
       break;
-    }
 
-    default: {
-      comp = <TextField {...restProps} />;
+    case "radio":
+      comp = <RadioField {...props} />;
       break;
-    }
+
+    default:
+      comp = <TextField {...props} />;
+      break;
   }
 
-  return <FieldWrapper {...fieldWrapperProps}>{comp}</FieldWrapper>;
+  return <FieldWrapper {...props}>{comp}</FieldWrapper>;
 }
