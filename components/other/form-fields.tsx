@@ -12,7 +12,7 @@ import {
   TextareaFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
-import { ControllerRenderProps } from "react-hook-form";
+import { ControllerRenderProps, FieldValues } from "react-hook-form";
 import { Checkbox } from "../ui/checkbox";
 import {
   FormControl,
@@ -35,8 +35,7 @@ import { DatePicker } from "./date-picker";
 import { FileUpload } from "./file-upload";
 import { InputWrapper } from "./input-wrapper";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Controller = { field: ControllerRenderProps<any> };
+type Controller<T extends FieldValues> = { field: ControllerRenderProps<T> };
 
 function getIconOrText(Icon: FormFieldIcon) {
   return Icon && (typeof Icon === "string" ? Icon : <Icon />);
@@ -70,12 +69,12 @@ export function FieldWrapper({
   );
 }
 
-function TextField({
+function TextField<T extends FieldValues>({
   field,
   type,
   icon,
   ...props
-}: Controller & InputFieldProps) {
+}: Controller<T> & InputFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
 
   const inputField = (
@@ -91,12 +90,12 @@ function TextField({
   );
 }
 
-function NumberField({
+function NumberField<T extends FieldValues>({
   field: { value, onChange, ...restField },
   type,
   icon,
   ...props
-}: Controller & NumericFieldProps) {
+}: Controller<T> & NumericFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
   const inputField = (
     <FormControl>
@@ -118,11 +117,11 @@ function NumberField({
   );
 }
 
-function SelectField({
+function SelectField<T extends FieldValues>({
   field,
   placeholder,
   data,
-}: Controller & SelectFieldProps) {
+}: Controller<T> & SelectFieldProps) {
   return (
     <Select value={field.value} onValueChange={field.onChange}>
       <FormControl>
@@ -141,7 +140,11 @@ function SelectField({
   );
 }
 
-function RadioField({ field, className, data }: Controller & RadioFieldProps) {
+function RadioField<T extends FieldValues>({
+  field,
+  className,
+  data,
+}: Controller<T> & RadioFieldProps) {
   return (
     <RadioGroup
       value={field.value}
@@ -179,12 +182,12 @@ function RadioField({ field, className, data }: Controller & RadioFieldProps) {
   );
 }
 
-function CalendarField({
+function CalendarField<T extends FieldValues>({
   field,
   mode,
   required,
   placeholder,
-}: Controller & CalendarFieldProps) {
+}: Controller<T> & CalendarFieldProps) {
   return (
     <DatePicker
       mode={mode}
@@ -197,14 +200,14 @@ function CalendarField({
   );
 }
 
-function CheckboxField({
+function CheckboxField<T extends FieldValues>({
   field,
   label,
   description,
   required,
   className,
   classNames,
-}: Controller & FieldWrapperProps & CheckboxFieldProps) {
+}: Controller<T> & FieldWrapperProps & CheckboxFieldProps) {
   return (
     <FormItem className={classNames?.formItem}>
       <div className="flex gap-x-3">
@@ -232,7 +235,10 @@ function CheckboxField({
   );
 }
 
-function TextAreaField({ field, ...props }: Controller & TextareaFieldProps) {
+function TextAreaField<T extends FieldValues>({
+  field,
+  ...props
+}: Controller<T> & TextareaFieldProps) {
   return (
     <FormControl>
       <Textarea {...props} {...field} />
@@ -240,14 +246,16 @@ function TextAreaField({ field, ...props }: Controller & TextareaFieldProps) {
   );
 }
 
-function FileUploadField({
+function FileUploadField<T extends FieldValues>({
   field,
   ...props
-}: Controller & FileUploadFieldProps) {
+}: Controller<T> & FileUploadFieldProps) {
   return <FileUpload {...props} {...field} />;
 }
 
-export function Field({ ...props }: Controller & FieldProps) {
+export function Field<T extends FieldValues>({
+  ...props
+}: Controller<T> & FieldProps) {
   let comp: React.ReactNode;
 
   switch (props.type) {
