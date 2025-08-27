@@ -23,9 +23,9 @@ const exampleFields = fieldsMeta.example;
 export function ExampleForm() {
   const fileType: FileType = "image";
   const schema = z.object({
-    text: zodSchemas.string("Text field"),
-    numeric: z.number().min(1),
-    phone: z.number().min(1),
+    text: zodSchemas.string("Text", { min: 1 }),
+    numeric: zodSchemas.number("Numeric", { min: 1 }),
+    phone: zodSchemas.number("Phone", { min: 1 }),
     date: zodSchemas.date,
     dateMultiple: zodSchemas.dateMultiple.min(1),
     dateRange: zodSchemas.dateRange,

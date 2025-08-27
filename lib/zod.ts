@@ -10,19 +10,51 @@ z.config(id());
 const { user: userFields } = fieldsMeta;
 
 export const zodSchemas = {
-  string: (field: string) => z.string().trim().min(1, messages.required(field)),
+  string: (field: string, options?: { min?: number; max?: number }) => {
+    let schema = z.string().trim();
+
+    const { required, stringTooShort, stringTooLong } = messages;
+    const min = options?.min;
+    const max = options?.max;
+
+    if (min) {
+      const message = min <= 1 ? required : stringTooShort;
+      schema = schema.min(min, { error: message(field, min) });
+    }
+
+    if (max) schema = schema.max(max, { error: stringTooLong(field, max) });
+
+    return schema;
+  },
+
+  number: (field: string, options?: { min?: number; max?: number }) => {
+    let schema = z.number();
+
+    const { required, numberTooSmall, numberTooLarge } = messages;
+    const min = options?.min;
+    const max = options?.max;
+
+    if (min) {
+      const message = min <= 1 ? required : numberTooSmall;
+      schema = schema.min(min, { error: message(field, min) });
+    }
+
+    if (max) schema = schema.max(max, { error: numberTooLarge(field, max) });
+
+    return schema;
+  },
 
   email: z
     .email({ error: messages.invalid(userFields.email.label) })
     .trim()
     .min(1, { error: messages.required(userFields.email.label) })
-    .max(255, { error: messages.tooLong(userFields.email.label, 255) }),
+    .max(255, { error: messages.stringTooLong(userFields.email.label, 255) }),
 
   password: z
     .string()
     .min(1, { error: messages.required(userFields.password.label) })
-    .min(8, { error: messages.tooShort(userFields.password.label, 8) })
-    .max(255, { error: messages.tooLong(userFields.password.label, 255) })
+    .min(8, { error: messages.stringTooShort(userFields.password.label, 8) })
+    .max(255, { error: messages.stringTooLong(userFields.password.label, 255) })
     .regex(/[A-Z]/, {
       error: `${userFields.password.label} harus mengandung huruf kapital. (A-Z)`,
     })
@@ -95,14 +127,16 @@ export const zodSchemas = {
 export const zodUser = z.object({
   role: z.enum(allRoles),
   email: zodSchemas.email,
-  name: z
-    .string()
-    .min(1, { error: messages.tooShort(userFields.name.label, 1) }),
+  name: zodSchemas.string(userFields.name.label, { min: 1 }),
 
-  password: zodSchemas.string(userFields.password.label),
+  password: zodSchemas.string(userFields.password.label, { min: 1 }),
   newPassword: zodSchemas.password,
-  confirmPassword: zodSchemas.string(userFields.confirmPassword.label),
-  currentPassword: zodSchemas.string(userFields.currentPassword.label),
+  confirmPassword: zodSchemas.string(userFields.confirmPassword.label, {
+    min: 1,
+  }),
+  currentPassword: zodSchemas.string(userFields.currentPassword.label, {
+    min: 1,
+  }),
 
   rememberMe: z.boolean(),
   revokeOtherSessions: z.boolean(),

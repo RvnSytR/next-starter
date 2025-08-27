@@ -48,10 +48,16 @@ export const messages = {
   requiredInvalidType: (field: string, fieldType: FieldType) =>
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
-  tooShort: (field: string, min: number, thing: string = "karakter") =>
-    `${field} harus terdiri dari minimal ${min} ${thing}.`.trim(),
-  tooLong: (field: string, max: number, thing: string = "karakter") =>
-    `${field} tidak boleh melebihi ${max} ${thing}.`.trim(),
+  stringTooShort: (field: string, min: number) =>
+    `${field} harus terdiri dari minimal ${min} karakter.`,
+  stringTooLong: (field: string, max: number) =>
+    `${field} tidak boleh melebihi ${max} karakter.`,
+
+  numberTooSmall: (field: string, min: number) =>
+    `${field} tidak boleh kurang dari ${min}.`,
+  numberTooLarge: (field: string, max: number) =>
+    `${field} tidak boleh lebih dari ${max}.`,
+
   outOfRange: (
     field: string,
     min: number,
