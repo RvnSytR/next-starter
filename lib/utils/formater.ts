@@ -1,4 +1,4 @@
-import { appMeta, Languages, languagesMeta } from "../meta";
+import { appMeta, Language, languageMeta } from "../meta";
 
 export function capitalize(str: string, mode: "word" | "first" = "word") {
   const handler = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
@@ -40,9 +40,9 @@ export function toKebabCase(str: string) {
 
 export function formatNumber(
   number: number,
-  props?: { lang?: Languages; options?: Intl.NumberFormatOptions },
+  props?: { lang?: Language; options?: Intl.NumberFormatOptions },
 ) {
-  const locale = languagesMeta[props?.lang ?? appMeta.lang].locale;
+  const locale = languageMeta[props?.lang ?? appMeta.lang].locale;
   const value = new Intl.NumberFormat(locale, props?.options).format(number);
   return value === "0" ? "" : value;
 }

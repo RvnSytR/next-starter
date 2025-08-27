@@ -8,23 +8,38 @@ import {
   TextIcon,
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
-import { languagesMeta } from "./other";
+import { languageMeta } from "./other";
 
-export type FieldType =
-  | "string"
-  | "boolean"
-  | "number"
-  | "date"
-  | "array"
-  | "object";
+export const allFieldType = [
+  "text",
+  "color",
+  "date",
+  "datetime-local",
+  "email",
+  "hidden",
+  "password",
+  "search",
+  "time",
+  "url",
 
-export type FieldIcon = string | LucideIcon;
+  "number",
+  "tel",
+
+  "select",
+  "radio",
+  "calendar",
+] as const;
+
+export type FieldType = (typeof allFieldType)[number];
+// export const fieldTypeMeta: Record<FieldType, {icon: LucideIcon}> = {};
+
+export type FormFieldIcon = string | LucideIcon;
 
 type BaseFieldProps = {
   className?: string;
   placeholder?: string;
   required?: boolean;
-  icon?: FieldIcon;
+  icon?: FormFieldIcon;
 };
 
 export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
@@ -34,7 +49,8 @@ export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
 };
 
 export type InputFieldProps = BaseFieldProps & {
-  type:
+  type: Extract<
+    FieldType,
     | "text"
     | "color"
     | "date"
@@ -44,34 +60,39 @@ export type InputFieldProps = BaseFieldProps & {
     | "password"
     | "search"
     | "time"
-    | "url";
+    | "url"
+  >;
 };
 
-export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
+export type NumericFieldProps = BaseFieldProps & {
+  type: Extract<FieldType, "number" | "tel">;
+};
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
-  type: "select";
+  type: Extract<FieldType, "select">;
   data: {
     value: string;
     label?: string;
-    icon?: FieldIcon;
+    icon?: FormFieldIcon;
     className?: string;
   }[];
 };
 
 export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
-  type: "radio";
+  type: Extract<FieldType, "radio">;
   data: {
     value: string;
     label?: string;
     desc?: string;
-    icon?: FieldIcon;
+    icon?: FormFieldIcon;
     className?: string;
   }[];
 };
 
 export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
-  Pick<BaseFieldProps, "placeholder" | "required"> & { type: "calendar" };
+  Pick<BaseFieldProps, "placeholder" | "required"> & {
+    type: Extract<FieldType, "calendar">;
+  };
 
 export type FieldProps = FieldWrapperProps &
   (
@@ -106,7 +127,7 @@ export const fieldsMeta = {
       type: "tel",
       label: "Phone",
       placeholder: "Masukkan No Telp",
-      icon: languagesMeta.id.symbol,
+      icon: languageMeta.id.symbol,
       className: "pl-11",
       required: true,
     },

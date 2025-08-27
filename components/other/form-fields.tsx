@@ -1,8 +1,8 @@
 import {
   CalendarFieldProps,
-  FieldIcon,
   FieldProps,
   FieldWrapperProps,
+  FormFieldIcon,
   InputFieldProps,
   NumericFieldProps,
   RadioFieldProps,
@@ -32,7 +32,7 @@ import { InputWrapper } from "./input-wrapper";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Controller = { field: ControllerRenderProps<any> };
 
-function getIconOrText(Icon: FieldIcon) {
+function getIconOrText(Icon: FormFieldIcon) {
   return Icon && (typeof Icon === "string" ? Icon : <Icon />);
 }
 

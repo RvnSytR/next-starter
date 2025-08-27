@@ -1,4 +1,4 @@
-import { FieldType } from "./meta";
+import { DataType } from "./meta";
 import { formatDate, formatDateDistanceToNow } from "./utils";
 
 export const actions = {
@@ -41,11 +41,11 @@ export const messages = {
 
   // -- Validation
   invalid: (field: string) => `Masukkan ${field} yang valid.`,
-  invalidType: (field: string, fieldType: FieldType) =>
+  invalidType: (field: string, fieldType: DataType) =>
     `${field} harus berupa ${fieldType} yang valid.`,
 
   required: (field: string) => `${field} wajib diisi.`,
-  requiredInvalidType: (field: string, fieldType: FieldType) =>
+  requiredInvalidType: (field: string, fieldType: DataType) =>
     `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
   stringTooShort: (field: string, min: number) =>

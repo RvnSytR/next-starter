@@ -1,4 +1,4 @@
-import { Languages } from "./other";
+import { Language } from "./other";
 
 export const appMeta = {
   name: "Nama Proyek",
@@ -7,5 +7,5 @@ export const appMeta = {
 
   // logo: "/some-image.png"
 
-  lang: "id" satisfies Languages as Languages,
+  lang: "id" satisfies Language as Language,
 };

@@ -2,8 +2,16 @@ import { LucideIcon, Mars, Venus } from "lucide-react";
 
 export type Toast = "success" | "error" | "info" | "warning";
 
-export const gender = ["male", "female"] as const;
-export type Gender = (typeof gender)[number];
+export type DataType =
+  | "string"
+  | "boolean"
+  | "number"
+  | "date"
+  | "array"
+  | "object";
+
+export const allGenders = ["male", "female"] as const;
+export type Gender = (typeof allGenders)[number];
 export const genderMeta: Record<
   Gender,
   { displayName: string; icon: LucideIcon; badgeClassName: string }
@@ -20,10 +28,10 @@ export const genderMeta: Record<
   },
 };
 
-export const languages = ["en", "id", "es", "fr", "de", "ar"] as const;
-export type Languages = (typeof languages)[number];
-export const languagesMeta: Record<
-  Languages,
+export const allLanguages = ["en", "id", "es", "fr", "de", "ar"] as const;
+export type Language = (typeof allLanguages)[number];
+export const languageMeta: Record<
+  Language,
   { locale: string; currency: string; decimal: number; symbol: string }
 > = {
   en: { locale: "en-US", currency: "USD", decimal: 2, symbol: "$" },
