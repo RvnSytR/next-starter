@@ -16,7 +16,7 @@ import { Button } from "../ui/button";
 import { Form, FormField } from "../ui/form";
 // import { uploadFiles } from "@/server/s3";
 
-const card = ["Spade", "Heart", "Diamond", "Club"] as const;
+const card = ["spade", "heart", "diamond", "club"] as const;
 const exampleFields = fieldsMeta.example;
 
 export function ExampleForm() {
@@ -47,8 +47,8 @@ export function ExampleForm() {
       calendar: new Date(),
       calendarMultiple: [new Date()],
       calendarRange: { from: new Date(), to: addDays(new Date(), 6) },
-      select: "Spade",
-      radio: "Spade",
+      select: "spade",
+      radio: "spade",
       file: [],
     },
   });

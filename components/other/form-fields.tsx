@@ -118,9 +118,9 @@ function SelectField({
         </SelectTrigger>
       </FormControl>
       <SelectContent>
-        {data.map(({ value, icon }) => (
-          <SelectItem key={value} value={value}>
-            {icon && getIconOrText(icon)} {value}
+        {data.map(({ value, label, icon, className }) => (
+          <SelectItem key={value} value={value} className={className}>
+            {icon && getIconOrText(icon)} {label ?? value}
           </SelectItem>
         ))}
       </SelectContent>
@@ -135,10 +135,13 @@ function RadioField({ field, className, data }: Controller & RadioFieldProps) {
       onValueChange={field.onChange}
       className={className}
     >
-      {data.map(({ value, desc, icon }) => (
+      {data.map(({ value, label, desc, icon, className }) => (
         <FormItem
           key={value}
-          className="dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row items-start rounded-md border p-4 shadow-xs"
+          className={cn(
+            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row items-start rounded-md border p-4 shadow-xs",
+            className,
+          )}
         >
           <FormControl>
             <RadioGroupItem
@@ -148,7 +151,7 @@ function RadioField({ field, className, data }: Controller & RadioFieldProps) {
           </FormControl>
           <div className="grid grow gap-2">
             <FormLabel className="flex items-center">
-              {icon && getIconOrText(icon)} {value}
+              {icon && getIconOrText(icon)} {label ?? value}
             </FormLabel>
 
             {desc && (

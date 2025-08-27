@@ -51,12 +51,23 @@ export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
   type: "select";
-  data: { value: string; icon?: FieldIcon }[];
+  data: {
+    value: string;
+    label?: string;
+    icon?: FieldIcon;
+    className?: string;
+  }[];
 };
 
 export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   type: "radio";
-  data: { value: string; desc?: string; icon?: FieldIcon }[];
+  data: {
+    value: string;
+    label?: string;
+    desc?: string;
+    icon?: FieldIcon;
+    className?: string;
+  }[];
 };
 
 export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
@@ -103,10 +114,10 @@ export const fieldsMeta = {
       type: "select",
       label: "Select",
       data: [
-        { value: "Spade", icon: Spade },
-        { value: "Heart", icon: Heart },
-        { value: "Diamond", icon: Diamond },
-        { value: "Club", icon: Club },
+        { value: "spade", label: "Spade", icon: Spade },
+        { value: "heart", label: "Heart", icon: Heart },
+        { value: "diamond", label: "Diamond", icon: Diamond },
+        { value: "club", label: "Club", icon: Club },
       ],
       required: true,
     },
@@ -115,22 +126,26 @@ export const fieldsMeta = {
       label: "Radio Group",
       data: [
         {
-          value: "Spade",
+          value: "spade",
+          label: "Spade",
           desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           icon: Spade,
         },
         {
-          value: "Heart",
+          value: "heart",
+          label: "Heart",
           desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           icon: Heart,
         },
         {
-          value: "Diamond",
+          value: "diamond",
+          label: "Diamond",
           desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           icon: Diamond,
         },
         {
-          value: "Club",
+          value: "club",
+          label: "Club",
           desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           icon: Club,
         },
@@ -168,7 +183,6 @@ export const fieldsMeta = {
       // icon: "user-round",
       required: true,
     },
-
     email: {
       type: "email",
       label: "Alamat Email",
@@ -176,7 +190,6 @@ export const fieldsMeta = {
       // icon: "mail",
       required: true,
     },
-
     password: {
       type: "password",
       label: "Kata Sandi",
@@ -184,7 +197,6 @@ export const fieldsMeta = {
       // icon: "lock-keyhole",
       required: true,
     },
-
     confirmPassword: {
       type: "password",
       label: "Konfirmasi Kata Sandi",
@@ -192,7 +204,6 @@ export const fieldsMeta = {
       // icon: "lock-keyhole",
       required: true,
     },
-
     currentPassword: {
       type: "password",
       label: "Kata Sandi Saat Ini",
@@ -200,7 +211,6 @@ export const fieldsMeta = {
       // icon: "lock-keyhole-open",
       required: true,
     },
-
     newPassword: {
       type: "password",
       label: "Kata Sandi Baru",
@@ -208,7 +218,6 @@ export const fieldsMeta = {
       // icon: "lock-keyhole",
       required: true,
     },
-
     role: {
       type: "radio",
       label: "Role",
