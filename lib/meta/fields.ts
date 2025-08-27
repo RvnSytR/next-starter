@@ -1,3 +1,4 @@
+import { FileUploadProps } from "@/components/other/file-upload";
 import { CalendarProps } from "@/components/ui/calendar";
 import {
   Calendar1,
@@ -14,6 +15,7 @@ import {
   Heart,
   LinkIcon,
   LockKeyhole,
+  LockKeyholeOpen,
   LucideIcon,
   Mail,
   PaintBucket,
@@ -22,8 +24,10 @@ import {
   Spade,
   TextIcon,
   Type,
+  UserRound,
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
+import { appMeta } from "./app";
 import { languageMeta } from "./other";
 
 export const allFieldType = [
@@ -45,6 +49,7 @@ export const allFieldType = [
   "radio",
   "calendar",
   "checkbox",
+  "textarea",
   "file",
 ] as const;
 
@@ -68,6 +73,7 @@ export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
   radio: { icon: CircleDot },
   calendar: { icon: CalendarIcon },
   checkbox: { icon: Check },
+  textarea: { icon: TextIcon },
   file: { icon: File },
 };
 
@@ -85,9 +91,9 @@ export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
   description?: string;
   classNames?: {
     label?: string;
-    item?: string;
-    description?: string;
-    message?: string;
+    formItem?: string;
+    formDescription?: string;
+    formMessage?: string;
   };
 };
 
@@ -128,15 +134,23 @@ export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   }[];
 };
 
-export type CalendarFieldProps = Pick<
-  BaseFieldProps,
-  "required" | "placeholder"
-> &
-  Required<Pick<CalendarProps, "mode">> & { type: "calendar" };
+export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
+  Pick<BaseFieldProps, "placeholder" | "required"> & { type: "calendar" };
 
 export type CheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
   type: "checkbox";
 };
+
+export type TextareaFieldProps = Pick<
+  React.ComponentProps<"textarea">,
+  "minLength" | "maxLength" | "rows"
+> &
+  Omit<BaseFieldProps, "icon"> & { type: "textarea" };
+
+export type FileUploadFieldProps = Omit<
+  FileUploadProps,
+  "value" | "onChange"
+> & { type: "file" };
 
 export type FieldProps = FieldWrapperProps &
   (
@@ -146,6 +160,8 @@ export type FieldProps = FieldWrapperProps &
     | RadioFieldProps
     | CalendarFieldProps
     | CheckboxFieldProps
+    | TextareaFieldProps
+    | FileUploadFieldProps
   );
 
 export const fieldsMeta = {
@@ -218,6 +234,11 @@ export const fieldsMeta = {
       ],
       required: true,
     },
+    textarea: {
+      type: "textarea",
+      label: "Text Area",
+      placeholder: "Masukkan Text Area",
+    },
     calendar: {
       type: "calendar",
       mode: "single",
@@ -236,6 +257,10 @@ export const fieldsMeta = {
       label: "Date Range",
       required: true,
     },
+    file: {
+      type: "file",
+      label: "File Upload",
+    },
     checkbox: {
       type: "checkbox",
       label: "Checkbox",
@@ -252,50 +277,64 @@ export const fieldsMeta = {
       type: "text",
       label: "Nama Pengguna",
       placeholder: "Masukkan nama pengguna Anda",
-      // icon: "user-round",
+      icon: UserRound,
       required: true,
     },
     email: {
       type: "email",
       label: "Alamat Email",
       placeholder: "Masukkan alamat email Anda",
-      // icon: "mail",
+      icon: fieldTypeMeta.email.icon,
       required: true,
     },
     password: {
       type: "password",
       label: "Kata Sandi",
       placeholder: "Masukkan kata sandi Anda",
-      // icon: "lock-keyhole",
+      icon: fieldTypeMeta.password.icon,
       required: true,
     },
     confirmPassword: {
       type: "password",
       label: "Konfirmasi Kata Sandi",
       placeholder: "Konfirmasi kata sandi Anda",
-      // icon: "lock-keyhole",
+      icon: fieldTypeMeta.password.icon,
       required: true,
     },
     currentPassword: {
       type: "password",
       label: "Kata Sandi Saat Ini",
       placeholder: "Masukkan kata sandi saat ini",
-      // icon: "lock-keyhole-open",
+      icon: LockKeyholeOpen,
       required: true,
     },
     newPassword: {
       type: "password",
       label: "Kata Sandi Baru",
       placeholder: "Masukkan kata sandi baru",
-      // icon: "lock-keyhole",
+      icon: fieldTypeMeta.password.icon,
+      required: true,
+    },
+    rememberMe: {
+      type: "checkbox",
+      label: "Ingat Saya",
+    },
+    revokeOtherSessions: {
+      type: "checkbox",
+      label: "Keluar dari perangkat lainnya",
+    },
+    agreement: {
+      type: "checkbox",
+      label: "Setujui syarat dan ketentuan",
+      description: `Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi ${appMeta.name}.`,
       required: true,
     },
     role: {
       type: "radio",
       label: "Role",
       data: allRoles.map((item) => {
-        const { displayName, desc } = rolesMeta[item];
-        return { value: displayName, desc };
+        const { displayName, desc, icon } = rolesMeta[item];
+        return { value: displayName, desc, icon };
       }),
       required: true,
       className: "grid grid-cols-2",

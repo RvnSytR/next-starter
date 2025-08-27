@@ -30,6 +30,7 @@ export function ExampleForm() {
     calendarRange: zodSchemas.dateRange,
     select: z.enum(card),
     radio: z.enum(card),
+    textarea: zodSchemas.string("Text Area", { min: 1, max: 255 }),
     file: zodSchemas.file(fileType, {
       optional: true,
       // maxSize: toBytes(1),
@@ -50,6 +51,7 @@ export function ExampleForm() {
       calendarRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "spade",
       radio: "spade",
+      textarea: "The Brown Fox Jumping Over The Lazy Dog",
       file: [],
       checkbox: false,
     },
@@ -148,6 +150,15 @@ export function ExampleForm() {
         name="radio"
         render={({ field }) => (
           <Field field={field} {...fieldsMeta.example.radio} />
+        )}
+      />
+
+      {/* Text Area */}
+      <FormField
+        control={form.control}
+        name="textarea"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.textarea} />
         )}
       />
 

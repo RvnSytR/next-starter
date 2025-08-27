@@ -4,7 +4,7 @@
 import { BadgeProps } from "@/components/ui/badge";
 import { createAccessControl } from "better-auth/plugins/access";
 import { adminAc, defaultStatements } from "better-auth/plugins/admin/access";
-import { LucideIcon, UserRound, UserRoundCheck } from "lucide-react";
+import { LucideIcon, ShieldUser, UserRound } from "lucide-react";
 
 export const ac = createAccessControl({
   ...defaultStatements,
@@ -39,14 +39,14 @@ export const rolesMeta: Record<
   }
 > = {
   user: {
-    displayName: "User",
+    displayName: "Pengguna",
     icon: UserRound,
     desc: "Pengguna standar dengan akses dan izin dasar.",
     badgeVariant: "outline",
   },
   admin: {
     displayName: "Admin",
-    icon: UserRoundCheck,
+    icon: ShieldUser,
     desc: "Administrator dengan akses penuh dan kontrol pengelolaan sistem.",
     badgeVariant: "outline_primary",
   },

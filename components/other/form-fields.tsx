@@ -3,11 +3,13 @@ import {
   CheckboxFieldProps,
   FieldProps,
   FieldWrapperProps,
+  FileUploadFieldProps,
   FormFieldIcon,
   InputFieldProps,
   NumericFieldProps,
   RadioFieldProps,
   SelectFieldProps,
+  TextareaFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { ControllerRenderProps } from "react-hook-form";
@@ -28,7 +30,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Textarea } from "../ui/textarea";
 import { DatePicker } from "./date-picker";
+import { FileUpload } from "./file-upload";
 import { InputWrapper } from "./input-wrapper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -46,7 +50,7 @@ export function FieldWrapper({
   children,
 }: FieldWrapperProps & { children: React.ReactNode }) {
   return (
-    <FormItem className={classNames?.item}>
+    <FormItem className={classNames?.formItem}>
       <FormLabel
         className={cn(required && "label-required", classNames?.label)}
       >
@@ -55,10 +59,10 @@ export function FieldWrapper({
 
       {children}
 
-      <FormMessage className={classNames?.message} />
+      <FormMessage className={classNames?.formMessage} />
 
       {description && (
-        <FormDescription className={classNames?.description}>
+        <FormDescription className={classNames?.formDescription}>
           {description}
         </FormDescription>
       )}
@@ -202,7 +206,7 @@ function CheckboxField({
   classNames,
 }: Controller & FieldWrapperProps & CheckboxFieldProps) {
   return (
-    <FormItem className={classNames?.item}>
+    <FormItem className={classNames?.formItem}>
       <div className="flex gap-x-3">
         <FormControl>
           <Checkbox checked={field.value} onCheckedChange={field.onChange} />
@@ -216,16 +220,31 @@ function CheckboxField({
           </FormLabel>
 
           {description && (
-            <FormDescription className={classNames?.description}>
+            <FormDescription className={classNames?.formDescription}>
               {description}
             </FormDescription>
           )}
         </div>
       </div>
 
-      <FormMessage className={classNames?.message} />
+      <FormMessage className={classNames?.formMessage} />
     </FormItem>
   );
+}
+
+function TextAreaField({ field, ...props }: Controller & TextareaFieldProps) {
+  return (
+    <FormControl>
+      <Textarea {...props} {...field} />
+    </FormControl>
+  );
+}
+
+function FileUploadField({
+  field,
+  ...props
+}: Controller & FileUploadFieldProps) {
+  return <FileUpload {...props} {...field} />;
 }
 
 export function Field({ ...props }: Controller & FieldProps) {
@@ -251,6 +270,14 @@ export function Field({ ...props }: Controller & FieldProps) {
 
     case "checkbox":
       return <CheckboxField {...props} />;
+
+    case "textarea":
+      comp = <TextAreaField {...props} />;
+      break;
+
+    case "file":
+      comp = <FileUploadField {...props} />;
+      break;
 
     default:
       comp = <TextField {...props} />;

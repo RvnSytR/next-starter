@@ -63,7 +63,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { CardContent, CardFooter } from "../ui/card";
-import { Checkbox } from "../ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -82,14 +81,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../ui/form";
+import { Form, FormField } from "../ui/form";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import {
@@ -430,15 +422,7 @@ export function SignInForm() {
         control={form.control}
         name="rememberMe"
         render={({ field }) => (
-          <FormItem className="flex-row">
-            <FormControl>
-              <Checkbox
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-            </FormControl>
-            <FormLabel>Ingat Saya</FormLabel>
-          </FormItem>
+          <Field field={field} {...userFields.rememberMe} />
         )}
       />
 
@@ -531,25 +515,7 @@ export function SignUpForm() {
         control={form.control}
         name="agreement"
         render={({ field }) => (
-          <FormItem>
-            <div className="flex gap-x-3">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-
-              <div className="flex flex-col items-start gap-y-1.5">
-                <FormLabel>Setujui syarat dan ketentuan</FormLabel>
-                <small className="text-muted-foreground text-xs font-normal">
-                  Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi.
-                </small>
-              </div>
-            </div>
-
-            <FormMessage />
-          </FormItem>
+          <Field field={field} {...userFields.agreement} />
         )}
       />
 
@@ -825,15 +791,7 @@ export function ChangePasswordForm() {
           control={form.control}
           name="revokeOtherSessions"
           render={({ field }) => (
-            <FormItem className="flex-row">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Keluar dari perangkat lainnya</FormLabel>
-            </FormItem>
+            <Field field={field} {...userFields.revokeOtherSessions} />
           )}
         />
       </CardContent>

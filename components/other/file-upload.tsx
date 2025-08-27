@@ -18,7 +18,7 @@ import { Button } from "../ui/button";
 import { FormControl } from "../ui/form";
 import { Input } from "../ui/input";
 
-type FileUploadProps = Pick<ComponentProps<"input">, "multiple"> & {
+export type FileUploadProps = Pick<ComponentProps<"input">, "multiple"> & {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
