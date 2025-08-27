@@ -1,5 +1,6 @@
 import {
   CalendarFieldProps,
+  CheckboxFieldProps,
   FieldProps,
   FieldWrapperProps,
   FormFieldIcon,
@@ -10,6 +11,7 @@ import {
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { ControllerRenderProps } from "react-hook-form";
+import { Checkbox } from "../ui/checkbox";
 import {
   FormControl,
   FormDescription,
@@ -37,22 +39,29 @@ function getIconOrText(Icon: FormFieldIcon) {
 }
 
 export function FieldWrapper({
-  desc,
   label,
-  required = false,
+  description,
   classNames,
+  required = false,
   children,
 }: FieldWrapperProps & { children: React.ReactNode }) {
   return (
-    <FormItem className={classNames?.formItem}>
+    <FormItem className={classNames?.item}>
       <FormLabel
         className={cn(required && "label-required", classNames?.label)}
       >
         {label}
       </FormLabel>
+
       {children}
-      {desc && <FormDescription>{desc}</FormDescription>}
-      <FormMessage className={classNames?.formMessage} />
+
+      <FormMessage className={classNames?.message} />
+
+      {description && (
+        <FormDescription className={classNames?.description}>
+          {description}
+        </FormDescription>
+      )}
     </FormItem>
   );
 }
@@ -168,16 +177,54 @@ function RadioField({ field, className, data }: Controller & RadioFieldProps) {
 
 function CalendarField({
   field,
-  // mode = "single",
-  ...props
+  mode,
+  required,
+  placeholder,
 }: Controller & CalendarFieldProps) {
   return (
     <DatePicker
+      mode={mode}
       selected={field.value}
       onSelect={field.onChange}
+      placeholder={placeholder}
+      required={required}
       withControl
-      {...props}
     />
+  );
+}
+
+function CheckboxField({
+  field,
+  label,
+  description,
+  required,
+  className,
+  classNames,
+}: Controller & FieldWrapperProps & CheckboxFieldProps) {
+  return (
+    <FormItem className={classNames?.item}>
+      <div className="flex gap-x-3">
+        <FormControl>
+          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+        </FormControl>
+
+        <div className={cn("grid gap-y-1 pt-0.25", className)}>
+          <FormLabel
+            className={cn(required && "label-required", classNames?.label)}
+          >
+            {label}
+          </FormLabel>
+
+          {description && (
+            <FormDescription className={classNames?.description}>
+              {description}
+            </FormDescription>
+          )}
+        </div>
+      </div>
+
+      <FormMessage className={classNames?.message} />
+    </FormItem>
   );
 }
 
@@ -201,6 +248,9 @@ export function Field({ ...props }: Controller & FieldProps) {
     case "calendar":
       comp = <CalendarField {...props} />;
       break;
+
+    case "checkbox":
+      return <CheckboxField {...props} />;
 
     default:
       comp = <TextField {...props} />;

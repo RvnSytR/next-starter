@@ -1,11 +1,27 @@
 import { CalendarProps } from "@/components/ui/calendar";
 import {
+  Calendar1,
+  CalendarClock,
+  CalendarIcon,
+  Check,
+  ChevronDown,
+  CircleDot,
+  Clock,
   Club,
   Diamond,
+  EyeOff,
+  File,
   Heart,
+  LinkIcon,
+  LockKeyhole,
   LucideIcon,
+  Mail,
+  PaintBucket,
+  Phone,
+  Search,
   Spade,
   TextIcon,
+  Type,
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
 import { languageMeta } from "./other";
@@ -28,10 +44,32 @@ export const allFieldType = [
   "select",
   "radio",
   "calendar",
+  "checkbox",
+  "file",
 ] as const;
 
 export type FieldType = (typeof allFieldType)[number];
-// export const fieldTypeMeta: Record<FieldType, {icon: LucideIcon}> = {};
+export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
+  text: { icon: Type },
+  color: { icon: PaintBucket },
+  date: { icon: Calendar1 },
+  "datetime-local": { icon: CalendarClock },
+  email: { icon: Mail },
+  hidden: { icon: EyeOff },
+  password: { icon: LockKeyhole },
+  search: { icon: Search },
+  time: { icon: Clock },
+  url: { icon: LinkIcon },
+
+  number: { icon: "123" },
+  tel: { icon: Phone },
+
+  select: { icon: ChevronDown },
+  radio: { icon: CircleDot },
+  calendar: { icon: CalendarIcon },
+  checkbox: { icon: Check },
+  file: { icon: File },
+};
 
 export type FormFieldIcon = string | LucideIcon;
 
@@ -44,13 +82,17 @@ type BaseFieldProps = {
 
 export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
   label: string;
-  desc?: string;
-  classNames?: { label?: string; formItem?: string; formMessage?: string };
+  description?: string;
+  classNames?: {
+    label?: string;
+    item?: string;
+    description?: string;
+    message?: string;
+  };
 };
 
 export type InputFieldProps = BaseFieldProps & {
-  type: Extract<
-    FieldType,
+  type:
     | "text"
     | "color"
     | "date"
@@ -60,16 +102,13 @@ export type InputFieldProps = BaseFieldProps & {
     | "password"
     | "search"
     | "time"
-    | "url"
-  >;
+    | "url";
 };
 
-export type NumericFieldProps = BaseFieldProps & {
-  type: Extract<FieldType, "number" | "tel">;
-};
+export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
-  type: Extract<FieldType, "select">;
+  type: "select";
   data: {
     value: string;
     label?: string;
@@ -79,7 +118,7 @@ export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
 };
 
 export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
-  type: Extract<FieldType, "radio">;
+  type: "radio";
   data: {
     value: string;
     label?: string;
@@ -89,10 +128,15 @@ export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   }[];
 };
 
-export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
-  Pick<BaseFieldProps, "placeholder" | "required"> & {
-    type: Extract<FieldType, "calendar">;
-  };
+export type CalendarFieldProps = Pick<
+  BaseFieldProps,
+  "required" | "placeholder"
+> &
+  Required<Pick<CalendarProps, "mode">> & { type: "calendar" };
+
+export type CheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
+  type: "checkbox";
+};
 
 export type FieldProps = FieldWrapperProps &
   (
@@ -101,6 +145,7 @@ export type FieldProps = FieldWrapperProps &
     | SelectFieldProps
     | RadioFieldProps
     | CalendarFieldProps
+    | CheckboxFieldProps
   );
 
 export const fieldsMeta = {
@@ -114,7 +159,7 @@ export const fieldsMeta = {
       placeholder: "Masukkan Text",
       icon: TextIcon,
       required: true,
-      // desc: "Form Description",
+      // description: "Form Description",
     },
     numeric: {
       type: "number",
@@ -189,6 +234,12 @@ export const fieldsMeta = {
       type: "calendar",
       mode: "range",
       label: "Date Range",
+      required: true,
+    },
+    checkbox: {
+      type: "checkbox",
+      label: "Checkbox",
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
       required: true,
     },
   },

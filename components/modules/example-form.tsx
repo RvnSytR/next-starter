@@ -36,6 +36,7 @@ export function ExampleForm() {
       // min: 2,
       // max: 5,
     }),
+    checkbox: z.boolean(),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -50,6 +51,7 @@ export function ExampleForm() {
       select: "spade",
       radio: "spade",
       file: [],
+      checkbox: false,
     },
   });
 
@@ -162,6 +164,15 @@ export function ExampleForm() {
               {...field}
             />
           </FieldWrapper>
+        )}
+      />
+
+      {/* Checkbox */}
+      <FormField
+        control={form.control}
+        name="checkbox"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.checkbox} />
         )}
       />
 
