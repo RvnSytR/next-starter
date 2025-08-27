@@ -10,7 +10,6 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ResetButton } from "../other/buttons";
-import { DatePicker } from "../other/date-picker";
 import { FileUpload } from "../other/file-upload";
 import { Field, FieldWrapper } from "../other/form-fields";
 import { Button } from "../ui/button";
@@ -26,9 +25,9 @@ export function ExampleForm() {
     text: zodSchemas.string("Text", { min: 1 }),
     numeric: zodSchemas.number("Numeric", { min: 1 }),
     phone: zodSchemas.number("Phone", { min: 1 }),
-    date: zodSchemas.date,
-    dateMultiple: zodSchemas.dateMultiple.min(1),
-    dateRange: zodSchemas.dateRange,
+    calendar: zodSchemas.date,
+    calendarMultiple: zodSchemas.dateMultiple.min(1),
+    calendarRange: zodSchemas.dateRange,
     select: z.enum(card),
     radio: z.enum(card),
     file: zodSchemas.file(fileType, {
@@ -45,9 +44,9 @@ export function ExampleForm() {
       text: "Hello World",
       numeric: 100000,
       phone: 81234567890,
-      date: new Date(),
-      dateMultiple: [new Date()],
-      dateRange: { from: new Date(), to: addDays(new Date(), 6) },
+      calendar: new Date(),
+      calendarMultiple: [new Date()],
+      calendarRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "Spade",
       radio: "Spade",
       file: [],
@@ -116,48 +115,27 @@ export function ExampleForm() {
         {/* Date Single */}
         <FormField
           control={form.control}
-          name="date"
+          name="calendar"
           render={({ field }) => (
-            <FieldWrapper label="Date" required>
-              <DatePicker
-                mode="single"
-                selected={field.value}
-                onSelect={field.onChange}
-                withControl
-              />
-            </FieldWrapper>
+            <Field field={field} {...exampleFields.calendar} />
           )}
         />
 
         {/* Date Multiple */}
         <FormField
           control={form.control}
-          name="dateMultiple"
+          name="calendarMultiple"
           render={({ field }) => (
-            <FieldWrapper label="Date Multiple" required>
-              <DatePicker
-                mode="multiple"
-                selected={field.value}
-                onSelect={field.onChange}
-                withControl
-              />
-            </FieldWrapper>
+            <Field field={field} {...exampleFields.calendarMultiple} />
           )}
         />
 
         {/* Date Range */}
         <FormField
           control={form.control}
-          name="dateRange"
+          name="calendarRange"
           render={({ field }) => (
-            <FieldWrapper label="Date Range" required>
-              <DatePicker
-                mode="range"
-                selected={field.value}
-                onSelect={field.onChange}
-                withControl
-              />
-            </FieldWrapper>
+            <Field field={field} {...exampleFields.calendarRange} />
           )}
         />
       </div>

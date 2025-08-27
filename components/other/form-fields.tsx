@@ -1,4 +1,5 @@
 import {
+  CalendarFieldProps,
   FieldIcon,
   FieldProps,
   FieldWrapperProps,
@@ -25,6 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { DatePicker } from "./date-picker";
 import { InputWrapper } from "./input-wrapper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -161,6 +163,21 @@ function RadioField({ field, className, data }: Controller & RadioFieldProps) {
   );
 }
 
+function CalendarField({
+  field,
+  // mode = "single",
+  ...props
+}: Controller & CalendarFieldProps) {
+  return (
+    <DatePicker
+      selected={field.value}
+      onSelect={field.onChange}
+      withControl
+      {...props}
+    />
+  );
+}
+
 export function Field({ ...props }: Controller & FieldProps) {
   let comp: React.ReactNode;
 
@@ -176,6 +193,10 @@ export function Field({ ...props }: Controller & FieldProps) {
 
     case "radio":
       comp = <RadioField {...props} />;
+      break;
+
+    case "calendar":
+      comp = <CalendarField {...props} />;
       break;
 
     default:

@@ -1,3 +1,4 @@
+import { CalendarProps } from "@/components/ui/calendar";
 import {
   Club,
   Diamond,
@@ -19,20 +20,20 @@ export type FieldType =
 
 export type FieldIcon = string | LucideIcon;
 
-export type FieldWrapperProps = {
-  label: string;
-  desc?: string;
-  required?: boolean;
-  classNames?: { label?: string; formItem?: string; formMessage?: string };
-};
-
-export type BaseInputProps = {
+type BaseFieldProps = {
   className?: string;
   placeholder?: string;
+  required?: boolean;
   icon?: FieldIcon;
 };
 
-export type InputFieldProps = BaseInputProps & {
+export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
+  label: string;
+  desc?: string;
+  classNames?: { label?: string; formItem?: string; formMessage?: string };
+};
+
+export type InputFieldProps = BaseFieldProps & {
   type:
     | "text"
     | "color"
@@ -46,20 +47,29 @@ export type InputFieldProps = BaseInputProps & {
     | "url";
 };
 
-export type NumericFieldProps = BaseInputProps & { type: "number" | "tel" };
+export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
-export type SelectFieldProps = Pick<BaseInputProps, "placeholder"> & {
+export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
   type: "select";
   data: { value: string; icon?: FieldIcon }[];
 };
 
-export type RadioFieldProps = Pick<BaseInputProps, "className"> & {
+export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   type: "radio";
   data: { value: string; desc?: string; icon?: FieldIcon }[];
 };
 
+export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
+  Pick<BaseFieldProps, "placeholder" | "required"> & { type: "calendar" };
+
 export type FieldProps = FieldWrapperProps &
-  (InputFieldProps | NumericFieldProps | SelectFieldProps | RadioFieldProps);
+  (
+    | InputFieldProps
+    | NumericFieldProps
+    | SelectFieldProps
+    | RadioFieldProps
+    | CalendarFieldProps
+  );
 
 export const fieldsMeta = {
   num: "No",
@@ -125,6 +135,24 @@ export const fieldsMeta = {
           icon: Club,
         },
       ],
+      required: true,
+    },
+    calendar: {
+      type: "calendar",
+      mode: "single",
+      label: "Date with Calendar",
+      required: true,
+    },
+    calendarMultiple: {
+      type: "calendar",
+      mode: "multiple",
+      label: "Date Multiple",
+      required: true,
+    },
+    calendarRange: {
+      type: "calendar",
+      mode: "range",
+      label: "Date Range",
       required: true,
     },
   },

@@ -1,6 +1,10 @@
 import { cn, formatDate } from "@/lib/utils";
 import { isSameDay } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
+import {
+  CalendarDays,
+  Calendar as CalendarIcon,
+  CalendarRange,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Calendar, CalendarProps } from "../ui/calendar";
 import { FormControl } from "../ui/form";
@@ -14,6 +18,7 @@ export function DatePicker({
   ...props
 }: CalendarProps & { placeholder?: string; withControl?: boolean }) {
   let isSelected = false;
+  let Icon = CalendarIcon;
 
   if (props.mode) {
     const { mode, selected } = props;
@@ -26,6 +31,7 @@ export function DatePicker({
     }
 
     if (mode === "multiple") {
+      Icon = CalendarDays;
       placeholder = defaultPlaceholder;
 
       if (selected && selected.length > 0) {
@@ -40,6 +46,7 @@ export function DatePicker({
     }
 
     if (mode === "range") {
+      Icon = CalendarRange;
       placeholder = "Pilih Rentang Tanggal";
 
       if (selected?.from) {
@@ -59,7 +66,7 @@ export function DatePicker({
       variant="outline"
       className={cn(!isSelected && "text-muted-foreground")}
     >
-      <CalendarIcon /> {placeholder}
+      <Icon /> {placeholder}
     </Button>
   );
 

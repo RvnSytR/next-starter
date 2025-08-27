@@ -22,9 +22,7 @@ export function Calendar({
   formatters,
   components,
   ...props
-}: CalendarProps & {
-  buttonVariant?: ButtonProps["variant"];
-}) {
+}: CalendarProps & { buttonVariant?: ButtonProps["variant"] }) {
   const defaultClassNames = getDefaultClassNames();
 
   return (
