@@ -1,6 +1,6 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 import { getRoutesMeta } from "@/lib/routes";
 import { Route } from "next";
 import Link from "next/link";

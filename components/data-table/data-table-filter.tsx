@@ -22,7 +22,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { actions } from "@/lib/content";
 import {
   ColumnDataType,
@@ -42,6 +41,7 @@ import {
   optionFilterDetails,
   textFilterDetails,
 } from "@/lib/filters";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 import { cn, formatDate, take, uniq } from "@/lib/utils";
 import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import { endOfDay, isEqual } from "date-fns";

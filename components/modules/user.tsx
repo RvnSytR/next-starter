@@ -1,9 +1,9 @@
 "use client";
 
-import { useIsMobile } from "@/hooks/use-mobile";
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 import { fieldsMeta, fileMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";

@@ -7,6 +7,7 @@ import {
   TextIcon,
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
+import { languagesMeta } from "./other";
 
 export type FieldType =
   | "string"
@@ -84,7 +85,7 @@ export const fieldsMeta = {
       type: "tel",
       label: "Phone",
       placeholder: "Masukkan No Telp",
-      icon: "+62",
+      icon: languagesMeta.id.symbol,
       className: "pl-11",
       required: true,
     },

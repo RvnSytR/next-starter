@@ -36,7 +36,6 @@ export function FieldWrapper({
   required = false,
   classNames,
   children,
-  ...props
 }: FieldWrapperProps & { children: React.ReactNode }) {
   return (
     <FormItem className={classNames?.formItem}>
