@@ -32,6 +32,10 @@ import { InputWrapper } from "./input-wrapper";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Controller = { field: ControllerRenderProps<any> };
 
+function getIconOrText(Icon: FieldIcon) {
+  return Icon && (typeof Icon === "string" ? Icon : <Icon />);
+}
+
 export function FieldWrapper({
   desc,
   label,
@@ -51,10 +55,6 @@ export function FieldWrapper({
       <FormMessage className={classNames?.formMessage} />
     </FormItem>
   );
-}
-
-function getIconOrText(Icon: FieldIcon) {
-  return Icon && (typeof Icon === "string" ? Icon : <Icon />);
 }
 
 function TextField({

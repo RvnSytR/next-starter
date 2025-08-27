@@ -18,6 +18,14 @@ import { Button } from "../ui/button";
 import { FormControl } from "../ui/form";
 import { Input } from "../ui/input";
 
+type FileUploadProps = Pick<ComponentProps<"input">, "multiple"> & {
+  value: File[];
+  onChange: (files: File[]) => void;
+  accept?: FileType;
+  maxSize?: number;
+  classNames?: { container?: string; dropzone?: string; files?: string };
+};
+
 export function FileUpload({
   value,
   onChange,
@@ -25,13 +33,7 @@ export function FileUpload({
   maxSize,
   classNames,
   multiple = false,
-}: Pick<ComponentProps<"input">, "multiple"> & {
-  value: File[];
-  onChange: (files: File[]) => void;
-  accept?: FileType;
-  maxSize?: number;
-  classNames?: { container?: string; dropzone?: string; files?: string };
-}) {
+}: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const {
@@ -113,7 +115,7 @@ export function FileUpload({
         onDragEnter={handleDragEnterAndOver}
         onDragOver={handleDragEnterAndOver}
         className={cn(
-          "group border-input dark:bg-input/30 flex flex-col items-center gap-y-2 rounded-md border px-4 py-8 text-center outline-none hover:cursor-pointer",
+          "group border-input hover:border-muted-foreground dark:bg-input/30 flex flex-col items-center gap-y-2 rounded-md border border-dashed px-4 py-8 text-center transition outline-none hover:cursor-pointer",
           "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
           classNames?.dropzone,
         )}
@@ -144,7 +146,7 @@ export function FileUpload({
       {isFiles && multiple && (
         <div className="flex items-center justify-between gap-2">
           <small>
-            Total {displayName}: {length}
+            Total {displayName}: {value.length}
           </small>
 
           <Button
@@ -193,7 +195,7 @@ export function FileUpload({
                   )}
                 </div>
 
-                <div className="flex flex-col gap-1 border-t p-3 break-all *:line-clamp-1">
+                <div className="grid gap-y-1 border-t p-3 break-all *:line-clamp-1">
                   <Link
                     href={fileURL as Route}
                     target="_blank"
@@ -204,6 +206,7 @@ export function FileUpload({
                   >
                     {file.name}
                   </Link>
+
                   <small
                     className={cn(
                       "text-muted-foreground text-xs",
