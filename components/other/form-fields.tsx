@@ -28,7 +28,7 @@ import {
 import { InputWrapper } from "./input-wrapper";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type FormField = { field: ControllerRenderProps<any> };
+type Controller = { field: ControllerRenderProps<any> };
 
 export function FieldWrapper({
   desc,
@@ -60,7 +60,7 @@ function TextField({
   type,
   icon,
   ...props
-}: FormField & InputFieldProps) {
+}: Controller & InputFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
 
   const inputField = (
@@ -81,7 +81,7 @@ function NumberField({
   type,
   icon,
   ...props
-}: FormField & NumericFieldProps) {
+}: Controller & NumericFieldProps) {
   const iconOrText = icon && getIconOrText(icon);
   const inputField = (
     <FormControl>
@@ -107,7 +107,7 @@ function SelectField({
   field,
   placeholder,
   data,
-}: FormField & SelectFieldProps) {
+}: Controller & SelectFieldProps) {
   return (
     <Select value={field.value} onValueChange={field.onChange}>
       <FormControl>
@@ -126,7 +126,7 @@ function SelectField({
   );
 }
 
-function RadioField({ field, className, data }: FormField & RadioFieldProps) {
+function RadioField({ field, className, data }: Controller & RadioFieldProps) {
   return (
     <RadioGroup
       value={field.value}
@@ -161,7 +161,7 @@ function RadioField({ field, className, data }: FormField & RadioFieldProps) {
   );
 }
 
-export function Field({ ...props }: FormField & FieldProps) {
+export function Field({ ...props }: Controller & FieldProps) {
   let comp: React.ReactNode;
 
   switch (props.type) {

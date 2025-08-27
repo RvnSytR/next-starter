@@ -61,142 +61,140 @@ export function ExampleForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        {/* General */}
-        <div className="grid gap-x-2 gap-y-4 md:grid-cols-4">
-          {/* Example to dynamically render the form fields */}
-          {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
-            (field) => (
-              <FormField
-                key={field}
-                control={form.control}
-                name={field}
-                render={({ field }) => (
-                  <Field field={field} {...fieldsMeta.example[field]} />
-                )}
-              />
-            ),
-          )} */}
+    <Form form={form} onSubmit={formHandler}>
+      {/* General */}
+      <div className="grid gap-x-2 gap-y-4 md:grid-cols-4">
+        {/* Example to dynamically render the form fields */}
+        {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
+          (field) => (
+            <FormField
+              key={field}
+              control={form.control}
+              name={field}
+              render={({ field }) => (
+                <Field field={field} {...fieldsMeta.example[field]} />
+              )}
+            />
+          ),
+        )} */}
 
-          <FormField
-            control={form.control}
-            name="text"
-            render={({ field }) => (
-              <Field field={field} {...exampleFields.text} />
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="numeric"
-            render={({ field }) => (
-              <Field field={field} {...exampleFields.numeric} />
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <Field field={field} {...exampleFields.phone} />
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="select"
-            render={({ field }) => (
-              <Field field={field} {...exampleFields.select} />
-            )}
-          />
-        </div>
-
-        {/* Dates */}
-        <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
-          {/* Date Single */}
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FieldWrapper label="Date" required>
-                <DatePicker
-                  mode="single"
-                  selected={field.value}
-                  onSelect={field.onChange}
-                  withControl
-                />
-              </FieldWrapper>
-            )}
-          />
-
-          {/* Date Multiple */}
-          <FormField
-            control={form.control}
-            name="dateMultiple"
-            render={({ field }) => (
-              <FieldWrapper label="Date Multiple" required>
-                <DatePicker
-                  mode="multiple"
-                  selected={field.value}
-                  onSelect={field.onChange}
-                  withControl
-                />
-              </FieldWrapper>
-            )}
-          />
-
-          {/* Date Range */}
-          <FormField
-            control={form.control}
-            name="dateRange"
-            render={({ field }) => (
-              <FieldWrapper label="Date Range" required>
-                <DatePicker
-                  mode="range"
-                  selected={field.value}
-                  onSelect={field.onChange}
-                  withControl
-                />
-              </FieldWrapper>
-            )}
-          />
-        </div>
-
-        {/* Radio Group */}
         <FormField
           control={form.control}
-          name="radio"
+          name="text"
           render={({ field }) => (
-            <Field field={field} {...fieldsMeta.example.radio} />
+            <Field field={field} {...exampleFields.text} />
           )}
         />
 
-        {/* Files */}
         <FormField
           control={form.control}
-          name="file"
+          name="numeric"
           render={({ field }) => (
-            <FieldWrapper label="File Upload">
-              <FileUpload
-                accept={fileType}
-                multiple
-                // maxSize={toBytes(1)}
-                {...field}
+            <Field field={field} {...exampleFields.numeric} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.phone} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="select"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.select} />
+          )}
+        />
+      </div>
+
+      {/* Dates */}
+      <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
+        {/* Date Single */}
+        <FormField
+          control={form.control}
+          name="date"
+          render={({ field }) => (
+            <FieldWrapper label="Date" required>
+              <DatePicker
+                mode="single"
+                selected={field.value}
+                onSelect={field.onChange}
+                withControl
               />
             </FieldWrapper>
           )}
         />
 
-        <div className="flex gap-2">
-          <Button type="submit">
-            {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
-            <Save /> {actions.save}
-          </Button>
+        {/* Date Multiple */}
+        <FormField
+          control={form.control}
+          name="dateMultiple"
+          render={({ field }) => (
+            <FieldWrapper label="Date Multiple" required>
+              <DatePicker
+                mode="multiple"
+                selected={field.value}
+                onSelect={field.onChange}
+                withControl
+              />
+            </FieldWrapper>
+          )}
+        />
 
-          <ResetButton fn={form.reset} />
-        </div>
-      </form>
+        {/* Date Range */}
+        <FormField
+          control={form.control}
+          name="dateRange"
+          render={({ field }) => (
+            <FieldWrapper label="Date Range" required>
+              <DatePicker
+                mode="range"
+                selected={field.value}
+                onSelect={field.onChange}
+                withControl
+              />
+            </FieldWrapper>
+          )}
+        />
+      </div>
+
+      {/* Radio Group */}
+      <FormField
+        control={form.control}
+        name="radio"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.radio} />
+        )}
+      />
+
+      {/* Files */}
+      <FormField
+        control={form.control}
+        name="file"
+        render={({ field }) => (
+          <FieldWrapper label="File Upload">
+            <FileUpload
+              accept={fileType}
+              multiple
+              // maxSize={toBytes(1)}
+              {...field}
+            />
+          </FieldWrapper>
+        )}
+      />
+
+      <div className="flex gap-2">
+        <Button type="submit">
+          {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
+          <Save /> {actions.save}
+        </Button>
+
+        <ResetButton fn={form.reset} />
+      </div>
     </Form>
   );
 }

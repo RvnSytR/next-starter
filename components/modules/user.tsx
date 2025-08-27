@@ -413,43 +413,39 @@ export function SignInForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => <Field field={field} {...userFields.email} />}
-        />
+    <Form form={form} onSubmit={formHandler}>
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => <Field field={field} {...userFields.email} />}
+      />
 
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <Field field={field} {...userFields.password} />
-          )}
-        />
+      <FormField
+        control={form.control}
+        name="password"
+        render={({ field }) => <Field field={field} {...userFields.password} />}
+      />
 
-        <FormField
-          control={form.control}
-          name="rememberMe"
-          render={({ field }) => (
-            <FormItem className="flex-row">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <FormLabel>Ingat Saya</FormLabel>
-            </FormItem>
-          )}
-        />
+      <FormField
+        control={form.control}
+        name="rememberMe"
+        render={({ field }) => (
+          <FormItem className="flex-row">
+            <FormControl>
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            </FormControl>
+            <FormLabel>Ingat Saya</FormLabel>
+          </FormItem>
+        )}
+      />
 
-        <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
-          Masuk ke Dashboard
-        </Button>
-      </form>
+      <Button type="submit" disabled={isLoading}>
+        <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
+        Masuk ke Dashboard
+      </Button>
     </Form>
   );
 }
@@ -502,67 +498,65 @@ export function SignUpForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => <Field field={field} {...userFields.name} />}
-        />
+    <Form form={form} onSubmit={formHandler}>
+      <FormField
+        control={form.control}
+        name="name"
+        render={({ field }) => <Field field={field} {...userFields.name} />}
+      />
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => <Field field={field} {...userFields.email} />}
-        />
+      <FormField
+        control={form.control}
+        name="email"
+        render={({ field }) => <Field field={field} {...userFields.email} />}
+      />
 
-        <FormField
-          control={form.control}
-          name="newPassword"
-          render={({ field }) => (
-            <Field field={field} {...userFields.newPassword} />
-          )}
-        />
+      <FormField
+        control={form.control}
+        name="newPassword"
+        render={({ field }) => (
+          <Field field={field} {...userFields.newPassword} />
+        )}
+      />
 
-        <FormField
-          control={form.control}
-          name="confirmPassword"
-          render={({ field }) => (
-            <Field field={field} {...userFields.confirmPassword} />
-          )}
-        />
+      <FormField
+        control={form.control}
+        name="confirmPassword"
+        render={({ field }) => (
+          <Field field={field} {...userFields.confirmPassword} />
+        )}
+      />
 
-        <FormField
-          control={form.control}
-          name="agreement"
-          render={({ field }) => (
-            <FormItem>
-              <div className="flex gap-x-3">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
+      <FormField
+        control={form.control}
+        name="agreement"
+        render={({ field }) => (
+          <FormItem>
+            <div className="flex gap-x-3">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
 
-                <div className="flex flex-col items-start gap-y-1.5">
-                  <FormLabel>Setujui syarat dan ketentuan</FormLabel>
-                  <small className="text-muted-foreground text-xs font-normal">
-                    Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi.
-                  </small>
-                </div>
+              <div className="flex flex-col items-start gap-y-1.5">
+                <FormLabel>Setujui syarat dan ketentuan</FormLabel>
+                <small className="text-muted-foreground text-xs font-normal">
+                  Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi.
+                </small>
               </div>
+            </div>
 
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormMessage />
+          </FormItem>
+        )}
+      />
 
-        <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
-          Daftar Sekarang
-        </Button>
-      </form>
+      <Button type="submit" disabled={isLoading}>
+        <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
+        Daftar Sekarang
+      </Button>
     </Form>
   );
 }
@@ -729,35 +723,31 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <CardContent className="flex flex-col gap-y-4">
-          <ProfilePicture {...props} />
+    <Form form={form} onSubmit={formHandler}>
+      <CardContent className="flex flex-col gap-y-4">
+        <ProfilePicture {...props} />
 
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <Field field={field} {...userFields.email} />
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => <Field field={field} {...userFields.email} />}
+        />
 
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => <Field field={field} {...userFields.name} />}
-          />
-        </CardContent>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => <Field field={field} {...userFields.name} />}
+        />
+      </CardContent>
 
-        <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
-          <Button type="submit" disabled={isLoading}>
-            <Loader loading={isLoading} icon={{ base: <Save /> }} />
-            {actions.update}
-          </Button>
+      <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
+        <Button type="submit" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <Save /> }} />
+          {actions.update}
+        </Button>
 
-          <ResetButton fn={form.reset} />
-        </CardFooter>
-      </form>
+        <ResetButton fn={form.reset} />
+      </CardFooter>
     </Form>
   );
 }
@@ -805,59 +795,57 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)}>
-        <CardContent className="flex flex-col gap-y-4">
-          <FormField
-            control={form.control}
-            name="currentPassword"
-            render={({ field }) => (
-              <Field field={field} {...userFields.currentPassword} />
-            )}
-          />
+    <Form form={form} onSubmit={formHandler}>
+      <CardContent className="flex flex-col gap-y-4">
+        <FormField
+          control={form.control}
+          name="currentPassword"
+          render={({ field }) => (
+            <Field field={field} {...userFields.currentPassword} />
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="newPassword"
-            render={({ field }) => (
-              <Field field={field} {...userFields.newPassword} />
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="newPassword"
+          render={({ field }) => (
+            <Field field={field} {...userFields.newPassword} />
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <Field field={field} {...userFields.confirmPassword} />
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="confirmPassword"
+          render={({ field }) => (
+            <Field field={field} {...userFields.confirmPassword} />
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="revokeOtherSessions"
-            render={({ field }) => (
-              <FormItem className="flex-row">
-                <FormControl>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                  />
-                </FormControl>
-                <FormLabel>Keluar dari perangkat lainnya</FormLabel>
-              </FormItem>
-            )}
-          />
-        </CardContent>
+        <FormField
+          control={form.control}
+          name="revokeOtherSessions"
+          render={({ field }) => (
+            <FormItem className="flex-row">
+              <FormControl>
+                <Checkbox
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+              <FormLabel>Keluar dari perangkat lainnya</FormLabel>
+            </FormItem>
+          )}
+        />
+      </CardContent>
 
-        <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
-          <Button type="submit" disabled={isLoading}>
-            <Loader loading={isLoading} icon={{ base: <Save /> }} />
-            {actions.update}
-          </Button>
+      <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
+        <Button type="submit" disabled={isLoading}>
+          <Loader loading={isLoading} icon={{ base: <Save /> }} />
+          {actions.update}
+        </Button>
 
-          <ResetButton fn={form.reset} />
-        </CardFooter>
-      </form>
+        <ResetButton fn={form.reset} />
+      </CardFooter>
     </Form>
   );
 }
@@ -1146,58 +1134,52 @@ export function AdminCreateUserDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(formHandler)}>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <Field field={field} {...userFields.name} />
-              )}
-            />
+        <Form form={form} onSubmit={formHandler}>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => <Field field={field} {...userFields.name} />}
+          />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <Field field={field} {...userFields.email} />
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <Field field={field} {...userFields.email} />
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <Field field={field} {...userFields.newPassword} />
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="newPassword"
+            render={({ field }) => (
+              <Field field={field} {...userFields.newPassword} />
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <Field field={field} {...userFields.confirmPassword} />
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <Field field={field} {...userFields.confirmPassword} />
+            )}
+          />
 
-            <FormField
-              control={form.control}
-              name="role"
-              render={({ field }) => (
-                <Field field={field} {...userFields.role} />
-              )}
-            />
+          <FormField
+            control={form.control}
+            name="role"
+            render={({ field }) => <Field field={field} {...userFields.role} />}
+          />
 
-            <Separator />
+          <Separator />
 
-            <DialogFooter>
-              <DialogClose>{actions.cancel}</DialogClose>
-              <Button type="submit" disabled={isLoading}>
-                <Loader loading={isLoading} icon={{ base: <Icon /> }} />
-                {actions.add}
-              </Button>
-            </DialogFooter>
-          </form>
+          <DialogFooter>
+            <DialogClose>{actions.cancel}</DialogClose>
+            <Button type="submit" disabled={isLoading}>
+              <Loader loading={isLoading} icon={{ base: <Icon /> }} />
+              {actions.add}
+            </Button>
+          </DialogFooter>
         </Form>
       </DialogContent>
     </Dialog>
@@ -1247,19 +1229,17 @@ function AdminChangeUserRoleForm({
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(formHandler)} className="gap-y-2">
-        <FormField
-          control={form.control}
-          name="role"
-          render={({ field }) => <Field field={field} {...userFields.role} />}
-        />
+    <Form form={form} onSubmit={formHandler}>
+      <FormField
+        control={form.control}
+        name="role"
+        render={({ field }) => <Field field={field} {...userFields.role} />}
+      />
 
-        <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Save /> }} />
-          {actions.update}
-        </Button>
-      </form>
+      <Button type="submit" disabled={isLoading}>
+        <Loader loading={isLoading} icon={{ base: <Save /> }} />
+        {actions.update}
+      </Button>
     </Form>
   );
 }

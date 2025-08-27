@@ -10,11 +10,11 @@ import {
   FieldPath,
   FieldValues,
   FormProvider,
+  FormProviderProps,
+  SubmitHandler,
   useFormContext,
   useFormState,
 } from "react-hook-form";
-
-const Form = FormProvider;
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -27,18 +27,16 @@ const FormFieldContext = createContext<FormFieldContextValue>(
   {} as FormFieldContextValue,
 );
 
-const FormField = <
+function FormField<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->({
-  ...props
-}: ControllerProps<TFieldValues, TName>) => {
+>({ ...props }: ControllerProps<TFieldValues, TName>) {
   return (
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
     </FormFieldContext.Provider>
   );
-};
+}
 
 const useFormField = () => {
   const fieldContext = useContext(FormFieldContext);
@@ -68,6 +66,24 @@ type FormItemContextValue = { id: string };
 const FormItemContext = createContext<FormItemContextValue>(
   {} as FormItemContextValue,
 );
+
+function Form<T extends FieldValues>({
+  form,
+  onSubmit,
+  children,
+  ...props
+}: Omit<React.ComponentProps<"form">, "onSubmit" | "noValidate"> & {
+  form: Omit<FormProviderProps<T>, "children">;
+  onSubmit: SubmitHandler<T>;
+}) {
+  return (
+    <FormProvider {...form}>
+      <form noValidate onSubmit={form.handleSubmit(onSubmit)} {...props}>
+        {children}
+      </form>
+    </FormProvider>
+  );
+}
 
 function FormItem({ className, ...props }: React.ComponentProps<"div">) {
   const id = useId();
