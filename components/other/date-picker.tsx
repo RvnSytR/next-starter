@@ -15,6 +15,7 @@ const defaultPlaceholder = "Pilih Tanggal";
 export function DatePicker({
   placeholder = defaultPlaceholder,
   withControl = false,
+  numberOfMonths,
   ...props
 }: CalendarProps & { placeholder?: string; withControl?: boolean }) {
   let isSelected = false;
@@ -47,6 +48,7 @@ export function DatePicker({
 
     if (mode === "range") {
       Icon = CalendarRange;
+      numberOfMonths = 2;
       placeholder = "Pilih Rentang Tanggal";
 
       if (selected?.from) {
@@ -75,9 +77,8 @@ export function DatePicker({
       <PopoverTrigger asChild>
         {withControl ? <FormControl>{trigger}</FormControl> : trigger}
       </PopoverTrigger>
-
       <PopoverContent className="size-fit p-0">
-        <Calendar {...props} />
+        <Calendar numberOfMonths={numberOfMonths} {...props} />
       </PopoverContent>
     </Popover>
   );

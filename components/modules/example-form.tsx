@@ -116,7 +116,7 @@ export function ExampleForm() {
           control={form.control}
           name="select"
           render={({ field }) => (
-            <Field field={field} {...exampleFields.select} withSearch />
+            <Field field={field} {...exampleFields.select} />
           )}
         />
       </div>

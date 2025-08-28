@@ -23,6 +23,7 @@ import {
   Phone,
   Search,
   Spade,
+  SquareStack,
   TextIcon,
   Type,
   UserRound,
@@ -48,6 +49,8 @@ export const allFieldType = [
   "tel",
 
   "select",
+  "multi-select",
+
   "radio",
   "calendar",
   "checkbox",
@@ -73,6 +76,8 @@ export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
   tel: { icon: Phone },
 
   select: { icon: ChevronDown },
+  "multi-select": { icon: SquareStack },
+
   radio: { icon: CircleDot },
   calendar: { icon: CalendarIcon },
   checkbox: { icon: Check },
@@ -118,7 +123,6 @@ export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
   type: "select";
-  withSearch?: boolean;
   data: {
     value: string;
     label?: string;
@@ -138,8 +142,8 @@ export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   }[];
 };
 
-export type CalendarFieldProps = Required<Pick<CalendarProps, "mode">> &
-  Pick<BaseFieldProps, "placeholder" | "required"> & { type: "calendar" };
+export type CalendarFieldProps = Omit<CalendarProps, "selected" | "onChange"> &
+  Pick<BaseFieldProps, "placeholder"> & { type: "calendar" };
 
 export type CheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
   type: "checkbox";
@@ -211,6 +215,7 @@ export const fieldsMeta = {
     radio: {
       type: "radio",
       label: "Radio Group",
+      className: "flex-col md:flex-row",
       data: [
         {
           value: "spade",

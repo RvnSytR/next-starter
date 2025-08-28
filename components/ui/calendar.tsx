@@ -1,15 +1,14 @@
 "use client";
 
+import { buttonVariants } from "@/components/ui/button";
+import { cn, formatDate } from "@/lib/utils";
 import {
   ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
 } from "lucide-react";
-import { DayButton, DayPicker, getDefaultClassNames } from "react-day-picker";
-
-import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
-import { cn, formatDate } from "@/lib/utils";
-import { ComponentProps, useEffect, useRef } from "react";
+import { ComponentProps } from "react";
+import { DayPicker, getDefaultClassNames } from "react-day-picker";
 
 export type CalendarProps = ComponentProps<typeof DayPicker>;
 
@@ -18,11 +17,10 @@ export function Calendar({
   classNames,
   showOutsideDays = true,
   captionLayout = "dropdown",
-  buttonVariant = "ghost",
   formatters,
   components,
   ...props
-}: CalendarProps & { buttonVariant?: ButtonProps["variant"] }) {
+}: CalendarProps) {
   const defaultClassNames = getDefaultClassNames();
 
   return (
@@ -43,22 +41,25 @@ export function Calendar({
       classNames={{
         root: cn("w-fit", defaultClassNames.root),
         months: cn(
-          "flex gap-4 flex-col md:flex-row relative",
+          "relative flex gap-8 flex-col md:flex-row",
           defaultClassNames.months,
         ),
-        month: cn("flex flex-col w-full gap-4", defaultClassNames.month),
+        month: cn(
+          "relative flex flex-col w-full gap-4 first-of-type:before:hidden before:absolute max-sm:before:inset-x-2 max-sm:before:h-px max-sm:before:-top-2 sm:before:inset-y-2 sm:before:w-px before:bg-border sm:before:-left-4",
+          defaultClassNames.month,
+        ),
         nav: cn(
-          "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
+          "absolute top-0 flex gap-1 w-full justify-between z-10",
           defaultClassNames.nav,
         ),
         button_previous: cn(
-          buttonVariants({ variant: buttonVariant }),
-          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          buttonVariants({ size: "iconsm", variant: "ghost" }),
+          "aria-disabled:opacity-50",
           defaultClassNames.button_previous,
         ),
         button_next: cn(
-          buttonVariants({ variant: buttonVariant }),
-          "size-(--cell-size) aria-disabled:opacity-50 p-0 select-none",
+          buttonVariants({ size: "iconsm", variant: "ghost" }),
+          "aria-disabled:opacity-50",
           defaultClassNames.button_next,
         ),
         month_caption: cn(
@@ -70,7 +71,7 @@ export function Calendar({
           defaultClassNames.dropdowns,
         ),
         dropdown_root: cn(
-          "relative h-8 border border-input shadow-xs rounded-md has-focus:border-ring has-focus:ring-ring/50 has-focus:ring-[3px]",
+          "relative px-1 h-8 border border-input shadow-xs rounded-md has-focus:border-ring has-focus:ring-ring/50 has-focus:ring-[3px]",
           defaultClassNames.dropdown_root,
         ),
         dropdown: cn(
@@ -87,7 +88,7 @@ export function Calendar({
         table: "w-full border-collapse",
         weekdays: cn("flex", defaultClassNames.weekdays),
         weekday: cn(
-          "text-muted-foreground rounded-md flex-1 font-normal text-[0.8rem] select-none",
+          "text-muted-foreground rounded-md flex-1 font-normal text-xs select-none",
           defaultClassNames.weekday,
         ),
         week: cn("flex w-full mt-2", defaultClassNames.week),
@@ -96,21 +97,26 @@ export function Calendar({
           defaultClassNames.week_number_header,
         ),
         week_number: cn(
-          "text-[0.8rem] select-none text-muted-foreground",
+          "text-xs select-none text-muted-foreground",
           defaultClassNames.week_number,
         ),
-        day: cn(
-          "relative w-full h-full p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md group/day aspect-square select-none",
-          defaultClassNames.day,
-        ),
+        day_button:
+          "relative flex size-9 items-center justify-center whitespace-nowrap rounded-md p-0 text-foreground group-[[data-selected]:not(.range-middle)]:[transition-property:color,background-color,border-radius,box-shadow] group-[[data-selected]:not(.range-middle)]:duration-150 group-data-disabled:pointer-events-none focus-visible:z-10 hover:not-in-data-selected:bg-accent group-data-selected:bg-primary hover:not-in-data-selected:text-foreground group-data-selected:text-primary-foreground group-data-disabled:text-foreground/30 group-data-disabled:line-through group-data-outside:text-foreground/30 group-data-selected:group-data-outside:text-primary-foreground outline-none focus-visible:ring-ring/50 focus-visible:ring-[3px] group-[.range-start:not(.range-end)]:rounded-e-none group-[.range-end:not(.range-start)]:rounded-s-none group-[.range-middle]:rounded-none group-[.range-middle]:group-data-selected:bg-accent group-[.range-middle]:group-data-selected:text-foreground",
+        day: cn("group text-sm", defaultClassNames.day),
         range_start: cn(
-          "rounded-l-md bg-accent",
+          "range-start rounded-l-md bg-accent",
           defaultClassNames.range_start,
         ),
-        range_middle: cn("rounded-none", defaultClassNames.range_middle),
-        range_end: cn("rounded-r-md bg-accent", defaultClassNames.range_end),
+        range_middle: cn(
+          "range-middle rounded-none",
+          defaultClassNames.range_middle,
+        ),
+        range_end: cn(
+          "range-end rounded-r-md bg-accent",
+          defaultClassNames.range_end,
+        ),
         today: cn(
-          "bg-accent text-accent-foreground rounded-md data-[selected=true]:rounded-none",
+          "*:after:pointer-events-none *:after:absolute *:after:bottom-1 *:after:start-1/2 *:after:z-10 *:after:size-[3px] *:after:-translate-x-1/2 *:after:rounded-full *:after:bg-primary [&[data-selected]:not(.range-middle)>*]:after:bg-background [&[data-disabled]>*]:after:bg-foreground/30 *:after:transition-colors",
           defaultClassNames.today,
         ),
         outside: cn(
@@ -142,10 +148,9 @@ export function Calendar({
               : orientation === "right"
                 ? ChevronRightIcon
                 : ChevronDownIcon;
-
           return <Icon className={cn("size-4", className)} {...props} />;
         },
-        DayButton: CalendarDayButton,
+        // DayButton: CalendarDayButton,
         WeekNumber: ({ children, ...props }) => {
           return (
             <td {...props}>
@@ -162,40 +167,40 @@ export function Calendar({
   );
 }
 
-export function CalendarDayButton({
-  className,
-  day,
-  modifiers,
-  ...props
-}: ComponentProps<typeof DayButton>) {
-  const defaultClassNames = getDefaultClassNames();
+// function CalendarDayButton({
+//   className,
+//   day,
+//   modifiers,
+//   ...props
+// }: ComponentProps<typeof DayButton>) {
+//   const defaultClassNames = getDefaultClassNames();
 
-  const ref = useRef<HTMLButtonElement>(null);
-  useEffect(() => {
-    if (modifiers.focused) ref.current?.focus();
-  }, [modifiers.focused]);
+//   const ref = useRef<HTMLButtonElement>(null);
+//   useEffect(() => {
+//     if (modifiers.focused) ref.current?.focus();
+//   }, [modifiers.focused]);
 
-  return (
-    <Button
-      ref={ref}
-      variant="ghost"
-      size="icon"
-      data-day={day.date.toLocaleDateString()}
-      data-selected-single={
-        modifiers.selected &&
-        !modifiers.range_start &&
-        !modifiers.range_end &&
-        !modifiers.range_middle
-      }
-      data-range-start={modifiers.range_start}
-      data-range-end={modifiers.range_end}
-      data-range-middle={modifiers.range_middle}
-      className={cn(
-        "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
-        defaultClassNames.day,
-        className,
-      )}
-      {...props}
-    />
-  );
-}
+//   return (
+//     <Button
+//       ref={ref}
+//       variant="ghost"
+//       size="icon"
+//       data-day={day.date.toLocaleDateString()}
+//       data-selected-single={
+//         modifiers.selected &&
+//         !modifiers.range_start &&
+//         !modifiers.range_end &&
+//         !modifiers.range_middle
+//       }
+//       data-range-start={modifiers.range_start}
+//       data-range-end={modifiers.range_end}
+//       data-range-middle={modifiers.range_middle}
+//       className={cn(
+//         "data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground data-[range-middle=true]:bg-accent data-[range-middle=true]:text-accent-foreground data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-ring/50 dark:hover:text-accent-foreground flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:ring-[3px] data-[range-end=true]:rounded-md data-[range-end=true]:rounded-r-md data-[range-middle=true]:rounded-none data-[range-start=true]:rounded-md data-[range-start=true]:rounded-l-md [&>span]:text-xs [&>span]:opacity-70",
+//         defaultClassNames.day,
+//         className,
+//       )}
+//       {...props}
+//     />
+//   );
+// }

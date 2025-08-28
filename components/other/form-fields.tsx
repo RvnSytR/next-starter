@@ -176,7 +176,6 @@ function SelectWithSearchField<T extends FieldValues>({
             ) : (
               placeholder
             )}
-
             <ChevronDown aria-hidden="true" className="ml-auto opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -254,18 +253,18 @@ function RadioField<T extends FieldValues>({
 
 function CalendarField<T extends FieldValues>({
   field,
-  mode,
-  required,
-  placeholder,
+  mode = "single",
+  required = false,
+  ...props
 }: Controller<T> & CalendarFieldProps) {
   return (
     <DatePicker
       mode={mode}
+      required={required}
       selected={field.value}
       onSelect={field.onChange}
-      placeholder={placeholder}
-      required={required}
       withControl
+      {...props}
     />
   );
 }
@@ -335,8 +334,7 @@ export function Field<T extends FieldValues>({
       break;
 
     case "select":
-      const Comp = props.withSearch ? SelectWithSearchField : SelectField;
-      comp = <Comp {...props} />;
+      comp = <SelectField {...props} />;
       break;
 
     case "radio":
