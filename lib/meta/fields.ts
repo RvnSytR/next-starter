@@ -12,6 +12,7 @@ import {
   Diamond,
   EyeOff,
   File,
+  GitCommit,
   Heart,
   LinkIcon,
   LockKeyhole,
@@ -38,6 +39,7 @@ export const allFieldType = [
   "email",
   "hidden",
   "password",
+  "range",
   "search",
   "time",
   "url",
@@ -62,6 +64,7 @@ export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
   email: { icon: Mail },
   hidden: { icon: EyeOff },
   password: { icon: LockKeyhole },
+  range: { icon: GitCommit },
   search: { icon: Search },
   time: { icon: Clock },
   url: { icon: LinkIcon },
@@ -260,6 +263,8 @@ export const fieldsMeta = {
     file: {
       type: "file",
       label: "File Upload",
+      accept: "image",
+      multiple: true,
     },
     checkbox: {
       type: "checkbox",

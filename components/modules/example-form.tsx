@@ -10,8 +10,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { ResetButton } from "../other/buttons";
-import { FileUpload } from "../other/file-upload";
-import { Field, FieldWrapper } from "../other/form-fields";
+import { Field } from "../other/form-fields";
 import { Button } from "../ui/button";
 import { Form, FormField } from "../ui/form";
 // import { uploadFiles } from "@/server/s3";
@@ -162,19 +161,12 @@ export function ExampleForm() {
         )}
       />
 
-      {/* Files */}
+      {/* File Upload */}
       <FormField
         control={form.control}
         name="file"
         render={({ field }) => (
-          <FieldWrapper label="File Upload">
-            <FileUpload
-              accept={fileType}
-              multiple
-              // maxSize={toBytes(1)}
-              {...field}
-            />
-          </FieldWrapper>
+          <Field field={field} {...fieldsMeta.example.file} />
         )}
       />
 
