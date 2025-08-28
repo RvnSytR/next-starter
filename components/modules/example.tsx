@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+import { Fragment } from "react";
 import { AreaChart, BarChart, PieChart } from "../other/charts";
+import { FormBuilder } from "../other/form-builder";
 import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import { ExampleForm } from "./example-form";
-
-type CompCardContent = { title: string; key: keyof typeof comp };
 
 const pieChartData = [
   { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
@@ -31,57 +31,61 @@ const areaAndPieChartConfig = {
 
 const comp = {
   pieChart: (
-    <div className="mx-auto aspect-square h-[20rem]">
-      <PieChart label="Kategori" data={pieChartData} />
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Pie Chart</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="mx-auto aspect-square h-[20rem]">
+          <PieChart label="Kategori" data={pieChartData} />
+        </div>
+      </CardContent>
+    </Card>
   ),
 
   timelineChart: (
-    <div className="flex w-full flex-col gap-2 md:flex-row">
-      <div className="md:basis-1/2">
-        <AreaChart config={areaAndPieChartConfig} data={areaAndPieChartData} />
-      </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Timeline Chart</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col gap-2 md:flex-row">
+        <div className="md:basis-1/2">
+          <AreaChart
+            config={areaAndPieChartConfig}
+            data={areaAndPieChartData}
+          />
+        </div>
 
-      <div className="md:basis-1/2">
-        <BarChart config={areaAndPieChartConfig} data={areaAndPieChartData} />
-      </div>
-    </div>
+        <div className="md:basis-1/2">
+          <BarChart config={areaAndPieChartConfig} data={areaAndPieChartData} />
+        </div>
+      </CardContent>
+    </Card>
   ),
 
-  form: <ExampleForm />,
+  form: (
+    <Card>
+      <CardContent>
+        <ExampleForm />
+      </CardContent>
+    </Card>
+  ),
+
+  formBuilder: <FormBuilder />,
 };
 
-const tabs: { section: string; content: CompCardContent[] }[] = [
-  {
-    section: "Chart",
-    content: [
-      { title: "Pie Chart", key: "pieChart" },
-      { title: "Area and Bar Chart", key: "timelineChart" },
-    ],
-  },
-  {
-    section: "Form",
-    content: [{ title: "Contoh penggunaan Form", key: "form" }],
-  },
+const tabs: { section: string; content: (keyof typeof comp)[] }[] = [
+  { section: "Form Builder", content: ["formBuilder"] },
+  { section: "Chart", content: ["pieChart", "timelineChart"] },
+  { section: "Form", content: ["form"] },
 ];
-
-function Comp({ content }: { content: CompCardContent[] }) {
-  return content.map(({ title, key }) => (
-    <Card key={key}>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-y-4">{comp[key]}</CardContent>
-    </Card>
-  ));
-}
 
 export function Example() {
   return (
     <Tabs
       defaultValue={tabs[0].section}
       orientation="vertical"
-      className="animate-fade w-full delay-1000 md:flex-row"
+      className="animate-fade w-full gap-x-8 delay-1000 md:flex-row"
     >
       <ScrollArea className="pb-2 md:hidden">
         <TabsList className="w-full rounded-none border-b bg-transparent p-0">
@@ -118,8 +122,11 @@ export function Example() {
 
       <div className="w-full">
         {tabs.map(({ section, content }) => (
-          <TabsContent key={section} value={section} className="space-y-4">
-            <Comp content={content} />
+          <TabsContent key={section} value={section} className="grid gap-y-4">
+            <h3>{section}</h3>
+            {content.map((key, index) => (
+              <Fragment key={index}>{comp[key]}</Fragment>
+            ))}
           </TabsContent>
         ))}
       </div>

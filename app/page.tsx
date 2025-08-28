@@ -2,7 +2,6 @@ import { Example } from "@/components/modules/example";
 import { LinkLoader, ThemeToggle } from "@/components/other/buttons";
 import { R } from "@/components/other/motion";
 import { Button } from "@/components/ui/button";
-import { dashboardRoute } from "@/lib/routes";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
@@ -10,7 +9,7 @@ import Link from "next/link";
 
 export default function Page() {
   return (
-    <div className="container flex max-w-6xl flex-col gap-y-8 py-8 md:py-16">
+    <div className="container flex flex-col gap-y-8 py-8 md:py-16">
       <div className="flex flex-col items-center gap-y-4">
         <R />
 
@@ -18,7 +17,7 @@ export default function Page() {
           <ThemeToggle variant="outline_primary" />
 
           <Button variant="outline_primary" asChild>
-            <Link href={dashboardRoute}>
+            <Link href="/dashboard">
               Ke Dashboard <LinkLoader icon={{ base: <ArrowRight /> }} />
             </Link>
           </Button>
