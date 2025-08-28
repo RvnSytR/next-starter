@@ -100,8 +100,7 @@ export const getUserColumn = (currentUserId: string) => [
       if (id === currentUserId) {
         return (
           <div className="flex items-center gap-x-2">
-            {email}
-            {emailVerified && <UserVerifiedBadge withoutText />}
+            {email} {emailVerified && <UserVerifiedBadge withoutText />}
           </div>
         );
       }
@@ -115,11 +114,7 @@ export const getUserColumn = (currentUserId: string) => [
     header: ({ column }) => headerButton(column, userFields.name.label),
     cell: ({ row }) => row.original.name,
     filterFn: filterFn("text"),
-    meta: {
-      displayName: userFields.name.label,
-      type: "text",
-      icon: UserRound,
-    },
+    meta: { displayName: userFields.name.label, type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: userFields.role.label,

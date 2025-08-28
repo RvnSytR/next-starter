@@ -7,7 +7,7 @@ import { useIsMobile } from "@/lib/hooks/use-mobile";
 import { fieldsMeta, fileMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -199,7 +199,6 @@ export function UserDataTable({
       enableRowSelection={({ original }) => original.id !== currentUserId}
       onRowSelection={(data, table) => {
         const filteredData = data.map(({ original }) => original);
-
         const clearRowSelection = () => table.resetRowSelection();
 
         return (
@@ -1186,12 +1185,20 @@ function AdminChangeUserRoleForm({
     );
   };
 
+  const { label, ...restField } = userFields.role;
+
   return (
     <Form form={form} onSubmit={formHandler}>
       <FormField
         control={form.control}
         name="role"
-        render={({ field }) => <Field field={field} {...userFields.role} />}
+        render={({ field }) => (
+          <Field
+            field={field}
+            label={capitalize(`Ubah ${label}`, "first")}
+            {...restField}
+          />
+        )}
       />
 
       <Button type="submit" disabled={isLoading}>

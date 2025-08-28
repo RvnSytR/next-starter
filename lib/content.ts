@@ -24,7 +24,9 @@ export const actions = {
 };
 
 export const messages = {
+  empty: "Tidak ada hasil yang ditemukan.",
   loading: "Mohon tunggu sebentar...",
+
   error: "Terjadi kesalahan. Silakan coba lagi nanti.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 

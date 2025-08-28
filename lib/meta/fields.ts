@@ -118,6 +118,7 @@ export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
   type: "select";
+  withSearch?: boolean;
   data: {
     value: string;
     label?: string;
@@ -169,13 +170,13 @@ export type FieldProps = FieldWrapperProps &
 
 export const fieldsMeta = {
   num: "No",
-  createdAt: "Tanggal Dibuat",
+  createdAt: "Tanggal dibuat",
 
   example: {
     text: {
       type: "text",
       label: "Text",
-      placeholder: "Masukkan Text",
+      placeholder: "Masukkan text",
       icon: TextIcon,
       required: true,
       // description: "Form Description",
@@ -183,14 +184,14 @@ export const fieldsMeta = {
     numeric: {
       type: "number",
       label: "Numeric",
-      placeholder: "Masukkan Nomor",
+      placeholder: "Masukkan nomor",
       icon: "Rp.",
       required: true,
     },
     phone: {
       type: "tel",
       label: "Phone",
-      placeholder: "Masukkan No Telp",
+      placeholder: "Masukkan no telp",
       icon: languageMeta.id.symbol,
       className: "pl-11",
       required: true,
@@ -198,6 +199,7 @@ export const fieldsMeta = {
     select: {
       type: "select",
       label: "Select",
+      placeholder: "Pilih kartu",
       data: [
         { value: "spade", label: "Spade", icon: Spade },
         { value: "heart", label: "Heart", icon: Heart },
@@ -240,7 +242,7 @@ export const fieldsMeta = {
     textarea: {
       type: "textarea",
       label: "Text Area",
-      placeholder: "Masukkan Text Area",
+      placeholder: "Masukkan text area",
     },
     calendar: {
       type: "calendar",
@@ -275,54 +277,54 @@ export const fieldsMeta = {
   },
 
   user: {
-    id: "ID Pengguna",
-    avatar: "Foto Profil",
+    id: "ID pengguna",
+    avatar: "Foto profil",
 
     name: {
       type: "text",
-      label: "Nama Pengguna",
+      label: "Nama pengguna",
       placeholder: "Masukkan nama pengguna Anda",
       icon: UserRound,
       required: true,
     },
     email: {
       type: "email",
-      label: "Alamat Email",
+      label: "Alamat email",
       placeholder: "Masukkan alamat email Anda",
       icon: fieldTypeMeta.email.icon,
       required: true,
     },
     password: {
       type: "password",
-      label: "Kata Sandi",
+      label: "Kata sandi",
       placeholder: "Masukkan kata sandi Anda",
       icon: fieldTypeMeta.password.icon,
       required: true,
     },
     confirmPassword: {
       type: "password",
-      label: "Konfirmasi Kata Sandi",
+      label: "Konfirmasi kata sandi",
       placeholder: "Konfirmasi kata sandi Anda",
       icon: fieldTypeMeta.password.icon,
       required: true,
     },
     currentPassword: {
       type: "password",
-      label: "Kata Sandi Saat Ini",
+      label: "Kata sandi saat ini",
       placeholder: "Masukkan kata sandi saat ini",
       icon: LockKeyholeOpen,
       required: true,
     },
     newPassword: {
       type: "password",
-      label: "Kata Sandi Baru",
+      label: "Kata sandi baru",
       placeholder: "Masukkan kata sandi baru",
       icon: fieldTypeMeta.password.icon,
       required: true,
     },
     rememberMe: {
       type: "checkbox",
-      label: "Ingat Saya",
+      label: "Ingat saya",
     },
     revokeOtherSessions: {
       type: "checkbox",
@@ -331,15 +333,15 @@ export const fieldsMeta = {
     agreement: {
       type: "checkbox",
       label: "Setujui syarat dan ketentuan",
-      description: `Saya menyetujui Ketentuan Layanan dan Kebijakan Privasi ${appMeta.name}.`,
+      description: `Saya menyetujui ketentuan layanan dan kebijakan privasi ${appMeta.name}.`,
       required: true,
     },
     role: {
       type: "radio",
       label: "Role",
-      data: allRoles.map((item) => {
-        const { displayName, desc, icon } = rolesMeta[item];
-        return { value: displayName, desc, icon };
+      data: allRoles.map((value) => {
+        const { displayName, ...rest } = rolesMeta[value];
+        return { value, label: displayName, ...rest };
       }),
       required: true,
       className: "grid grid-cols-2",

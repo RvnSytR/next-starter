@@ -1,8 +1,8 @@
 import { appMeta, Language, languageMeta } from "../meta";
 
-export function capitalize(str: string, mode: "word" | "first" = "word") {
+export function capitalize(string: string, mode: "word" | "first" = "word") {
+  const str = string.toLowerCase();
   const handler = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-
   if (mode === "first") return handler(str);
   return str.split(" ").map(handler).join(" ");
 }

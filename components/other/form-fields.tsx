@@ -1,3 +1,4 @@
+import { messages } from "@/lib/content";
 import {
   CalendarFieldProps,
   CheckboxFieldProps,
@@ -12,8 +13,18 @@ import {
   TextareaFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
+import { Check, ChevronDown } from "lucide-react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
+import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "../ui/command";
 import {
   FormControl,
   FormDescription,
@@ -22,6 +33,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
@@ -140,6 +152,63 @@ function SelectField<T extends FieldValues>({
   );
 }
 
+function SelectWithSearchField<T extends FieldValues>({
+  field,
+  placeholder,
+  data,
+}: Controller<T> & SelectFieldProps) {
+  const meta = data.find((i) => i.value === field.value);
+  return (
+    <Popover>
+      <FormControl>
+        <PopoverTrigger asChild>
+          <Button
+            type="button"
+            variant="outline"
+            role="combobox"
+            className={cn(!meta && "text-muted-foreground")}
+          >
+            {meta ? (
+              <div className="flex items-center gap-x-2">
+                {meta.icon && getIconOrText(meta.icon)}
+                {meta.label ?? meta.value}
+              </div>
+            ) : (
+              placeholder
+            )}
+
+            <ChevronDown aria-hidden="true" className="ml-auto opacity-50" />
+          </Button>
+        </PopoverTrigger>
+      </FormControl>
+
+      <PopoverContent className="border-input min-w-[var(--radix-popper-anchor-width)] p-0">
+        <Command>
+          <CommandInput placeholder={`${placeholder}...`} />
+          <CommandList>
+            <CommandEmpty>{messages.empty}</CommandEmpty>
+            <CommandGroup>
+              {data.map(({ value, label, icon, className }) => (
+                <CommandItem
+                  key={value}
+                  value={value}
+                  onSelect={(currentValue) => field.onChange(currentValue)}
+                  className={cn("flex items-center gap-x-2", className)}
+                >
+                  {icon && getIconOrText(icon)} {label ?? value}
+                  {field.value === value && (
+                    <Check aria-hidden="true" className="ml-auto" />
+                  )}
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </CommandList>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
 function RadioField<T extends FieldValues>({
   field,
   className,
@@ -165,6 +234,7 @@ function RadioField<T extends FieldValues>({
               className="order-1 after:absolute after:inset-0"
             />
           </FormControl>
+
           <div className="grid grow gap-2">
             <FormLabel className="flex items-center">
               {icon && getIconOrText(icon)} {label ?? value}
@@ -265,7 +335,8 @@ export function Field<T extends FieldValues>({
       break;
 
     case "select":
-      comp = <SelectField {...props} />;
+      const Comp = props.withSearch ? SelectWithSearchField : SelectField;
+      comp = <Comp {...props} />;
       break;
 
     case "radio":

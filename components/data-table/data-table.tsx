@@ -1,6 +1,6 @@
 "use client";
 
-import { actions } from "@/lib/content";
+import { actions, messages } from "@/lib/content";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -210,7 +210,7 @@ export function DataTable<TData>({
                   colSpan={columns.length}
                   className="text-muted-foreground py-4 text-center whitespace-pre-line"
                 >
-                  Tidak ada hasil yang ditemukan.
+                  {messages.empty}
                 </TableCell>
               </TableRow>
             )}
