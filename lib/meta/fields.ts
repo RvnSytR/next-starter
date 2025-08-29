@@ -1,5 +1,5 @@
-import { FileUploadProps } from "@/components/other/file-upload";
 import { CalendarProps } from "@/components/ui/calendar";
+import { FileUploadProps } from "@/components/ui/file-upload";
 import {
   Calendar1,
   CalendarClock,
@@ -122,7 +122,7 @@ export type InputFieldProps = BaseFieldProps & {
 export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
-  type: "select";
+  type: "select" | "multi-select";
   data: {
     value: string;
     label?: string;

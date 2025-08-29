@@ -14,9 +14,9 @@ import {
   useCallback,
   useRef,
 } from "react";
-import { Button } from "../ui/button";
-import { FormControl } from "../ui/form";
-import { Input } from "../ui/input";
+import { Button } from "./button";
+import { FormControl } from "./form";
+import { Input } from "./input";
 
 export type FileUploadProps = Pick<ComponentProps<"input">, "multiple"> & {
   value: File[];

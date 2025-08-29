@@ -2,9 +2,8 @@
 
 import { Search } from "lucide-react";
 import { useEffect, useRef } from "react";
-import { InputWrapper } from "../other/input-wrapper";
 import { CommandShortcut } from "../ui/command";
-import { Input } from "../ui/input";
+import { Input, InputWrapper } from "../ui/input";
 import { TableProps, ToolBoxProps } from "./data-table";
 
 export function DataTableSearch<TData>({

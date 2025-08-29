@@ -1,5 +1,5 @@
 import { DashboardMain } from "@/components/layout/section";
-import { R } from "@/components/other/motion";
+import { R } from "@/components/ui/motion";
 import { requireAuthorizedSession } from "@/server/action";
 
 export default async function Page() {

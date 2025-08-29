@@ -45,9 +45,6 @@ import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
 import { SheetDetails } from "../layout/section";
-import { ResetButton } from "../other/buttons";
-import { Field } from "../other/form-fields";
-import { GithubIcon, Loader } from "../other/icon";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -62,6 +59,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
+import { ResetButton } from "../ui/buttons";
 import { CardContent, CardFooter } from "../ui/card";
 import {
   Dialog,
@@ -82,6 +80,8 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { Form, FormField } from "../ui/form";
+import { Field } from "../ui/form-fields";
+import { GithubIcon, Loader } from "../ui/icons";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 import {

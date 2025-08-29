@@ -9,10 +9,10 @@ import { Save } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { ResetButton } from "../other/buttons";
-import { Field } from "../other/form-fields";
 import { Button } from "../ui/button";
+import { ResetButton } from "../ui/buttons";
 import { Form, FormField } from "../ui/form";
+import { Field } from "../ui/form-fields";
 // import { uploadFiles } from "@/server/s3";
 
 const card = ["spade", "heart", "diamond", "club"] as const;

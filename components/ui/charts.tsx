@@ -20,7 +20,7 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "../ui/chart";
+} from "./chart";
 
 type TimelineChart = {
   config: ChartConfig;

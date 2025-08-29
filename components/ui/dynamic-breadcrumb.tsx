@@ -13,13 +13,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "../ui/breadcrumb";
+} from "./breadcrumb";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "./dropdown-menu";
 
 type DynamicBreadcrumbMeta = { url: Route; displayName: string };
 type DynamicBreadcrumbData = Route | DynamicBreadcrumbMeta;

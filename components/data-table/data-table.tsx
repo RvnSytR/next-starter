@@ -28,8 +28,8 @@ import {
   RotateCcw,
 } from "lucide-react";
 import { ReactNode, useEffect, useState } from "react";
-import { RefreshButton } from "../other/buttons";
 import { Button, buttonVariants } from "../ui/button";
+import { RefreshButton } from "../ui/buttons";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";

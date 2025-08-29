@@ -16,8 +16,8 @@ import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { UseFormReset } from "react-hook-form";
-import { Button, ButtonProps } from "../ui/button";
-import { Loader, LoaderProps } from "./icon";
+import { Button, ButtonProps } from "./button";
+import { Loader, LoaderProps } from "./icons";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 type ButtonIconSize = "iconlg" | "icon" | "iconsm";

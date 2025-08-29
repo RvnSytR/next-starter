@@ -2,11 +2,11 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { ThemeToggle } from "../other/buttons";
+import { ThemeToggle } from "../ui/buttons";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
-} from "../other/dynamic-breadcrumb";
+} from "../ui/dynamic-breadcrumb";
 import { Label } from "../ui/label";
 import { Separator } from "../ui/separator";
 

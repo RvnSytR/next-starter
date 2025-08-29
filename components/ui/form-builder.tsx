@@ -1,6 +1,6 @@
 "use client";
 
-import { Label } from "../ui/label";
+import { Label } from "./label";
 
 // function getSchema(fields: { name: string; key: FieldType }[]) {
 //   return fields.reduce((acc, field) => {

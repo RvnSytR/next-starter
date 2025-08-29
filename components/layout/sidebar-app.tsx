@@ -8,7 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
-import { LinkLoader, RefreshButton } from "../other/buttons";
+import { LinkLoader, RefreshButton } from "../ui/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,

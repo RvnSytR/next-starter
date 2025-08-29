@@ -1,10 +1,10 @@
 import { ExampleForm } from "@/components/modules/example";
-import { LinkLoader, ThemeToggle } from "@/components/other/buttons";
-import { AreaChart, BarChart, PieChart } from "@/components/other/charts";
-import { FormBuilder } from "@/components/other/form-builder";
-import { R } from "@/components/other/motion";
 import { Button } from "@/components/ui/button";
+import { LinkLoader, ThemeToggle } from "@/components/ui/buttons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { AreaChart, BarChart, PieChart } from "@/components/ui/charts";
+import { FormBuilder } from "@/components/ui/form-builder";
+import { R } from "@/components/ui/motion";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";

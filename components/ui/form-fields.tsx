@@ -13,10 +13,11 @@ import {
   TextareaFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
-import { Check, ChevronDown } from "lucide-react";
+import { Check, ChevronDown, X } from "lucide-react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { Button } from "../ui/button";
-import { Checkbox } from "../ui/checkbox";
+import { Badge } from "./badge";
+import { Button } from "./button";
+import { Checkbox } from "./checkbox";
 import {
   Command,
   CommandEmpty,
@@ -24,28 +25,27 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "../ui/command";
+} from "./command";
+import { DatePicker } from "./date-picker";
+import { FileUpload } from "./file-upload";
 import {
   FormControl,
   FormDescription,
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import { Input } from "../ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+} from "./form";
+import { Input, InputWrapper } from "./input";
+import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { RadioGroup, RadioGroupItem } from "./radio-group";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { DatePicker } from "./date-picker";
-import { FileUpload } from "./file-upload";
-import { InputWrapper } from "./input-wrapper";
+} from "./select";
+import { Textarea } from "./textarea";
 
 type Controller<T extends FieldValues> = { field: ControllerRenderProps<T> };
 
@@ -152,12 +152,12 @@ function SelectField<T extends FieldValues>({
   );
 }
 
-function SelectWithSearchField<T extends FieldValues>({
+function MultiSelectField<T extends FieldValues>({
   field,
   placeholder,
   data,
 }: Controller<T> & SelectFieldProps) {
-  const meta = data.find((i) => i.value === field.value);
+  const fieldValue = field.value ? Array.from(field.value) : [];
   return (
     <Popover>
       <FormControl>
@@ -166,12 +166,26 @@ function SelectWithSearchField<T extends FieldValues>({
             type="button"
             variant="outline"
             role="combobox"
-            className={cn(!meta && "text-muted-foreground")}
+            className={cn(
+              "h-fit p-1",
+              !fieldValue.length && "text-muted-foreground",
+            )}
           >
-            {meta ? (
-              <div className="flex items-center gap-x-2">
-                {meta.icon && getIconOrText(meta.icon)}
-                {meta.label ?? meta.value}
+            {fieldValue.length > 0 ? (
+              <div className="flex flex-wrap gap-1">
+                {fieldValue.map((item) => {
+                  const meta = data.find((i) => i.value === item);
+                  if (!meta) return;
+                  return (
+                    <Badge key={meta.value} variant="outline" className="gap-2">
+                      <div className="flex items-center gap-1">
+                        {meta.icon && getIconOrText(meta.icon)}
+                        {meta.label ?? meta.value}
+                      </div>
+                      <X className="opacity-50" />
+                    </Badge>
+                  );
+                })}
               </div>
             ) : (
               placeholder
@@ -185,22 +199,28 @@ function SelectWithSearchField<T extends FieldValues>({
         <Command>
           <CommandInput placeholder={`${placeholder}...`} />
           <CommandList>
-            <CommandEmpty>{messages.empty}</CommandEmpty>
             <CommandGroup>
               {data.map(({ value, label, icon, className }) => (
                 <CommandItem
                   key={value}
                   value={value}
-                  onSelect={(currentValue) => field.onChange(currentValue)}
+                  onSelect={() => {
+                    field.onChange(
+                      fieldValue.includes(value)
+                        ? fieldValue.filter((v) => v !== value)
+                        : [...fieldValue, value],
+                    );
+                  }}
                   className={cn("flex items-center gap-x-2", className)}
                 >
                   {icon && getIconOrText(icon)} {label ?? value}
-                  {field.value === value && (
+                  {fieldValue.includes(value) && (
                     <Check aria-hidden="true" className="ml-auto" />
                   )}
                 </CommandItem>
               ))}
             </CommandGroup>
+            <CommandEmpty>{messages.empty}</CommandEmpty>
           </CommandList>
         </Command>
       </PopoverContent>
@@ -335,6 +355,10 @@ export function Field<T extends FieldValues>({
 
     case "select":
       comp = <SelectField {...props} />;
+      break;
+
+    case "multi-select":
+      comp = <MultiSelectField {...props} />;
       break;
 
     case "radio":
