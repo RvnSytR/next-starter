@@ -1,135 +1,203 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
-import { Fragment } from "react";
-import { AreaChart, BarChart, PieChart } from "../other/charts";
-import { FormBuilder } from "../other/form-builder";
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-import { ExampleForm } from "./example-form";
+"use client";
 
-const pieChartData = [
-  { nameKey: "Chrome", dataKey: 275, fill: "var(--color-chart-1)" },
-  { nameKey: "Safari", dataKey: 200, fill: "var(--color-chart-2)" },
-  { nameKey: "Firefox", dataKey: 187, fill: "var(--color-chart-3)" },
-  { nameKey: "Edge", dataKey: 173, fill: "var(--color-chart-4)" },
-  { nameKey: "Other", dataKey: 90, fill: "var(--color-chart-5)" },
-];
+import { actions } from "@/lib/content";
+import { fieldsMeta, FileType } from "@/lib/meta";
+import { zodSchemas } from "@/lib/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { addDays } from "date-fns";
+import { Save } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { z } from "zod";
+import { ResetButton } from "../other/buttons";
+import { Field } from "../other/form-fields";
+import { Button } from "../ui/button";
+import { Form, FormField } from "../ui/form";
+// import { uploadFiles } from "@/server/s3";
 
-const areaAndPieChartData = [
-  { xLabel: "Januari", dataKeys: { key1: 186, key2: 80 } },
-  { xLabel: "Februari", dataKeys: { key1: 305, key2: 200 } },
-  { xLabel: "Maret", dataKeys: { key1: 237, key2: 120 } },
-  { xLabel: "April", dataKeys: { key1: 73, key2: 190 } },
-  { xLabel: "Mei", dataKeys: { key1: 209, key2: 130 } },
-  { xLabel: "Juni", dataKeys: { key1: 214, key2: 140 } },
-];
+const card = ["spade", "heart", "diamond", "club"] as const;
+const exampleFields = fieldsMeta.example;
 
-const areaAndPieChartConfig = {
-  key1: { label: "Desktop", color: "var(--color-chart-1)" },
-  key2: { label: "Mobile", color: "var(--color-chart-2)" },
-};
+export function ExampleForm() {
+  const fileType: FileType = "image";
+  const schema = z.object({
+    text: zodSchemas.string("Text", { min: 1 }),
+    numeric: zodSchemas.number("Numeric", { min: 1 }),
+    phone: zodSchemas.number("Phone", { min: 1 }),
+    calendar: zodSchemas.date,
+    calendarMultiple: zodSchemas.dateMultiple.min(1),
+    calendarRange: zodSchemas.dateRange,
+    select: z.enum(card),
+    multiSelect: z.array(z.string()),
+    radio: z.enum(card),
+    textarea: zodSchemas.string("Text Area", { min: 1, max: 255 }),
+    file: zodSchemas.file(fileType, {
+      optional: true,
+      // maxSize: toBytes(1),
+      // min: 2,
+      // max: 5,
+    }),
+    checkbox: z.boolean(),
+  });
 
-const comp = {
-  pieChart: (
-    <Card>
-      <CardHeader>
-        <CardTitle>Pie Chart</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="mx-auto aspect-square h-[20rem]">
-          <PieChart label="Kategori" data={pieChartData} />
-        </div>
-      </CardContent>
-    </Card>
-  ),
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      text: "Hello World",
+      numeric: 100000,
+      phone: 81234567890,
+      calendar: new Date(),
+      calendarMultiple: [new Date()],
+      calendarRange: { from: new Date(), to: addDays(new Date(), 6) },
+      select: "spade",
+      radio: "spade",
+      textarea: "The Brown Fox Jumping Over The Lazy Dog",
+      file: [],
+      checkbox: false,
+    },
+  });
 
-  timelineChart: (
-    <Card>
-      <CardHeader>
-        <CardTitle>Timeline Chart</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col gap-2 md:flex-row">
-        <div className="md:basis-1/2">
-          <AreaChart
-            config={areaAndPieChartConfig}
-            data={areaAndPieChartData}
-          />
-        </div>
+  const formHandler = async (formData: z.infer<typeof schema>) => {
+    console.log(formData.file);
+    // const res = await uploadFiles({ files: formData.file });
+    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
+  };
 
-        <div className="md:basis-1/2">
-          <BarChart config={areaAndPieChartConfig} data={areaAndPieChartData} />
-        </div>
-      </CardContent>
-    </Card>
-  ),
-
-  form: (
-    <Card>
-      <CardContent>
-        <ExampleForm />
-      </CardContent>
-    </Card>
-  ),
-
-  formBuilder: <FormBuilder />,
-};
-
-const tabs: { section: string; content: (keyof typeof comp)[] }[] = [
-  { section: "Form Builder", content: ["formBuilder"] },
-  { section: "Chart", content: ["pieChart", "timelineChart"] },
-  { section: "Form", content: ["form"] },
-];
-
-export function Example() {
   return (
-    <Tabs
-      defaultValue={tabs[0].section}
-      orientation="vertical"
-      className="animate-fade w-full gap-x-8 delay-1000 md:flex-row"
-    >
-      <ScrollArea className="pb-2 md:hidden">
-        <TabsList className="w-full rounded-none border-b bg-transparent p-0">
-          {tabs.map(({ section }) => (
-            <TabsTrigger
-              key={section}
-              value={section}
-              className={cn(
-                "relative rounded-none py-2 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5",
-                "data-[state=active]:after:bg-primary data-[state=active]:hover:bg-accent data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
+    <Form form={form} onSubmit={formHandler}>
+      {/* General */}
+      <div className="grid gap-x-2 gap-y-4 md:grid-cols-5">
+        {/* Example to dynamically render the form fields */}
+        {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
+          (field) => (
+            <FormField
+              key={field}
+              control={form.control}
+              name={field}
+              render={({ field }) => (
+                <Field field={field} {...fieldsMeta.example[field]} />
               )}
-            >
-              {section}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        <ScrollBar orientation="horizontal" />
-      </ScrollArea>
+            />
+          ),
+        )} */}
 
-      <TabsList className="hidden h-full flex-col items-start justify-start rounded-none border-l bg-transparent p-0 md:flex">
-        {tabs.map(({ section }) => (
-          <TabsTrigger
-            key={section}
-            value={section}
-            className={cn(
-              "relative w-full justify-start rounded-none after:absolute after:inset-y-0 after:-start-0.5 after:w-0.5",
-              "data-[state=active]:after:bg-primary data-[state=active]:bg-transparent data-[state=active]:shadow-none dark:data-[state=active]:border-transparent dark:data-[state=active]:bg-transparent",
-            )}
-          >
-            {section}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+        <FormField
+          control={form.control}
+          name="text"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.text} />
+          )}
+        />
 
-      <div className="w-full">
-        {tabs.map(({ section, content }) => (
-          <TabsContent key={section} value={section} className="grid gap-y-4">
-            <h3>{section}</h3>
-            {content.map((key, index) => (
-              <Fragment key={index}>{comp[key]}</Fragment>
-            ))}
-          </TabsContent>
-        ))}
+        <FormField
+          control={form.control}
+          name="numeric"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.numeric} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.phone} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="select"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.select} />
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="multiSelect"
+          render={({ field }) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { type, ...rest } = exampleFields.select;
+            return <Field field={field} type="multi-select" {...rest} />;
+          }}
+        />
       </div>
-    </Tabs>
+
+      {/* Dates */}
+      <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
+        {/* Date Single */}
+        <FormField
+          control={form.control}
+          name="calendar"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.calendar} />
+          )}
+        />
+
+        {/* Date Multiple */}
+        <FormField
+          control={form.control}
+          name="calendarMultiple"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.calendarMultiple} />
+          )}
+        />
+
+        {/* Date Range */}
+        <FormField
+          control={form.control}
+          name="calendarRange"
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.calendarRange} />
+          )}
+        />
+      </div>
+
+      {/* Radio Group */}
+      <FormField
+        control={form.control}
+        name="radio"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.radio} />
+        )}
+      />
+
+      {/* Text Area */}
+      <FormField
+        control={form.control}
+        name="textarea"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.textarea} />
+        )}
+      />
+
+      {/* File Upload */}
+      <FormField
+        control={form.control}
+        name="file"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.file} />
+        )}
+      />
+
+      {/* Checkbox */}
+      <FormField
+        control={form.control}
+        name="checkbox"
+        render={({ field }) => (
+          <Field field={field} {...fieldsMeta.example.checkbox} />
+        )}
+      />
+
+      <div className="flex gap-2">
+        <Button type="submit">
+          {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
+          <Save /> {actions.save}
+        </Button>
+
+        <ResetButton fn={form.reset} />
+      </div>
+    </Form>
   );
 }
