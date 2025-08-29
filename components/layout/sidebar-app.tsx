@@ -3,10 +3,12 @@ import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { getRoutesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
+import { getSession } from "@/server/action";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { LinkLoader, RefreshButton } from "../ui/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -57,20 +59,19 @@ export const sidebarMenuButtonVariants = cva(
   },
 );
 
-export function SidebarApp({
-  children,
-  ...props
-}: SidebarData & { children: React.ReactNode }) {
+export async function SidebarApp({ children }: { children: React.ReactNode }) {
+  const session = await getSession();
+  if (!session) notFound();
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <Header {...props} />
+          <Header {...session.user} />
           <SidebarSeparator />
         </SidebarHeader>
 
         <SidebarContent>
-          <Content {...props} />
+          <Content {...session.user} />
         </SidebarContent>
 
         <SidebarFooter>
