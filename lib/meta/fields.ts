@@ -31,6 +31,7 @@ import {
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
 import { appMeta } from "./app";
+import { baseColorMeta, tailwindColorMeta } from "./color";
 import { languageMeta } from "./other";
 
 export const allFieldType = [
@@ -228,14 +229,14 @@ export const fieldsMeta = {
           value: "spade",
           label: "Spade",
           icon: Spade,
-          color: "var(--primary)",
+          color: baseColorMeta.primary,
           group: "Card 1",
         },
         {
           value: "heart",
           label: "Heart",
           icon: Heart,
-          color: "var(--color-red-500)",
+          color: tailwindColorMeta["red-500"],
           group: "Card 1",
           disabled: true,
         },
@@ -243,14 +244,14 @@ export const fieldsMeta = {
           value: "diamond",
           label: "Diamond",
           icon: Diamond,
-          color: "var(--color-cyan-500)",
+          color: tailwindColorMeta["cyan-500"],
           group: "Card 2",
         },
         {
           value: "club",
           label: "Club",
           icon: Club,
-          color: "var(--color-green-500)",
+          color: tailwindColorMeta["green-500"],
           group: "Card 2",
         },
       ],

@@ -38,6 +38,10 @@ export function toKebabCase(str: string) {
     .replace(/\s+/g, "-");
 }
 
+export function kebabToRegularCase(str: string) {
+  return str.trim().split("-").join(" ");
+}
+
 export function formatNumber(
   number: number,
   props?: { lang?: Language; options?: Intl.NumberFormatOptions },
