@@ -22,7 +22,6 @@ import {
   CommandItem,
   CommandList,
 } from "./command";
-import { getIconOrText } from "./icons";
 
 export type MultiSelectConfig = {
   value: string;
@@ -415,7 +414,7 @@ export function MultiSelect({
       >
         <div className="flex flex-wrap gap-1">
           {selected.map((item) => {
-            const icon = getItemMeta(item.value)?.icon;
+            const Icon = getItemMeta(item.value)?.icon;
             return (
               <Badge
                 key={item.value}
@@ -427,7 +426,13 @@ export function MultiSelect({
                   badgeClassName,
                 )}
               >
-                {icon && getIconOrText(icon)}
+                {Icon &&
+                  (typeof Icon === "string" ? (
+                    Icon
+                  ) : (
+                    <Icon className="size-3.5" />
+                  ))}
+
                 {item.label ?? item.value}
 
                 {!item.fixed && (
@@ -544,7 +549,7 @@ export function MultiSelect({
                       className="h-full overflow-auto"
                     >
                       {dropdowns.map((item) => {
-                        const icon = getItemMeta(item.value)?.icon;
+                        const Icon = getItemMeta(item.value)?.icon;
                         return (
                           <CommandItem
                             key={item.value}
@@ -570,7 +575,9 @@ export function MultiSelect({
                                 "pointer-events-none cursor-not-allowed opacity-50",
                             )}
                           >
-                            {icon && getIconOrText(icon)}
+                            {Icon &&
+                              (typeof Icon === "string" ? Icon : <Icon />)}
+
                             {item.label ?? item.value}
                           </CommandItem>
                         );

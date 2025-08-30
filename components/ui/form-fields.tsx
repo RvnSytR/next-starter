@@ -23,7 +23,6 @@ import {
   FormLabel,
   FormMessage,
 } from "./form";
-import { getIconOrText } from "./icons";
 import { Input, InputWrapper } from "./input";
 import { MultiSelect } from "./multi-select";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
@@ -69,10 +68,10 @@ export function FieldWrapper({
 function TextField<T extends FieldValues>({
   field,
   type,
-  icon,
+  icon: Icon,
   ...props
 }: Controller<T> & InputFieldProps) {
-  const iconOrText = icon && getIconOrText(icon);
+  const iconOrText = Icon && (typeof Icon === "string" ? Icon : <Icon />);
 
   const inputField = (
     <FormControl>
@@ -90,10 +89,10 @@ function TextField<T extends FieldValues>({
 function NumberField<T extends FieldValues>({
   field: { value, onChange, ...restField },
   type,
-  icon,
+  icon: Icon,
   ...props
 }: Controller<T> & NumericFieldProps) {
-  const iconOrText = icon && getIconOrText(icon);
+  const iconOrText = Icon && (typeof Icon === "string" ? Icon : <Icon />);
   const inputField = (
     <FormControl>
       <Input
@@ -127,14 +126,15 @@ function SelectField<T extends FieldValues>({
         </SelectTrigger>
       </FormControl>
       <SelectContent>
-        {data.map(({ value, label, icon, className, disabled }) => (
+        {data.map(({ value, label, icon: Icon, className, disabled }) => (
           <SelectItem
             key={value}
             value={value}
             className={className}
             disabled={disabled}
           >
-            {icon && getIconOrText(icon)} {label ?? value}
+            {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
+            {label ?? value}
           </SelectItem>
         ))}
       </SelectContent>
@@ -171,7 +171,7 @@ function RadioField<T extends FieldValues>({
       onValueChange={field.onChange}
       className={className}
     >
-      {data.map(({ value, label, desc, icon, className, disabled }) => (
+      {data.map(({ value, label, desc, icon: Icon, className, disabled }) => (
         <FormItem
           key={value}
           className={cn(
@@ -190,7 +190,8 @@ function RadioField<T extends FieldValues>({
 
           <div className="grid grow gap-2">
             <FormLabel className="flex items-center">
-              {icon && getIconOrText(icon)} {label ?? value}
+              {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
+              {label ?? value}
             </FormLabel>
 
             {desc && (
