@@ -418,11 +418,17 @@ export function MultiSelect({
             return (
               <Badge
                 key={item.value}
-                variant="outline"
+                variant="default"
                 data-fixed={item.fixed}
                 data-disabled={disabled || undefined}
+                style={
+                  {
+                    "--badge-color": item.color ?? "var(--foreground)",
+                  } as React.CSSProperties
+                }
                 className={cn(
-                  "border-input relative h-7 rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
+                  "relative h-7 rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
+                  "bg-[var(--badge-color)]/10 text-[var(--badge-color)]",
                   badgeClassName,
                 )}
               >
@@ -437,7 +443,7 @@ export function MultiSelect({
 
                 {!item.fixed && (
                   <button
-                    className="text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px end-1 flex items-center justify-center rounded-e-md border border-transparent p-0 outline-hidden transition-[color,box-shadow] outline-none focus-visible:ring-[3px]"
+                    className="focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px end-1 flex items-center justify-center rounded-e-md border border-transparent p-0 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:ring-[3px]"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleUnselect(item);
                     }}
@@ -569,6 +575,11 @@ export function MultiSelect({
                               setSelected(newOptions);
                               onChange?.(newOptions);
                             }}
+                            style={
+                              {
+                                "--item-color": item.color ?? "transparent",
+                              } as React.CSSProperties
+                            }
                             className={cn(
                               "cursor-pointer",
                               item.disabled &&
@@ -577,8 +588,9 @@ export function MultiSelect({
                           >
                             {Icon &&
                               (typeof Icon === "string" ? Icon : <Icon />)}
-
                             {item.label ?? item.value}
+
+                            <div className="ml-auto size-2 rounded-full bg-[var(--item-color)]" />
                           </CommandItem>
                         );
                       })}

@@ -15,7 +15,7 @@ export function FormBuilder() {
   return (
     <div className="flex gap-x-4">
       <div>
-        <Label>Fields</Label>
+        <Label>TODO</Label>
         {/* {JSON.stringify(fields)} */}
       </div>
     </div>
