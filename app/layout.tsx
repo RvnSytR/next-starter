@@ -44,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           disableTransitionOnChange
           enableSystem
         >
-          <GridPattern className="stroke-muted dark:stroke-muted/60 -z-1" />
+          <GridPattern className="stroke-muted dark:stroke-muted/60 -z-1 min-h-dvh" />
           {children}
           <Toaster position="top-center" closeButton richColors />
         </ThemeProvider>

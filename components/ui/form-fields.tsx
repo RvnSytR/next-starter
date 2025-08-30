@@ -117,7 +117,7 @@ function SelectField<T extends FieldValues>({
   field,
   placeholder,
   data,
-}: Controller<T> & SelectFieldProps) {
+}: Controller<T> & Omit<SelectFieldProps, "type">) {
   return (
     <Select value={field.value} onValueChange={field.onChange}>
       <FormControl>
@@ -146,7 +146,7 @@ function MultiSelectField<T extends FieldValues>({
   field,
   placeholder,
   data,
-}: Controller<T> & MultiSelectFieldProps) {
+}: Controller<T> & Omit<MultiSelectFieldProps, "type">) {
   const value = Array.from(field.value ?? [undefined])
     .map((v) => data.find(({ value }) => value === v))
     .filter(Boolean) as MultiSelectFieldProps["data"];
@@ -164,7 +164,7 @@ function RadioField<T extends FieldValues>({
   field,
   className,
   data,
-}: Controller<T> & RadioFieldProps) {
+}: Controller<T> & Omit<RadioFieldProps, "type">) {
   return (
     <RadioGroup
       value={field.value}
@@ -211,7 +211,7 @@ function CalendarField<T extends FieldValues>({
   mode = "single",
   required = false,
   ...props
-}: Controller<T> & CalendarFieldProps) {
+}: Controller<T> & Omit<CalendarFieldProps, "type">) {
   return (
     <DatePicker
       mode={mode}
@@ -231,7 +231,7 @@ function CheckboxField<T extends FieldValues>({
   required,
   className,
   classNames,
-}: Controller<T> & FieldWrapperProps & CheckboxFieldProps) {
+}: Controller<T> & FieldWrapperProps & Omit<CheckboxFieldProps, "type">) {
   return (
     <FormItem className={classNames?.formItem}>
       <div className="flex gap-x-3">
@@ -262,7 +262,7 @@ function CheckboxField<T extends FieldValues>({
 function TextAreaField<T extends FieldValues>({
   field,
   ...props
-}: Controller<T> & TextareaFieldProps) {
+}: Controller<T> & Omit<TextareaFieldProps, "type">) {
   return (
     <FormControl>
       <Textarea {...props} {...field} />
@@ -273,7 +273,7 @@ function TextAreaField<T extends FieldValues>({
 function FileUploadField<T extends FieldValues>({
   field,
   ...props
-}: Controller<T> & FileUploadFieldProps) {
+}: Controller<T> & Omit<FileUploadFieldProps, "type">) {
   return <FileUpload {...props} {...field} />;
 }
 

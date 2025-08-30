@@ -212,7 +212,7 @@
   }
 
   body {
-    @apply bg-background text-foreground overflow-x-hidden font-sans antialiased;
+    @apply bg-background text-foreground relative overflow-x-hidden font-sans antialiased;
   }
 
   h1 {

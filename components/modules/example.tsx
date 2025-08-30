@@ -66,22 +66,22 @@ export function ExampleForm() {
 
   return (
     <Form form={form} onSubmit={formHandler}>
+      {/* Example to dynamically render the form fields */}
+      {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
+        (field) => (
+          <FormField
+            key={field}
+            control={form.control}
+            name={field}
+            render={({ field }) => (
+              <Field field={field} {...fieldsMeta.example[field]} />
+            )}
+          />
+        ),
+      )} */}
+
       {/* General */}
       <div className="grid gap-x-2 gap-y-4 md:grid-cols-5">
-        {/* Example to dynamically render the form fields */}
-        {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
-          (field) => (
-            <FormField
-              key={field}
-              control={form.control}
-              name={field}
-              render={({ field }) => (
-                <Field field={field} {...fieldsMeta.example[field]} />
-              )}
-            />
-          ),
-        )} */}
-
         <FormField
           control={form.control}
           name="text"
