@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils/index";
+import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 
@@ -72,11 +72,10 @@ function Button({
   ...props
 }: ButtonProps) {
   const Comp = asChild ? SlotPrimitive.Slot : "button";
-
   return (
     <Comp
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={cn(buttonVariants({ variant, size }), className)}
       {...props}
     />
   );

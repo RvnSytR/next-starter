@@ -1,11 +1,22 @@
 import { cn } from "@/lib/utils";
-import { LoaderCircle, LucideProps, SVGAttributes } from "lucide-react";
+import {
+  LoaderCircle,
+  LucideIcon,
+  LucideProps,
+  SVGAttributes,
+} from "lucide-react";
 import { ReactNode } from "react";
+
+export type IconOrText = string | LucideIcon;
 
 export type LoaderPropsWithLoading = LoaderProps & { loading: boolean };
 export type LoaderProps = LucideProps & {
   icon?: { base?: ReactNode; loader?: ReactNode };
 };
+
+export function getIconOrText(Icon: IconOrText): ReactNode {
+  return typeof Icon === "string" ? Icon : <Icon />;
+}
 
 export function Loader({
   loading,

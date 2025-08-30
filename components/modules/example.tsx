@@ -28,7 +28,7 @@ export function ExampleForm() {
     calendarMultiple: zodSchemas.dateMultiple.min(1),
     calendarRange: zodSchemas.dateRange,
     select: z.enum(card),
-    multiSelect: z.array(z.string()),
+    multiSelect: z.array(z.enum(card)),
     radio: z.enum(card),
     textarea: zodSchemas.string("Text Area", { min: 1, max: 255 }),
     file: zodSchemas.file(fileType, {
@@ -50,6 +50,7 @@ export function ExampleForm() {
       calendarMultiple: [new Date()],
       calendarRange: { from: new Date(), to: addDays(new Date(), 6) },
       select: "spade",
+      multiSelect: ["spade"],
       radio: "spade",
       textarea: "The Brown Fox Jumping Over The Lazy Dog",
       file: [],
@@ -116,11 +117,9 @@ export function ExampleForm() {
         <FormField
           control={form.control}
           name="multiSelect"
-          render={({ field }) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { type, ...rest } = exampleFields.select;
-            return <Field field={field} type="multi-select" {...rest} />;
-          }}
+          render={({ field }) => (
+            <Field field={field} {...exampleFields.multiSelect} />
+          )}
         />
       </div>
 

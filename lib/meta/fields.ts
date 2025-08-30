@@ -1,5 +1,7 @@
 import { CalendarProps } from "@/components/ui/calendar";
 import { FileUploadProps } from "@/components/ui/file-upload";
+import { IconOrText } from "@/components/ui/icons";
+import { MultiSelectConfig } from "@/components/ui/multi-select";
 import {
   Calendar1,
   CalendarClock,
@@ -17,7 +19,6 @@ import {
   LinkIcon,
   LockKeyhole,
   LockKeyholeOpen,
-  LucideIcon,
   Mail,
   PaintBucket,
   Phone,
@@ -59,7 +60,7 @@ export const allFieldType = [
 ] as const;
 
 export type FieldType = (typeof allFieldType)[number];
-export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
+export const fieldTypeMeta: Record<FieldType, { icon: IconOrText }> = {
   text: { icon: Type },
   color: { icon: PaintBucket },
   date: { icon: Calendar1 },
@@ -85,13 +86,11 @@ export const fieldTypeMeta: Record<FieldType, { icon: FormFieldIcon }> = {
   file: { icon: File },
 };
 
-export type FormFieldIcon = string | LucideIcon;
-
 type BaseFieldProps = {
   className?: string;
   placeholder?: string;
   required?: boolean;
-  icon?: FormFieldIcon;
+  icon?: IconOrText;
 };
 
 export type FieldWrapperProps = Pick<BaseFieldProps, "required"> & {
@@ -122,13 +121,19 @@ export type InputFieldProps = BaseFieldProps & {
 export type NumericFieldProps = BaseFieldProps & { type: "number" | "tel" };
 
 export type SelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
-  type: "select" | "multi-select";
+  type: "select";
   data: {
     value: string;
     label?: string;
-    icon?: FormFieldIcon;
+    icon?: IconOrText;
     className?: string;
+    disabled?: boolean;
   }[];
+};
+
+export type MultiSelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
+  type: "multi-select";
+  data: MultiSelectConfig[];
 };
 
 export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
@@ -137,8 +142,9 @@ export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
     value: string;
     label?: string;
     desc?: string;
-    icon?: FormFieldIcon;
+    icon?: IconOrText;
     className?: string;
+    disabled?: boolean;
   }[];
 };
 
@@ -165,6 +171,7 @@ export type FieldProps = FieldWrapperProps &
     | InputFieldProps
     | NumericFieldProps
     | SelectFieldProps
+    | MultiSelectFieldProps
     | RadioFieldProps
     | CalendarFieldProps
     | CheckboxFieldProps
@@ -189,14 +196,14 @@ export const fieldsMeta = {
       type: "number",
       label: "Numeric",
       placeholder: "Masukkan nomor",
-      icon: "Rp.",
+      icon: languageMeta.id.symbol,
       required: true,
     },
     phone: {
       type: "tel",
       label: "Phone",
       placeholder: "Masukkan no telp",
-      icon: languageMeta.id.symbol,
+      icon: "+62",
       className: "pl-11",
       required: true,
     },
@@ -206,9 +213,33 @@ export const fieldsMeta = {
       placeholder: "Pilih kartu",
       data: [
         { value: "spade", label: "Spade", icon: Spade },
-        { value: "heart", label: "Heart", icon: Heart },
+        { value: "heart", label: "Heart", icon: Heart, disabled: true },
         { value: "diamond", label: "Diamond", icon: Diamond },
         { value: "club", label: "Club", icon: Club },
+      ],
+      required: true,
+    },
+    multiSelect: {
+      type: "multi-select",
+      label: "Multi Select",
+      placeholder: "Pilih beberapa kartu",
+      data: [
+        {
+          value: "spade",
+          label: "Spade",
+          icon: Spade,
+          group: "Card 1",
+          fixed: true,
+        },
+        {
+          value: "heart",
+          label: "Heart",
+          icon: Heart,
+          group: "Card 1",
+          disabled: true,
+        },
+        { value: "diamond", label: "Diamond", icon: Diamond, group: "Card 2" },
+        { value: "club", label: "Club", icon: Club, group: "Card 2" },
       ],
       required: true,
     },
@@ -228,6 +259,7 @@ export const fieldsMeta = {
           label: "Heart",
           desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
           icon: Heart,
+          disabled: true,
         },
         {
           value: "diamond",

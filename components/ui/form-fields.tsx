@@ -1,31 +1,19 @@
-import { messages } from "@/lib/content";
 import {
   CalendarFieldProps,
   CheckboxFieldProps,
   FieldProps,
   FieldWrapperProps,
   FileUploadFieldProps,
-  FormFieldIcon,
   InputFieldProps,
+  MultiSelectFieldProps,
   NumericFieldProps,
   RadioFieldProps,
   SelectFieldProps,
   TextareaFieldProps,
 } from "@/lib/meta";
 import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
-import { Check, ChevronDown, X } from "lucide-react";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { Badge } from "./badge";
-import { Button } from "./button";
 import { Checkbox } from "./checkbox";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./command";
 import { DatePicker } from "./date-picker";
 import { FileUpload } from "./file-upload";
 import {
@@ -35,8 +23,9 @@ import {
   FormLabel,
   FormMessage,
 } from "./form";
+import { getIconOrText } from "./icons";
 import { Input, InputWrapper } from "./input";
-import { Popover, PopoverContent, PopoverTrigger } from "./popover";
+import { MultiSelect } from "./multi-select";
 import { RadioGroup, RadioGroupItem } from "./radio-group";
 import {
   Select,
@@ -48,10 +37,6 @@ import {
 import { Textarea } from "./textarea";
 
 type Controller<T extends FieldValues> = { field: ControllerRenderProps<T> };
-
-function getIconOrText(Icon: FormFieldIcon) {
-  return Icon && (typeof Icon === "string" ? Icon : <Icon />);
-}
 
 export function FieldWrapper({
   label,
@@ -142,8 +127,13 @@ function SelectField<T extends FieldValues>({
         </SelectTrigger>
       </FormControl>
       <SelectContent>
-        {data.map(({ value, label, icon, className }) => (
-          <SelectItem key={value} value={value} className={className}>
+        {data.map(({ value, label, icon, className, disabled }) => (
+          <SelectItem
+            key={value}
+            value={value}
+            className={className}
+            disabled={disabled}
+          >
             {icon && getIconOrText(icon)} {label ?? value}
           </SelectItem>
         ))}
@@ -156,75 +146,17 @@ function MultiSelectField<T extends FieldValues>({
   field,
   placeholder,
   data,
-}: Controller<T> & SelectFieldProps) {
-  const fieldValue = field.value ? Array.from(field.value) : [];
+}: Controller<T> & MultiSelectFieldProps) {
+  const value = Array.from(field.value ?? [undefined])
+    .map((v) => data.find(({ value }) => value === v))
+    .filter(Boolean) as MultiSelectFieldProps["data"];
   return (
-    <Popover>
-      <FormControl>
-        <PopoverTrigger asChild>
-          <Button
-            type="button"
-            variant="outline"
-            role="combobox"
-            className={cn(
-              "h-fit p-1",
-              !fieldValue.length && "text-muted-foreground",
-            )}
-          >
-            {fieldValue.length > 0 ? (
-              <div className="flex flex-wrap gap-1">
-                {fieldValue.map((item) => {
-                  const meta = data.find((i) => i.value === item);
-                  if (!meta) return;
-                  return (
-                    <Badge key={meta.value} variant="outline" className="gap-2">
-                      <div className="flex items-center gap-1">
-                        {meta.icon && getIconOrText(meta.icon)}
-                        {meta.label ?? meta.value}
-                      </div>
-                      <X className="opacity-50" />
-                    </Badge>
-                  );
-                })}
-              </div>
-            ) : (
-              placeholder
-            )}
-            <ChevronDown aria-hidden="true" className="ml-auto opacity-50" />
-          </Button>
-        </PopoverTrigger>
-      </FormControl>
-
-      <PopoverContent className="border-input min-w-[var(--radix-popper-anchor-width)] p-0">
-        <Command>
-          <CommandInput placeholder={`${placeholder}...`} />
-          <CommandList>
-            <CommandGroup>
-              {data.map(({ value, label, icon, className }) => (
-                <CommandItem
-                  key={value}
-                  value={value}
-                  onSelect={() => {
-                    field.onChange(
-                      fieldValue.includes(value)
-                        ? fieldValue.filter((v) => v !== value)
-                        : [...fieldValue, value],
-                    );
-                  }}
-                  className={cn("flex items-center gap-x-2", className)}
-                >
-                  {icon && getIconOrText(icon)} {label ?? value}
-                  {fieldValue.includes(value) && (
-                    <Check aria-hidden="true" className="ml-auto" />
-                  )}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-            <CommandEmpty>{messages.empty}</CommandEmpty>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <MultiSelect
+      defaultValue={data}
+      placeholder={placeholder}
+      value={value}
+      onChange={(item) => field.onChange(item.map(({ value }) => value))}
+    />
   );
 }
 
@@ -239,11 +171,12 @@ function RadioField<T extends FieldValues>({
       onValueChange={field.onChange}
       className={className}
     >
-      {data.map(({ value, label, desc, icon, className }) => (
+      {data.map(({ value, label, desc, icon, className, disabled }) => (
         <FormItem
           key={value}
           className={cn(
             "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row items-start rounded-md border p-4 shadow-xs",
+            disabled && "opacity-50",
             className,
           )}
         >
@@ -251,6 +184,7 @@ function RadioField<T extends FieldValues>({
             <RadioGroupItem
               value={value}
               className="order-1 after:absolute after:inset-0"
+              disabled={disabled}
             />
           </FormControl>
 
