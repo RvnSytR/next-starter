@@ -1,6 +1,7 @@
 "use client";
 
 import { messages } from "@/lib/content";
+import { useDebounce } from "@/lib/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { LucideIcon, XIcon } from "lucide-react";
@@ -99,17 +100,6 @@ export type MultiSelectRef = {
   focus: () => void;
   reset: () => void;
 };
-
-export function useDebounce<T>(value: T, delay?: number): T {
-  const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  useEffect(() => {
-    const timer = setTimeout(() => setDebouncedValue(value), delay || 500);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [value, delay]);
-  return debouncedValue;
-}
 
 function transToGroupOption(options: MultiSelectConfig[]) {
   if (options.length === 0) return {};
