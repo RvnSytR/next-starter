@@ -7,15 +7,13 @@ import {
   CalendarClock,
   CalendarIcon,
   Check,
+  CheckCheck,
   ChevronDown,
   CircleDot,
   Clock,
-  Club,
-  Diamond,
   EyeOff,
   File,
   GitCommit,
-  Heart,
   LinkIcon,
   LockKeyhole,
   LockKeyholeOpen,
@@ -23,7 +21,6 @@ import {
   PaintBucket,
   Phone,
   Search,
-  Spade,
   SquareStack,
   TextIcon,
   Type,
@@ -31,7 +28,6 @@ import {
 } from "lucide-react";
 import { allRoles, rolesMeta } from "../permission";
 import { appMeta } from "./app";
-import { languageMeta } from "./other";
 
 export const allFieldType = [
   "text",
@@ -52,9 +48,11 @@ export const allFieldType = [
   "select",
   "multi-select",
 
+  "checkbox",
+  "multi-checkbox",
+
   "radio",
   "calendar",
-  "checkbox",
   "textarea",
   "file",
 ] as const;
@@ -79,9 +77,11 @@ export const fieldTypeMeta: Record<FieldType, { icon: IconOrText }> = {
   select: { icon: ChevronDown },
   "multi-select": { icon: SquareStack },
 
+  checkbox: { icon: Check },
+  "multi-checkbox": { icon: CheckCheck },
+
   radio: { icon: CircleDot },
   calendar: { icon: CalendarIcon },
-  checkbox: { icon: Check },
   textarea: { icon: TextIcon },
   file: { icon: File },
 };
@@ -136,6 +136,15 @@ export type MultiSelectFieldProps = Pick<BaseFieldProps, "placeholder"> & {
   data: MultiSelectConfig[];
 };
 
+export type CheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
+  type: "checkbox";
+};
+
+export type MultiCheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
+  type: "multi-checkbox";
+  id: string;
+};
+
 export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
   type: "radio";
   data: {
@@ -150,10 +159,6 @@ export type RadioFieldProps = Pick<BaseFieldProps, "className"> & {
 
 export type CalendarFieldProps = Omit<CalendarProps, "selected" | "onChange"> &
   Pick<BaseFieldProps, "placeholder"> & { type: "calendar" };
-
-export type CheckboxFieldProps = Pick<BaseFieldProps, "className"> & {
-  type: "checkbox";
-};
 
 export type TextareaFieldProps = Pick<
   React.ComponentProps<"textarea">,
@@ -172,159 +177,18 @@ export type FieldProps = FieldWrapperProps &
     | NumericFieldProps
     | SelectFieldProps
     | MultiSelectFieldProps
+    | CheckboxFieldProps
+    | MultiCheckboxFieldProps
     | RadioFieldProps
     | CalendarFieldProps
-    | CheckboxFieldProps
     | TextareaFieldProps
     | FileUploadFieldProps
   );
 
+// ? meta for common used fields
 export const fieldsMeta = {
   num: "No",
   createdAt: "Tanggal dibuat",
-
-  example: {
-    text: {
-      type: "text",
-      label: "Text",
-      placeholder: "Masukkan text",
-      icon: TextIcon,
-      required: true,
-      // description: "Form Description",
-    },
-    numeric: {
-      type: "number",
-      label: "Numeric",
-      placeholder: "Masukkan nomor",
-      icon: languageMeta.id.symbol,
-      required: true,
-    },
-    phone: {
-      type: "tel",
-      label: "Phone",
-      placeholder: "Masukkan no telp",
-      icon: "+62",
-      className: "pl-11",
-      required: true,
-    },
-    select: {
-      type: "select",
-      label: "Select",
-      placeholder: "Pilih kartu",
-      data: [
-        { value: "spade", label: "Spade", icon: Spade },
-        { value: "heart", label: "Heart", icon: Heart, disabled: true },
-        { value: "diamond", label: "Diamond", icon: Diamond },
-        { value: "club", label: "Club", icon: Club },
-      ],
-      required: true,
-    },
-    multiSelect: {
-      type: "multi-select",
-      label: "Multi Select",
-      placeholder: "Pilih beberapa kartu",
-      data: [
-        {
-          value: "spade",
-          label: "Spade",
-          icon: Spade,
-          color: "var(--primary)",
-          group: "Card 1",
-        },
-        {
-          value: "heart",
-          label: "Heart",
-          icon: Heart,
-          color: "var(--color-red-500)",
-          group: "Card 1",
-          disabled: true,
-        },
-        {
-          value: "diamond",
-          label: "Diamond",
-          icon: Diamond,
-          color: "var(--color-cyan-500)",
-          group: "Card 2",
-        },
-        {
-          value: "club",
-          label: "Club",
-          icon: Club,
-          color: "var(--color-green-500)",
-          group: "Card 2",
-        },
-      ],
-      required: true,
-    },
-    radio: {
-      type: "radio",
-      label: "Radio Group",
-      className: "flex-col md:flex-row",
-      data: [
-        {
-          value: "spade",
-          label: "Spade",
-          desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-          icon: Spade,
-        },
-        {
-          value: "heart",
-          label: "Heart",
-          desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-          icon: Heart,
-          disabled: true,
-        },
-        {
-          value: "diamond",
-          label: "Diamond",
-          desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-          icon: Diamond,
-        },
-        {
-          value: "club",
-          label: "Club",
-          desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-          icon: Club,
-        },
-      ],
-      required: true,
-    },
-    textarea: {
-      type: "textarea",
-      label: "Text Area",
-      placeholder: "Masukkan text area",
-    },
-    calendar: {
-      type: "calendar",
-      mode: "single",
-      label: "Date with Calendar",
-      required: true,
-    },
-    calendarMultiple: {
-      type: "calendar",
-      mode: "multiple",
-      label: "Date Multiple",
-      required: true,
-    },
-    calendarRange: {
-      type: "calendar",
-      mode: "range",
-      label: "Date Range",
-      required: true,
-    },
-    file: {
-      type: "file",
-      label: "File Upload",
-      accept: "image",
-      multiple: true,
-    },
-    checkbox: {
-      type: "checkbox",
-      label: "Checkbox",
-      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
-      required: true,
-    },
-  },
 
   user: {
     id: "ID pengguna",

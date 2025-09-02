@@ -18,7 +18,6 @@ export function DataTableSearch<TData>({
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
-        console.log("first");
         searchRef.current?.focus();
       }
     };

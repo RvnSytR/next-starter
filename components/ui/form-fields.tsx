@@ -5,6 +5,7 @@ import {
   FieldWrapperProps,
   FileUploadFieldProps,
   InputFieldProps,
+  MultiCheckboxFieldProps,
   MultiSelectFieldProps,
   NumericFieldProps,
   RadioFieldProps,
@@ -51,16 +52,50 @@ export function FieldWrapper({
       >
         {label}
       </FormLabel>
-
       {children}
-
       <FormMessage className={classNames?.formMessage} />
-
       {description && (
         <FormDescription className={classNames?.formDescription}>
           {description}
         </FormDescription>
       )}
+    </FormItem>
+  );
+}
+
+function CheckboxFieldWrapper({
+  label,
+  description,
+  required,
+  className,
+  classNames,
+  hideFormMessage = false,
+  children,
+}: FieldWrapperProps & {
+  className?: string;
+  hideFormMessage?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <FormItem className={classNames?.formItem}>
+      <div className="flex gap-x-3">
+        <FormControl>{children}</FormControl>
+        <div className={cn("grid gap-y-1 pt-0.25", className)}>
+          <FormLabel
+            className={cn(required && "label-required", classNames?.label)}
+          >
+            {label}
+          </FormLabel>
+
+          {description && (
+            <FormDescription className={classNames?.formDescription}>
+              {description}
+            </FormDescription>
+          )}
+        </div>
+      </div>
+
+      {!hideFormMessage && <FormMessage className={classNames?.formMessage} />}
     </FormItem>
   );
 }
@@ -147,7 +182,7 @@ function MultiSelectField<T extends FieldValues>({
   placeholder,
   data,
 }: Controller<T> & Omit<MultiSelectFieldProps, "type">) {
-  const value = Array.from(field.value ?? [undefined])
+  const value = Array.from(field.value ?? [])
     .map((v) => data.find(({ value }) => value === v))
     .filter(Boolean) as MultiSelectFieldProps["data"];
   return (
@@ -157,6 +192,37 @@ function MultiSelectField<T extends FieldValues>({
       value={value}
       onChange={(item) => field.onChange(item.map(({ value }) => value))}
     />
+  );
+}
+
+function CheckboxField<T extends FieldValues>({
+  field,
+  ...props
+}: Controller<T> & FieldWrapperProps & Omit<CheckboxFieldProps, "type">) {
+  return (
+    <CheckboxFieldWrapper {...props}>
+      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+    </CheckboxFieldWrapper>
+  );
+}
+
+function MultiCheckboxField<T extends FieldValues>({
+  field,
+  id,
+  ...props
+}: Controller<T> & FieldWrapperProps & Omit<MultiCheckboxFieldProps, "type">) {
+  const value = Array.from((field.value as string) ?? []);
+  return (
+    <CheckboxFieldWrapper {...props} hideFormMessage>
+      <Checkbox
+        checked={value.includes(id)}
+        onCheckedChange={(checked) => {
+          return checked
+            ? field.onChange([...value, id])
+            : field.onChange(value.filter((v) => v !== id));
+        }}
+      />
+    </CheckboxFieldWrapper>
   );
 }
 
@@ -224,41 +290,6 @@ function CalendarField<T extends FieldValues>({
   );
 }
 
-function CheckboxField<T extends FieldValues>({
-  field,
-  label,
-  description,
-  required,
-  className,
-  classNames,
-}: Controller<T> & FieldWrapperProps & Omit<CheckboxFieldProps, "type">) {
-  return (
-    <FormItem className={classNames?.formItem}>
-      <div className="flex gap-x-3">
-        <FormControl>
-          <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-        </FormControl>
-
-        <div className={cn("grid gap-y-1 pt-0.25", className)}>
-          <FormLabel
-            className={cn(required && "label-required", classNames?.label)}
-          >
-            {label}
-          </FormLabel>
-
-          {description && (
-            <FormDescription className={classNames?.formDescription}>
-              {description}
-            </FormDescription>
-          )}
-        </div>
-      </div>
-
-      <FormMessage className={classNames?.formMessage} />
-    </FormItem>
-  );
-}
-
 function TextAreaField<T extends FieldValues>({
   field,
   ...props
@@ -296,6 +327,13 @@ export function Field<T extends FieldValues>({
       comp = <MultiSelectField {...props} />;
       break;
 
+    case "checkbox":
+      return <CheckboxField {...props} />;
+
+    case "multi-checkbox":
+      return <MultiCheckboxField {...props} />;
+      break;
+
     case "radio":
       comp = <RadioField {...props} />;
       break;
@@ -303,9 +341,6 @@ export function Field<T extends FieldValues>({
     case "calendar":
       comp = <CalendarField {...props} />;
       break;
-
-    case "checkbox":
-      return <CheckboxField {...props} />;
 
     case "textarea":
       comp = <TextAreaField {...props} />;
