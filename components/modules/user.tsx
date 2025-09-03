@@ -113,11 +113,20 @@ export function UserRoleBadge({
   role: Role;
   className?: string;
 }) {
-  const { displayName, desc, icon: Icon, badgeVariant } = rolesMeta[role];
+  const { displayName, desc, icon: Icon, color, style } = rolesMeta[role];
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
-        <Badge variant={badgeVariant} className="capitalize">
+        <Badge
+          variant="default"
+          style={{ "--badge-color": color } as React.CSSProperties}
+          className={cn(
+            "text-[var(--badge-color)] capitalize",
+            style === "border"
+              ? "border-[var(--badge-color)] bg-transparent"
+              : "bg-[var(--badge-color)]/10",
+          )}
+        >
           <Icon /> {displayName ?? role}
         </Badge>
       </TooltipTrigger>

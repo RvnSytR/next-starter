@@ -1,7 +1,6 @@
 // Any role that isn't in the adminRoles list, even if they have the permission, will not be considered an admin.
 // https://www.better-auth.com/docs/plugins/admin#admin-roles
 
-import { BadgeProps } from "@/components/ui/badge";
 import { createAccessControl } from "better-auth/plugins/access";
 import { adminAc, defaultStatements } from "better-auth/plugins/admin/access";
 import { LucideIcon, ShieldUser, UserRound } from "lucide-react";
@@ -35,19 +34,21 @@ export const rolesMeta: Record<
     displayName: string;
     desc: string;
     icon: LucideIcon;
-    badgeVariant: BadgeProps["variant"];
+    color: string;
+    style?: "default" | "border";
   }
 > = {
   user: {
     displayName: "Pengguna",
     icon: UserRound,
     desc: "Pengguna standar dengan akses dan izin dasar.",
-    badgeVariant: "outline",
+    color: "var(--primary)",
   },
   admin: {
     displayName: "Admin",
     icon: ShieldUser,
     desc: "Administrator dengan akses penuh dan kontrol pengelolaan sistem.",
-    badgeVariant: "outline_primary",
+    color: "var(--primary)",
+    style: "border",
   },
 };

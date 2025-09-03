@@ -335,14 +335,15 @@ function View<TData>({ table }: TableProps<TData>) {
           .getAllColumns()
           .filter((column) => column.getCanHide())
           .map((column) => {
-            const cbId = `cb${column.id}`;
+            const cbId = `cb-${column.id}`;
+            const Icon = column.columnDef.meta?.icon;
             return (
               <Label
                 key={cbId}
                 htmlFor={cbId}
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "sm" }),
-                  "justify-start gap-x-2 p-2 capitalize",
+                  "justify-start gap-x-3 p-2 capitalize",
                 )}
               >
                 <Checkbox
@@ -351,7 +352,10 @@ function View<TData>({ table }: TableProps<TData>) {
                   onCheckedChange={(value) => column.toggleVisibility(!!value)}
                 />
 
-                <small className="font-medium">{column.id}</small>
+                <div className="flex items-center gap-x-2">
+                  {Icon && <Icon className="text-muted-foreground" />}
+                  <small className="font-medium">{column.id}</small>
+                </div>
               </Label>
             );
           })}

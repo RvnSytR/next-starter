@@ -4,14 +4,13 @@ import { messages } from "@/lib/content";
 import { useDebounce } from "@/lib/hooks/use-debounce";
 import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
-import { LucideIcon, XIcon } from "lucide-react";
+import { Check, LucideIcon, XIcon } from "lucide-react";
 import {
   ComponentPropsWithoutRef,
   KeyboardEvent,
   ReactNode,
   useCallback,
   useEffect,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -114,18 +113,18 @@ function transToGroupOption(options: MultiSelectConfig[]) {
   return groupOption;
 }
 
-function removePickedOption(
-  groupOption: GroupOption,
-  picked: MultiSelectConfig[],
-) {
-  const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
-  for (const [key, value] of Object.entries(cloneOption)) {
-    cloneOption[key] = value.filter(
-      (val) => !picked.find((p) => p.value === val.value),
-    );
-  }
-  return cloneOption;
-}
+// function removePickedOption(
+//   groupOption: GroupOption,
+//   picked: MultiSelectConfig[],
+// ) {
+//   const cloneOption = JSON.parse(JSON.stringify(groupOption)) as GroupOption;
+//   for (const [key, value] of Object.entries(cloneOption)) {
+//     cloneOption[key] = value.filter(
+//       (val) => !picked.find((p) => p.value === val.value),
+//     );
+//   }
+//   return cloneOption;
+// }
 
 function isOptionsExist(
   groupOption: GroupOption,
@@ -295,10 +294,10 @@ export function MultiSelect({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedSearchTerm, open, triggerSearchOnFocus]);
 
-  const selectables = useMemo<GroupOption>(
-    () => removePickedOption(options, selected),
-    [options, selected],
-  );
+  // const selectables = useMemo<GroupOption>(
+  //   () => removePickedOption(options, selected),
+  //   [options, selected],
+  // );
 
   /** Avoid Creatable Selector freezing or lagging when paste a long string. */
   const commandFilter = useCallback(() => {
@@ -344,9 +343,7 @@ export function MultiSelect({
     );
 
     // For normal creatable
-    if (!onSearch && inputValue.length > 0) {
-      return Item;
-    }
+    if (!onSearch && inputValue.length > 0) return Item;
 
     // For async search creatable. avoid showing creatable item before loading at first.
     if (onSearch && debouncedSearchTerm.length > 0 && !isLoading) return Item;
@@ -417,7 +414,7 @@ export function MultiSelect({
                   } as React.CSSProperties
                 }
                 className={cn(
-                  "relative h-7 rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
+                  "relative h-7 overflow-visible rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
                   "bg-[var(--badge-color)]/10 text-[var(--badge-color)]",
                   badgeClassName,
                 )}
@@ -433,10 +430,7 @@ export function MultiSelect({
 
                 {!item.fixed && (
                   <button
-                    className="focus-visible:border-ring focus-visible:ring-ring/50 absolute -inset-y-px end-1 flex items-center justify-center rounded-e-md border border-transparent p-0 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:ring-[3px]"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") handleUnselect(item);
-                    }}
+                    className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
@@ -538,7 +532,8 @@ export function MultiSelect({
                     <CommandItem value="-" className="hidden" />
                   )}
 
-                  {Object.entries(selectables).map(([key, dropdowns]) => (
+                  {/* {Object.entries(selectables).map(([key, dropdowns]) => ( */}
+                  {Object.entries(options).map(([key, dropdowns]) => (
                     <CommandGroup
                       key={key}
                       heading={key}
@@ -546,6 +541,10 @@ export function MultiSelect({
                     >
                       {dropdowns.map((item) => {
                         const Icon = getItemMeta(item.value)?.icon;
+                        const isSelected = selected.some(
+                          ({ value }) => value === item.value,
+                        );
+
                         return (
                           <CommandItem
                             key={item.value}
@@ -561,9 +560,13 @@ export function MultiSelect({
                                 return;
                               }
                               setInputValue("");
-                              const newOptions = [...selected, item];
-                              setSelected(newOptions);
-                              onChange?.(newOptions);
+                              if (isSelected) {
+                                if (!item.fixed) handleUnselect(item);
+                              } else {
+                                const newOptions = [...selected, item];
+                                setSelected(newOptions);
+                                onChange?.(newOptions);
+                              }
                             }}
                             style={
                               {
@@ -572,10 +575,18 @@ export function MultiSelect({
                             }
                             className={cn(
                               "cursor-pointer",
-                              item.disabled &&
+                              (item.disabled || (isSelected && item.fixed)) &&
                                 "pointer-events-none cursor-not-allowed opacity-50",
                             )}
                           >
+                            <Check
+                              className={cn(
+                                isSelected
+                                  ? "text-accent-foreground"
+                                  : "text-transparent",
+                              )}
+                            />
+
                             {Icon &&
                               (typeof Icon === "string" ? Icon : <Icon />)}
                             {item.label ?? item.value}

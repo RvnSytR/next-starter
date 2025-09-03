@@ -4,12 +4,13 @@ import { Session } from "@/lib/auth";
 import { filterFn } from "@/lib/filters";
 import { fieldsMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import {
   ArrowUpDown,
   CalendarCheck2,
   CircleDot,
+  CircleUserRound,
   Mail,
   UserRound,
 } from "lucide-react";
@@ -24,9 +25,13 @@ import { Checkbox } from "../ui/checkbox";
 
 const userFields = fieldsMeta.user;
 
-function headerButton<C, T>(column: Column<C, T>, children: React.ReactNode) {
+function headerButton<C, T>(
+  column: Column<C, T>,
+  children: React.ReactNode,
+  center: boolean = false,
+) {
   return (
-    <div className="flex justify-start">
+    <div className={cn("flex", center ? "justify-center" : "justify-start")}>
       <Button
         size="sm"
         variant="ghost"
@@ -91,6 +96,11 @@ export const getUserColumn = (currentUserId: string) => [
         <UserAvatar {...row.original} className="size-20" />
       </div>
     ),
+    meta: {
+      displayName: userFields.avatar,
+      type: "text",
+      icon: CircleUserRound,
+    },
   }),
   createUserColumn.accessor(({ email }) => email, {
     id: userFields.email.label,
@@ -118,8 +128,12 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: userFields.role.label,
-    header: ({ column }) => headerButton(column, userFields.role.label),
-    cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
+    header: ({ column }) => headerButton(column, userFields.role.label, true),
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <UserRoleBadge role={row.original.role as Role} />
+      </div>
+    ),
     filterFn: filterFn("option"),
     meta: {
       displayName: userFields.role.label,

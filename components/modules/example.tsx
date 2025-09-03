@@ -23,6 +23,7 @@ const selectAndRadioData = [
     desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     icon: Spade,
     color: "var(--primary)",
+    fixed: true,
     group: "Card 1",
   },
   {
@@ -30,7 +31,7 @@ const selectAndRadioData = [
     label: "Heart",
     desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     icon: Heart,
-    color: "var(--primary)",
+    color: "var(--color-red-500)",
     group: "Card 1",
     disabled: true,
   },
@@ -39,7 +40,7 @@ const selectAndRadioData = [
     label: "Diamond",
     desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     icon: Diamond,
-    color: "var(--primary)",
+    color: "var(--color-cyan-500)",
     group: "Card 1",
   },
   {
@@ -47,7 +48,7 @@ const selectAndRadioData = [
     label: "Club",
     desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit.",
     icon: Club,
-    color: "var(--primary)",
+    color: "var(--color-green-500)",
     group: "Card 1",
   },
 ];
