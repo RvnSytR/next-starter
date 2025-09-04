@@ -241,31 +241,31 @@ function RadioField<T extends FieldValues>({
         <FormItem
           key={value}
           className={cn(
-            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative flex-row items-start rounded-md border p-4 shadow-xs",
+            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative items-start rounded-md border p-4 shadow-xs",
             disabled && "opacity-50",
             className,
           )}
         >
-          <FormControl>
-            <RadioGroupItem
-              value={value}
-              className="order-1 after:absolute after:inset-0"
-              disabled={disabled}
-            />
-          </FormControl>
-
-          <div className="grid grow gap-2">
+          <div className="flex w-full justify-between gap-x-2">
             <FormLabel className="flex items-center">
               {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
               {label ?? value}
             </FormLabel>
 
-            {desc && (
-              <small className="text-muted-foreground text-xs text-balance">
-                {desc}
-              </small>
-            )}
+            <FormControl>
+              <RadioGroupItem
+                value={value}
+                className="after:absolute after:inset-0"
+                disabled={disabled}
+              />
+            </FormControl>
           </div>
+
+          {desc && (
+            <small className="text-muted-foreground text-xs text-pretty">
+              {desc}
+            </small>
+          )}
         </FormItem>
       ))}
     </RadioGroup>
@@ -332,7 +332,6 @@ export function Field<T extends FieldValues>({
 
     case "multi-checkbox":
       return <MultiCheckboxField {...props} />;
-      break;
 
     case "radio":
       comp = <RadioField {...props} />;
