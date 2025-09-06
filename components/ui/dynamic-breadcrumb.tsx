@@ -1,7 +1,7 @@
 "use client";
 
 import { useIsMobile } from "@/lib/hooks/use-mobile";
-import { getRoutesMeta } from "@/lib/routes";
+import { routesMeta } from "@/lib/routes";
 import { Route } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -30,7 +30,7 @@ export type DynamicBreadcrumbProps = {
 
 function getProps(data: DynamicBreadcrumbData): DynamicBreadcrumbMeta {
   return typeof data === "string"
-    ? { url: data, displayName: getRoutesMeta(data).displayName }
+    ? { url: data, displayName: routesMeta[data].displayName }
     : data;
 }
 

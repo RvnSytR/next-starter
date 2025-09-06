@@ -1,7 +1,6 @@
 import { Session } from "@/lib/auth";
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
-import { getRoutesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { getSession } from "@/server/action";
 import { cva } from "class-variance-authority";
@@ -9,6 +8,7 @@ import { ChevronRight } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { routesMeta } from "../../lib/routes";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { LinkLoader, RefreshButton } from "../ui/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
@@ -138,7 +138,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
       <SidebarMenu>
         {content.map(({ route, icon: Icon, disabled, subMenu }) => {
-          const { displayName } = getRoutesMeta(route);
+          const { displayName } = routesMeta[route];
           if (disabled) {
             return (
               <SidebarMenuItem key={route}>

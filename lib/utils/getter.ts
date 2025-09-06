@@ -2,10 +2,10 @@ import { Route } from "next";
 import { dashboardMenu, Menu } from "../menu";
 import { appMeta } from "../meta";
 import { Role } from "../permission";
-import { allRoutes, getRoutesMeta, RouteRole } from "../routes";
+import { allRoutes, RouteRole, routesMeta } from "../routes";
 
 export function getTitle(route: Route) {
-  return `${getRoutesMeta(route).displayName} | ${appMeta.name}`;
+  return `${routesMeta[route].displayName} | ${appMeta.name}`;
 }
 
 export function getRandomString(length: number) {
@@ -32,7 +32,7 @@ export function getMenuByRole(
 ): Menu[] {
   const filteredMenu = menu.map(({ section, content }) => {
     const filteredContent = content.filter(({ route }) => {
-      const meta = getRoutesMeta(route);
+      const meta = routesMeta[route];
       if (!("role" in meta)) return true;
 
       const currentRole = meta.role as RouteRole;
