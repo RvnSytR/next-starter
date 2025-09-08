@@ -12,7 +12,6 @@ export async function getCustomHeaders() {
   const url = req.get("x-url");
   const origin = req.get("x-origin");
   const pathname = req.get("x-pathname");
-
   return { url, origin, pathname };
 }
 

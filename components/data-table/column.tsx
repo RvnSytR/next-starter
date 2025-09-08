@@ -9,6 +9,7 @@ import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import {
   ArrowUpDown,
   CalendarCheck2,
+  CalendarSync,
   CircleDot,
   Mail,
   UserRound,
@@ -143,13 +144,21 @@ export const getUserColumn = (currentUserId: string) => [
       },
     },
   }),
+  createUserColumn.accessor(({ updatedAt }) => updatedAt, {
+    id: fieldsMeta.updatedAt,
+    header: ({ column }) => headerButton(column, fieldsMeta.updatedAt),
+    cell: ({ row }) => formatDate(row.original.updatedAt, "PPPp"),
+    filterFn: filterFn("date"),
+    meta: {
+      displayName: fieldsMeta.updatedAt,
+      type: "date",
+      icon: CalendarSync,
+    },
+  }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
     id: fieldsMeta.createdAt,
     header: ({ column }) => headerButton(column, fieldsMeta.createdAt),
-    cell: ({ row }) =>
-      row.original.createdAt
-        ? formatDate(row.original.createdAt, "PPPp")
-        : null,
+    cell: ({ row }) => formatDate(row.original.createdAt, "PPPp"),
     filterFn: filterFn("date"),
     meta: {
       displayName: fieldsMeta.createdAt,

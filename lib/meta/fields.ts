@@ -84,7 +84,8 @@ export const fieldTypeMeta: Record<FieldType, { icon: IconOrText }> = {
 // ! Only for fields that are commonly used in tables, details or displayed to users
 export const fieldsMeta = {
   num: "No",
-  createdAt: "Tanggal dibuat",
+  updatedAt: "Waktu diperbarui",
+  createdAt: "Waktu dibuat",
 
   user: {
     role: "Role",

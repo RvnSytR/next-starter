@@ -182,13 +182,10 @@ export function UserAvatar({
 }) {
   return (
     <Avatar className={cn("rounded-xl", className)}>
-      {image && (
-        <AvatarImage
-          src={image}
-          className={cn("rounded-xl", classNames?.image)}
-        />
-      )}
-
+      <AvatarImage
+        src={image || undefined}
+        className={cn("rounded-xl", classNames?.image)}
+      />
       <AvatarFallback className={cn("rounded-xl", classNames?.fallback)}>
         {name.slice(0, 2)}
       </AvatarFallback>
@@ -618,13 +615,13 @@ export function ProfilePicture({
       { image: null },
       {
         onError: ({ error }) => {
-          setIsRemoved(false);
           toast.error(error.message);
+          setIsRemoved(false);
         },
         onSuccess: () => {
+          toast.success(messages.success("Foto profil Anda", "removed"));
           setIsRemoved(false);
           router.refresh();
-          toast.success(messages.success("Foto profil Anda", "removed"));
         },
       },
     );
