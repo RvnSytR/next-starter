@@ -38,7 +38,7 @@ export type MultiSelectConfig = {
 type GroupOption = Record<string, MultiSelectConfig[]>;
 
 type MultiSelectProps = {
-  value?: MultiSelectConfig[];
+  value?: string[]; // value by keys
   defaultValue?: MultiSelectConfig[];
   /** manually controlled options */
   options?: MultiSelectConfig[];
@@ -90,7 +90,6 @@ type MultiSelectProps = {
   >;
   /** hide the clear all button. */
   hideClearAllButton?: boolean;
-  withControl?: boolean;
 };
 
 export type MultiSelectRef = {
@@ -131,13 +130,25 @@ function isOptionsExist(
   targetOption: MultiSelectConfig[],
 ) {
   for (const [, value] of Object.entries(groupOption)) {
-    if (
-      value.some((option) => targetOption.find((p) => p.value === option.value))
-    ) {
+    if (value.some((opt) => targetOption.find((p) => p.value === opt.value))) {
       return true;
     }
   }
   return false;
+}
+
+function getValue(
+  value: string[],
+  defaultValue: MultiSelectConfig[],
+  creatable: boolean,
+) {
+  return Array.from(value)
+    .map(
+      (v) =>
+        defaultValue.find((i) => i.value === v) ||
+        (creatable ? { value: v, label: v } : null),
+    )
+    .filter(Boolean) as MultiSelectConfig[];
 }
 
 export function MultiSelect({
@@ -170,7 +181,9 @@ export function MultiSelect({
   const [isLoading, setIsLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null); // Added this
 
-  const [selected, setSelected] = useState<MultiSelectConfig[]>(value || []);
+  const [selected, setSelected] = useState<MultiSelectConfig[]>(
+    getValue(value || [], defaultValue, creatable),
+  );
   const [options, setOptions] = useState<GroupOption>(
     transToGroupOption(defaultValue),
   );
@@ -220,9 +233,7 @@ export function MultiSelect({
           }
         }
         // This is not a default behavior of the <input /> field
-        if (e.key === "Escape") {
-          input.blur();
-        }
+        if (e.key === "Escape") input.blur();
       }
     },
     [handleUnselect, selected],
@@ -244,8 +255,8 @@ export function MultiSelect({
   }, [open]);
 
   useEffect(() => {
-    if (value) setSelected(value);
-  }, [value]);
+    if (value) setSelected(getValue(value, defaultValue, creatable));
+  }, [value, defaultValue, creatable]);
 
   useEffect(() => {
     /** If `onSearch` is provided, do not trigger options updated. */
@@ -387,121 +398,111 @@ export function MultiSelect({
       <div
         className={cn(
           "border-input dark:bg-input/30 focus-within:border-ring focus-within:ring-ring/50 has-aria-invalid:ring-destructive/20 dark:has-aria-invalid:ring-destructive/40 has-aria-invalid:border-destructive relative min-h-[38px] rounded-md border text-sm transition-[color,box-shadow] outline-none focus-within:ring-[3px] has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50",
-          {
-            "p-1": selected.length !== 0,
-            "cursor-text": !disabled && selected.length !== 0,
-          },
+          "flex flex-wrap gap-1",
+          selected.length !== 0 && "p-1",
+          disabled && selected.length !== 0 && "cursor-text",
           !hideClearAllButton && "pe-9",
           className,
         )}
         onClick={() => {
-          if (disabled) return;
-          inputRef?.current?.focus();
+          if (!disabled) inputRef?.current?.focus();
         }}
       >
-        <div className="flex flex-wrap gap-1">
-          {selected.map((item) => {
-            const Icon = getItemMeta(item.value)?.icon;
-            return (
-              <Badge
-                key={item.value}
-                variant="default"
-                data-fixed={item.fixed}
-                data-disabled={disabled || undefined}
-                style={
-                  {
-                    "--badge-color": item.color ?? "var(--foreground)",
-                  } as React.CSSProperties
-                }
-                className={cn(
-                  "relative h-7 overflow-visible rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
-                  "bg-[var(--badge-color)]/10 text-[var(--badge-color)]",
-                  badgeClassName,
-                )}
-              >
-                {Icon &&
-                  (typeof Icon === "string" ? (
-                    Icon
-                  ) : (
-                    <Icon className="size-3.5" />
-                  ))}
-
-                {item.label ?? item.value}
-
-                {!item.fixed && (
-                  <button
-                    className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                    }}
-                    onClick={() => handleUnselect(item)}
-                    aria-label="Remove"
-                  >
-                    <XIcon aria-hidden="true" />
-                  </button>
-                )}
-              </Badge>
-            );
-          })}
-
-          {/* Avoid having the "Search" Icon */}
-          <CommandPrimitive.Input
-            {...inputProps}
-            ref={inputRef}
-            value={inputValue}
-            disabled={disabled}
-            onValueChange={(value) => {
-              setInputValue(value);
-              inputProps?.onValueChange?.(value);
-            }}
-            onBlur={(event) => {
-              if (!onScrollbar) {
-                setOpen(false);
+        {selected.map((item) => {
+          const Icon = getItemMeta(item.value)?.icon;
+          return (
+            <Badge
+              key={item.value}
+              variant="default"
+              data-fixed={item.fixed}
+              data-disabled={disabled || undefined}
+              style={
+                {
+                  "--badge-color": item.color ?? "var(--foreground)",
+                } as React.CSSProperties
               }
-              inputProps?.onBlur?.(event);
-            }}
-            onFocus={(event) => {
-              setOpen(true);
-              if (triggerSearchOnFocus) {
-                onSearch?.(debouncedSearchTerm);
-              }
-              inputProps?.onFocus?.(event);
-            }}
-            placeholder={
-              hidePlaceholderWhenSelected && selected.length !== 0
-                ? ""
-                : placeholder
-            }
-            className={cn(
-              "placeholder:text-muted-foreground/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
-              {
-                "w-full": hidePlaceholderWhenSelected,
-                "px-3 py-2": selected.length === 0,
-                "mx-1": selected.length !== 0,
-              },
-              inputProps?.className,
-            )}
-          />
+              className={cn(
+                "relative h-7 overflow-visible rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
+                "bg-[var(--badge-color)]/10 text-[var(--badge-color)]",
+                badgeClassName,
+              )}
+            >
+              {Icon &&
+                (typeof Icon === "string" ? (
+                  Icon
+                ) : (
+                  <Icon className="size-3.5" />
+                ))}
 
-          <button
-            type="button"
-            onClick={() => {
-              setSelected(selected.filter((s) => s.fixed));
-              onChange?.(selected.filter((s) => s.fixed));
-            }}
-            className={cn(
-              "text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute end-0 top-0 flex h-full w-9 items-center justify-center rounded-r-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
-              (hideClearAllButton ||
-                disabled ||
-                selected.filter((s) => s.fixed).length === selected.length) &&
-                "hidden",
-            )}
-            aria-label="Clear all"
-          >
-            <XIcon size={16} aria-hidden="true" />
-          </button>
-        </div>
+              {item.label ?? item.value}
+
+              {!item.fixed && (
+                <button
+                  className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"
+                  onMouseDown={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                  }}
+                  onClick={() => handleUnselect(item)}
+                  aria-label="Remove"
+                >
+                  <XIcon aria-hidden="true" />
+                </button>
+              )}
+            </Badge>
+          );
+        })}
+
+        {/* Avoid having the "Search" Icon */}
+        <CommandPrimitive.Input
+          {...inputProps}
+          ref={inputRef}
+          value={inputValue}
+          disabled={disabled}
+          onValueChange={(value) => {
+            setInputValue(value);
+            inputProps?.onValueChange?.(value);
+          }}
+          onBlur={(event) => {
+            if (!onScrollbar) setOpen(false);
+            inputProps?.onBlur?.(event);
+          }}
+          onFocus={(event) => {
+            setOpen(true);
+            if (triggerSearchOnFocus) onSearch?.(debouncedSearchTerm);
+            inputProps?.onFocus?.(event);
+          }}
+          placeholder={
+            hidePlaceholderWhenSelected && selected.length !== 0
+              ? ""
+              : placeholder
+          }
+          className={cn(
+            "placeholder:text-muted-foreground/70 flex-1 bg-transparent outline-hidden disabled:cursor-not-allowed",
+            hidePlaceholderWhenSelected && "w-full",
+            selected.length === 0 && "px-3 py-2",
+            selected.length !== 0 && "mx-1",
+            inputProps?.className,
+          )}
+        />
+
+        <button
+          type="button"
+          onClick={() => {
+            setSelected(selected.filter((s) => s.fixed));
+            onChange?.(selected.filter((s) => s.fixed));
+          }}
+          className={cn(
+            "text-muted-foreground/80 hover:text-foreground focus-visible:border-ring focus-visible:ring-ring/50 absolute end-0 top-0 flex h-full w-9 items-center justify-center rounded-r-md border border-transparent transition-[color,box-shadow] outline-none focus-visible:ring-[3px]",
+            (hideClearAllButton ||
+              disabled ||
+              selected.filter((s) => s.fixed).length === selected.length) &&
+              "hidden",
+          )}
+          aria-label="Clear all"
+        >
+          <XIcon size={16} aria-hidden="true" />
+        </button>
       </div>
 
       {open && !isAllSelected && (

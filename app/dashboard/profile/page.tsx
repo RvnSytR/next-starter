@@ -43,9 +43,9 @@ export default async function Page() {
           <CardDescription>
             Perbarui dan kelola informasi profil {appMeta.name} Anda.
           </CardDescription>
-          <CardAction className="flex flex-col items-end gap-1.5 md:flex-row">
-            {user.emailVerified && <UserVerifiedBadge />}
+          <CardAction className="flex flex-col items-end gap-2 md:flex-row-reverse">
             <UserRoleBadge role={user.role as Role} />
+            {user.emailVerified && <UserVerifiedBadge />}
           </CardAction>
         </CardHeader>
 

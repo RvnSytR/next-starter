@@ -2,17 +2,32 @@
 
 import { actions } from "@/lib/content";
 import { FileType, languageMeta } from "@/lib/meta";
+import { formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
-import { Club, Diamond, Heart, Save, Spade, Text } from "lucide-react";
+import { Club, Diamond, Heart, Save, Spade, TextIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { ResetButton } from "../ui/buttons";
-import { Form, FormField } from "../ui/form";
-import { Field, FieldWrapper } from "../ui/form-fields";
+import { Checkbox } from "../ui/checkbox";
+import { DatePicker } from "../ui/date-picker";
+import { FileUpload } from "../ui/file-upload";
+import { Form, FormControl, FormField } from "../ui/form";
+import { FormFieldWrapper } from "../ui/form-fields";
+import { Input, InputWrapper } from "../ui/input";
+import { MultiSelect } from "../ui/multi-select";
+import { RadioGroupField } from "../ui/radio-group";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Textarea } from "../ui/textarea";
 // import { uploadFiles } from "@/server/s3";
 
 const card = ["spade", "heart", "diamond", "club"] as const;
@@ -107,94 +122,108 @@ export function ExampleForm() {
 
   return (
     <Form form={form} onSubmit={formHandler}>
-      {/* Example to dynamically render the form fields */}
-      {/* {(["text", "numeric", "phone", "select", "radio"] as const).map(
-        (field) => (
-          <FormField
-            key={field}
-            control={form.control}
-            name={field}
-            render={({ field }) => (
-              <Field field={field} {...fieldsMeta.example[field]} />
-            )}
-          />
-        ),
-      )} */}
-
       <div className="grid gap-x-2 gap-y-4 md:grid-cols-5">
         <FormField
           control={form.control}
           name="text"
           render={({ field }) => (
-            <Field
-              field={field}
-              type="text"
-              label="Text"
-              placeholder="Masukkan text"
-              description="Deskripsi text field"
-              icon={Text}
-              required
-            />
+            <FormFieldWrapper label="Text" desc="Deskripsi text field">
+              <InputWrapper icon={<TextIcon />}>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Masukkan Text"
+                    required
+                    {...field}
+                  />
+                </FormControl>
+              </InputWrapper>
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="numeric"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="number"
-              label="Numeric"
-              placeholder="Masukkan nomor"
-              icon={languageMeta.id.symbol}
-              required
-            />
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormFieldWrapper label="Numeric">
+              <InputWrapper icon={languageMeta.id.symbol}>
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Masukkan Text"
+                    inputMode="numeric"
+                    value={formatNumber(value)}
+                    onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                    required
+                    {...field}
+                  />
+                </FormControl>
+              </InputWrapper>
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="phone"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="tel"
-              label="Phone"
-              placeholder="Masukkan no telp"
-              icon="+62"
-              required
-            />
+          render={({ field: { value, onChange, ...field } }) => (
+            <FormFieldWrapper label="Phone">
+              <InputWrapper icon="+62">
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder="Masukkan No HP"
+                    inputMode="tel"
+                    value={formatPhone(value)}
+                    onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                    className="pl-11"
+                    required
+                    {...field}
+                  />
+                </FormControl>
+              </InputWrapper>
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="select"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="select"
-              label="Select"
-              placeholder="Pilih kartu"
-              data={selectAndRadioData}
-              required
-            />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper label="Select">
+              <Select defaultValue={value} onValueChange={onChange} required>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Pilih kartu" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {selectAndRadioData.map(
+                    ({ value, label, icon: Icon, disabled }) => (
+                      <SelectItem key={value} value={value} disabled={disabled}>
+                        {Icon && <Icon />} {label ?? value}
+                      </SelectItem>
+                    ),
+                  )}
+                </SelectContent>
+              </Select>
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="multiSelect"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="multi-select"
-              label="Multi Select"
-              placeholder="Pilih beberapa kartu"
-              data={selectAndRadioData}
-              required
-            />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper label="Multi Select">
+              <MultiSelect
+                defaultValue={selectAndRadioData}
+                placeholder="Pilih kartu"
+                value={value}
+                onChange={(item) => onChange(item.map(({ value }) => value))}
+              />
+            </FormFieldWrapper>
           )}
         />
       </div>
@@ -203,42 +232,48 @@ export function ExampleForm() {
         <FormField
           control={form.control}
           name="date"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="calendar"
-              mode="single"
-              label="Date Picker with Calendar"
-              required
-            />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper label="Date Picker with Calendar">
+              <DatePicker
+                mode="single"
+                selected={value}
+                onSelect={onChange}
+                required
+                withFormControl
+              />
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="dateMultiple"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="calendar"
-              mode="multiple"
-              label="Multiple Date Picker"
-              required
-            />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper label="Multiple Date">
+              <DatePicker
+                mode="multiple"
+                selected={value}
+                onSelect={onChange}
+                required
+                withFormControl
+              />
+            </FormFieldWrapper>
           )}
         />
 
         <FormField
           control={form.control}
           name="dateRange"
-          render={({ field }) => (
-            <Field
-              field={field}
-              type="calendar"
-              mode="range"
-              label="Date Range"
-              required
-            />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper label="Date Range">
+              <DatePicker
+                mode="range"
+                selected={value}
+                onSelect={onChange}
+                required
+                withFormControl
+              />
+            </FormFieldWrapper>
           )}
         />
       </div>
@@ -246,14 +281,15 @@ export function ExampleForm() {
       <FormField
         control={form.control}
         name="radio"
-        render={({ field }) => (
-          <Field
-            field={field}
-            type="radio"
-            label="Radio"
-            data={selectAndRadioData}
-            required
-          />
+        render={({ field: { value, onChange } }) => (
+          <FormFieldWrapper label="Radio Group">
+            <RadioGroupField
+              defaultValue={value}
+              onValueChange={onChange}
+              data={selectAndRadioData}
+              required
+            />
+          </FormFieldWrapper>
         )}
       />
 
@@ -261,13 +297,11 @@ export function ExampleForm() {
         control={form.control}
         name="textarea"
         render={({ field }) => (
-          <Field
-            field={field}
-            type="textarea"
-            label="Text Area"
-            placeholder="Masukkan text area"
-            required
-          />
+          <FormFieldWrapper label="Text Area">
+            <FormControl>
+              <Textarea placeholder="Masukkan text area" required {...field} />
+            </FormControl>
+          </FormFieldWrapper>
         )}
       />
 
@@ -275,26 +309,25 @@ export function ExampleForm() {
         control={form.control}
         name="file"
         render={({ field }) => (
-          <Field
-            field={field}
-            type="file"
-            label="File Upload"
-            accept="image"
-            required
-          />
+          <FormFieldWrapper label="File Upload">
+            <FileUpload accept="image" multiple required {...field} />
+          </FormFieldWrapper>
         )}
       />
 
       <FormField
         control={form.control}
         name="checkbox"
-        render={({ field }) => (
-          <Field
-            field={field}
+        render={({ field: { value, onChange } }) => (
+          <FormFieldWrapper
             type="checkbox"
             label="Checkbox"
-            description="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          />
+            desc="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+          >
+            <FormControl>
+              <Checkbox checked={value} onCheckedChange={onChange} />
+            </FormControl>
+          </FormFieldWrapper>
         )}
       />
 
@@ -302,24 +335,36 @@ export function ExampleForm() {
         control={form.control}
         name="multiCheckbox"
         render={() => (
-          <FieldWrapper label="Multi Checkbox">
+          <FormFieldWrapper label="Multi Checkbox">
             {checkboxData.map((item) => (
               <FormField
                 key={item}
                 control={form.control}
                 name="multiCheckbox"
-                render={({ field }) => (
-                  <Field
-                    field={field}
-                    type="multi-checkbox"
+                render={({ field: { value, onChange } }) => (
+                  <FormFieldWrapper
+                    type="checkbox"
                     label={item}
-                    id={item}
-                    classNames={{ label: "capitalize" }}
-                  />
+                    classNames={{
+                      formLabel: "capitalize",
+                      formMessage: "hidden",
+                    }}
+                  >
+                    <FormControl>
+                      <Checkbox
+                        checked={value.includes(item)}
+                        onCheckedChange={(checked) => {
+                          return checked
+                            ? onChange([...value, item])
+                            : onChange(value.filter((v) => v !== item));
+                        }}
+                      />
+                    </FormControl>
+                  </FormFieldWrapper>
                 )}
               />
             ))}
-          </FieldWrapper>
+          </FormFieldWrapper>
         )}
       />
 

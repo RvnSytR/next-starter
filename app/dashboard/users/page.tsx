@@ -23,12 +23,12 @@ export default async function Page() {
 
   return (
     <DashboardMain currentPage={meta.displayName} className="pt-6">
-      <CardHeader className="px-0">
+      <CardHeader className="flex flex-col px-0 md:grid">
         <CardTitle>{meta.displayName}</CardTitle>
         <CardDescription>
           Kelola dan lihat detail semua pengguna yang telah terdaftar.
         </CardDescription>
-        <CardAction>
+        <CardAction className="mt-2 self-stretch">
           <AdminCreateUserDialog />
         </CardAction>
       </CardHeader>

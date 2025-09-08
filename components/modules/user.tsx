@@ -3,11 +3,10 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
-import { useIsMobile } from "@/lib/hooks/use-mobile";
-import { fieldsMeta, fileMeta } from "@/lib/meta";
-import { Role, rolesMeta } from "@/lib/permission";
+import { appMeta, fieldsMeta, fileMeta } from "@/lib/meta";
+import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
-import { capitalize, cn } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -61,6 +60,7 @@ import { Badge } from "../ui/badge";
 import { Button, buttonVariants } from "../ui/button";
 import { ResetButton } from "../ui/buttons";
 import { CardContent, CardFooter } from "../ui/card";
+import { Checkbox } from "../ui/checkbox";
 import {
   Dialog,
   DialogClose,
@@ -79,10 +79,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Form, FormField } from "../ui/form";
-import { Field } from "../ui/form-fields";
+import { Form, FormControl, FormField } from "../ui/form";
+import { FormFieldWrapper, TextFields } from "../ui/form-fields";
 import { GithubIcon, Loader } from "../ui/icons";
 import { Label } from "../ui/label";
+import { RadioGroupField } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
@@ -106,6 +107,9 @@ const sharedText = {
   revokeSession: "Cabut Sesi",
 };
 
+/*
+ * --- User ---
+ */
 export function UserRoleBadge({
   role,
   className,
@@ -257,7 +261,7 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const details = [
-    { label: userFields.id, content: data.id.slice(0, 7) },
+    { label: "ID Pengguna", content: data.id.slice(0, 7) },
     { label: userFields.email.label, content: data.email },
     {
       label: fieldsMeta.createdAt,
@@ -399,7 +403,7 @@ export function SignInForm() {
   const formHandler = (formData: z.infer<typeof schema>) => {
     setIsLoading(true);
     authClient.signIn.email(
-      { ...formData, callbackURL: signInRoute },
+      { ...formData, callbackURL: dashboardRoute },
       {
         onError: ({ error }) => {
           toast.error(error.message);
@@ -417,20 +421,28 @@ export function SignInForm() {
       <FormField
         control={form.control}
         name="email"
-        render={({ field }) => <Field field={field} {...userFields.email} />}
+        render={({ field }) => (
+          <TextFields type="email" field={field} {...userFields.email} />
+        )}
       />
 
       <FormField
         control={form.control}
         name="password"
-        render={({ field }) => <Field field={field} {...userFields.password} />}
+        render={({ field }) => (
+          <TextFields type="password" field={field} {...userFields.password} />
+        )}
       />
 
       <FormField
         control={form.control}
         name="rememberMe"
-        render={({ field }) => (
-          <Field field={field} {...userFields.rememberMe} />
+        render={({ field: { value, onChange } }) => (
+          <FormFieldWrapper type="checkbox" label="Ingat Saya">
+            <FormControl>
+              <Checkbox checked={value} onCheckedChange={onChange} />
+            </FormControl>
+          </FormFieldWrapper>
         )}
       />
 
@@ -494,20 +506,28 @@ export function SignUpForm() {
       <FormField
         control={form.control}
         name="name"
-        render={({ field }) => <Field field={field} {...userFields.name} />}
+        render={({ field }) => (
+          <TextFields type="text" field={field} {...userFields.name} />
+        )}
       />
 
       <FormField
         control={form.control}
         name="email"
-        render={({ field }) => <Field field={field} {...userFields.email} />}
+        render={({ field }) => (
+          <TextFields type="email" field={field} {...userFields.email} />
+        )}
       />
 
       <FormField
         control={form.control}
         name="newPassword"
         render={({ field }) => (
-          <Field field={field} {...userFields.newPassword} />
+          <TextFields
+            type="password"
+            field={field}
+            {...userFields.newPassword}
+          />
         )}
       />
 
@@ -515,15 +535,27 @@ export function SignUpForm() {
         control={form.control}
         name="confirmPassword"
         render={({ field }) => (
-          <Field field={field} {...userFields.confirmPassword} />
+          <TextFields
+            type="password"
+            field={field}
+            {...userFields.confirmPassword}
+          />
         )}
       />
 
       <FormField
         control={form.control}
         name="agreement"
-        render={({ field }) => (
-          <Field field={field} {...userFields.agreement} />
+        render={({ field: { value, onChange } }) => (
+          <FormFieldWrapper
+            type="checkbox"
+            label="Setujui syarat dan ketentuan"
+            desc={`Saya menyetujui ketentuan layanan dan kebijakan privasi ${appMeta.name}.`}
+          >
+            <FormControl>
+              <Checkbox checked={value} onCheckedChange={onChange} />
+            </FormControl>
+          </FormFieldWrapper>
         )}
       />
 
@@ -704,13 +736,22 @@ export function PersonalInformation({ ...props }: Session["user"]) {
         <FormField
           control={form.control}
           name="email"
-          render={({ field }) => <Field field={field} {...userFields.email} />}
+          render={({ field }) => (
+            <TextFields
+              type="email"
+              field={field}
+              disabled
+              {...userFields.email}
+            />
+          )}
         />
 
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => <Field field={field} {...userFields.name} />}
+          render={({ field }) => (
+            <TextFields type="text" field={field} {...userFields.name} />
+          )}
         />
       </CardContent>
 
@@ -775,7 +816,11 @@ export function ChangePasswordForm() {
           control={form.control}
           name="currentPassword"
           render={({ field }) => (
-            <Field field={field} {...userFields.currentPassword} />
+            <TextFields
+              type="password"
+              field={field}
+              {...userFields.currentPassword}
+            />
           )}
         />
 
@@ -783,7 +828,11 @@ export function ChangePasswordForm() {
           control={form.control}
           name="newPassword"
           render={({ field }) => (
-            <Field field={field} {...userFields.newPassword} />
+            <TextFields
+              type="password"
+              field={field}
+              {...userFields.newPassword}
+            />
           )}
         />
 
@@ -791,15 +840,26 @@ export function ChangePasswordForm() {
           control={form.control}
           name="confirmPassword"
           render={({ field }) => (
-            <Field field={field} {...userFields.confirmPassword} />
+            <TextFields
+              type="password"
+              field={field}
+              {...userFields.confirmPassword}
+            />
           )}
         />
 
         <FormField
           control={form.control}
           name="revokeOtherSessions"
-          render={({ field }) => (
-            <Field field={field} {...userFields.revokeOtherSessions} />
+          render={({ field: { value, onChange } }) => (
+            <FormFieldWrapper
+              type="checkbox"
+              label="Keluar dari perangkat lainnya"
+            >
+              <FormControl>
+                <Checkbox checked={value} onCheckedChange={onChange} />
+              </FormControl>
+            </FormFieldWrapper>
           )}
         />
       </CardContent>
@@ -1035,7 +1095,6 @@ export function DeleteMyAccountButton({
 
 export function AdminCreateUserDialog() {
   const router = useRouter();
-  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodUser
@@ -1086,8 +1145,8 @@ export function AdminCreateUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={isMobile ? "iconsm" : "sm"}>
-          <Icon /> <span className="hidden md:flex">Tambah Pengguna</span>
+        <Button className="w-full">
+          <Icon /> Tambah Pengguna
         </Button>
       </DialogTrigger>
 
@@ -1104,14 +1163,16 @@ export function AdminCreateUserDialog() {
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => <Field field={field} {...userFields.name} />}
+            render={({ field }) => (
+              <TextFields type="text" field={field} {...userFields.name} />
+            )}
           />
 
           <FormField
             control={form.control}
             name="email"
             render={({ field }) => (
-              <Field field={field} {...userFields.email} />
+              <TextFields type="email" field={field} {...userFields.email} />
             )}
           />
 
@@ -1119,7 +1180,11 @@ export function AdminCreateUserDialog() {
             control={form.control}
             name="newPassword"
             render={({ field }) => (
-              <Field field={field} {...userFields.newPassword} />
+              <TextFields
+                type="password"
+                field={field}
+                {...userFields.newPassword}
+              />
             )}
           />
 
@@ -1127,14 +1192,31 @@ export function AdminCreateUserDialog() {
             control={form.control}
             name="confirmPassword"
             render={({ field }) => (
-              <Field field={field} {...userFields.confirmPassword} />
+              <TextFields
+                type="password"
+                field={field}
+                {...userFields.confirmPassword}
+              />
             )}
           />
 
           <FormField
             control={form.control}
             name="role"
-            render={({ field }) => <Field field={field} {...userFields.role} />}
+            render={({ field: { value, onChange } }) => (
+              <FormFieldWrapper label={userFields.role}>
+                <RadioGroupField
+                  defaultValue={value}
+                  onValueChange={onChange}
+                  className="grid grid-cols-2 gap-2"
+                  data={allRoles.map((value) => {
+                    const { displayName, ...rest } = rolesMeta[value];
+                    return { value, label: displayName, ...rest };
+                  })}
+                  required
+                />
+              </FormFieldWrapper>
+            )}
           />
 
           <Separator />
@@ -1166,7 +1248,6 @@ function AdminChangeUserRoleForm({
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: { role: data.role as Role },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
@@ -1194,19 +1275,25 @@ function AdminChangeUserRoleForm({
     );
   };
 
-  const { label, ...restField } = userFields.role;
-
   return (
     <Form form={form} onSubmit={formHandler}>
       <FormField
         control={form.control}
         name="role"
-        render={({ field }) => (
-          <Field
-            field={field}
-            label={capitalize(`Ubah ${label}`, "first")}
-            {...restField}
-          />
+        render={({ field: { value, onChange } }) => (
+          <FormFieldWrapper label={userFields.role}>
+            <RadioGroupField
+              defaultValue={value}
+              onValueChange={onChange}
+              className="grid grid-cols-2 gap-2"
+              data={allRoles.map((value) => {
+                const { displayName, ...rest } = rolesMeta[value];
+                const disabled = value === data.role;
+                return { value, label: displayName, disabled, ...rest };
+              })}
+              required
+            />
+          </FormFieldWrapper>
         )}
       />
 

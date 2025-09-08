@@ -10,9 +10,9 @@ import {
   ArrowUpDown,
   CalendarCheck2,
   CircleDot,
-  CircleUserRound,
   Mail,
   UserRound,
+  UserSquare2,
 } from "lucide-react";
 import {
   UserAvatar,
@@ -96,11 +96,9 @@ export const getUserColumn = (currentUserId: string) => [
         <UserAvatar {...row.original} className="size-20" />
       </div>
     ),
-    meta: {
-      displayName: userFields.avatar,
-      type: "text",
-      icon: CircleUserRound,
-    },
+    filterFn: filterFn("text"),
+    meta: { displayName: userFields.avatar, type: "text", icon: UserSquare2 },
+    enableSorting: false,
   }),
   createUserColumn.accessor(({ email }) => email, {
     id: userFields.email.label,
@@ -127,8 +125,8 @@ export const getUserColumn = (currentUserId: string) => [
     meta: { displayName: userFields.name.label, type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ role }) => role, {
-    id: userFields.role.label,
-    header: ({ column }) => headerButton(column, userFields.role.label, true),
+    id: userFields.role,
+    header: ({ column }) => headerButton(column, userFields.role, true),
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserRoleBadge role={row.original.role as Role} />
@@ -136,7 +134,7 @@ export const getUserColumn = (currentUserId: string) => [
     ),
     filterFn: filterFn("option"),
     meta: {
-      displayName: userFields.role.label,
+      displayName: userFields.role,
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {

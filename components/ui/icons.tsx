@@ -14,6 +14,10 @@ export type LoaderProps = LucideProps & {
   icon?: { base?: ReactNode; loader?: ReactNode };
 };
 
+export function getIconOrText(Icon: IconOrText): ReactNode {
+  return typeof Icon === "string" ? Icon : <Icon />;
+}
+
 export function Loader({
   loading,
   icon,

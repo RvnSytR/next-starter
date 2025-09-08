@@ -1,22 +1,5 @@
-import {
-  CalendarFieldProps,
-  CheckboxFieldProps,
-  FieldProps,
-  FieldWrapperProps,
-  FileUploadFieldProps,
-  InputFieldProps,
-  MultiCheckboxFieldProps,
-  MultiSelectFieldProps,
-  NumericFieldProps,
-  RadioFieldProps,
-  SelectFieldProps,
-  TextareaFieldProps,
-} from "@/lib/meta";
-import { cn, formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 import { ControllerRenderProps, FieldValues } from "react-hook-form";
-import { Checkbox } from "./checkbox";
-import { DatePicker } from "./date-picker";
-import { FileUpload } from "./file-upload";
 import {
   FormControl,
   FormDescription,
@@ -24,335 +7,107 @@ import {
   FormLabel,
   FormMessage,
 } from "./form";
-import { Input, InputWrapper } from "./input";
-import { MultiSelect } from "./multi-select";
-import { RadioGroup, RadioGroupItem } from "./radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./select";
-import { Textarea } from "./textarea";
+import { getIconOrText, IconOrText } from "./icons";
+import { Input, InputProps, InputWrapper } from "./input";
 
-type Controller<T extends FieldValues> = { field: ControllerRenderProps<T> };
-
-export function FieldWrapper({
+export function FormFieldWrapper({
+  type = "default",
   label,
-  description,
+  desc,
+  className,
   classNames,
-  required = false,
   children,
-}: FieldWrapperProps & { children: React.ReactNode }) {
+}: {
+  type?: "default" | "checkbox";
+  label: string;
+  desc?: string;
+  className?: string;
+  classNames?: {
+    formLabel?: string;
+    formMessage?: string;
+    formDescription?: string;
+  };
+  children: React.ReactNode;
+}) {
+  const LabelComp = () => (
+    <FormLabel
+      data-slot="form-field-wrapper-label"
+      className={classNames?.formLabel}
+    >
+      {label}
+    </FormLabel>
+  );
+
   return (
-    <FormItem className={classNames?.formItem}>
-      <FormLabel
-        className={cn(required && "label-required", classNames?.label)}
-      >
-        {label}
-      </FormLabel>
-      {children}
+    <FormItem
+      className={cn(
+        "has-required:*:data-[slot=form-field-wrapper-label]:after:text-destructive has-required:*:data-[slot=form-field-wrapper-label]:after:content-['*']",
+        className,
+      )}
+    >
+      {type === "checkbox" ? (
+        <div className="flex gap-x-3">
+          {children}
+          <div className={cn("grid gap-y-1 pt-0.25", className)}>
+            <LabelComp />
+            {desc && (
+              <FormDescription className={classNames?.formDescription}>
+                {desc}
+              </FormDescription>
+            )}
+          </div>
+        </div>
+      ) : (
+        <>
+          <LabelComp /> {children}
+        </>
+      )}
+
       <FormMessage className={classNames?.formMessage} />
-      {description && (
+
+      {type !== "checkbox" && desc && (
         <FormDescription className={classNames?.formDescription}>
-          {description}
+          {desc}
         </FormDescription>
       )}
     </FormItem>
   );
 }
 
-function CheckboxFieldWrapper({
+// ! Only for traditional text fields that are commonly used
+export function TextFields<T extends FieldValues>({
+  type,
   label,
-  description,
-  required,
-  className,
-  classNames,
-  hideFormMessage = false,
-  children,
-}: FieldWrapperProps & {
-  className?: string;
-  hideFormMessage?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <FormItem className={classNames?.formItem}>
-      <div className="flex gap-x-3">
-        <FormControl>{children}</FormControl>
-        <div className={cn("grid gap-y-1 pt-0.25", className)}>
-          <FormLabel
-            className={cn(required && "label-required", classNames?.label)}
-          >
-            {label}
-          </FormLabel>
-
-          {description && (
-            <FormDescription className={classNames?.formDescription}>
-              {description}
-            </FormDescription>
-          )}
-        </div>
-      </div>
-
-      {!hideFormMessage && <FormMessage className={classNames?.formMessage} />}
-    </FormItem>
-  );
-}
-
-function TextField<T extends FieldValues>({
+  placeholder,
+  icon: Icon,
+  required = false,
   field,
-  type,
-  icon: Icon,
   ...props
-}: Controller<T> & InputFieldProps) {
-  const iconOrText = Icon && (typeof Icon === "string" ? Icon : <Icon />);
-
-  const inputField = (
-    <FormControl>
-      <Input type={type} {...props} {...field} />
-    </FormControl>
-  );
-
-  return iconOrText ? (
-    <InputWrapper icon={iconOrText}>{inputField}</InputWrapper>
-  ) : (
-    inputField
-  );
-}
-
-function NumberField<T extends FieldValues>({
-  field: { value, onChange, ...restField },
-  type,
-  icon: Icon,
-  ...props
-}: Controller<T> & NumericFieldProps) {
-  const iconOrText = Icon && (typeof Icon === "string" ? Icon : <Icon />);
-  const inputField = (
+}: Omit<InputProps, keyof Omit<ControllerRenderProps<T>, "disabled">> & {
+  field: ControllerRenderProps<T>;
+  type: React.HTMLInputTypeAttribute;
+  label: string;
+  icon?: IconOrText;
+}) {
+  const comp = (
     <FormControl>
       <Input
-        type="text"
-        inputMode={type === "number" ? "numeric" : "tel"}
-        value={(type === "number" ? formatNumber : formatPhone)(value)}
-        onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+        type={type}
+        placeholder={placeholder}
+        required={required}
+        {...field}
         {...props}
-        {...restField}
       />
     </FormControl>
   );
 
-  return iconOrText ? (
-    <InputWrapper icon={iconOrText}>{inputField}</InputWrapper>
-  ) : (
-    inputField
-  );
-}
-
-function SelectField<T extends FieldValues>({
-  field,
-  placeholder,
-  data,
-}: Controller<T> & Omit<SelectFieldProps, "type">) {
   return (
-    <Select value={field.value} onValueChange={field.onChange}>
-      <FormControl>
-        <SelectTrigger>
-          <SelectValue placeholder={placeholder} />
-        </SelectTrigger>
-      </FormControl>
-      <SelectContent>
-        {data.map(({ value, label, icon: Icon, className, disabled }) => (
-          <SelectItem
-            key={value}
-            value={value}
-            className={className}
-            disabled={disabled}
-          >
-            {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
-            {label ?? value}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
+    <FormFieldWrapper label={label}>
+      {Icon ? (
+        <InputWrapper icon={getIconOrText(Icon)}>{comp}</InputWrapper>
+      ) : (
+        comp
+      )}
+    </FormFieldWrapper>
   );
-}
-
-function MultiSelectField<T extends FieldValues>({
-  field,
-  placeholder,
-  data,
-}: Controller<T> & Omit<MultiSelectFieldProps, "type">) {
-  const value = Array.from(field.value ?? [])
-    .map((v) => data.find(({ value }) => value === v))
-    .filter(Boolean) as MultiSelectFieldProps["data"];
-  return (
-    <MultiSelect
-      defaultValue={data}
-      placeholder={placeholder}
-      value={value}
-      onChange={(item) => field.onChange(item.map(({ value }) => value))}
-    />
-  );
-}
-
-function CheckboxField<T extends FieldValues>({
-  field,
-  ...props
-}: Controller<T> & FieldWrapperProps & Omit<CheckboxFieldProps, "type">) {
-  return (
-    <CheckboxFieldWrapper {...props}>
-      <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-    </CheckboxFieldWrapper>
-  );
-}
-
-function MultiCheckboxField<T extends FieldValues>({
-  field,
-  id,
-  ...props
-}: Controller<T> & FieldWrapperProps & Omit<MultiCheckboxFieldProps, "type">) {
-  const value = Array.from((field.value as string) ?? []);
-  return (
-    <CheckboxFieldWrapper {...props} hideFormMessage>
-      <Checkbox
-        checked={value.includes(id)}
-        onCheckedChange={(checked) => {
-          return checked
-            ? field.onChange([...value, id])
-            : field.onChange(value.filter((v) => v !== id));
-        }}
-      />
-    </CheckboxFieldWrapper>
-  );
-}
-
-function RadioField<T extends FieldValues>({
-  field,
-  className,
-  data,
-}: Controller<T> & Omit<RadioFieldProps, "type">) {
-  return (
-    <RadioGroup
-      value={field.value}
-      onValueChange={field.onChange}
-      className={className}
-    >
-      {data.map(({ value, label, desc, icon: Icon, className, disabled }) => (
-        <FormItem
-          key={value}
-          className={cn(
-            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative items-start rounded-md border p-4 shadow-xs",
-            disabled && "opacity-50",
-            className,
-          )}
-        >
-          <div className="flex w-full justify-between gap-x-2">
-            <FormLabel className="flex items-center">
-              {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
-              {label ?? value}
-            </FormLabel>
-
-            <FormControl>
-              <RadioGroupItem
-                value={value}
-                className="after:absolute after:inset-0"
-                disabled={disabled}
-              />
-            </FormControl>
-          </div>
-
-          {desc && (
-            <small className="text-muted-foreground text-xs text-pretty">
-              {desc}
-            </small>
-          )}
-        </FormItem>
-      ))}
-    </RadioGroup>
-  );
-}
-
-function CalendarField<T extends FieldValues>({
-  field,
-  mode = "single",
-  required = false,
-  ...props
-}: Controller<T> & Omit<CalendarFieldProps, "type">) {
-  return (
-    <DatePicker
-      mode={mode}
-      required={required}
-      selected={field.value}
-      onSelect={field.onChange}
-      withControl
-      {...props}
-    />
-  );
-}
-
-function TextAreaField<T extends FieldValues>({
-  field,
-  ...props
-}: Controller<T> & Omit<TextareaFieldProps, "type">) {
-  return (
-    <FormControl>
-      <Textarea {...props} {...field} />
-    </FormControl>
-  );
-}
-
-function FileUploadField<T extends FieldValues>({
-  field,
-  ...props
-}: Controller<T> & Omit<FileUploadFieldProps, "type">) {
-  return <FileUpload {...props} {...field} />;
-}
-
-export function Field<T extends FieldValues>({
-  ...props
-}: Controller<T> & FieldProps) {
-  let comp: React.ReactNode;
-
-  switch (props.type) {
-    case "number":
-    case "tel":
-      comp = <NumberField {...props} />;
-      break;
-
-    case "select":
-      comp = <SelectField {...props} />;
-      break;
-
-    case "multi-select":
-      comp = <MultiSelectField {...props} />;
-      break;
-
-    case "checkbox":
-      return <CheckboxField {...props} />;
-
-    case "multi-checkbox":
-      return <MultiCheckboxField {...props} />;
-
-    case "radio":
-      comp = <RadioField {...props} />;
-      break;
-
-    case "calendar":
-      comp = <CalendarField {...props} />;
-      break;
-
-    case "textarea":
-      comp = <TextAreaField {...props} />;
-      break;
-
-    case "file":
-      comp = <FileUploadField {...props} />;
-      break;
-
-    default:
-      comp = <TextField {...props} />;
-      break;
-  }
-
-  return <FieldWrapper {...props}>{comp}</FieldWrapper>;
 }

@@ -7,7 +7,6 @@ import { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  ComponentProps,
   DragEvent,
   KeyboardEvent,
   MouseEvent,
@@ -18,12 +17,15 @@ import { Button } from "./button";
 import { FormControl } from "./form";
 import { Input } from "./input";
 
-export type FileUploadProps = Pick<ComponentProps<"input">, "multiple"> & {
+export type FileUploadProps = {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
   maxSize?: number;
-  classNames?: { container?: string; dropzone?: string; files?: string };
+  className?: string;
+  classNames?: { container?: string; dropzone?: string };
+  multiple?: boolean;
+  required?: boolean;
 };
 
 export function FileUpload({
@@ -31,8 +33,10 @@ export function FileUpload({
   onChange,
   accept = "file",
   maxSize,
+  className,
   classNames,
   multiple = false,
+  required = false,
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -104,6 +108,7 @@ export function FileUpload({
           accept={mimeTypes.join(", ")}
           className={cn("absolute -z-1 opacity-0")}
           onChange={({ target }) => changeHandler(target.files)}
+          required={required}
         />
       </FormControl>
 
@@ -161,7 +166,7 @@ export function FileUpload({
       )}
 
       {isFiles && (
-        <div className={cn("grid gap-2 md:grid-cols-4", classNames?.files)}>
+        <div className={cn("grid gap-2 md:grid-cols-4", className)}>
           {value.map((file, index) => {
             const fileURL = URL.createObjectURL(file);
             const isImage = file.type.startsWith("image/");

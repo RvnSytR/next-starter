@@ -3,11 +3,14 @@
 import { cn } from "@/lib/utils";
 import { CircleIcon } from "lucide-react";
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
+import { ComponentProps } from "react";
+import { FormControl, FormItem, FormLabel } from "./form";
+import { IconOrText } from "./icons";
 
-function RadioGroup({
-  className,
-  ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Root>) {
+type RadioGroupProps = ComponentProps<typeof RadioGroupPrimitive.Root>;
+type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item>;
+
+export function RadioGroup({ className, ...props }: RadioGroupProps) {
   return (
     <RadioGroupPrimitive.Root
       data-slot="radio-group"
@@ -17,10 +20,7 @@ function RadioGroup({
   );
 }
 
-function RadioGroupItem({
-  className,
-  ...props
-}: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
+export function RadioGroupItem({ className, ...props }: RadioGroupItemProps) {
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
@@ -40,4 +40,52 @@ function RadioGroupItem({
   );
 }
 
-export { RadioGroup, RadioGroupItem };
+export function RadioGroupField({
+  data,
+  ...props
+}: RadioGroupProps & {
+  data: {
+    value: string;
+    label?: string;
+    desc?: string;
+    icon?: IconOrText;
+    className?: boolean;
+    disabled?: boolean;
+  }[];
+}) {
+  return (
+    <RadioGroup {...props}>
+      {data.map(({ value, label, desc, icon: Icon, className, disabled }) => (
+        <FormItem
+          key={value}
+          className={cn(
+            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative items-start rounded-md border p-4 shadow-xs",
+            disabled && "opacity-50",
+            className,
+          )}
+        >
+          <div className="flex w-full justify-between gap-x-2">
+            <FormLabel className="flex items-center">
+              {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
+              {label ?? value}
+            </FormLabel>
+
+            <FormControl>
+              <RadioGroupItem
+                value={value}
+                className="after:absolute after:inset-0"
+                disabled={disabled}
+              />
+            </FormControl>
+          </div>
+
+          {desc && (
+            <small className="text-muted-foreground text-xs text-pretty">
+              {desc}
+            </small>
+          )}
+        </FormItem>
+      ))}
+    </RadioGroup>
+  );
+}
