@@ -23,7 +23,7 @@ export function DashboardMain({
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
-        <ThemeToggle size="iconsm" />
+        <ThemeToggle size="icon-sm" />
       </nav>
 
       <div

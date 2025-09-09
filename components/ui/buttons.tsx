@@ -20,7 +20,7 @@ import { Button, ButtonProps } from "./button";
 import { Loader, LoaderProps } from "./icons";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
-type ButtonIconSize = "iconlg" | "icon" | "iconsm";
+type ButtonIconSize = "icon-xs" | "icon-sm" | "icon" | "icon-lg";
 
 export function LinkLoader({ ...props }: LoaderProps) {
   const { pending } = useLinkStatus();
@@ -136,7 +136,7 @@ export function RefreshButton({
 }
 
 export function ScrollToTopButton({
-  size = "iconlg",
+  size = "icon-lg",
   className,
   onClick,
   ...props

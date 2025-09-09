@@ -127,12 +127,8 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: userFields.role,
-    header: ({ column }) => headerButton(column, userFields.role, true),
-    cell: ({ row }) => (
-      <div className="flex justify-center">
-        <UserRoleBadge role={row.original.role as Role} />
-      </div>
-    ),
+    header: ({ column }) => headerButton(column, userFields.role),
+    cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
       displayName: userFields.role,

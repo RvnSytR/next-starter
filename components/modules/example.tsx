@@ -79,7 +79,7 @@ export function ExampleForm() {
     dateMultiple: zodSchemas.dateMultiple.min(1),
     dateRange: zodSchemas.dateRange,
     select: z.enum(card),
-    multiSelect: z.array(z.enum(card)),
+    multiSelect: z.array(z.enum(card)).min(1),
     radio: z.enum(card),
     textarea: zodSchemas.string("Text Area", { min: 1, max: 255 }),
     file: zodSchemas.file(fileType, {
@@ -110,6 +110,7 @@ export function ExampleForm() {
       radio: "spade",
       textarea: "The Brown Fox Jumping Over The Lazy Dog",
       file: [],
+      checkbox: false,
       multiCheckbox: ["firefox"],
     },
   });
@@ -222,6 +223,7 @@ export function ExampleForm() {
                 placeholder="Pilih kartu"
                 value={value}
                 onChange={(item) => onChange(item.map(({ value }) => value))}
+                inputProps={{ required: true }}
               />
             </FormFieldWrapper>
           )}
@@ -233,13 +235,16 @@ export function ExampleForm() {
           control={form.control}
           name="date"
           render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper label="Date Picker with Calendar">
+            <FormFieldWrapper
+              label="Date Picker with Calendar"
+              classNames={{ formLabel: "label-required" }}
+            >
               <DatePicker
                 mode="single"
                 selected={value}
                 onSelect={onChange}
-                required
                 withFormControl
+                required
               />
             </FormFieldWrapper>
           )}
@@ -249,13 +254,16 @@ export function ExampleForm() {
           control={form.control}
           name="dateMultiple"
           render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper label="Multiple Date">
+            <FormFieldWrapper
+              label="Multiple Date"
+              classNames={{ formLabel: "label-required" }}
+            >
               <DatePicker
                 mode="multiple"
                 selected={value}
                 onSelect={onChange}
-                required
                 withFormControl
+                required
               />
             </FormFieldWrapper>
           )}
@@ -265,13 +273,16 @@ export function ExampleForm() {
           control={form.control}
           name="dateRange"
           render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper label="Date Range">
+            <FormFieldWrapper
+              label="Date Range"
+              classNames={{ formLabel: "label-required" }}
+            >
               <DatePicker
                 mode="range"
                 selected={value}
                 onSelect={onChange}
-                required
                 withFormControl
+                required
               />
             </FormFieldWrapper>
           )}
@@ -301,16 +312,6 @@ export function ExampleForm() {
             <FormControl>
               <Textarea placeholder="Masukkan text area" required {...field} />
             </FormControl>
-          </FormFieldWrapper>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="file"
-        render={({ field }) => (
-          <FormFieldWrapper label="File Upload">
-            <FileUpload accept="image" multiple required {...field} />
           </FormFieldWrapper>
         )}
       />
@@ -358,12 +359,23 @@ export function ExampleForm() {
                             ? onChange([...value, item])
                             : onChange(value.filter((v) => v !== item));
                         }}
+                        required
                       />
                     </FormControl>
                   </FormFieldWrapper>
                 )}
               />
             ))}
+          </FormFieldWrapper>
+        )}
+      />
+
+      <FormField
+        control={form.control}
+        name="file"
+        render={({ field }) => (
+          <FormFieldWrapper label="File Upload">
+            <FileUpload accept="image" multiple required {...field} />
           </FormFieldWrapper>
         )}
       />

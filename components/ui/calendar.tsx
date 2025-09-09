@@ -10,9 +10,9 @@ import {
 import { ComponentProps } from "react";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 
-export type CalendarProps = ComponentProps<typeof DayPicker>;
+type CalendarProps = ComponentProps<typeof DayPicker>;
 
-export function Calendar({
+function Calendar({
   className,
   classNames,
   showOutsideDays = true,
@@ -53,12 +53,12 @@ export function Calendar({
           defaultClassNames.nav,
         ),
         button_previous: cn(
-          buttonVariants({ size: "iconsm", variant: "ghost" }),
+          buttonVariants({ size: "icon-sm", variant: "ghost" }),
           "aria-disabled:opacity-50",
           defaultClassNames.button_previous,
         ),
         button_next: cn(
-          buttonVariants({ size: "iconsm", variant: "ghost" }),
+          buttonVariants({ size: "icon-sm", variant: "ghost" }),
           "aria-disabled:opacity-50",
           defaultClassNames.button_next,
         ),
@@ -166,3 +166,6 @@ export function Calendar({
     />
   );
 }
+
+export { Calendar };
+export type { CalendarProps };

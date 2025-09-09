@@ -110,6 +110,7 @@ const sharedText = {
 /*
  * --- User ---
  */
+
 export function UserRoleBadge({
   role,
   className,
@@ -117,7 +118,7 @@ export function UserRoleBadge({
   role: Role;
   className?: string;
 }) {
-  const { displayName, desc, icon: Icon, color, style } = rolesMeta[role];
+  const { displayName, desc, icon: Icon, color } = rolesMeta[role];
   return (
     <Tooltip>
       <TooltipTrigger className={className} asChild>
@@ -125,10 +126,7 @@ export function UserRoleBadge({
           variant="default"
           style={{ "--badge-color": color } as React.CSSProperties}
           className={cn(
-            "text-[var(--badge-color)] capitalize",
-            style === "border"
-              ? "border-[var(--badge-color)] bg-transparent"
-              : "bg-[var(--badge-color)]/10",
+            "bg-[var(--badge-color)]/20 text-[var(--badge-color)] capitalize",
           )}
         >
           <Icon /> {displayName ?? role}
@@ -943,7 +941,7 @@ export function ActiveSessionButton({
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
-              size="iconsm"
+              size="icon-sm"
               variant="outline_destructive"
               disabled={isLoading}
             >

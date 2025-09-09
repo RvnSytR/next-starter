@@ -16,6 +16,7 @@ import {
 import { Button } from "./button";
 import { FormControl } from "./form";
 import { Input } from "./input";
+import { Separator } from "./separator";
 
 export type FileUploadProps = {
   value: File[];
@@ -149,10 +150,18 @@ export function FileUpload({
       </div>
 
       {isFiles && multiple && (
-        <div className="flex items-center justify-between gap-2">
-          <small>
-            Total {displayName}: {value.length}
-          </small>
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-x-2 tabular-nums">
+            <small className="font-medium capitalize">
+              Total {value.length} {displayName}
+            </small>
+            <Separator orientation="vertical" className="h-4" />
+            <small className="text-muted-foreground text-xs">
+              {`${toMegabytes(
+                value.reduce((acc, v) => (acc += v.size), 0),
+              ).toFixed(2)} MB`}
+            </small>
+          </div>
 
           <Button
             type="button"
@@ -179,7 +188,7 @@ export function FileUpload({
                 <Button
                   type="button"
                   onClick={() => removeFile(index)}
-                  size="iconxs"
+                  size="icon-xs"
                   variant="destructive"
                   className="absolute -top-2 -right-2 z-10 rounded-full"
                 >

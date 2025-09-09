@@ -371,7 +371,7 @@ function Pagination<TData>({
   return (
     <div className={cn("flex gap-x-1", className)}>
       <Button
-        size="iconsm"
+        size="icon-sm"
         variant="outline"
         onClick={() => table.firstPage()}
         disabled={!table.getCanPreviousPage()}
@@ -380,7 +380,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="iconsm"
+        size="icon-sm"
         variant="outline"
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
@@ -389,7 +389,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="iconsm"
+        size="icon-sm"
         variant="outline"
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
@@ -398,7 +398,7 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="iconsm"
+        size="icon-sm"
         variant="outline"
         onClick={() => table.lastPage()}
         disabled={!table.getCanNextPage()}

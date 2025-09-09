@@ -84,7 +84,7 @@ function BreadcrumbEllipsis({ role = "presentation", ...props }: ButtonProps) {
     <Button
       data-slot="breadcrumb-ellipsis"
       aria-hidden="true"
-      size="iconsm"
+      size="icon-sm"
       variant="ghost"
       role={role}
       {...props}

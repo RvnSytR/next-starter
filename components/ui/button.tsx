@@ -45,16 +45,16 @@ const buttonVariants = cva(
       },
       size: {
         xs: "h-6 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5 [&_svg:not([class*='size-'])]:size-3.5",
-        iconxs: "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
+        "icon-xs": "size-6 rounded-md [&_svg:not([class*='size-'])]:size-3.5",
 
         default: "h-9 px-4 py-2 has-[>svg]:px-3",
         icon: "size-9",
 
         sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
-        iconsm: "size-8 rounded-md",
+        "icon-sm": "size-8 rounded-md",
 
         lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
-        iconlg: "size-10 rounded-md",
+        "icon-lg": "size-10 rounded-md",
       },
     },
     defaultVariants: { variant: "default", size: "default" },

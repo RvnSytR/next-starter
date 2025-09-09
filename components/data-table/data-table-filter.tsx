@@ -411,7 +411,7 @@ function renderFilter<TData, T extends ColumnDataType>(
       />
       <Separator orientation="vertical" />
       <Button
-        size="iconsm"
+        size="icon-sm"
         variant="ghost"
         className="rounded-none rounded-r-md"
         onClick={() => table.getColumn(filter.id)?.setFilterValue(undefined)}
