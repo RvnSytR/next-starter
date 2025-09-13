@@ -68,6 +68,9 @@ export const zodSchemas = {
       error: `${userFields.password.label} harus mengandung karakter khusus.`,
     }),
 
+  updatedAt: z.coerce.date({ error: `${fieldsMeta.updatedAt} tidak valid.` }),
+  createdAt: z.coerce.date({ error: `${fieldsMeta.createdAt} tidak valid.` }),
+
   date: z.date({ error: "Pilih tanggal yang valid." }),
 
   dateMultiple: z.array(z.date({ error: "Pilih tanggal yang valid." }), {
