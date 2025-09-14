@@ -2,10 +2,10 @@ import { DataType } from "./meta";
 import { formatDate, formatDateDistanceToNow } from "./utils";
 
 export const actions = {
-  created: "dibuat",
-  removed: "dihapus",
-  updated: "diperbarui",
-  uploaded: "diunggah",
+  // created: "dibuat",
+  // removed: "dihapus",
+  // updated: "diperbarui",
+  // uploaded: "diunggah",
 
   action: "Tindakan",
   add: "Tambah",
@@ -30,15 +30,11 @@ export const messages = {
   error: "Terjadi kesalahan. Silakan coba lagi nanti.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 
-  noChanges: (thing: string) => `Tidak ada perubahan pada ${thing} Anda.`,
-  success: (
-    thing: string,
-    action: "created" | "updated" | "removed" | "uploaded",
-  ) => `${thing} berhasil ${actions[action]}.`.trim(),
+  noChanges: (thing: string) => `Tidak ada perubahan pada ${thing}.`,
 
   thingAgo: (thing: string, time: Date) =>
     `${thing} ${formatDateDistanceToNow(time)} yang lalu.`,
-  createdAgo: (time: Date) =>
+  dateAgo: (time: Date) =>
     `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} yang lalu.`,
 
   // -- Validation

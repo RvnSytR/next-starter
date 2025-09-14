@@ -3,6 +3,7 @@
 import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
+import { useIsMobile } from "@/lib/hooks/use-mobile";
 import { appMeta, fieldsMeta, fileMeta } from "@/lib/meta";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
@@ -123,10 +124,10 @@ export function UserRoleBadge({
     <Tooltip>
       <TooltipTrigger className={className} asChild>
         <Badge
-          variant="default"
+          variant="outline"
           style={{ "--badge-color": color } as React.CSSProperties}
           className={cn(
-            "bg-[var(--badge-color)]/20 text-[var(--badge-color)] capitalize",
+            "border-[var(--badge-color)] text-[var(--badge-color)] capitalize",
           )}
         >
           <Icon /> {displayName ?? role}
@@ -216,7 +217,7 @@ export function UserDataTable({
                 <Settings2 /> {actions.action}
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent>
+            <DropdownMenuContent className="[&_button]:justify-start">
               <DropdownMenuLabel className="text-center">
                 Akun dipilih: {filteredData.length}
               </DropdownMenuLabel>
@@ -258,10 +259,8 @@ export function UserDetailSheet({ data }: { data: Session["user"] }) {
   const details = [
     { label: "ID Pengguna", content: data.id.slice(0, 7) },
     { label: userFields.email.label, content: data.email },
-    {
-      label: fieldsMeta.createdAt,
-      content: messages.createdAgo(data.createdAt),
-    },
+    { label: fieldsMeta.updatedAt, content: messages.dateAgo(data.updatedAt) },
+    { label: fieldsMeta.createdAt, content: messages.dateAgo(data.createdAt) },
   ];
 
   return (
@@ -487,7 +486,7 @@ export function SignUpForm() {
         },
         onSuccess: () => {
           toast.success(
-            "Akun berhasil dibuat! Silakan masuk untuk melanjutkan.",
+            "Akun berhasil dibuat. Silakan masuk untuk melanjutkan.",
           );
           setIsLoading(false);
           form.reset();
@@ -597,7 +596,7 @@ export function ProfilePicture({
           setIsChange(false);
         },
         onSuccess: () => {
-          toast.success(messages.success("Foto profil Anda", "updated"));
+          toast.success("Foto profil Anda berhasil diperbarui.");
           setIsChange(false);
           router.refresh();
         },
@@ -617,7 +616,7 @@ export function ProfilePicture({
           setIsRemoved(false);
         },
         onSuccess: () => {
-          toast.success(messages.success("Foto profil Anda", "removed"));
+          toast.success("Foto profil Anda berhasil dihapus.");
           setIsRemoved(false);
           router.refresh();
         },
@@ -704,7 +703,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
   });
 
   const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
-    if (newName === name) return toast.info(messages.noChanges("profil"));
+    if (newName === name) return toast.info(messages.noChanges("profil Anda"));
 
     setIsLoading(true);
     authClient.updateUser(
@@ -715,7 +714,7 @@ export function PersonalInformation({ ...props }: Session["user"]) {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(messages.success("Profil", "updated"));
+          toast.success("Profil Anda berhasil diperbarui.");
           setIsLoading(false);
           router.refresh();
         },
@@ -796,7 +795,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(messages.success(userFields.password.label, "updated"));
+        toast.success(`${userFields.password.label} Anda berhasil diperbarui.`);
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -885,6 +884,7 @@ export function ActiveSessionButton({
   const { browser, os, device } = new UAParser(userAgent!).getResult();
 
   const DeviceIcons = {
+    desktop: Monitor,
     mobile: Smartphone,
     tablet: Tablet,
     console: Gamepad2,
@@ -892,8 +892,8 @@ export function ActiveSessionButton({
     wearable: MonitorSmartphone,
     xr: MonitorSmartphone,
     embedded: MonitorSmartphone,
-    other: Monitor,
-  }[device.type ?? "other"];
+    other: MonitorSmartphone,
+  }[device.type || "other"];
 
   const clickHandler = () => {
     setIsLoading(true);
@@ -1038,7 +1038,7 @@ export function DeleteMyAccountButton({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(messages.success("Akun", "removed"));
+          toast.success("Akun Anda berhasil dihapus.");
           router.push(signInRoute);
         },
       },
@@ -1090,6 +1090,7 @@ export function DeleteMyAccountButton({
 
 export function AdminCreateUserDialog() {
   const router = useRouter();
+  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodUser
@@ -1128,7 +1129,7 @@ export function AdminCreateUserDialog() {
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(messages.success(`Akun ${rest.name}`, "created"));
+          toast.success(`Akun atas nama ${rest.name} berhasil dibuat.`);
           setIsLoading(false);
           form.reset();
           router.refresh();
@@ -1140,7 +1141,7 @@ export function AdminCreateUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="w-full">
+        <Button size={isMobile ? "default" : "sm"} className="w-full">
           <Icon /> Tambah Pengguna
         </Button>
       </DialogTrigger>
@@ -1243,12 +1244,13 @@ function AdminChangeUserRoleForm({
 
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
+    defaultValues: { role: data.role === "user" ? "admin" : "user" },
   });
 
   const formHandler = (formData: z.infer<typeof schema>) => {
-    const newRole = formData.role as Role;
+    const newRole = formData.role;
     if (newRole === data.role)
-      return toast.info(messages.noChanges(`${data.name}'s role`));
+      return toast.info(messages.noChanges(`role ${data.name}`));
 
     setIsLoading(true);
     authClient.admin.setRole(
@@ -1380,7 +1382,7 @@ function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(messages.success(name, "removed"));
+          toast.success(`Akun atas nama ${name} berhasil dihapus.`);
           setIsLoading(false);
           setIsOpen(false);
           router.refresh();
@@ -1506,14 +1508,10 @@ function AdminActionRemoveUsersDialog({
       success: (res) => {
         setIsLoading(false);
         onSuccess();
-
         router.refresh();
 
         const successLength = res.filter(({ success }) => success).length;
-        return messages.success(
-          `${successLength} dari ${data.length} akun pengguna`,
-          "removed",
-        );
+        return `${successLength} dari ${data.length} akun pengguna berhasil dihapus.`;
       },
     });
   };
