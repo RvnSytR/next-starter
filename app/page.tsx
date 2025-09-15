@@ -1,4 +1,4 @@
-import { ExampleForm } from "@/components/modules/example";
+import { ExampleForm, ExampleTypography } from "@/components/modules/example";
 import { Button } from "@/components/ui/button";
 import { LinkLoader, ThemeToggle } from "@/components/ui/buttons";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -78,13 +78,15 @@ const comp = {
     </Card>
   ),
 
+  typography: <ExampleTypography />,
   formBuilder: <FormBuilder />,
 };
 
 const tabs: { section: string; content: (keyof typeof comp)[] }[] = [
-  { section: "Form Builder", content: ["formBuilder"] },
+  { section: "Typography", content: ["typography"] },
   { section: "Chart", content: ["pieChart", "timelineChart"] },
   { section: "Form", content: ["form"] },
+  { section: "Form Builder", content: ["formBuilder"] },
 ];
 
 export default function Page() {
@@ -145,7 +147,7 @@ export default function Page() {
         <div className="w-full">
           {tabs.map(({ section, content }) => (
             <TabsContent key={section} value={section} className="grid gap-y-4">
-              <h3>{section}</h3>
+              <h2>{section}</h2>
               {content.map((key, index) => (
                 <Fragment key={index}>{comp[key]}</Fragment>
               ))}

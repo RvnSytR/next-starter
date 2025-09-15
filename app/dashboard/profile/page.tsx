@@ -20,7 +20,7 @@ import {
 import { appMeta } from "@/lib/meta";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
-import { getListSession, requireAuthorizedSession } from "@/server/action";
+import { getListSession, requireAuth } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
@@ -29,7 +29,7 @@ export default async function Page() {
   const {
     session: { session, user },
     meta,
-  } = await requireAuthorizedSession("/dashboard/profile");
+  } = await requireAuth("/dashboard/profile");
   const sessionList = await getListSession();
 
   return (

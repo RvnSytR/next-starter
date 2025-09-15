@@ -1,9 +1,9 @@
 import { DashboardMain } from "@/components/layout/section";
 import { R } from "@/components/ui/motion";
-import { requireAuthorizedSession } from "@/server/action";
+import { requireAuth } from "@/server/action";
 
 export default async function Page() {
-  const { session, meta } = await requireAuthorizedSession("/dashboard");
+  const { session, meta } = await requireAuth("/dashboard");
 
   return (
     <DashboardMain
@@ -11,9 +11,9 @@ export default async function Page() {
       className="items-center justify-center"
     >
       <R />
-      <p className="animate-fade delay-500">
+      <pre className="animate-fade delay-500">
         {JSON.stringify(session, null, 2)}
-      </p>
+      </pre>
     </DashboardMain>
   );
 }

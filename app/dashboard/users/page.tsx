@@ -11,13 +11,13 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { getTitle } from "@/lib/utils";
-import { getUserList, requireAuthorizedSession } from "@/server/action";
+import { getUserList, requireAuth } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/users") };
 
 export default async function Page() {
-  const { session, meta } = await requireAuthorizedSession("/dashboard/users");
+  const { session, meta } = await requireAuth("/dashboard/users");
   const data = await getUserList();
 
   return (

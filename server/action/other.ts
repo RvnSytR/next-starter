@@ -15,17 +15,16 @@ export async function getCustomHeaders() {
   return { url, origin, pathname };
 }
 
-export async function requireAuthorizedSession(route: Route) {
+export async function requireAuth(route: Route) {
   const meta = routesMeta[route];
-  if (!("role" in meta)) notFound();
+  if (!meta.role) notFound();
 
   const session = await getSession();
   if (!session) notFound();
 
-  const routeRole = meta.role;
-  const userRole = session.user.role as Role;
   const isAuthorized =
-    routeRole && (routeRole === "all" || routeRole.includes(userRole));
+    meta.role &&
+    (meta.role === "all" || meta.role.includes(session.user.role as Role));
 
   if (!isAuthorized) notFound();
 

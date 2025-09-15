@@ -34,7 +34,7 @@ export const rolesMeta: Record<
     displayName: string;
     desc: string;
     icon: LucideIcon;
-    color: string;
+    color: string | { light: string; dark: string };
   }
 > = {
   user: {
@@ -47,6 +47,6 @@ export const rolesMeta: Record<
     displayName: "Admin",
     icon: ShieldUser,
     desc: "Administrator dengan akses penuh dan kontrol pengelolaan sistem.",
-    color: "#0ea5e9",
+    color: "var(--rvns)",
   },
 };
