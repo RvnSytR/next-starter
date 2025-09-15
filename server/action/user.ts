@@ -1,7 +1,6 @@
 "use server";
 
 import { auth } from "@/lib/auth";
-import { Role } from "@/lib/permission";
 import { UserWithRole } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { deleteFiles, extractKeyFromPublicUrl } from "../s3";
@@ -15,15 +14,10 @@ export async function getListSession() {
 }
 
 export async function getUserList() {
-  const { total, users } = await auth.api.listUsers({
+  return await auth.api.listUsers({
     headers: await headers(),
     query: { sortBy: "createdAt", sortDirection: "desc" },
   });
-
-  return {
-    total,
-    users: users.map(({ role, ...rest }) => ({ role: role as Role, ...rest })),
-  };
 }
 
 export async function revokeUserSessions(ids: string[]) {

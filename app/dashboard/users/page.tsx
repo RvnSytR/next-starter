@@ -1,5 +1,8 @@
 import { DashboardMain } from "@/components/layout/section";
-import { AdminCreateUserDialog } from "@/components/modules/user";
+import {
+  AdminCreateUserDialog,
+  UserDataTable,
+} from "@/components/modules/user";
 import {
   CardAction,
   CardDescription,
@@ -7,14 +10,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { routesMeta } from "@/lib/routes";
 import { getTitle } from "@/lib/utils";
+import { getUserList, requireAuthorizedSession } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/users") };
 
 export default async function Page() {
-  const meta = routesMeta["/dashboard/users"];
+  const { session, meta } = await requireAuthorizedSession("/dashboard/users");
+  const data = await getUserList();
+
   return (
     <DashboardMain currentPage={meta.displayName} className="pt-6">
       <CardHeader asPageHeader>
@@ -29,11 +34,11 @@ export default async function Page() {
 
       <Separator />
 
-      {/* <UserDataTable
+      <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
         searchPlaceholder="Cari Pengguna..."
-      /> */}
+      />
     </DashboardMain>
   );
 }

@@ -1,6 +1,6 @@
 {
   "name": "next-starter",
-  "version": "4.5",
+  "version": "4.6",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -32,6 +32,7 @@
     "react-hook-form": "^7.62.0",
     "recharts": "^2.15.4",
     "sonner": "^2.0.7",
+    "swr": "^2.3.6",
     "tailwind-merge": "^3.3.1",
     "tw-animate-css": "^1.3.8",
     "ua-parser-js": "^2.0.5",

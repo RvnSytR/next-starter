@@ -11,6 +11,7 @@ import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
   deleteUsers,
+  getUserList,
   revokeUserSessions,
 } from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
@@ -41,6 +42,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import useSWR, { mutate } from "swr";
 import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
@@ -194,13 +196,15 @@ export function UserAvatar({
 }
 
 export function UserDataTable({
-  data,
+  data: fallbackData,
   currentUserId,
   ...props
 }: OtherDataTableProps<UserWithRole> & {
   data: UserWithRole[];
   currentUserId: string;
 }) {
+  const fetcher = async () => (await getUserList()).users;
+  const { data } = useSWR("users", fetcher, { fallbackData });
   const columns = getUserColumn(currentUserId);
   return (
     <DataTable
@@ -1088,7 +1092,6 @@ export function DeleteMyAccountButton({ image }: Pick<UserWithRole, "image">) {
  */
 
 export function AdminCreateUserDialog() {
-  const router = useRouter();
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -1131,7 +1134,7 @@ export function AdminCreateUserDialog() {
           toast.success(`Akun atas nama ${rest.name} berhasil dibuat.`);
           setIsLoading(false);
           form.reset();
-          router.refresh();
+          mutate("users");
         },
       },
     );
@@ -1236,7 +1239,6 @@ function AdminChangeUserRoleForm({
   data: UserWithRole;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = zodUser.pick({ role: true });
@@ -1265,7 +1267,7 @@ function AdminChangeUserRoleForm({
           );
           setIsLoading(false);
           setIsOpen(false);
-          router.refresh();
+          mutate("users");
         },
       },
     );
@@ -1366,7 +1368,6 @@ function AdminRemoveUserDialog({
   data: Pick<UserWithRole, "id" | "name" | "image">;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = async () => {
@@ -1384,7 +1385,7 @@ function AdminRemoveUserDialog({
           toast.success(`Akun atas nama ${name} berhasil dihapus.`);
           setIsLoading(false);
           setIsOpen(false);
-          router.refresh();
+          mutate("users");
         },
       },
     );
@@ -1493,7 +1494,6 @@ function AdminActionRemoveUsersDialog({
   data: Pick<UserWithRole, "id" | "name" | "image">[];
   onSuccess: () => void;
 }) {
-  const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = async () => {
@@ -1507,7 +1507,7 @@ function AdminActionRemoveUsersDialog({
       success: (res) => {
         setIsLoading(false);
         onSuccess();
-        router.refresh();
+        mutate("users");
 
         const successLength = res.filter(({ success }) => success).length;
         return `${successLength} dari ${data.length} akun pengguna berhasil dihapus.`;

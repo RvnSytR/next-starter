@@ -1,13 +1,11 @@
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
-import { getSession } from "@/server/action";
 import { UserWithRole } from "better-auth/plugins";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import { Route } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
 import { routesMeta } from "../../lib/routes";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { LinkLoader, RefreshButton } from "../ui/buttons";
@@ -59,19 +57,23 @@ export const sidebarMenuButtonVariants = cva(
   },
 );
 
-export async function SidebarApp({ children }: { children: React.ReactNode }) {
-  const session = await getSession();
-  if (!session) notFound();
+export function SidebarApp({
+  data,
+  children,
+}: {
+  data: UserWithRole;
+  children: React.ReactNode;
+}) {
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon">
         <SidebarHeader>
-          <Header {...session.user} />
+          <Header {...data} />
           <SidebarSeparator />
         </SidebarHeader>
 
         <SidebarContent>
-          <Content {...session.user} />
+          <Content {...data} />
         </SidebarContent>
 
         <SidebarFooter>
