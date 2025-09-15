@@ -1,8 +1,8 @@
-import { Session } from "@/lib/auth";
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { getSession } from "@/server/action";
+import { UserWithRole } from "better-auth/plugins";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import { Route } from "next";
@@ -34,7 +34,7 @@ import {
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
 
 type SidebarData = Pick<
-  Session["user"],
+  UserWithRole,
   "name" | "email" | "image" | "role" | "emailVerified"
 >;
 

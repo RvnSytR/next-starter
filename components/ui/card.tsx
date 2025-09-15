@@ -13,12 +13,17 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
+function CardHeader({
+  asPageHeader = false,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { asPageHeader?: boolean }) {
   return (
     <div
       data-slot="card-header"
       className={cn(
         "@container/card-header grid auto-rows-min grid-rows-[auto_auto] items-start gap-x-4 gap-y-2 px-6 has-data-[slot=card-action]:grid-cols-[1fr_auto] [.border-b]:pb-6",
+        asPageHeader && "flex flex-col px-0 md:grid",
         className,
       )}
       {...props}
@@ -46,12 +51,17 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+function CardAction({
+  asPageAction = false,
+  className,
+  ...props
+}: React.ComponentProps<"div"> & { asPageAction?: boolean }) {
   return (
     <div
       data-slot="card-action"
       className={cn(
         "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        asPageAction && "mt-2 self-stretch md:mt-0 md:self-start",
         className,
       )}
       {...props}

@@ -1,7 +1,7 @@
 "use server";
 
 import { Role } from "@/lib/permission";
-import { RouteRole, routesMeta } from "@/lib/routes";
+import { routesMeta } from "@/lib/routes";
 import { Route } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
@@ -22,9 +22,10 @@ export async function requireAuthorizedSession(route: Route) {
   const session = await getSession();
   if (!session) notFound();
 
-  const routeRole = meta.role as RouteRole;
+  const routeRole = meta.role;
   const userRole = session.user.role as Role;
-  const isAuthorized = routeRole === "all" || routeRole.includes(userRole);
+  const isAuthorized =
+    routeRole && (routeRole === "all" || routeRole.includes(userRole));
 
   if (!isAuthorized) notFound();
 

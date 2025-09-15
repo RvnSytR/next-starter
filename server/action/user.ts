@@ -1,7 +1,8 @@
 "use server";
 
-import { auth, Session } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { Role } from "@/lib/permission";
+import { UserWithRole } from "better-auth/plugins";
 import { headers } from "next/headers";
 import { deleteFiles, extractKeyFromPublicUrl } from "../s3";
 
@@ -13,10 +14,7 @@ export async function getListSession() {
   return await auth.api.listSessions({ headers: await headers() });
 }
 
-export async function getUserList(): Promise<{
-  users: Session["user"][];
-  total: number;
-}> {
+export async function getUserList() {
   const { total, users } = await auth.api.listUsers({
     headers: await headers(),
     query: { sortBy: "createdAt", sortDirection: "desc" },
@@ -24,11 +22,7 @@ export async function getUserList(): Promise<{
 
   return {
     total,
-    users: users.map(({ role, banned, ...rest }) => ({
-      role: role as Role,
-      banned,
-      ...rest,
-    })),
+    users: users.map(({ role, ...rest }) => ({ role: role as Role, ...rest })),
   };
 }
 
@@ -47,9 +41,7 @@ export async function deleteProfilePicture(image: string) {
   await deleteFiles([await extractKeyFromPublicUrl(image)]);
 }
 
-export async function deleteUsers(
-  data: Pick<Session["user"], "id" | "image">[],
-) {
+export async function deleteUsers(data: Pick<UserWithRole, "id" | "image">[]) {
   return Promise.all(
     data.map(async ({ id, image }) => {
       if (image) await deleteProfilePicture(image);

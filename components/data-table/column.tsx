@@ -1,11 +1,11 @@
 "use client";
 
-import { Session } from "@/lib/auth";
 import { filterFn } from "@/lib/filters";
 import { fieldsMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
 import { cn, formatDate } from "@/lib/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
+import { UserWithRole } from "better-auth/plugins";
 import {
   ArrowUpDown,
   CalendarCheck2,
@@ -74,7 +74,7 @@ function cellCheckbox<R>(row: Row<R>, disabled: boolean = false) {
   );
 }
 
-const createUserColumn = createColumnHelper<Session["user"]>();
+const createUserColumn = createColumnHelper<UserWithRole>();
 export const getUserColumn = (currentUserId: string) => [
   createUserColumn.display({
     id: "select",

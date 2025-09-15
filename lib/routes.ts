@@ -7,7 +7,7 @@ export type RouteMeta = { displayName: string; role?: RouteRole };
 export const routesMeta: Record<Route, RouteMeta> = {
   "/": { displayName: "Beranda" },
   "/sign-in": { displayName: "Masuk" },
-  "/dashboard": { displayName: "Overview", role: "all" },
+  "/dashboard": { displayName: "Dashboard", role: "all" },
   "/dashboard/profile": { displayName: "Profil Saya", role: "all" },
   "/dashboard/users": { displayName: "Pengguna", role: ["admin"] },
 };

@@ -1,8 +1,5 @@
 import { DashboardMain } from "@/components/layout/section";
-import {
-  AdminCreateUserDialog,
-  UserDataTable,
-} from "@/components/modules/user";
+import { AdminCreateUserDialog } from "@/components/modules/user";
 import {
   CardAction,
   CardDescription,
@@ -10,36 +7,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { routesMeta } from "@/lib/routes";
 import { getTitle } from "@/lib/utils";
-import { getUserList, requireAuthorizedSession } from "@/server/action";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/users") };
 
 export default async function Page() {
-  const { session, meta } = await requireAuthorizedSession("/dashboard/users");
-
-  const data = await getUserList();
-
+  const meta = routesMeta["/dashboard/users"];
   return (
     <DashboardMain currentPage={meta.displayName} className="pt-6">
-      <CardHeader className="flex flex-col px-0 md:grid">
-        <CardTitle>{meta.displayName}</CardTitle>
+      <CardHeader asPageHeader>
+        <CardTitle>Manajemen {meta.displayName}</CardTitle>
         <CardDescription>
           Kelola dan lihat detail semua pengguna yang telah terdaftar.
         </CardDescription>
-        <CardAction className="mt-2 self-stretch">
+        <CardAction asPageAction>
           <AdminCreateUserDialog />
         </CardAction>
       </CardHeader>
 
       <Separator />
 
-      <UserDataTable
+      {/* <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
         searchPlaceholder="Cari Pengguna..."
-      />
+      /> */}
     </DashboardMain>
   );
 }

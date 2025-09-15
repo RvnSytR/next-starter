@@ -1,6 +1,5 @@
 "use client";
 
-import { Session } from "@/lib/auth";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
 import { useIsMobile } from "@/lib/hooks/use-mobile";
@@ -16,6 +15,8 @@ import {
 } from "@/server/action";
 import { getFilePublicUrl, uploadFiles } from "@/server/s3";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Session } from "better-auth";
+import { UserWithRole } from "better-auth/plugins";
 import {
   BadgeCheck,
   Ban,
@@ -175,7 +176,7 @@ export function UserAvatar({
   name,
   className,
   classNames,
-}: Pick<Session["user"], "image" | "name"> & {
+}: Pick<UserWithRole, "image" | "name"> & {
   className?: string;
   classNames?: { image?: string; fallback?: string };
 }) {
@@ -196,8 +197,8 @@ export function UserDataTable({
   data,
   currentUserId,
   ...props
-}: OtherDataTableProps<Session["user"]> & {
-  data: Session["user"][];
+}: OtherDataTableProps<UserWithRole> & {
+  data: UserWithRole[];
   currentUserId: string;
 }) {
   const columns = getUserColumn(currentUserId);
@@ -253,7 +254,7 @@ export function UserDataTable({
   );
 }
 
-export function UserDetailSheet({ data }: { data: Session["user"] }) {
+export function UserDetailSheet({ data }: { data: UserWithRole }) {
   const [isOpen, setIsOpen] = useState(false);
 
   const details = [
@@ -565,7 +566,7 @@ export function ProfilePicture({
   id,
   name,
   image,
-}: Pick<Session["user"], "id" | "name" | "image">) {
+}: Pick<UserWithRole, "id" | "name" | "image">) {
   const router = useRouter();
   const inputAvatarRef = useRef<HTMLInputElement>(null);
   const [isChange, setIsChange] = useState<boolean>(false);
@@ -690,7 +691,7 @@ export function ProfilePicture({
   );
 }
 
-export function PersonalInformation({ ...props }: Session["user"]) {
+export function PersonalInformation({ ...props }: UserWithRole) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -876,7 +877,7 @@ export function ActiveSessionButton({
   updatedAt,
   userAgent,
   token,
-}: Session["session"] & { currentSessionId: string }) {
+}: Session & { currentSessionId: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -1019,9 +1020,7 @@ export function RevokeOtherSessionsButton() {
   );
 }
 
-export function DeleteMyAccountButton({
-  image,
-}: Pick<Session["user"], "image">) {
+export function DeleteMyAccountButton({ image }: Pick<UserWithRole, "image">) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -1234,7 +1233,7 @@ function AdminChangeUserRoleForm({
   data,
   setIsOpen,
 }: {
-  data: Session["user"];
+  data: UserWithRole;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
@@ -1305,7 +1304,7 @@ function AdminChangeUserRoleForm({
 function AdminRevokeUserSessionsDialog({
   id,
   name,
-}: Pick<Session["user"], "id" | "name">) {
+}: Pick<UserWithRole, "id" | "name">) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = () => {
@@ -1364,7 +1363,7 @@ function AdminRemoveUserDialog({
   data: { id, name, image },
   setIsOpen,
 }: {
-  data: Pick<Session["user"], "id" | "name" | "image">;
+  data: Pick<UserWithRole, "id" | "name" | "image">;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const router = useRouter();
@@ -1491,7 +1490,7 @@ function AdminActionRemoveUsersDialog({
   data,
   onSuccess,
 }: {
-  data: Pick<Session["user"], "id" | "name" | "image">[];
+  data: Pick<UserWithRole, "id" | "name" | "image">[];
   onSuccess: () => void;
 }) {
   const router = useRouter();
