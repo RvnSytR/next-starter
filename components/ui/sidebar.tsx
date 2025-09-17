@@ -17,7 +17,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useIsMobile } from "@/lib/hooks/use-mobile";
+import { useIsMobile } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";

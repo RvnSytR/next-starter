@@ -2,7 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
-import { useIsMobile } from "@/lib/hooks/use-mobile";
+import { useIsMobile } from "@/lib/hooks";
 import { appMeta, fieldsMeta, fileMeta } from "@/lib/meta";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";

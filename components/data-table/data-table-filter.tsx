@@ -41,7 +41,7 @@ import {
   optionFilterDetails,
   textFilterDetails,
 } from "@/lib/filters";
-import { useIsMobile } from "@/lib/hooks/use-mobile";
+import { useIsMobile } from "@/lib/hooks";
 import { cn, formatDate, take, uniq } from "@/lib/utils";
 import { Column, ColumnMeta, RowData, Table } from "@tanstack/react-table";
 import { endOfDay, isEqual } from "date-fns";

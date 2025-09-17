@@ -1,7 +1,7 @@
 "use client";
 
 import { messages } from "@/lib/content";
-import { useDebounce } from "@/lib/hooks/use-debounce";
+import { useDebounce } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
 import { Check, LucideIcon, XIcon } from "lucide-react";
