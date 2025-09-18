@@ -6,7 +6,7 @@ import { useIsMobile } from "@/lib/hooks";
 import { appMeta, fieldsMeta, fileMeta } from "@/lib/meta";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
-import { cn } from "@/lib/utils";
+import { capitalize, cn } from "@/lib/utils";
 import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -265,11 +265,16 @@ export function UserDataTable({
   );
 }
 
-export function UserDetailSheet({ data }: { data: UserWithRole }) {
+export function UserDetailSheet({
+  data,
+  isCurrentUser,
+}: {
+  data: UserWithRole;
+  isCurrentUser: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   const details = [
-    { label: "ID Pengguna", content: data.id.slice(0, 7) },
     { label: userFields.email.label, content: data.email },
     { label: fieldsMeta.updatedAt, content: messages.dateAgo(data.updatedAt) },
     { label: fieldsMeta.createdAt, content: messages.dateAgo(data.createdAt) },
@@ -284,13 +289,10 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
 
       <SheetContent>
         <SheetHeader className="flex-row items-center">
-          <UserAvatar {...data} className="size-12" />
-
-          <div className="flex flex-col">
-            <SheetTitle className="text-base">Detail {data.name}</SheetTitle>
-            <SheetDescription>
-              Lihat informasi lengkap tentang akun {data.name}
-            </SheetDescription>
+          <UserAvatar {...data} className="size-10" />
+          <div className="grid">
+            <SheetTitle className="text-base">{data.name}</SheetTitle>
+            <SheetDescription># {data.id.slice(0, 17)}</SheetDescription>
           </div>
         </SheetHeader>
 
@@ -306,26 +308,32 @@ export function UserDetailSheet({ data }: { data: UserWithRole }) {
 
           <Separator />
 
-          <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
+          {!isCurrentUser && (
+            <>
+              <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
 
-          <Separator />
+              <Separator />
 
-          {/* // TODO */}
-          <Button variant="outline_primary" disabled>
-            <Layers2 /> Tiru Sesi
-          </Button>
+              {/* // TODO */}
+              <Button variant="outline_primary" disabled>
+                <Layers2 /> Tiru Sesi
+              </Button>
 
-          <AdminRevokeUserSessionsDialog {...data} />
+              <AdminRevokeUserSessionsDialog {...data} />
 
-          {/* // TODO */}
-          <Button variant="outline_destructive" disabled>
-            <Ban /> Ban {data.name}
-          </Button>
+              {/* // TODO */}
+              <Button variant="outline_destructive" disabled>
+                <Ban /> Ban {data.name}
+              </Button>
+            </>
+          )}
         </div>
 
-        <SheetFooter>
-          <AdminRemoveUserDialog data={data} setIsOpen={setIsOpen} />
-        </SheetFooter>
+        {!isCurrentUser && (
+          <SheetFooter>
+            <AdminRemoveUserDialog data={data} setIsOpen={setIsOpen} />
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );
@@ -1286,7 +1294,9 @@ function AdminChangeUserRoleForm({
         control={form.control}
         name="role"
         render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper label={userFields.role}>
+          <FormFieldWrapper
+            label={capitalize(`Ubah ${userFields.role}`, "first")}
+          >
             <RadioGroupField
               defaultValue={value}
               onValueChange={onChange}

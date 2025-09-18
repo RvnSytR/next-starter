@@ -15,12 +15,7 @@ import {
   UserRound,
   UserSquare2,
 } from "lucide-react";
-import {
-  UserAvatar,
-  UserDetailSheet,
-  UserRoleBadge,
-  UserVerifiedBadge,
-} from "../modules/user";
+import { UserAvatar, UserDetailSheet, UserRoleBadge } from "../modules/user";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
@@ -105,15 +100,12 @@ export const getUserColumn = (currentUserId: string) => [
     id: userFields.email.label,
     header: ({ column }) => headerButton(column, userFields.email.label),
     cell: ({ row }) => {
-      const { id, email, emailVerified } = row.original;
-      if (id === currentUserId) {
-        return (
-          <div className="flex items-center gap-x-2">
-            {email} {emailVerified && <UserVerifiedBadge withoutText />}
-          </div>
-        );
-      }
-      return <UserDetailSheet data={row.original} />;
+      return (
+        <UserDetailSheet
+          data={row.original}
+          isCurrentUser={row.original.id === currentUserId}
+        />
+      );
     },
     filterFn: filterFn("text"),
     meta: { displayName: userFields.email.label, type: "text", icon: Mail },

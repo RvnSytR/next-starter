@@ -238,12 +238,12 @@
     @apply scroll-m-20 text-lg font-semibold tracking-tight;
   }
 
-  p {
+  /* p {
     @apply leading-7;
-  }
+  } */
 
   small {
-    @apply text-sm leading-none;
+    @apply text-sm leading-tight;
   }
 
   blockquote {

@@ -394,7 +394,7 @@ export function ExampleForm() {
 
 export function ExampleTypography() {
   return (
-    <div className="[&>p]:text-foreground/90 mx-auto max-w-4xl space-y-6 py-8">
+    <div className="[&>p]:text-foreground/90 mx-auto max-w-4xl space-y-6 py-8 [&>p]:leading-7">
       <h1>The Subtle Shift: How LLMs Are Reshaping Web Development</h1>
 
       <p>
