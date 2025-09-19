@@ -4,7 +4,6 @@ import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { UserWithRole } from "better-auth/plugins";
 import { cva } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
-import { Route } from "next";
 import Link from "next/link";
 import { routesMeta } from "../../lib/routes";
 import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
@@ -134,7 +133,8 @@ function Header({
 }
 
 function Content({ role }: Pick<SidebarData, "role">) {
-  return getMenuByRole(role as Role).map(({ section, content }, i) => (
+  const menu = getMenuByRole(role as Role);
+  return menu.map(({ section, content }, i) => (
     <SidebarGroup key={i}>
       <SidebarGroupLabel>{section}</SidebarGroupLabel>
 
@@ -172,13 +172,11 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {subMenu.map(({ label, className }, idx) => (
+                        {subMenu.map(({ label, href, className }, idx) => (
                           <SidebarMenuSubItem key={idx}>
                             <SidebarMenuSubButton className={className} asChild>
                               <Link
-                                href={
-                                  `${route}/#${toKebabCase(label)}` as Route
-                                }
+                                href={href ?? `${route}/#${toKebabCase(label)}`}
                                 className="flex justify-between"
                               >
                                 <span className="line-clamp-1">{label}</span>

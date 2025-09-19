@@ -34,10 +34,7 @@ export default async function Page() {
 
   return (
     <DashboardMain currentPage={meta.displayName} className="items-center">
-      <Card
-        id="personal-information"
-        className="w-full scroll-m-20 lg:max-w-xl"
-      >
+      <Card id="informasi-pribadi" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
           <CardTitle>Informasi Pribadi</CardTitle>
           <CardDescription>
@@ -52,7 +49,7 @@ export default async function Page() {
         <PersonalInformation {...user} />
       </Card>
 
-      <Card id="change-password" className="w-full scroll-m-20 lg:max-w-xl">
+      <Card id="ubah-kata-sandi" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
           <CardTitle>Ubah Kata Sandi</CardTitle>
           <CardDescription>
@@ -63,7 +60,7 @@ export default async function Page() {
         <ChangePasswordForm />
       </Card>
 
-      <Card id="active-session" className="w-full scroll-m-20 lg:max-w-xl">
+      <Card id="sesi-aktif" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
           <CardTitle>Sesi Aktif</CardTitle>
           <CardDescription>
@@ -86,7 +83,7 @@ export default async function Page() {
         </CardFooter>
       </Card>
 
-      <Card id="delete-account" className="w-full scroll-m-20 lg:max-w-xl">
+      <Card id="hapus-akun" className="w-full scroll-m-20 lg:max-w-xl">
         <CardHeader className="border-b">
           <CardTitle className="text-destructive">Hapus Akun</CardTitle>
           <CardDescription>

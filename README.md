@@ -7,7 +7,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
 - Authentication with user dashboard and RBAC
 - Database and S3 integration
 - Ready-to-use components, and styling
-- Centralized project structure (write once, use anywhere)
+- Centralized project structure
 - Handy utility functions, actions and S3 helpers
 
 ## Tech Stack
@@ -48,8 +48,6 @@ cd next-starter
 Install the dependencies:
 
 ```sh
-npm install
-# or
 bun install
 ```
 
@@ -58,8 +56,6 @@ bun install
 Push database schema to your PostgreSQL instance:
 
 ```sh
-npx drizzle-kit push
-# or
 bunx drizzle-kit push
 ```
 
@@ -68,14 +64,12 @@ bunx drizzle-kit push
 Start the Next.js development server:
 
 ```sh
-npm run dev
-# or
 bun run dev
 ```
 
 ## Tips
 
-To avoid default imports for `next/router` and Radix UI components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
+To avoid default imports for `next/router` and `radix-ui` components, you can adjust your TypeScript settings by adding the following configuration to your `.vscode/settings.json` file:
 
 ```json
 {

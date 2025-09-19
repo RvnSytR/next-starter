@@ -12,8 +12,8 @@ type MenuContent = {
   route: Route;
   icon?: LucideIcon;
   disabled?: boolean;
-  // TODO
-  subMenu?: { label: string; className?: string }[];
+  // if href is not defined, the Link href prop will be `route/toKebabCase(label)`
+  subMenu?: { label: string; href?: string; className?: string }[];
 };
 
 export type Menu = { section: string; content: MenuContent[] };
