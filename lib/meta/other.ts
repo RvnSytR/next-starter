@@ -10,18 +10,18 @@ export type DataType =
   | "array"
   | "object";
 
-export const allGenders = ["male", "female"] as const;
+export const allGenders = ["m", "f"] as const;
 export type Gender = (typeof allGenders)[number];
 export const genderMeta: Record<
   Gender,
   { displayName: string; icon: LucideIcon; badgeClassName: string }
 > = {
-  male: {
+  m: {
     displayName: "Laki-laki",
     icon: Mars,
     badgeClassName: "border-sky-500 text-sky-500",
   },
-  female: {
+  f: {
     displayName: "Perempuan",
     icon: Venus,
     badgeClassName: "border-pink-500 text-pink-500",
