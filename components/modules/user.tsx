@@ -344,8 +344,9 @@ export function SignOutButton() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   return (
     <SidebarMenuButton
+      tooltip="Keluar"
       variant="outline_destructive"
-      className="text-destructive hover:text-destructive justify-center"
+      className="text-destructive hover:text-destructive"
       disabled={isLoading}
       onClick={() => {
         setIsLoading(true);

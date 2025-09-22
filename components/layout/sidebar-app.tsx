@@ -112,7 +112,7 @@ function Header({
               }}
             />
 
-            <div className="grid break-all [&_span]:line-clamp-1">
+            <div className="grid break-all [&>span]:line-clamp-1">
               <div className="flex items-center gap-x-2">
                 <span className="text-sm font-semibold">{name}</span>
                 {emailVerified && (
@@ -145,8 +145,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
             return (
               <SidebarMenuItem key={route}>
                 <SidebarMenuButton disabled>
-                  {Icon && <Icon />}
-                  <span className="line-clamp-1">{displayName}</span>
+                  {Icon && <Icon />} {displayName}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );
@@ -158,7 +157,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                 <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
                     <LinkLoader icon={{ base: Icon && <Icon /> }} />
-                    <span className="line-clamp-1">{displayName}</span>
+                    {displayName}
                   </Link>
                 </SCMenuButton>
 
@@ -174,13 +173,15 @@ function Content({ role }: Pick<SidebarData, "role">) {
                       <SidebarMenuSub>
                         {subMenu.map(({ label, href, className }, idx) => (
                           <SidebarMenuSubItem key={idx}>
-                            <SidebarMenuSubButton className={className} asChild>
+                            <SidebarMenuSubButton asChild>
                               <Link
                                 href={href ?? `${route}/#${toKebabCase(label)}`}
-                                className="flex justify-between"
+                                className={cn(
+                                  "flex justify-between",
+                                  className,
+                                )}
                               >
-                                <span className="line-clamp-1">{label}</span>
-                                <LinkLoader />
+                                {label} <LinkLoader />
                               </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
@@ -218,8 +219,7 @@ function Footer() {
         <SidebarMenuItem key={url}>
           {disabled ? (
             <SidebarMenuButton size="sm" disabled>
-              {Icon && <Icon />}
-              {displayName}
+              {Icon && <Icon />} {displayName}
             </SidebarMenuButton>
           ) : (
             <SidebarMenuButton size="sm" tooltip={displayName} asChild>
@@ -235,9 +235,7 @@ function Footer() {
       <SidebarSeparator />
 
       <SidebarMenuItem>
-        <SidebarMenuButton tooltip="Sign Out" asChild>
-          <SignOutButton />
-        </SidebarMenuButton>
+        <SignOutButton />
       </SidebarMenuItem>
     </SidebarMenu>
   );

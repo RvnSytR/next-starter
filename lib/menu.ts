@@ -51,10 +51,5 @@ export const dashboardfooterMenu: (Omit<MenuContent, "route" | "subMenu"> & {
   displayName: string;
 })[] = [
   { url: "/", displayName: "Beranda", icon: ExternalLink },
-  {
-    url: "/sign-in",
-    displayName: "Bantuan",
-    icon: CircleHelp,
-    disabled: true,
-  },
+  { url: "/help", displayName: "Bantuan", icon: CircleHelp, disabled: true },
 ];
