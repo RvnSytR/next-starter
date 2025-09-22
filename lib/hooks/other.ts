@@ -1,7 +1,4 @@
 import { useEffect, useState } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
-import { ZodType } from "zod";
-import { fetcher } from "../utils";
 
 const MOBILE_BREAKPOINT = 768;
 
@@ -28,13 +25,4 @@ export function useDebounce<T>(value: T, delay?: number): T {
     };
   }, [value, delay]);
   return debouncedValue;
-}
-
-export function useValidatedSWR<T>(
-  key: string,
-  schema: ZodType<T>,
-  config?: { fetcher?: RequestInit; swr?: SWRConfiguration },
-): SWRResponse<T> {
-  const fn = async () => await fetcher(key, schema, config?.fetcher);
-  return useSWR(key, fn, config?.swr);
 }
