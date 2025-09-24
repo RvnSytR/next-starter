@@ -19,7 +19,6 @@ import {
 } from "@/components/ui/tooltip";
 import { useIsMobile } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
-import { VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import {
@@ -30,7 +29,11 @@ import {
   useMemo,
   useState,
 } from "react";
-import { sidebarMenuButtonVariants } from "../layout/sidebar-app";
+import {
+  SidebarMenuButtonProps,
+  sidebarMenuButtonVariants,
+  SidebarMenuSubButtonProps,
+} from "../layout/sidebar-app";
 
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
@@ -475,12 +478,6 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<"li">) {
   );
 }
 
-type SidebarMenuButtonProps = React.ComponentProps<"button"> & {
-  asChild?: boolean;
-  isActive?: boolean;
-  tooltip?: string | React.ComponentProps<typeof TooltipContent>;
-} & VariantProps<typeof sidebarMenuButtonVariants>;
-
 function SidebarMenuButton({
   asChild = false,
   isActive = false,
@@ -637,15 +634,12 @@ function SidebarMenuSubItem({
 
 function SidebarMenuSubButton({
   asChild = false,
+  variant = "default",
   size = "md",
   isActive = false,
   className,
   ...props
-}: React.ComponentProps<"a"> & {
-  asChild?: boolean;
-  size?: "sm" | "md";
-  isActive?: boolean;
-}) {
+}: SidebarMenuSubButtonProps) {
   const Comp = asChild ? SlotPrimitive.Slot : "a";
 
   return (
@@ -655,10 +649,14 @@ function SidebarMenuSubButton({
       data-size={size}
       data-active={isActive}
       className={cn(
-        "text-sidebar-foreground ring-sidebar-ring hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:bg-sidebar-accent active:text-sidebar-accent-foreground [&>svg]:text-sidebar-accent-foreground flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-hidden focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
+        "[&>svg]:text-sidebar-accent-foreground flex h-7 min-w-0 -translate-x-px items-center gap-2 overflow-hidden rounded-md px-2 outline-hidden focus-visible:ring-2 disabled:pointer-events-none disabled:opacity-50 aria-disabled:pointer-events-none aria-disabled:opacity-50 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
         "data-[active=true]:bg-sidebar-accent data-[active=true]:text-sidebar-accent-foreground",
         size === "sm" && "text-xs",
         size === "md" && "text-sm",
+        variant === "default" &&
+          "text-sidebar-foreground ring-sidebar-ring active:bg-sidebar-accent hover:bg-sidebar-accent hover:text-sidebar-accent-foreground active:text-sidebar-accent-foreground",
+        variant === "destructive" &&
+          "text-destructive hover:bg-destructive/10 dark:hover:bg-destructive/20 ring-destructive/20 dark:ring-destructive/40 active:bg-destructive/10 dark:active:bg-destructive/10 hover:text-destructive active:text-destructive",
         "group-data-[collapsible=icon]:hidden",
         className,
       )}
@@ -694,4 +692,3 @@ export {
   SidebarTrigger,
   useSidebar,
 };
-export type { SidebarMenuButtonProps };

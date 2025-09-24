@@ -2,7 +2,7 @@ import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { UserWithRole } from "better-auth/plugins";
-import { cva } from "class-variance-authority";
+import { cva, VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { routesMeta } from "../../lib/routes";
@@ -28,12 +28,8 @@ import {
   SidebarRail,
   SidebarSeparator,
 } from "../ui/sidebar";
+import { TooltipContent } from "../ui/tooltip";
 import { SCCollapsible, SCMenuButton } from "./sidebar-client";
-
-type SidebarData = Pick<
-  UserWithRole,
-  "name" | "email" | "image" | "role" | "emailVerified"
->;
 
 export const sidebarMenuButtonVariants = cva(
   "peer/menu-button flex w-full items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-hidden ring-sidebar-ring transition-[width,height,padding,margin] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-data-[sidebar=menu-action]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:size-8 group-data-[collapsible=icon]:p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0",
@@ -55,6 +51,25 @@ export const sidebarMenuButtonVariants = cva(
     defaultVariants: { variant: "default", size: "default" },
   },
 );
+
+type SidebarData = Pick<
+  UserWithRole,
+  "name" | "email" | "image" | "role" | "emailVerified"
+>;
+
+export type SidebarMenuButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof sidebarMenuButtonVariants> & {
+    asChild?: boolean;
+    isActive?: boolean;
+    tooltip?: string | React.ComponentProps<typeof TooltipContent>;
+  };
+
+export type SidebarMenuSubButtonProps = React.ComponentProps<"a"> & {
+  asChild?: boolean;
+  variant?: "default" | "destructive";
+  size?: "sm" | "md";
+  isActive?: boolean;
+};
 
 export function SidebarApp({
   data,
@@ -171,21 +186,28 @@ function Content({ role }: Pick<SidebarData, "role">) {
 
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {subMenu.map(({ label, href, className }, idx) => (
-                          <SidebarMenuSubItem key={idx}>
-                            <SidebarMenuSubButton asChild>
-                              <Link
-                                href={href ?? `${route}/#${toKebabCase(label)}`}
+                        {subMenu.map(
+                          ({ label, href, className, ...props }, idx) => (
+                            <SidebarMenuSubItem key={idx}>
+                              <SidebarMenuSubButton
                                 className={cn(
                                   "flex justify-between",
                                   className,
                                 )}
+                                asChild
+                                {...props}
                               >
-                                {label} <LinkLoader />
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
+                                <Link
+                                  href={
+                                    href ?? `${route}/#${toKebabCase(label)}`
+                                  }
+                                >
+                                  {label} <LinkLoader />
+                                </Link>
+                              </SidebarMenuSubButton>
+                            </SidebarMenuSubItem>
+                          ),
+                        )}
                       </SidebarMenuSub>
                     </CollapsibleContent>
                   </>

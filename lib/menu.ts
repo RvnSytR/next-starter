@@ -1,3 +1,4 @@
+import { SidebarMenuSubButtonProps } from "@/components/layout/sidebar-app";
 import {
   CircleHelp,
   ExternalLink,
@@ -12,8 +13,8 @@ type MenuContent = {
   route: Route;
   icon?: LucideIcon;
   disabled?: boolean;
-  // if href is not defined, the Link href prop will be `route/toKebabCase(label)`
-  subMenu?: { label: string; href?: string; className?: string }[];
+  // if href is not defined, the Link href prop will be `/{route}/#${toKebabCase(label)}`
+  subMenu?: (Omit<SidebarMenuSubButtonProps, "asChild"> & { label: string })[];
 };
 
 export type Menu = { section: string; content: MenuContent[] };
@@ -36,10 +37,7 @@ export const dashboardMenu: Menu[] = [
           { label: "Informasi Pribadi" },
           { label: "Ubah Kata Sandi" },
           { label: "Sesi Aktif" },
-          {
-            label: "Hapus Akun",
-            className: "text-destructive hover:text-destructive",
-          },
+          { label: "Hapus Akun", variant: "destructive" },
         ],
       },
     ],

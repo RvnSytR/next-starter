@@ -6,11 +6,8 @@ import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 import { ComponentProps, useEffect, useState } from "react";
 import { Collapsible } from "../ui/collapsible";
-import {
-  SidebarMenuButton,
-  SidebarMenuButtonProps,
-  useSidebar,
-} from "../ui/sidebar";
+import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
+import { SidebarMenuButtonProps } from "./sidebar-app";
 
 // ? SC = Sidebar Client
 
