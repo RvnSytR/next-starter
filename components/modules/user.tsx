@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Session } from "better-auth";
 import { UserWithRole } from "better-auth/plugins";
 import {
+  ArrowUpRight,
   BadgeCheck,
   Ban,
   Gamepad2,
@@ -101,7 +102,7 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
-const userFields = fieldsMeta.user;
+const { user: userFields } = fieldsMeta;
 
 const sharedText = {
   signIn: "Berhasil masuk - Selamat datang!",
@@ -282,10 +283,12 @@ export function UserDetailSheet({
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex items-center gap-x-2">
-        <SheetTrigger className="link">{data.email}</SheetTrigger>
-        {data.emailVerified && <UserVerifiedBadge withoutText />}
-      </div>
+      <SheetTrigger className="group hover:cursor-pointer" asChild>
+        <div className="flex w-fit gap-x-1">
+          <span className="link-group">{data.name}</span>
+          <ArrowUpRight className="group-hover:text-primary size-3.5 transition-colors" />
+        </div>
+      </SheetTrigger>
 
       <SheetContent>
         <SheetHeader className="flex-row items-center">
@@ -306,10 +309,10 @@ export function UserDetailSheet({
 
           <SheetDetails data={details} />
 
-          <Separator />
-
           {!isCurrentUser && (
             <>
+              <Separator />
+
               <AdminChangeUserRoleForm data={data} setIsOpen={setIsOpen} />
 
               <Separator />

@@ -51,7 +51,7 @@ export function formatNumber(
   return value === "0" ? "" : value;
 }
 
-export function formatPhone(number: number, prefix?: "+62" | "0") {
+export function formatPhone(number: string | number, prefix?: "+62" | "0") {
   const phoneStr = String(number);
   if (!phoneStr || phoneStr === "0") return "";
   if (phoneStr.length <= 3) return phoneStr;
@@ -63,5 +63,5 @@ export function formatPhone(number: number, prefix?: "+62" | "0") {
     remaining = remaining.slice(4);
   }
 
-  return `${prefix ?? ""}${formatted}`.trim();
+  return `${prefix ?? ""} ${formatted}`.trim();
 }

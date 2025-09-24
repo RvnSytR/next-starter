@@ -15,11 +15,16 @@ import {
   UserRound,
   UserSquare2,
 } from "lucide-react";
-import { UserAvatar, UserDetailSheet, UserRoleBadge } from "../modules/user";
+import {
+  UserAvatar,
+  UserDetailSheet,
+  UserRoleBadge,
+  UserVerifiedBadge,
+} from "../modules/user";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
 
-const userFields = fieldsMeta.user;
+const { user: userFields } = fieldsMeta;
 
 function headerButton<C, T>(
   column: Column<C, T>,
@@ -96,26 +101,31 @@ export const getUserColumn = (currentUserId: string) => [
     meta: { displayName: userFields.avatar, type: "text", icon: UserSquare2 },
     enableSorting: false,
   }),
+  createUserColumn.accessor(({ name }) => name, {
+    id: userFields.name.label,
+    header: ({ column }) => headerButton(column, userFields.name.label),
+    cell: ({ row }) => (
+      <UserDetailSheet
+        data={row.original}
+        isCurrentUser={row.original.id === currentUserId}
+      />
+    ),
+    filterFn: filterFn("text"),
+    meta: { displayName: userFields.name.label, type: "text", icon: UserRound },
+  }),
   createUserColumn.accessor(({ email }) => email, {
     id: userFields.email.label,
     header: ({ column }) => headerButton(column, userFields.email.label),
     cell: ({ row }) => {
+      const { email, emailVerified } = row.original;
       return (
-        <UserDetailSheet
-          data={row.original}
-          isCurrentUser={row.original.id === currentUserId}
-        />
+        <div className="flex items-center gap-x-2">
+          {email} {!emailVerified && <UserVerifiedBadge withoutText />}
+        </div>
       );
     },
     filterFn: filterFn("text"),
     meta: { displayName: userFields.email.label, type: "text", icon: Mail },
-  }),
-  createUserColumn.accessor(({ name }) => name, {
-    id: userFields.name.label,
-    header: ({ column }) => headerButton(column, userFields.name.label),
-    cell: ({ row }) => row.original.name,
-    filterFn: filterFn("text"),
-    meta: { displayName: userFields.name.label, type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: userFields.role,

@@ -71,16 +71,16 @@ export const zodSchemas = {
   updatedAt: z.coerce.date({ error: `${fieldsMeta.updatedAt} tidak valid.` }),
   createdAt: z.coerce.date({ error: `${fieldsMeta.createdAt} tidak valid.` }),
 
-  date: z.date({ error: "Pilih tanggal yang valid." }),
+  date: z.coerce.date({ error: "Pilih tanggal yang valid." }),
 
-  dateMultiple: z.array(z.date({ error: "Pilih tanggal yang valid." }), {
+  dateMultiple: z.array(z.coerce.date({ error: "Pilih tanggal yang valid." }), {
     error: "Beberapa tanggal yang dimasukkan tidak valid.",
   }),
 
   dateRange: z.object(
     {
-      from: z.date({ error: "Pilih tanggal mulai yang valid." }),
-      to: z.date({ error: "Pilih tanggal akhir yang valid." }),
+      from: z.coerce.date({ error: "Pilih tanggal mulai yang valid." }),
+      to: z.coerce.date({ error: "Pilih tanggal akhir yang valid." }),
     },
     { error: "Pilih rentang tanggal yang valid." },
   ),

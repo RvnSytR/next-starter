@@ -85,6 +85,9 @@ export type OtherDataTableProps<TData> = ToolBoxProps & {
   };
 };
 
+const rowsLimitArr = [5, 10, 20, 30, 40, 50, 100];
+const defaultRowsLimit = rowsLimitArr[2];
+
 export function DataTable<TData>({
   data,
   columns,
@@ -105,7 +108,6 @@ export function DataTable<TData>({
   const [rowSelection, setRowSelection] = useState({});
 
   const [children, setChildren] = useState<ReactNode>(null);
-  const rowsLimitArr = [5, 10, 20, 30, 40, 50, 100];
 
   const table = useReactTable({
     data,
@@ -130,7 +132,7 @@ export function DataTable<TData>({
     onRowSelectionChange: setRowSelection,
     enableRowSelection,
 
-    initialState: { pagination: { pageIndex: 0, pageSize: rowsLimitArr[2] } },
+    initialState: { pagination: { pageIndex: 0, pageSize: defaultRowsLimit } },
     state: {
       sorting,
       globalFilter,
@@ -418,7 +420,7 @@ function RowsPerPage<TData>({
     <div className={cn("flex items-center gap-x-2", className)}>
       <Label>Baris per halaman</Label>
       <Select
-        value={String(table.getState().pagination.pageSize)}
+        value={String(table.getState().pagination.pageSize ?? defaultRowsLimit)}
         onValueChange={(value) => {
           table.setPageSize(Number(value));
         }}

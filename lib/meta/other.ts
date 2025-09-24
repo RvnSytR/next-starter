@@ -14,18 +14,10 @@ export const allGenders = ["m", "f"] as const;
 export type Gender = (typeof allGenders)[number];
 export const genderMeta: Record<
   Gender,
-  { displayName: string; icon: LucideIcon; badgeClassName: string }
+  { displayName: string; icon: LucideIcon; color: string }
 > = {
-  m: {
-    displayName: "Laki-laki",
-    icon: Mars,
-    badgeClassName: "border-sky-500 text-sky-500",
-  },
-  f: {
-    displayName: "Perempuan",
-    icon: Venus,
-    badgeClassName: "border-pink-500 text-pink-500",
-  },
+  m: { displayName: "Laki-laki", icon: Mars, color: "var(--color-sky-500)" },
+  f: { displayName: "Perempuan", icon: Venus, color: "var(--color-pink-500)" },
 };
 
 export const allLanguages = ["en", "id", "es", "fr", "de", "ar"] as const;
