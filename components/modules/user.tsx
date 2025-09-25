@@ -286,7 +286,7 @@ export function UserDetailSheet({
       <SheetTrigger className="group hover:cursor-pointer" asChild>
         <div className="flex w-fit gap-x-1">
           <span className="link-group">{data.name}</span>
-          <ArrowUpRight className="group-hover:text-primary size-3.5 transition-colors" />
+          <ArrowUpRight className="group-hover:text-primary size-3.5" />
         </div>
       </SheetTrigger>
 
