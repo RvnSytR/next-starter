@@ -6,7 +6,8 @@ import { cva, VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { routesMeta } from "../../lib/routes";
-import { SignOutButton, UserAvatar, UserVerifiedBadge } from "../modules/user";
+import { UserAvatar, UserVerifiedBadge } from "../modules/user";
+import { SignOutButton } from "../modules/user-client";
 import { LinkLoader, RefreshButton } from "../ui/buttons";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {

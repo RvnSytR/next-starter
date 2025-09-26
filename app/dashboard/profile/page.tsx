@@ -1,13 +1,12 @@
 import { DashboardMain } from "@/components/layout/section";
+import { UserRoleBadge, UserVerifiedBadge } from "@/components/modules/user";
 import {
   ActiveSessionButton,
   ChangePasswordForm,
   DeleteMyAccountButton,
   PersonalInformation,
   RevokeOtherSessionsButton,
-  UserRoleBadge,
-  UserVerifiedBadge,
-} from "@/components/modules/user";
+} from "@/components/modules/user-client";
 import {
   Card,
   CardAction,

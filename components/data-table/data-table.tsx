@@ -26,11 +26,14 @@ import {
   ChevronsRight,
   Columns3,
   RotateCcw,
+  SearchIcon,
 } from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
 import { RefreshButton } from "../ui/buttons";
 import { Checkbox } from "../ui/checkbox";
+import { CommandShortcut } from "../ui/command";
+import { Input, InputWrapper } from "../ui/input";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -49,7 +52,6 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
-import { DataTableSearch } from "./data-table-client";
 import {
   ActiveFilters,
   ActiveFiltersMobileContainer,
@@ -277,13 +279,58 @@ function ToolBox<TData>({
 
       <div className="flex gap-x-2 *:grow">
         <Reset table={table} />
-        <DataTableSearch
+        <Search
           table={table}
           searchPlaceholder={searchPlaceholder}
           className="col-span-2"
         />
       </div>
     </div>
+  );
+}
+
+function View<TData>({ table }: TableProps<TData>) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button size="sm" variant="outline">
+          <Columns3 /> {actions.view}
+        </Button>
+      </PopoverTrigger>
+
+      <PopoverContent className="flex flex-col gap-y-1 p-1">
+        {table
+          .getAllColumns()
+          .filter((column) => column.getCanHide())
+          .map((column) => {
+            const cbId = `cb-${column.id}`;
+            const Icon = column.columnDef.meta?.icon;
+            return (
+              <Label
+                key={cbId}
+                htmlFor={cbId}
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "sm" }),
+                  "group justify-start gap-x-3 p-2 capitalize",
+                )}
+              >
+                <Checkbox
+                  id={cbId}
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                />
+
+                <div className="flex items-center gap-x-2">
+                  {Icon && (
+                    <Icon className="text-muted-foreground group-hover:text-primary transition-colors" />
+                  )}
+                  <small className="font-medium">{column.id}</small>
+                </div>
+              </Label>
+            );
+          })}
+      </PopoverContent>
+    </Popover>
   );
 }
 
@@ -323,46 +370,39 @@ function Reset<TData>({
   );
 }
 
-function View<TData>({ table }: TableProps<TData>) {
+function Search<TData>({
+  table,
+  searchPlaceholder = "Cari...",
+  className,
+}: TableProps<TData> &
+  Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        searchRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   return (
-    <Popover>
-      <PopoverTrigger asChild>
-        <Button size="sm" variant="outline">
-          <Columns3 /> {actions.view}
-        </Button>
-      </PopoverTrigger>
-
-      <PopoverContent className="flex flex-col gap-y-1 p-1">
-        {table
-          .getAllColumns()
-          .filter((column) => column.getCanHide())
-          .map((column) => {
-            const cbId = `cb-${column.id}`;
-            const Icon = column.columnDef.meta?.icon;
-            return (
-              <Label
-                key={cbId}
-                htmlFor={cbId}
-                className={cn(
-                  buttonVariants({ variant: "ghost", size: "sm" }),
-                  "justify-start gap-x-3 p-2 capitalize",
-                )}
-              >
-                <Checkbox
-                  id={cbId}
-                  checked={column.getIsVisible()}
-                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                />
-
-                <div className="flex items-center gap-x-2">
-                  {Icon && <Icon className="text-muted-foreground" />}
-                  <small className="font-medium">{column.id}</small>
-                </div>
-              </Label>
-            );
-          })}
-      </PopoverContent>
-    </Popover>
+    <InputWrapper icon={<SearchIcon />} className={className}>
+      <Input
+        ref={searchRef}
+        placeholder={searchPlaceholder}
+        value={table.getState().globalFilter}
+        onChange={(e) => table.setGlobalFilter(String(e.target.value))}
+        className="h-8 lg:pr-12"
+      />
+      <CommandShortcut className="absolute inset-y-0 right-3 hidden items-center select-none lg:flex">
+        ⌘+K
+      </CommandShortcut>
+    </InputWrapper>
   );
 }
 

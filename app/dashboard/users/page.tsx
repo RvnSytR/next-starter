@@ -2,7 +2,7 @@ import { DashboardMain } from "@/components/layout/section";
 import {
   AdminCreateUserDialog,
   UserDataTable,
-} from "@/components/modules/user";
+} from "@/components/modules/user-client";
 import {
   CardAction,
   CardDescription,
