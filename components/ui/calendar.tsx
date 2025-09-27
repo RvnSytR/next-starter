@@ -49,7 +49,7 @@ function Calendar({
           defaultClassNames.month,
         ),
         nav: cn(
-          "absolute top-0 flex gap-1 w-full justify-between z-10",
+          "flex items-center gap-1 w-full absolute top-0 inset-x-0 justify-between",
           defaultClassNames.nav,
         ),
         button_previous: cn(

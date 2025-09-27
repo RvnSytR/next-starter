@@ -1,5 +1,5 @@
 import { DataType } from "./meta";
-import { formatDate, formatDateDistanceToNow } from "./utils";
+import { capitalize, formatDate, formatDateDistanceToNow } from "./utils";
 
 export const actions = {
   // created: "dibuat",
@@ -30,36 +30,40 @@ export const messages = {
   error: "Terjadi kesalahan. Silakan coba lagi nanti.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 
-  noChanges: (thing: string) => `Tidak ada perubahan pada ${thing}.`,
+  noChanges: (thing: string) =>
+    `Tidak ada perubahan pada ${thing.toLowerCase()}.`,
 
   thingAgo: (thing: string, time: Date) =>
-    `${thing} ${formatDateDistanceToNow(time)} yang lalu.`,
+    `${capitalize(thing, "first")} ${formatDateDistanceToNow(time)} yang lalu.`,
   dateAgo: (time: Date) =>
     `${formatDate(time, "PPPp")} - ${formatDateDistanceToNow(time)} yang lalu.`,
 
   // -- Validation
-  invalid: (field: string) => `Masukkan ${field} yang valid.`,
+  invalid: (field: string) => `Masukkan ${field.toLowerCase()} yang valid.`,
   invalidType: (field: string, fieldType: DataType) =>
-    `${field} harus berupa ${fieldType} yang valid.`,
+    `${capitalize(field, "first")} harus berupa ${fieldType} yang valid.`,
 
-  required: (field: string) => `${field} wajib diisi.`,
+  required: (field: string) => `${capitalize(field, "first")} wajib diisi.`,
   requiredInvalidType: (field: string, fieldType: DataType) =>
-    `${field} wajib diisi dan harus berupa ${fieldType} yang valid.`,
+    `${capitalize(field, "first")} wajib diisi dan harus berupa ${fieldType} yang valid.`,
 
+  stringLength: (field: string, min: number) =>
+    `${capitalize(field, "first")} harus terdiri dari ${min} karakter.`,
   stringTooShort: (field: string, min: number) =>
-    `${field} harus terdiri dari minimal ${min} karakter.`,
+    `${capitalize(field, "first")} harus terdiri dari minimal ${min} karakter.`,
   stringTooLong: (field: string, max: number) =>
-    `${field} tidak boleh melebihi ${max} karakter.`,
+    `${capitalize(field, "first")} tidak boleh melebihi ${max} karakter.`,
 
   numberTooSmall: (field: string, min: number) =>
-    `${field} tidak boleh kurang dari ${min}.`,
+    `${capitalize(field, "first")} tidak boleh kurang dari ${min}.`,
   numberTooLarge: (field: string, max: number) =>
-    `${field} tidak boleh lebih dari ${max}.`,
+    `${capitalize(field, "first")} tidak boleh lebih dari ${max}.`,
 
   outOfRange: (
     field: string,
     min: number,
     max: number,
     thing: string = "karakter",
-  ) => `${field} harus antara ${min} hingga ${max} ${thing}.`.trim(),
+  ) =>
+    `${capitalize(field, "first")} harus antara ${min} hingga ${max} ${thing}.`.trim(),
 };

@@ -10,14 +10,7 @@ import {
 import { getIconOrText, IconOrText } from "./icons";
 import { Input, InputProps, InputWrapper } from "./input";
 
-export function FormFieldWrapper({
-  type = "default",
-  label,
-  desc,
-  className,
-  classNames,
-  children,
-}: {
+export type FormFieldWrapperProps = {
   type?: "default" | "checkbox";
   label: string;
   desc?: string;
@@ -28,7 +21,16 @@ export function FormFieldWrapper({
     formDescription?: string;
   };
   children: React.ReactNode;
-}) {
+};
+
+export function FormFieldWrapper({
+  type = "default",
+  label,
+  desc,
+  className,
+  classNames,
+  children,
+}: FormFieldWrapperProps) {
   const LabelComp = () => (
     <FormLabel
       data-slot="form-field-wrapper-label"
@@ -76,19 +78,19 @@ export function FormFieldWrapper({
 
 // ! Only for traditional text fields that are commonly used
 export function TextFields<T extends FieldValues>({
-  type,
   label,
+  desc,
+  type,
   placeholder,
   icon: Icon,
   required = false,
   field,
   ...props
-}: Omit<InputProps, keyof Omit<ControllerRenderProps<T>, "disabled">> & {
-  field: ControllerRenderProps<T>;
-  type: React.HTMLInputTypeAttribute;
-  label: string;
-  icon?: IconOrText;
-}) {
+}: Omit<InputProps, keyof Omit<ControllerRenderProps<T>, "disabled">> &
+  Pick<FormFieldWrapperProps, "label" | "desc"> & {
+    field: ControllerRenderProps<T>;
+    icon?: IconOrText;
+  }) {
   const comp = (
     <FormControl>
       <Input
@@ -102,7 +104,7 @@ export function TextFields<T extends FieldValues>({
   );
 
   return (
-    <FormFieldWrapper label={label}>
+    <FormFieldWrapper label={label} desc={desc}>
       {Icon ? (
         <InputWrapper icon={getIconOrText(Icon)}>{comp}</InputWrapper>
       ) : (

@@ -1,11 +1,11 @@
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
+import { routesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { UserWithRole } from "better-auth/plugins";
 import { cva, VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
-import { routesMeta } from "../../lib/routes";
 import { UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { SignOutButton } from "../modules/user-client";
 import { LinkLoader, RefreshButton } from "../ui/buttons";

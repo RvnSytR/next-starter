@@ -19,16 +19,9 @@ export function UserRoleBadge({
       <TooltipTrigger className={className} asChild>
         <Badge
           variant="outline"
-          style={
-            {
-              "--badge-color-light":
-                typeof color === "string" ? color : color.light,
-              "--badge-color-dark":
-                typeof color === "string" ? color : color.dark,
-            } as React.CSSProperties
-          }
+          style={{ "--badge-color": color } as React.CSSProperties}
           className={cn(
-            "border-[var(--badge-color-light)] text-[var(--badge-color-light)] capitalize dark:border-[var(--badge-color-dark)] dark:text-[var(--badge-color-dark)]",
+            "border-[var(--badge-color)] text-[var(--badge-color)] capitalize",
           )}
         >
           <Icon /> {displayName ?? role}

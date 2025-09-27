@@ -8,7 +8,9 @@ import { FormControl, FormItem, FormLabel } from "./form";
 import { IconOrText } from "./icons";
 
 type RadioGroupProps = ComponentProps<typeof RadioGroupPrimitive.Root>;
-type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item>;
+type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item> & {
+  classNames?: { inidicator?: string; circle?: string };
+};
 
 export function RadioGroup({ className, ...props }: RadioGroupProps) {
   return (
@@ -20,7 +22,11 @@ export function RadioGroup({ className, ...props }: RadioGroupProps) {
   );
 }
 
-export function RadioGroupItem({ className, ...props }: RadioGroupItemProps) {
+export function RadioGroupItem({
+  className,
+  classNames,
+  ...props
+}: RadioGroupItemProps) {
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
@@ -32,9 +38,17 @@ export function RadioGroupItem({ className, ...props }: RadioGroupItemProps) {
     >
       <RadioGroupPrimitive.Indicator
         data-slot="radio-group-indicator"
-        className="relative flex items-center justify-center"
+        className={cn(
+          "relative flex items-center justify-center",
+          classNames?.inidicator,
+        )}
       >
-        <CircleIcon className="fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2" />
+        <CircleIcon
+          className={cn(
+            "fill-primary absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2",
+            classNames?.circle,
+          )}
+        />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
   );
@@ -46,42 +60,50 @@ export function RadioGroupField({
 }: RadioGroupProps & {
   data: {
     value: string;
+    key?: string;
     label?: string;
     desc?: string;
     icon?: IconOrText;
-    className?: boolean;
+    color?: string;
+    className?: string;
     disabled?: boolean;
   }[];
 }) {
   return (
     <RadioGroup {...props}>
-      {data.map(({ value, label, desc, icon: Icon, className, disabled }) => (
+      {data.map(({ icon: Icon, ...item }) => (
         <FormItem
-          key={value}
+          key={item.key ?? item.value}
+          style={
+            {
+              "--radio-color": item.color ?? "var(--primary)",
+            } as React.CSSProperties
+          }
           className={cn(
-            "dark:bg-input/30 has-data-[state=checked]:border-primary border-input relative items-start rounded-md border p-4 shadow-xs",
-            disabled && "opacity-50",
-            className,
+            "dark:bg-input/30 border-input relative items-start rounded-md border p-4 shadow-xs has-data-[state=checked]:border-[var(--radio-color)]",
+            item.disabled && "opacity-50",
+            item.className,
           )}
         >
-          <div className="flex w-full justify-between gap-x-2">
+          <div className="flex w-full justify-between gap-x-2 has-data-[state=checked]:[&>label]:text-[var(--radio-color)]">
             <FormLabel className="flex items-center">
               {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
-              {label ?? value}
+              {item.label ?? item.value}
             </FormLabel>
 
             <FormControl>
               <RadioGroupItem
-                value={value}
-                className="after:absolute after:inset-0"
-                disabled={disabled}
+                value={item.value}
+                className="after:absolute after:inset-0 has-data-[state=checked]:border-[var(--radio-color)]"
+                classNames={{ circle: "fill-[var(--radio-color)]" }}
+                disabled={item.disabled}
               />
             </FormControl>
           </div>
 
-          {desc && (
+          {item.desc && (
             <small className="text-muted-foreground text-xs text-pretty">
-              {desc}
+              {item.desc}
             </small>
           )}
         </FormItem>

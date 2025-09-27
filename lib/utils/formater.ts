@@ -48,7 +48,7 @@ export function formatNumber(
 ) {
   const locale = languageMeta[props?.lang ?? appMeta.lang].locale;
   const value = new Intl.NumberFormat(locale, props?.options).format(number);
-  return value === "0" ? "" : value;
+  return value === "0" ? "0" : value;
 }
 
 export function formatPhone(number: string | number, prefix?: "+62" | "0") {

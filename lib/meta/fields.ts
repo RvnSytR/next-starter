@@ -84,7 +84,7 @@ export const fieldTypeMeta: Record<FieldType, { icon: IconOrText }> = {
 // ! Only for fields that are commonly used in tables, details or displayed to users
 export const fieldsMeta = {
   num: "No",
-  gender: "Jenis Kelamin",
+  gender: "Jenis kelamin",
   updatedAt: "Terakhir diperbarui",
   createdAt: "Waktu dibuat",
 
