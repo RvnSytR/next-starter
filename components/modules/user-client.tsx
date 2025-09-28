@@ -1344,12 +1344,16 @@ function AdminRemoveUserDialog({
             datanya secara permanen. Harap berhati-hati karena aksi ini tidak
             dapat dibatalkan.
           </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div className="grid gap-2">
+          <Label>{messages.removeLabel(name)}</Label>
           <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={name}
           />
-        </AlertDialogHeader>
+        </div>
 
         <AlertDialogFooter>
           <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
@@ -1477,13 +1481,16 @@ function AdminActionRemoveUsersDialog({
             dipilih beserta seluruh datanya secara permanen. Harap berhati-hati
             karena aksi ini tidak dapat dibatalkan.
           </AlertDialogDescription>
+        </AlertDialogHeader>
+
+        <div className="grid gap-2">
+          <Label>{messages.removeLabel(String(data.length))}</Label>
           <Input
-            type="number"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={String(data.length)}
           />
-        </AlertDialogHeader>
+        </div>
 
         <AlertDialogFooter>
           <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>

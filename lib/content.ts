@@ -30,6 +30,9 @@ export const messages = {
   error: "Terjadi kesalahan. Silakan coba lagi nanti.",
   notAuthorized: "Anda tidak memiliki izin untuk melakukan tindakan ini.",
 
+  removeLabel: (thing: string) =>
+    `Untuk mengonfirmasi, ketik "${thing}" pada kolom di bawah ini.`,
+
   noChanges: (thing: string) =>
     `Tidak ada perubahan pada ${thing.toLowerCase()}.`,
 
