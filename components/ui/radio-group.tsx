@@ -62,10 +62,16 @@ export function RadioGroupField({
     value: string;
     key?: string;
     label?: string;
-    desc?: string;
+    desc?: React.ReactNode;
     icon?: IconOrText;
     color?: string;
     className?: string;
+    classNames?: {
+      header?: string;
+      label?: string;
+      radioItem?: string;
+      desc?: string;
+    };
     disabled?: boolean;
   }[];
 }) {
@@ -85,8 +91,15 @@ export function RadioGroupField({
             item.className,
           )}
         >
-          <div className="flex w-full justify-between gap-x-2 has-data-[state=checked]:[&>label]:text-[var(--radio-color)]">
-            <FormLabel className="flex items-center">
+          <div
+            className={cn(
+              "flex w-full justify-between gap-x-2 has-data-[state=checked]:[&>label]:text-[var(--radio-color)]",
+              item.classNames?.header,
+            )}
+          >
+            <FormLabel
+              className={cn("flex items-center", item.classNames?.label)}
+            >
               {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
               {item.label ?? item.value}
             </FormLabel>
@@ -94,7 +107,10 @@ export function RadioGroupField({
             <FormControl>
               <RadioGroupItem
                 value={item.value}
-                className="after:absolute after:inset-0 has-data-[state=checked]:border-[var(--radio-color)]"
+                className={cn(
+                  "after:absolute after:inset-0 has-data-[state=checked]:border-[var(--radio-color)]",
+                  item.classNames?.radioItem,
+                )}
                 classNames={{ circle: "fill-[var(--radio-color)]" }}
                 disabled={item.disabled}
               />
@@ -102,9 +118,14 @@ export function RadioGroupField({
           </div>
 
           {item.desc && (
-            <small className="text-muted-foreground text-xs text-pretty">
+            <span
+              className={cn(
+                "text-muted-foreground text-xs text-pretty",
+                item.classNames?.desc,
+              )}
+            >
               {item.desc}
-            </small>
+            </span>
           )}
         </FormItem>
       ))}

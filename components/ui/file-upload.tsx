@@ -214,7 +214,7 @@ export function FileUpload({
                     href={fileURL as Route}
                     target="_blank"
                     className={cn(
-                      "text-sm font-medium hover:underline",
+                      "w-fit text-sm font-medium hover:underline",
                       !res.success && "text-destructive",
                     )}
                   >

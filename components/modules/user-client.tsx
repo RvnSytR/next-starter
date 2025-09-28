@@ -84,6 +84,7 @@ import {
 import { Form, FormControl, FormField } from "../ui/form";
 import { FormFieldWrapper, TextFields } from "../ui/form-fields";
 import { GithubIcon, Loader } from "../ui/icons";
+import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroupField } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
@@ -1299,6 +1300,7 @@ function AdminRemoveUserDialog({
   data: Pick<UserWithRole, "id" | "name" | "image">;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = async () => {
@@ -1334,13 +1336,19 @@ function AdminRemoveUserDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> Hapus Akun {name}
+            <TriangleAlert /> Hapus akun atas nama {name}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            PERINGATAN: Tindakan ini akaPn menghapus akun {name} beserta seluruh
+            PERINGATAN: Tindakan ini akan menghapus akun{" "}
+            <span className="text-foreground">{name}</span> beserta seluruh
             datanya secara permanen. Harap berhati-hati karena aksi ini tidak
             dapat dibatalkan.
           </AlertDialogDescription>
+          <Input
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={name}
+          />
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -1348,6 +1356,7 @@ function AdminRemoveUserDialog({
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
+            disabled={input !== name}
           >
             {actions.confirm}
           </AlertDialogAction>
@@ -1399,7 +1408,8 @@ function AdminActionRevokeUserSessionsDialog({
             Cabut Sesi untuk {ids.length} Pengguna
           </AlertDialogTitle>
           <AlertDialogDescription>
-            Ini akan menghentikan semua sesi aktif dari {ids.length} pengguna
+            Ini akan menghentikan semua sesi aktif dari{" "}
+            <span className="text-foreground">{ids.length} pengguna</span>
             yang dipilih. Yakin ingin melanjutkan?
           </AlertDialogDescription>
         </AlertDialogHeader>
@@ -1425,6 +1435,7 @@ function AdminActionRemoveUsersDialog({
   data: Pick<UserWithRole, "id" | "name" | "image">[];
   onSuccess: () => void;
 }) {
+  const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const clickHandler = async () => {
@@ -1461,10 +1472,17 @@ function AdminActionRemoveUsersDialog({
             <TriangleAlert /> Hapus {data.length} Akun
           </AlertDialogTitle>
           <AlertDialogDescription>
-            PERINGATAN: Tindakan ini akan menghapus {data.length} akun yang
+            PERINGATAN: Tindakan ini akan menghapus{" "}
+            <span className="text-foreground">{data.length} akun</span> yang
             dipilih beserta seluruh datanya secara permanen. Harap berhati-hati
             karena aksi ini tidak dapat dibatalkan.
           </AlertDialogDescription>
+          <Input
+            type="number"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={String(data.length)}
+          />
         </AlertDialogHeader>
 
         <AlertDialogFooter>
@@ -1473,6 +1491,7 @@ function AdminActionRemoveUsersDialog({
           <AlertDialogAction
             className={buttonVariants({ variant: "destructive" })}
             onClick={clickHandler}
+            disabled={input !== String(data.length)}
           >
             {actions.confirm}
           </AlertDialogAction>
