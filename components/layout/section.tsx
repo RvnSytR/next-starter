@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { LoaderIcon, PackageX } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { ThemeToggle } from "../ui/buttons";
+import { ThemeButton } from "../ui/buttons-client";
 import {
   DynamicBreadcrumb,
   DynamicBreadcrumbProps,
@@ -24,7 +24,7 @@ export function DashboardMain({
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>
-        <ThemeToggle size="icon-sm" />
+        <ThemeButton size="icon-sm" />
       </nav>
 
       <div

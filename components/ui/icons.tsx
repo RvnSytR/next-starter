@@ -23,17 +23,11 @@ export function Loader({
   icon,
   className,
   ...props
-}: LoaderPropsWithLoading) {
+}: LoaderPropsWithLoading): ReactNode {
   const loaderIcon = (
     <LoaderCircle className={cn("animate-spin", className)} {...props} />
   );
-
-  const iconNode = loading
-    ? (icon?.loader ?? loaderIcon)
-    : (icon?.base ?? null);
-
-  if (!iconNode) return;
-  return iconNode;
+  return loading ? (icon?.loader ?? loaderIcon) : (icon?.base ?? null);
 }
 
 export function GithubIcon({ ...props }: SVGAttributes) {

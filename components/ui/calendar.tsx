@@ -10,9 +10,9 @@ import {
 import { ComponentProps } from "react";
 import { DayPicker, getDefaultClassNames } from "react-day-picker";
 
-type CalendarProps = ComponentProps<typeof DayPicker>;
+export type CalendarProps = ComponentProps<typeof DayPicker>;
 
-function Calendar({
+export function Calendar({
   className,
   classNames,
   showOutsideDays = true,
@@ -166,6 +166,3 @@ function Calendar({
     />
   );
 }
-
-export { Calendar };
-export type { CalendarProps };

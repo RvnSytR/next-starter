@@ -386,7 +386,7 @@ export function ExampleForm() {
           <Save /> {actions.save}
         </Button>
 
-        <ResetButton fn={form.reset} />
+        <ResetButton onClick={() => form.reset()} />
       </div>
     </Form>
   );

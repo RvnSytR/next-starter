@@ -690,7 +690,7 @@ export function PersonalInformation({ ...props }: UserWithRole) {
           {actions.update}
         </Button>
 
-        <ResetButton fn={form.reset} />
+        <ResetButton onClick={() => form.reset()} />
       </CardFooter>
     </Form>
   );
@@ -799,7 +799,7 @@ export function ChangePasswordForm() {
           {actions.update}
         </Button>
 
-        <ResetButton fn={form.reset} />
+        <ResetButton onClick={() => form.reset()} />
       </CardFooter>
     </Form>
   );

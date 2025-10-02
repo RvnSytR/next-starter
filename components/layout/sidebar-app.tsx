@@ -8,7 +8,7 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { SignOutButton } from "../modules/user-client";
-import { LinkLoader, RefreshButton } from "../ui/buttons";
+import { LinkLoader, RefreshButton } from "../ui/buttons-client";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import {
   Sidebar,
@@ -185,7 +185,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                       </SidebarMenuAction>
                     </CollapsibleTrigger>
 
-                    <CollapsibleContent>
+                    <CollapsibleContent animate>
                       <SidebarMenuSub>
                         {subMenu.map(
                           ({ label, href, className, ...props }, idx) => (

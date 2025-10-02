@@ -5,16 +5,18 @@ import { motion, useAnimation, useInView } from "motion/react";
 import { useEffect, useRef } from "react";
 
 export function BoxReveal({
-  className,
-  children,
   boxColor = "var(--primary)",
-  delay = 0,
   duration = 0.5,
+  delay = 0,
+  className,
+  classNames,
+  children,
 }: {
   boxColor?: string;
   duration?: number;
   delay?: number;
   className?: string;
+  classNames?: { children?: string; box?: string };
   children: React.ReactNode;
 }) {
   const mainControls = useAnimation();
@@ -43,6 +45,7 @@ export function BoxReveal({
         initial="hidden"
         animate={mainControls}
         transition={{ duration, delay: delay + 0.25 }}
+        className={classNames?.children}
       >
         {children}
       </motion.div>
@@ -65,6 +68,7 @@ export function BoxReveal({
           zIndex: 20,
           background: boxColor,
         }}
+        className={classNames?.box}
       />
     </div>
   );

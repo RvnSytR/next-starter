@@ -194,16 +194,27 @@
     }
   }
 
-  --animate-shiny-text: shiny-text 8s infinite;
-  @keyframes shiny-text {
+  --animate-pulse: pulse var(--duration) ease-out infinite;
+  @keyframes pulse {
     0%,
-    90%,
     100% {
-      background-position: calc(-100% - var(--shiny-width)) 0;
+      box-shadow: 0 0 0 0 var(--pulse-color);
     }
-    30%,
-    60% {
-      background-position: calc(100% + var(--shiny-width)) 0;
+    50% {
+      box-shadow: 0 0 0 8px var(--pulse-color);
+    }
+  }
+
+  --animate-shine: shine var(--duration) infinite linear;
+  @keyframes shine {
+    0% {
+      background-position: 0% 0%;
+    }
+    50% {
+      background-position: 100% 100%;
+    }
+    to {
+      background-position: 0% 0%;
     }
   }
 }

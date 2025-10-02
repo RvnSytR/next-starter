@@ -30,7 +30,7 @@ import {
 } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
-import { RefreshButton } from "../ui/buttons";
+import { RefreshButton } from "../ui/buttons-client";
 import { Checkbox } from "../ui/checkbox";
 import { CommandShortcut } from "../ui/command";
 import { Input, InputWrapper } from "../ui/input";
@@ -147,9 +147,9 @@ export function DataTable<TData>({
   const selectedRows = table.getFilteredSelectedRowModel().rows;
   const filteredRows = table.getFilteredRowModel().rows;
 
-  const totalPage = table.getPageCount();
+  const totalPage = table.getPageCount() > 0 ? table.getPageCount() : 1;
   const pageNumber =
-    table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 0;
+    table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 1;
 
   useEffect(() => {
     if (onRowSelection) setChildren(onRowSelection(selectedRows, table));

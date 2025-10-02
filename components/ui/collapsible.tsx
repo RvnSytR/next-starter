@@ -21,14 +21,18 @@ function CollapsibleTrigger({
 }
 
 function CollapsibleContent({
+  animate = false,
   className,
   ...props
-}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent>) {
+}: React.ComponentProps<typeof CollapsiblePrimitive.CollapsibleContent> & {
+  animate?: boolean;
+}) {
   return (
     <CollapsiblePrimitive.CollapsibleContent
       data-slot="collapsible-content"
       className={cn(
-        "data-[state=open]:animate-fade data-[state=open]:animate-duration-250",
+        animate &&
+          "data-[state=open]:animate-fade data-[state=open]:animate-duration-250",
         className,
       )}
       {...props}
