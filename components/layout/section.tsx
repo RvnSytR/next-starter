@@ -69,7 +69,7 @@ export function SheetDetails({
 export function LoadingFallback({ className }: { className?: string }) {
   return (
     <div className={cn("flex items-center justify-center p-4", className)}>
-      <LoaderIcon className="size-4 animate-spin" />
+      <LoaderIcon className="text-foreground size-4 animate-spin" />
     </div>
   );
 }
