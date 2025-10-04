@@ -106,7 +106,7 @@ const sharedText = {
   signIn: "Berhasil masuk - Selamat datang!",
   signOn: (social: string) => `Lanjutkan dengan ${social}`,
 
-  passwordNotMatch: "Kata sandi tidak cocok - silakan periksa kembali.",
+  passwordNotMatch: messages.thingNotMatch("Kata sandi"),
   revokeSession: "Cabut Sesi",
 };
 
@@ -1294,7 +1294,7 @@ function AdminRevokeUserSessionsDialog({
 }
 
 function AdminRemoveUserDialog({
-  data: { id, name, image },
+  data,
   setIsOpen,
 }: {
   data: Pick<UserWithRole, "id" | "name" | "image">;
@@ -1303,12 +1303,24 @@ function AdminRemoveUserDialog({
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const clickHandler = async () => {
+  const schema = z
+    .object({ input: zodSchemas.string(userFields.name.label) })
+    .refine((sc) => sc.input === data.name, {
+      message: messages.thingNotMatch(userFields.name.label),
+      path: ["input"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { input: "" },
+  });
+
+  const formHandler = async () => {
     setIsLoading(true);
-    if (image) await deleteProfilePicture(image);
+    if (data.image) await deleteProfilePicture(data.image);
 
     authClient.admin.removeUser(
-      { userId: id },
+      { userId: data.id },
       {
         onError: ({ error }) => {
           toast.error(error.message);
@@ -1325,48 +1337,66 @@ function AdminRemoveUserDialog({
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
           {`${actions.remove} ${name}`}
         </Button>
-      </AlertDialogTrigger>
+      </DialogTrigger>
 
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> Hapus akun atas nama {name}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            PERINGATAN: Tindakan ini akan menghapus akun{" "}
-            <span className="text-foreground">{name}</span> beserta seluruh
-            datanya secara permanen. Harap berhati-hati karena aksi ini tidak
-            dapat dibatalkan.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+      <DialogContent>
+        <Form form={form} onSubmit={formHandler}>
+          <DialogHeader>
+            <DialogTitle className="text-destructive flex items-center gap-x-2">
+              <TriangleAlert /> Hapus akun atas nama {data.name}
+            </DialogTitle>
+            <DialogDescription>
+              PERINGATAN: Tindakan ini akan menghapus akun{" "}
+              <span className="text-foreground">{data.name}</span> beserta
+              seluruh datanya secara permanen. Harap berhati-hati karena aksi
+              ini tidak dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid gap-2">
-          <Label>{messages.removeLabel(name)}</Label>
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={name}
+          <FormField
+            control={form.control}
+            name="input"
+            render={({ field: { onChange, ...rest } }) => (
+              <FormFieldWrapper
+                label={messages.removeLabel(data.name)}
+                classNames={{ formLabel: "leading-normal" }}
+              >
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder={data.name}
+                    required
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                      onChange(e);
+                    }}
+                    {...rest}
+                  />
+                </FormControl>
+              </FormFieldWrapper>
+            )}
           />
-        </div>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
-          <AlertDialogAction
-            className={buttonVariants({ variant: "destructive" })}
-            onClick={clickHandler}
-            disabled={input !== name}
-          >
-            {actions.confirm}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          <DialogFooter>
+            <DialogClose>{actions.cancel}</DialogClose>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={input !== data.name || isLoading}
+            >
+              <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+              {actions.confirm}
+            </Button>
+          </DialogFooter>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -1442,7 +1472,19 @@ function AdminActionRemoveUsersDialog({
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const clickHandler = async () => {
+  const schema = z
+    .object({ input: zodSchemas.string("Total pengguna yang dihapus") })
+    .refine((sc) => sc.input === String(data.length), {
+      message: messages.thingNotMatch("Total pengguna yang dihapus"),
+      path: ["input"],
+    });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: { input: "" },
+  });
+
+  const formHandler = async () => {
     setIsLoading(true);
     toast.promise(deleteUsers(data), {
       loading: messages.loading,
@@ -1462,48 +1504,65 @@ function AdminActionRemoveUsersDialog({
   };
 
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
+    <Dialog>
+      <DialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
           <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
           {actions.remove}
         </Button>
-      </AlertDialogTrigger>
+      </DialogTrigger>
 
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle className="text-destructive flex items-center gap-x-2">
-            <TriangleAlert /> Hapus {data.length} Akun
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            PERINGATAN: Tindakan ini akan menghapus{" "}
-            <span className="text-foreground">{data.length} akun</span> yang
-            dipilih beserta seluruh datanya secara permanen. Harap berhati-hati
-            karena aksi ini tidak dapat dibatalkan.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
+      <DialogContent>
+        <Form form={form} onSubmit={formHandler}>
+          <DialogHeader>
+            <DialogTitle className="text-destructive flex items-center gap-x-2">
+              <TriangleAlert /> Hapus {data.length} Akun
+            </DialogTitle>
+            <DialogDescription>
+              PERINGATAN: Tindakan ini akan menghapus{" "}
+              <span className="text-foreground">{data.length} akun</span> yang
+              dipilih beserta seluruh datanya secara permanen. Harap
+              berhati-hati karena aksi ini tidak dapat dibatalkan.
+            </DialogDescription>
+          </DialogHeader>
 
-        <div className="grid gap-2">
-          <Label>{messages.removeLabel(String(data.length))}</Label>
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={String(data.length)}
+          <FormField
+            control={form.control}
+            name="input"
+            render={({ field: { onChange, ...rest } }) => (
+              <FormFieldWrapper
+                label={messages.removeLabel(String(data.length))}
+                classNames={{ formLabel: "leading-normal" }}
+              >
+                <FormControl>
+                  <Input
+                    type="text"
+                    placeholder={String(data.length)}
+                    required
+                    onChange={(e) => {
+                      setInput(e.target.value);
+                      onChange(e);
+                    }}
+                    {...rest}
+                  />
+                </FormControl>
+              </FormFieldWrapper>
+            )}
           />
-        </div>
 
-        <AlertDialogFooter>
-          <AlertDialogCancel>{actions.cancel}</AlertDialogCancel>
-
-          <AlertDialogAction
-            className={buttonVariants({ variant: "destructive" })}
-            onClick={clickHandler}
-            disabled={input !== String(data.length)}
-          >
-            {actions.confirm}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+          <DialogFooter>
+            <DialogClose>{actions.cancel}</DialogClose>
+            <Button
+              type="submit"
+              variant="destructive"
+              disabled={input !== String(data.length) || isLoading}
+            >
+              <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+              {actions.confirm}
+            </Button>
+          </DialogFooter>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

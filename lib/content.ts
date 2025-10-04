@@ -35,6 +35,8 @@ export const messages = {
 
   noChanges: (thing: string) =>
     `Tidak ada perubahan pada ${thing.toLowerCase()}.`,
+  thingNotMatch: (thing: string) =>
+    `${capitalize(thing, "first")} tidak cocok - silakan periksa kembali.`,
 
   thingAgo: (thing: string, time: Date) =>
     `${capitalize(thing, "first")} ${formatDateDistanceToNow(time)} yang lalu.`,
