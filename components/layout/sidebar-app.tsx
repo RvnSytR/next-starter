@@ -10,6 +10,7 @@ import { UserAvatar, UserVerifiedBadge } from "../modules/user";
 import { SignOutButton } from "../modules/user-client";
 import { LinkLoader, RefreshButton } from "../ui/buttons-client";
 import { CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import { getIconOrText } from "../ui/icons";
 import {
   Sidebar,
   SidebarContent,
@@ -155,13 +156,15 @@ function Content({ role }: Pick<SidebarData, "role">) {
       <SidebarGroupLabel>{section}</SidebarGroupLabel>
 
       <SidebarMenu>
-        {content.map(({ route, icon: Icon, disabled, subMenu }) => {
+        {content.map(({ route, icon, disabled, subMenu }) => {
           const { displayName } = routesMeta[route];
+          const iconElement = getIconOrText(icon);
+
           if (disabled) {
             return (
               <SidebarMenuItem key={route}>
                 <SidebarMenuButton disabled>
-                  {Icon && <Icon />} {displayName}
+                  {iconElement} {displayName}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             );
@@ -172,7 +175,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
               <SidebarMenuItem>
                 <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
-                    <LinkLoader icon={{ base: Icon && <Icon /> }} />
+                    <LinkLoader icon={{ base: iconElement }} />
                     {displayName}
                   </Link>
                 </SCMenuButton>
@@ -238,22 +241,25 @@ function Footer() {
         </SidebarMenuButton>
       </SidebarMenuItem>
 
-      {dashboardfooterMenu.map(({ url, displayName, icon: Icon, disabled }) => (
-        <SidebarMenuItem key={url}>
-          {disabled ? (
-            <SidebarMenuButton size="sm" disabled>
-              {Icon && <Icon />} {displayName}
-            </SidebarMenuButton>
-          ) : (
-            <SidebarMenuButton size="sm" tooltip={displayName} asChild>
-              <Link href={url}>
-                <LinkLoader icon={{ base: Icon && <Icon /> }} />
-                {displayName}
-              </Link>
-            </SidebarMenuButton>
-          )}
-        </SidebarMenuItem>
-      ))}
+      {dashboardfooterMenu.map(({ url, displayName, icon, disabled }) => {
+        const iconElement = getIconOrText(icon);
+        return (
+          <SidebarMenuItem key={url}>
+            {disabled ? (
+              <SidebarMenuButton size="sm" disabled>
+                {iconElement} {displayName}
+              </SidebarMenuButton>
+            ) : (
+              <SidebarMenuButton size="sm" tooltip={displayName} asChild>
+                <Link href={url}>
+                  <LinkLoader icon={{ base: iconElement }} />
+                  {displayName}
+                </Link>
+              </SidebarMenuButton>
+            )}
+          </SidebarMenuItem>
+        );
+      })}
 
       <SidebarSeparator />
 

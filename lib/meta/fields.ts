@@ -1,5 +1,6 @@
 import { IconOrText } from "@/components/ui/icons";
 import {
+  Binary,
   Calendar1,
   CalendarClock,
   CalendarIcon,
@@ -66,7 +67,7 @@ export const fieldTypeMeta: Record<FieldType, { icon: IconOrText }> = {
   time: { icon: Clock },
   url: { icon: LinkIcon },
 
-  number: { icon: "123" },
+  number: { icon: Binary },
   tel: { icon: Phone },
 
   select: { icon: ChevronDown },

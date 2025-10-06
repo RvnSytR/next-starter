@@ -1,9 +1,9 @@
+import { IconOrText } from "@/components/ui/icons";
 import {
   FileArchive,
   FileText,
   Headphones,
   Image,
-  LucideIcon,
   Upload,
   Video,
 } from "lucide-react";
@@ -24,7 +24,7 @@ type FileMetaProps = Record<
     mimeTypes: string[];
     extensions: string[];
     size: { mb: number; bytes: number };
-    icon: LucideIcon;
+    icon: IconOrText;
   }
 >;
 

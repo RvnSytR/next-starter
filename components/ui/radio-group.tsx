@@ -5,7 +5,7 @@ import { CircleIcon } from "lucide-react";
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { ComponentProps } from "react";
 import { FormControl, FormItem, FormLabel } from "./form";
-import { IconOrText } from "./icons";
+import { getIconOrText, IconOrText } from "./icons";
 
 type RadioGroupProps = ComponentProps<typeof RadioGroupPrimitive.Root>;
 type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item> & {
@@ -77,7 +77,7 @@ export function RadioGroupField({
 }) {
   return (
     <RadioGroup {...props}>
-      {data.map(({ icon: Icon, ...item }) => (
+      {data.map((item) => (
         <FormItem
           key={item.key ?? item.value}
           style={
@@ -100,8 +100,7 @@ export function RadioGroupField({
             <FormLabel
               className={cn("flex items-center", item.classNames?.label)}
             >
-              {Icon && (typeof Icon === "string" ? Icon : <Icon />)}
-              {item.label ?? item.value}
+              {getIconOrText(item.icon)} {item.label ?? item.value}
             </FormLabel>
 
             <FormControl>

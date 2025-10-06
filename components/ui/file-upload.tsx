@@ -15,6 +15,7 @@ import {
 } from "react";
 import { Button } from "./button";
 import { FormControl } from "./form";
+import { getIconOrText } from "./icons";
 import { Input } from "./input";
 import { Separator } from "./separator";
 
@@ -41,13 +42,8 @@ export function FileUpload({
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const {
-    displayName,
-    mimeTypes,
-    extensions,
-    size,
-    icon: Icon,
-  } = fileMeta[accept];
+  const { displayName, mimeTypes, extensions, size, icon } = fileMeta[accept];
+  const iconElement = getIconOrText(icon);
 
   const isFiles = value.length > 0;
   const fileSize = maxSize
@@ -132,7 +128,7 @@ export function FileUpload({
             "group-hover:text-foreground group-hover:border-muted-foreground group-focus:text-foreground group-focus:border-muted-foreground",
           )}
         >
-          <Icon />
+          {iconElement}
         </div>
 
         <small className="font-medium">
@@ -205,7 +201,7 @@ export function FileUpload({
                       height={100}
                     />
                   ) : (
-                    <Icon />
+                    iconElement
                   )}
                 </div>
 

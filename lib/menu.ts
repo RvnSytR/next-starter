@@ -1,9 +1,9 @@
 import { SidebarMenuSubButtonProps } from "@/components/layout/sidebar-app";
+import { IconOrText } from "@/components/ui/icons";
 import {
   CircleHelp,
   ExternalLink,
   LayoutDashboard,
-  LucideIcon,
   UserRound,
   UsersRound,
 } from "lucide-react";
@@ -11,7 +11,7 @@ import { Route } from "next";
 
 type MenuContent = {
   route: Route;
-  icon?: LucideIcon;
+  icon?: IconOrText;
   disabled?: boolean;
   // if href is not defined, the Link href prop will be `/{route}/#${toKebabCase(label)}`
   subMenu?: (Omit<SidebarMenuSubButtonProps, "asChild"> & { label: string })[];

@@ -83,7 +83,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Form, FormControl, FormField } from "../ui/form";
 import { FormFieldWrapper, TextFields } from "../ui/form-fields";
-import { GithubIcon, Loader } from "../ui/icons";
+import { GithubIcon } from "../ui/icons";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroupField } from "../ui/radio-group";
@@ -98,6 +98,7 @@ import {
   SheetTrigger,
 } from "../ui/sheet";
 import { SidebarMenuButton } from "../ui/sidebar";
+import { LoadingSpinner } from "../ui/spinner";
 import { UserAvatar, UserRoleBadge, UserVerifiedBadge } from "./user";
 
 const { user: userFields } = fieldsMeta;
@@ -278,7 +279,7 @@ export function SignOutButton() {
         });
       }}
     >
-      <Loader loading={isLoading} icon={{ base: <LogOut /> }} /> Keluar
+      <LoadingSpinner loading={isLoading} icon={{ base: <LogOut /> }} /> Keluar
     </SidebarMenuButton>
   );
 }
@@ -309,7 +310,7 @@ export function SignOnGithubButton() {
         );
       }}
     >
-      <Loader loading={isLoading} icon={{ base: <GithubIcon /> }} />
+      <LoadingSpinner loading={isLoading} icon={{ base: <GithubIcon /> }} />
       {sharedText.signOn("Github")}
     </Button>
   );
@@ -376,7 +377,7 @@ export function SignInForm() {
       />
 
       <Button type="submit" disabled={isLoading}>
-        <Loader loading={isLoading} icon={{ base: <LogIn /> }} />
+        <LoadingSpinner loading={isLoading} icon={{ base: <LogIn /> }} />
         Masuk ke Dashboard
       </Button>
     </Form>
@@ -489,7 +490,10 @@ export function SignUpForm() {
       />
 
       <Button type="submit" disabled={isLoading}>
-        <Loader loading={isLoading} icon={{ base: <UserRoundPlus /> }} />
+        <LoadingSpinner
+          loading={isLoading}
+          icon={{ base: <UserRoundPlus /> }}
+        />
         Daftar Sekarang
       </Button>
     </Form>
@@ -584,7 +588,7 @@ export function ProfilePicture({
             disabled={isChange || isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
           >
-            <Loader loading={isChange} /> {actions.upload} Avatar
+            <LoadingSpinner loading={isChange} /> {actions.upload} Avatar
           </Button>
 
           <AlertDialog>
@@ -595,7 +599,7 @@ export function ProfilePicture({
                 variant="outline_destructive"
                 disabled={!image || isChange || isRemoved}
               >
-                <Loader loading={isRemoved} /> {actions.remove}
+                <LoadingSpinner loading={isRemoved} /> {actions.remove}
               </Button>
             </AlertDialogTrigger>
 
@@ -686,7 +690,7 @@ export function PersonalInformation({ ...props }: UserWithRole) {
 
       <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
         <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Save /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} />
           {actions.update}
         </Button>
 
@@ -795,7 +799,7 @@ export function ChangePasswordForm() {
 
       <CardFooter className="flex-col items-stretch border-t md:flex-row md:items-center">
         <Button type="submit" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Save /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} />
           {actions.update}
         </Button>
 
@@ -880,7 +884,7 @@ export function ActiveSessionButton({
               variant="outline_destructive"
               disabled={isLoading}
             >
-              <Loader loading={isLoading} icon={{ base: <LogOut /> }} />
+              <LoadingSpinner loading={isLoading} icon={{ base: <LogOut /> }} />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -929,7 +933,7 @@ export function RevokeOtherSessionsButton() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <MonitorOff /> }} />
           Cabut Semua Sesi Lain
         </Button>
       </AlertDialogTrigger>
@@ -986,7 +990,7 @@ export function DeleteMyAccountButton({ image }: Pick<UserWithRole, "image">) {
           className="w-full md:w-fit"
           disabled={isLoading}
         >
-          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
           Hapus Akun
         </Button>
       </AlertDialogTrigger>
@@ -1152,7 +1156,7 @@ export function AdminCreateUserDialog() {
           <DialogFooter>
             <DialogClose>{actions.cancel}</DialogClose>
             <Button type="submit" disabled={isLoading}>
-              <Loader loading={isLoading} icon={{ base: <Icon /> }} />
+              <LoadingSpinner loading={isLoading} icon={{ base: <Icon /> }} />
               {actions.add}
             </Button>
           </DialogFooter>
@@ -1228,7 +1232,7 @@ function AdminChangeUserRoleForm({
       />
 
       <Button type="submit" disabled={isLoading}>
-        <Loader loading={isLoading} icon={{ base: <Save /> }} />
+        <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} />
         {actions.update}
       </Button>
     </Form>
@@ -1262,7 +1266,7 @@ function AdminRevokeUserSessionsDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button variant="outline_warning" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <MonitorOff /> }} />
           {sharedText.revokeSession}
         </Button>
       </AlertDialogTrigger>
@@ -1340,7 +1344,7 @@ function AdminRemoveUserDialog({
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
           {`${actions.remove} ${name}`}
         </Button>
       </DialogTrigger>
@@ -1390,7 +1394,7 @@ function AdminRemoveUserDialog({
               variant="destructive"
               disabled={input !== data.name || isLoading}
             >
-              <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+              <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
               {actions.confirm}
             </Button>
           </DialogFooter>
@@ -1431,7 +1435,7 @@ function AdminActionRevokeUserSessionsDialog({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <MonitorOff /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <MonitorOff /> }} />
           {sharedText.revokeSession}
         </Button>
       </AlertDialogTrigger>
@@ -1507,7 +1511,7 @@ function AdminActionRemoveUsersDialog({
     <Dialog>
       <DialogTrigger asChild>
         <Button size="sm" variant="ghost_destructive" disabled={isLoading}>
-          <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+          <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
           {actions.remove}
         </Button>
       </DialogTrigger>
@@ -1557,7 +1561,7 @@ function AdminActionRemoveUsersDialog({
               variant="destructive"
               disabled={input !== String(data.length) || isLoading}
             >
-              <Loader loading={isLoading} icon={{ base: <Trash2 /> }} />
+              <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
               {actions.confirm}
             </Button>
           </DialogFooter>

@@ -32,8 +32,12 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
 import { RefreshButton } from "../ui/buttons-client";
 import { Checkbox } from "../ui/checkbox";
-import { CommandShortcut } from "../ui/command";
-import { Input, InputWrapper } from "../ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
+import { Kbd } from "../ui/kbd";
 import { Label } from "../ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
@@ -66,10 +70,7 @@ type DataTableProps<TData> = {
 };
 
 export type TableProps<TData> = { table: DataTableType<TData> };
-export type ToolBoxProps = {
-  withRefresh?: boolean;
-  searchPlaceholder?: string;
-};
+export type ToolBoxProps = { withRefresh?: boolean; placeholder?: string };
 
 export type OtherDataTableProps<TData> = ToolBoxProps & {
   onRowSelection?: (
@@ -254,7 +255,7 @@ export function DataTable<TData>({
 function ToolBox<TData>({
   table,
   withRefresh = false,
-  searchPlaceholder,
+  placeholder,
   className,
   children,
 }: TableProps<TData> &
@@ -281,7 +282,7 @@ function ToolBox<TData>({
         <Reset table={table} />
         <Search
           table={table}
-          searchPlaceholder={searchPlaceholder}
+          placeholder={placeholder}
           className="col-span-2"
         />
       </div>
@@ -372,10 +373,10 @@ function Reset<TData>({
 
 function Search<TData>({
   table,
-  searchPlaceholder = "Cari...",
+  placeholder = "Cari...",
   className,
 }: TableProps<TData> &
-  Pick<ToolBoxProps, "searchPlaceholder"> & { className?: string }) {
+  Pick<ToolBoxProps, "placeholder"> & { className?: string }) {
   const searchRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -391,18 +392,23 @@ function Search<TData>({
   }, []);
 
   return (
-    <InputWrapper icon={<SearchIcon />} className={className}>
-      <Input
+    <InputGroup className={className}>
+      <InputGroupInput
         ref={searchRef}
-        placeholder={searchPlaceholder}
+        placeholder={placeholder}
         value={table.getState().globalFilter}
         onChange={(e) => table.setGlobalFilter(String(e.target.value))}
-        className="h-8 lg:pr-12"
       />
-      <CommandShortcut className="absolute inset-y-0 right-3 hidden items-center select-none lg:flex">
-        ⌘+K
-      </CommandShortcut>
-    </InputWrapper>
+
+      <InputGroupAddon>
+        <SearchIcon />
+      </InputGroupAddon>
+
+      <InputGroupAddon align="inline-end">
+        <Kbd>⌘</Kbd>
+        <Kbd>K</Kbd>
+      </InputGroupAddon>
+    </InputGroup>
   );
 }
 

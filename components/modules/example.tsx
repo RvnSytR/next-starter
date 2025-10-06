@@ -17,7 +17,11 @@ import { DatePicker } from "../ui/date-picker";
 import { FileUpload } from "../ui/file-upload";
 import { Form, FormControl, FormField } from "../ui/form";
 import { FormFieldWrapper } from "../ui/form-fields";
-import { Input, InputWrapper } from "../ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
 import { MultiSelect } from "../ui/multi-select";
 import { RadioGroupField } from "../ui/radio-group";
 import {
@@ -129,16 +133,19 @@ export function ExampleForm() {
           name="text"
           render={({ field }) => (
             <FormFieldWrapper label="Text" desc="Deskripsi text field">
-              <InputWrapper icon={<TextIcon />}>
+              <InputGroup>
                 <FormControl>
-                  <Input
+                  <InputGroupInput
                     type="text"
                     placeholder="Masukkan Text"
                     required
                     {...field}
                   />
                 </FormControl>
-              </InputWrapper>
+                <InputGroupAddon>
+                  <TextIcon />
+                </InputGroupAddon>
+              </InputGroup>
             </FormFieldWrapper>
           )}
         />
@@ -148,9 +155,9 @@ export function ExampleForm() {
           name="numeric"
           render={({ field: { value, onChange, ...field } }) => (
             <FormFieldWrapper label="Numeric">
-              <InputWrapper icon={languageMeta.id.symbol}>
+              <InputGroup>
                 <FormControl>
-                  <Input
+                  <InputGroupInput
                     type="text"
                     placeholder="Masukkan Text"
                     inputMode="numeric"
@@ -160,7 +167,8 @@ export function ExampleForm() {
                     {...field}
                   />
                 </FormControl>
-              </InputWrapper>
+                <InputGroupAddon>{languageMeta.id.symbol}</InputGroupAddon>
+              </InputGroup>
             </FormFieldWrapper>
           )}
         />
@@ -170,9 +178,9 @@ export function ExampleForm() {
           name="phone"
           render={({ field: { value, onChange, ...field } }) => (
             <FormFieldWrapper label="Phone">
-              <InputWrapper icon="+62">
+              <InputGroup>
                 <FormControl>
-                  <Input
+                  <InputGroupInput
                     type="text"
                     placeholder="Masukkan No HP"
                     inputMode="tel"
@@ -183,7 +191,8 @@ export function ExampleForm() {
                     {...field}
                   />
                 </FormControl>
-              </InputWrapper>
+                <InputGroupAddon>+62</InputGroupAddon>
+              </InputGroup>
             </FormFieldWrapper>
           )}
         />
@@ -382,7 +391,7 @@ export function ExampleForm() {
 
       <div className="flex gap-2">
         <Button type="submit">
-          {/* <Loader loading={isLoading} icon={{ base: <Save /> }} /> */}
+          {/* <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} /> */}
           <Save /> {actions.save}
         </Button>
 

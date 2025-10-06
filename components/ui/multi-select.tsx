@@ -4,7 +4,7 @@ import { messages } from "@/lib/content";
 import { useDebounce } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import { Command as CommandPrimitive } from "cmdk";
-import { Check, LucideIcon, XIcon } from "lucide-react";
+import { Check, XIcon } from "lucide-react";
 import {
   ComponentPropsWithoutRef,
   KeyboardEvent,
@@ -22,12 +22,13 @@ import {
   CommandItem,
   CommandList,
 } from "./command";
+import { getIconOrText, IconOrText } from "./icons";
 
 export type MultiSelectConfig = {
   value: string;
   label?: string;
   disabled?: boolean;
-  icon?: string | LucideIcon;
+  icon?: IconOrText;
   color?: string;
   /** fixed option that can't be removed. */
   fixed?: boolean;
@@ -409,7 +410,7 @@ export function MultiSelect({
         }}
       >
         {selected.map((item) => {
-          const Icon = getItemMeta(item.value)?.icon;
+          const icon = getItemMeta(item.value)?.icon;
           return (
             <Badge
               key={item.value}
@@ -427,15 +428,8 @@ export function MultiSelect({
                 badgeClassName,
               )}
             >
-              {Icon &&
-                (typeof Icon === "string" ? (
-                  Icon
-                ) : (
-                  <Icon className="size-3.5" />
-                ))}
-
+              {getIconOrText(icon, { className: "size-3.5" })}
               {item.label ?? item.value}
-
               {!item.fixed && (
                 <button
                   className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"

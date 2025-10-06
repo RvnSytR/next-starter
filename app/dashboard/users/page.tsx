@@ -37,7 +37,7 @@ export default async function Page() {
       <UserDataTable
         data={data.users}
         currentUserId={session.user.id}
-        searchPlaceholder="Cari Pengguna..."
+        placeholder="Cari Pengguna..."
       />
     </DashboardMain>
   );

@@ -8,14 +8,14 @@ import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button, ButtonProps } from "./button";
-import { Loader, LoaderProps } from "./icons";
+import { LoadingSpinner, LoadingSpinnerProps } from "./spinner";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 type ButtonIconSize = "icon-xs" | "icon-sm" | "icon" | "icon-lg";
 
-export function LinkLoader({ ...props }: LoaderProps) {
+export function LinkLoader({ ...props }: Omit<LoadingSpinnerProps, "loading">) {
   const { pending } = useLinkStatus();
-  return <Loader loading={pending} {...props} />;
+  return <LoadingSpinner loading={pending} {...props} />;
 }
 
 export function ThemeButton({
@@ -84,9 +84,6 @@ export function RefreshButton({
   const router = useRouter();
   const [refreshing, setRefreshing] = useState<boolean>(false);
 
-  const Icon = RefreshCcw;
-  const iconCn = "animate-reverse animate-spin";
-
   return (
     <Button
       disabled={refreshing || disabled}
@@ -99,9 +96,11 @@ export function RefreshButton({
       }}
       {...props}
     >
-      <Loader
+      <LoadingSpinner
+        variant="refresh"
         loading={refreshing}
-        icon={{ base: <Icon />, loader: <Icon className={iconCn} /> }}
+        className="animate-reverse"
+        icon={{ base: <RefreshCcw /> }}
       />
       {text}
     </Button>

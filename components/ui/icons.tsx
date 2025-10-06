@@ -1,33 +1,14 @@
-import { cn } from "@/lib/utils";
-import {
-  LoaderCircle,
-  LucideIcon,
-  LucideProps,
-  SVGAttributes,
-} from "lucide-react";
+import { LucideIcon, LucideProps, SVGAttributes } from "lucide-react";
 import { ReactNode } from "react";
 
 export type IconOrText = string | LucideIcon;
 
-export type LoaderPropsWithLoading = LoaderProps & { loading: boolean };
-export type LoaderProps = LucideProps & {
-  icon?: { base?: ReactNode; loader?: ReactNode };
-};
-
-export function getIconOrText(Icon: IconOrText): ReactNode {
-  return typeof Icon === "string" ? Icon : <Icon />;
-}
-
-export function Loader({
-  loading,
-  icon,
-  className,
-  ...props
-}: LoaderPropsWithLoading): ReactNode {
-  const loaderIcon = (
-    <LoaderCircle className={cn("animate-spin", className)} {...props} />
-  );
-  return loading ? (icon?.loader ?? loaderIcon) : (icon?.base ?? null);
+export function getIconOrText(
+  Icon?: IconOrText,
+  iconProps?: LucideProps,
+): ReactNode {
+  if (!Icon) return null;
+  return typeof Icon === "string" ? Icon : <Icon {...iconProps} />;
 }
 
 export function GithubIcon({ ...props }: SVGAttributes) {

@@ -8,7 +8,8 @@ import {
   FormMessage,
 } from "./form";
 import { getIconOrText, IconOrText } from "./icons";
-import { Input, InputProps, InputWrapper } from "./input";
+import { Input, InputProps } from "./input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./input-group";
 
 export type FormFieldWrapperProps = {
   type?: "default" | "checkbox";
@@ -91,9 +92,10 @@ export function TextFields<T extends FieldValues>({
     field: ControllerRenderProps<T>;
     icon?: IconOrText;
   }) {
-  const comp = (
+  const Comp = Icon ? InputGroupInput : Input;
+  const inputElement = (
     <FormControl>
-      <Input
+      <Comp
         type={type}
         placeholder={placeholder}
         required={required}
@@ -106,9 +108,12 @@ export function TextFields<T extends FieldValues>({
   return (
     <FormFieldWrapper label={label} desc={desc}>
       {Icon ? (
-        <InputWrapper icon={getIconOrText(Icon)}>{comp}</InputWrapper>
+        <InputGroup>
+          {inputElement}
+          <InputGroupAddon>{getIconOrText(Icon)}</InputGroupAddon>
+        </InputGroup>
       ) : (
-        comp
+        inputElement
       )}
     </FormFieldWrapper>
   );
