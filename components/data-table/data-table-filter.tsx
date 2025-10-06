@@ -248,7 +248,7 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
       }}
     >
       <PopoverTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button variant="outline">
           <ListFilter /> Filter
         </Button>
       </PopoverTrigger>

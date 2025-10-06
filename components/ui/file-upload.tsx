@@ -14,6 +14,13 @@ import {
   useRef,
 } from "react";
 import { Button } from "./button";
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "./empty";
 import { FormControl } from "./form";
 import { getIconOrText } from "./icons";
 import { Input } from "./input";
@@ -43,7 +50,7 @@ export function FileUpload({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { displayName, mimeTypes, extensions, size, icon } = fileMeta[accept];
-  const iconElement = getIconOrText(icon);
+  const iconElement = getIconOrText(icon, { className: "size-4" });
 
   const isFiles = value.length > 0;
   const fileSize = maxSize
@@ -109,7 +116,7 @@ export function FileUpload({
         />
       </FormControl>
 
-      <div
+      <Empty
         tabIndex={0}
         onClick={handleOnClick}
         onKeyDown={handleOnKeyDown}
@@ -117,33 +124,36 @@ export function FileUpload({
         onDragEnter={handleDragEnterAndOver}
         onDragOver={handleDragEnterAndOver}
         className={cn(
-          "group border-input hover:border-muted-foreground dark:bg-input/30 flex flex-col items-center gap-y-2 rounded-md border border-dashed px-4 py-8 text-center transition outline-none hover:cursor-pointer",
+          "group border-input hover:border-muted-foreground dark:bg-input/30 gap-2 border border-dashed transition outline-none hover:cursor-pointer",
           "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
           classNames?.dropzone,
         )}
       >
-        <div
-          className={cn(
-            "text-muted-foreground rounded-full border p-3 transition",
-            "group-hover:text-foreground group-hover:border-muted-foreground group-focus:text-foreground group-focus:border-muted-foreground",
-          )}
-        >
-          {iconElement}
-        </div>
+        <EmptyHeader>
+          <EmptyMedia
+            className={cn(
+              "text-muted-foreground rounded-full border transition",
+              "group-hover:text-foreground group-hover:border-muted-foreground group-focus:text-foreground group-focus:border-muted-foreground",
+            )}
+            variant="icon"
+          >
+            {iconElement}
+          </EmptyMedia>
+        </EmptyHeader>
 
-        <small className="font-medium">
+        <EmptyTitle className="text-sm">
           Seret dan lepaskan {displayName} di sini, atau klik untuk mengunggah
-        </small>
+        </EmptyTitle>
 
-        <small className="text-muted-foreground flex items-center text-xs">
+        <EmptyDescription className="flex items-center text-xs">
           Maksimal {fileSize.mb} MB
           {extensions.length > 0 && (
             <>
               <Dot /> {`( ${extensions.join(" ")} )`}
             </>
           )}
-        </small>
-      </div>
+        </EmptyDescription>
+      </Empty>
 
       {isFiles && multiple && (
         <div className="flex items-center justify-between gap-4">

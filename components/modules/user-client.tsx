@@ -138,7 +138,7 @@ export function UserDataTable({
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button size="sm" variant="outline">
+              <Button variant="outline">
                 <Settings2 /> {actions.action}
               </Button>
             </DropdownMenuTrigger>

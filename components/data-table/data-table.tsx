@@ -1,6 +1,7 @@
 "use client";
 
 import { actions, messages } from "@/lib/content";
+import { useIsMobile } from "@/lib/hooks";
 import { cn } from "@/lib/utils";
 import {
   ColumnDef,
@@ -30,6 +31,7 @@ import {
 } from "lucide-react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { Button, buttonVariants } from "../ui/button";
+import { ButtonGroup } from "../ui/button-group";
 import { RefreshButton } from "../ui/buttons-client";
 import { Checkbox } from "../ui/checkbox";
 import {
@@ -110,6 +112,7 @@ export function DataTable<TData>({
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
 
+  const isMobile = useIsMobile();
   const [children, setChildren] = useState<ReactNode>(null);
 
   const table = useReactTable({
@@ -159,7 +162,12 @@ export function DataTable<TData>({
 
   return (
     <div className={cn("flex flex-col gap-y-4", className)}>
-      <ToolBox table={table} className={classNames?.toolbox} {...props}>
+      <ToolBox
+        table={table}
+        isMobile={isMobile}
+        className={classNames?.toolbox}
+        {...props}
+      >
         {selectedRows.length > 0 && children}
       </ToolBox>
 
@@ -224,29 +232,35 @@ export function DataTable<TData>({
       </div>
 
       <div
-        className={cn("flex flex-col items-center gap-4", classNames?.footer)}
+        className={cn(
+          "flex w-full flex-col items-center gap-4 text-center lg:flex-row",
+          classNames?.footer,
+        )}
       >
-        {caption && <small className="text-muted-foreground">{caption}</small>}
+        <RowsPerPage
+          table={table}
+          isMobile={isMobile}
+          rowsLimitArr={rowsLimitArr}
+          className="order-4 shrink-0 lg:order-1"
+        />
 
-        <div className="flex w-full flex-col items-center justify-between gap-4 lg:flex-row">
-          <small className="text-muted-foreground">
-            {selectedRows.length} dari {filteredRows.length} baris dipilih.
-          </small>
+        <small className="text-muted-foreground order-3 shrink-0 lg:order-2">
+          {selectedRows.length} dari {filteredRows.length} baris dipilih
+        </small>
 
-          <div className="flex flex-col items-center gap-4 lg:flex-row">
-            <RowsPerPage
-              table={table}
-              rowsLimitArr={rowsLimitArr}
-              className="order-3 lg:order-1"
-            />
+        <small className="text-muted-foreground order-1 mx-auto text-sm lg:order-3">
+          {caption}
+        </small>
 
-            <small className="order-2 tabular-nums">
-              Halaman {pageNumber} dari {totalPage}
-            </small>
+        <small className="order-2 shrink-0 tabular-nums lg:order-4">
+          Halaman {pageNumber} dari {totalPage}
+        </small>
 
-            <Pagination table={table} className="order-1 lg:order-3" />
-          </div>
-        </div>
+        <Pagination
+          table={table}
+          isMobile={isMobile}
+          className="order-3 shrink-0 lg:order-5"
+        />
       </div>
     </div>
   );
@@ -254,12 +268,17 @@ export function DataTable<TData>({
 
 function ToolBox<TData>({
   table,
-  withRefresh = false,
   placeholder,
+  withRefresh = false,
+  isMobile = false,
   className,
   children,
 }: TableProps<TData> &
-  ToolBoxProps & { className?: string; children: ReactNode }) {
+  ToolBoxProps & {
+    isMobile?: boolean;
+    className?: string;
+    children: ReactNode;
+  }) {
   return (
     <div
       className={cn(
@@ -267,12 +286,15 @@ function ToolBox<TData>({
         className,
       )}
     >
-      <div className={cn("flex items-center gap-x-2 [&_button]:grow")}>
-        <FilterSelector table={table} />
-        <View table={table} />
-        {withRefresh && <RefreshButton size="sm" variant="outline" />}
-        {children && (
-          <Separator orientation="vertical" className="hidden h-4 lg:flex" />
+      <div className={cn("flex flex-col gap-2 lg:flex-row lg:items-center")}>
+        <ButtonGroup className="w-full lg:w-fit [&_button]:grow">
+          <FilterSelector table={table} />
+          <View table={table} isMobile={isMobile} withRefresh={withRefresh} />
+          {withRefresh && <RefreshButton variant="outline" />}
+        </ButtonGroup>
+
+        {children && !isMobile && (
+          <Separator orientation="vertical" className="h-5" />
         )}
 
         {children}
@@ -290,16 +312,24 @@ function ToolBox<TData>({
   );
 }
 
-function View<TData>({ table }: TableProps<TData>) {
+function View<TData>({
+  table,
+  isMobile,
+  withRefresh,
+}: TableProps<TData> &
+  Pick<ToolBoxProps, "withRefresh"> & { isMobile: boolean }) {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button size="sm" variant="outline">
+        <Button variant="outline">
           <Columns3 /> {actions.view}
         </Button>
       </PopoverTrigger>
 
-      <PopoverContent className="flex flex-col gap-y-1 p-1">
+      <PopoverContent
+        align={isMobile && !withRefresh ? "end" : "center"}
+        className="flex flex-col gap-y-1 p-1"
+      >
         {table
           .getAllColumns()
           .filter((column) => column.getCanHide())
@@ -341,7 +371,6 @@ function Reset<TData>({
 }: TableProps<TData> & { className?: string }) {
   return (
     <Button
-      size="sm"
       variant="outline"
       className={className}
       onClick={() => {
@@ -414,13 +443,16 @@ function Search<TData>({
 
 function Pagination<TData>({
   table,
+  isMobile,
   className,
-}: TableProps<TData> & { className?: string }) {
+}: TableProps<TData> & { isMobile: boolean; className?: string }) {
+  const size = isMobile ? "icon" : "icon-sm";
+  const variant = "outline";
   return (
-    <div className={cn("flex gap-x-1", className)}>
+    <ButtonGroup className={cn(className)}>
       <Button
-        size="icon-sm"
-        variant="outline"
+        size={size}
+        variant={variant}
         onClick={() => table.firstPage()}
         disabled={!table.getCanPreviousPage()}
       >
@@ -428,8 +460,8 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="icon-sm"
-        variant="outline"
+        size={size}
+        variant={variant}
         onClick={() => table.previousPage()}
         disabled={!table.getCanPreviousPage()}
       >
@@ -437,8 +469,8 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="icon-sm"
-        variant="outline"
+        size={size}
+        variant={variant}
         onClick={() => table.nextPage()}
         disabled={!table.getCanNextPage()}
       >
@@ -446,22 +478,27 @@ function Pagination<TData>({
       </Button>
 
       <Button
-        size="icon-sm"
-        variant="outline"
+        size={size}
+        variant={variant}
         onClick={() => table.lastPage()}
         disabled={!table.getCanNextPage()}
       >
         <ChevronsRight />
       </Button>
-    </div>
+    </ButtonGroup>
   );
 }
 
 function RowsPerPage<TData>({
   table,
+  isMobile,
   rowsLimitArr,
   className,
-}: TableProps<TData> & { rowsLimitArr: number[]; className?: string }) {
+}: TableProps<TData> & {
+  rowsLimitArr: number[];
+  isMobile: boolean;
+  className?: string;
+}) {
   return (
     <div className={cn("flex items-center gap-x-2", className)}>
       <Label>Baris per halaman</Label>
@@ -471,7 +508,7 @@ function RowsPerPage<TData>({
           table.setPageSize(Number(value));
         }}
       >
-        <SelectTrigger size="sm">
+        <SelectTrigger size={isMobile ? "default" : "sm"}>
           <SelectValue />
         </SelectTrigger>
 
