@@ -54,12 +54,12 @@ export function Calendar({
         ),
         button_previous: cn(
           buttonVariants({ size: "icon-sm", variant: "ghost" }),
-          "aria-disabled:opacity-50",
+          "z-10 aria-disabled:opacity-50",
           defaultClassNames.button_previous,
         ),
         button_next: cn(
           buttonVariants({ size: "icon-sm", variant: "ghost" }),
-          "aria-disabled:opacity-50",
+          "z-10 aria-disabled:opacity-50",
           defaultClassNames.button_next,
         ),
         month_caption: cn(
