@@ -1219,7 +1219,7 @@ function AdminChangeUserRoleForm({
             <RadioGroupField
               defaultValue={value}
               onValueChange={onChange}
-              className="grid grid-cols-2 gap-2"
+              className="grid gap-2 lg:grid-cols-2"
               data={allRoles.map((value) => {
                 const { displayName, ...rest } = rolesMeta[value];
                 const disabled = value === data.role;
