@@ -1350,19 +1350,19 @@ function AdminRemoveUserDialog({
       </DialogTrigger>
 
       <DialogContent>
-        <Form form={form} onSubmit={formHandler}>
-          <DialogHeader>
-            <DialogTitle className="text-destructive flex items-center gap-x-2">
-              <TriangleAlert /> Hapus akun atas nama {data.name}
-            </DialogTitle>
-            <DialogDescription>
-              PERINGATAN: Tindakan ini akan menghapus akun{" "}
-              <span className="text-foreground">{data.name}</span> beserta
-              seluruh datanya secara permanen. Harap berhati-hati karena aksi
-              ini tidak dapat dibatalkan.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle className="text-destructive flex items-center gap-x-2">
+            <TriangleAlert /> Hapus akun atas nama {data.name}
+          </DialogTitle>
+          <DialogDescription>
+            PERINGATAN: Tindakan ini akan menghapus akun{" "}
+            <span className="text-foreground">{data.name}</span> beserta seluruh
+            datanya secara permanen. Harap berhati-hati karena aksi ini tidak
+            dapat dibatalkan.
+          </DialogDescription>
+        </DialogHeader>
 
+        <Form form={form} onSubmit={formHandler}>
           <FormField
             control={form.control}
             name="input"
@@ -1517,19 +1517,19 @@ function AdminActionRemoveUsersDialog({
       </DialogTrigger>
 
       <DialogContent>
-        <Form form={form} onSubmit={formHandler}>
-          <DialogHeader>
-            <DialogTitle className="text-destructive flex items-center gap-x-2">
-              <TriangleAlert /> Hapus {data.length} Akun
-            </DialogTitle>
-            <DialogDescription>
-              PERINGATAN: Tindakan ini akan menghapus{" "}
-              <span className="text-foreground">{data.length} akun</span> yang
-              dipilih beserta seluruh datanya secara permanen. Harap
-              berhati-hati karena aksi ini tidak dapat dibatalkan.
-            </DialogDescription>
-          </DialogHeader>
+        <DialogHeader>
+          <DialogTitle className="text-destructive flex items-center gap-x-2">
+            <TriangleAlert /> Hapus {data.length} Akun
+          </DialogTitle>
+          <DialogDescription>
+            PERINGATAN: Tindakan ini akan menghapus{" "}
+            <span className="text-foreground">{data.length} akun</span> yang
+            dipilih beserta seluruh datanya secara permanen. Harap berhati-hati
+            karena aksi ini tidak dapat dibatalkan.
+          </DialogDescription>
+        </DialogHeader>
 
+        <Form form={form} onSubmit={formHandler}>
           <FormField
             control={form.control}
             name="input"
