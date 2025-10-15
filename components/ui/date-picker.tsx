@@ -48,7 +48,7 @@ export function DatePicker({
 
     if (mode === "range") {
       Icon = CalendarRange;
-      numberOfMonths = numberOfMonths ?? 2;
+      numberOfMonths = numberOfMonths || 2;
       placeholder = "Pilih Rentang Tanggal";
 
       if (selected?.from) {

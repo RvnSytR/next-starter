@@ -7,13 +7,11 @@ export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 export const delay = (seconds: number) =>
   new Promise((resolve) => setTimeout(resolve, seconds * 1000));
 
-export const actionResponse = <T>(
-  success: boolean,
-  messages: string,
-  options?: { code?: number; data?: T },
-): ActionResponse<T> => ({
-  code: options?.code ?? (success ? 200 : 500),
-  success,
-  messages,
-  data: options?.data ?? null,
-});
+export function apiResponse<T>(
+  code: number,
+  jsonData: { messages: string; data?: T },
+): ActionResponse<T> {
+  const success = code >= 200 && code < 300;
+  const { messages, data = null } = jsonData;
+  return { code, success, messages, data };
+}

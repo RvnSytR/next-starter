@@ -1,10 +1,9 @@
 import { appMeta, Language, languageMeta } from "../meta";
 
 export function capitalize(string: string, mode: "word" | "first" = "word") {
-  const str = string.toLowerCase();
   const handler = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
-  if (mode === "first") return handler(str);
-  return str.split(" ").map(handler).join(" ");
+  if (mode === "first") return handler(string);
+  return string.split(" ").map(handler).join(" ");
 }
 
 export function sanitizeNumber(str: string): number {

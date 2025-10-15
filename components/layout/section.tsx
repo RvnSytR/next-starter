@@ -54,12 +54,17 @@ export function Tagline({ className }: { className?: string }) {
 export function SheetDetails({
   data,
 }: {
-  data: { label: string; content: ReactNode; className?: string }[];
+  data: {
+    label: string;
+    content: ReactNode;
+    className?: string;
+    classNames?: { label?: string; content?: string };
+  }[];
 }) {
-  return data.map(({ label, content, className }, index) => (
-    <div key={index} className="grid gap-y-1">
-      <Label>{label}</Label>
-      <div className={cn("text-muted-foreground text-sm", className)}>
+  return data.map(({ label, content, className, classNames }, index) => (
+    <div key={index} className={cn("grid gap-y-1", className)}>
+      <Label className={classNames?.label}>{label}</Label>
+      <div className={cn("text-muted-foreground text-sm", classNames?.content)}>
         {content}
       </div>
     </div>
@@ -94,7 +99,7 @@ export function ErrorFallback({
       <div className="flex items-center gap-x-2">
         <PackageX className="size-4 shrink-0" /> {error?.code}
       </div>
-      {!hideText && <p>{error?.message ?? "Tidak ada data"}</p>}
+      {!hideText && <p>{error?.message || "Tidak ada data"}</p>}
     </div>
   );
 }

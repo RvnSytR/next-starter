@@ -861,7 +861,7 @@ export function ActiveSessionButton({
 
         <div className="flex flex-col">
           <small className="font-medium">
-            {`${browser.name ?? "Browser tidak diketahui"} di ${os.name ?? "sistem operasi yang tidak diketahui"}`}
+            {`${browser.name || "Browser tidak diketahui"} di ${os.name || "sistem operasi yang tidak diketahui"}`}
           </small>
 
           {isCurrentSession ? (
@@ -1086,8 +1086,7 @@ export function AdminCreateUserDialog() {
         <DialogHeader>
           <DialogTitle>Tambah Pengguna</DialogTitle>
           <DialogDescription>
-            Isi detail pengguna baru dengan lengkap. Pastikan semua bidang wajib
-            diisi.
+            Pastikan semua informasi sudah benar sebelum mengkonfirmasi.
           </DialogDescription>
         </DialogHeader>
 
@@ -1488,7 +1487,7 @@ function AdminActionRemoveUsersDialog({
     defaultValues: { input: "" },
   });
 
-  const formHandler = async () => {
+  const formHandler = () => {
     setIsLoading(true);
     toast.promise(deleteUsers(data), {
       loading: messages.loading,

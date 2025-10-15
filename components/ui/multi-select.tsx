@@ -419,7 +419,7 @@ export function MultiSelect({
               data-disabled={disabled || undefined}
               style={
                 {
-                  "--badge-color": item.color ?? "var(--foreground)",
+                  "--badge-color": item.color || "var(--foreground)",
                 } as React.CSSProperties
               }
               className={cn(
@@ -429,7 +429,7 @@ export function MultiSelect({
               )}
             >
               {getIconOrText(icon, { className: "size-3.5" })}
-              {item.label ?? item.value}
+              {item.label || item.value}
               {!item.fixed && (
                 <button
                   className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"
@@ -565,7 +565,7 @@ export function MultiSelect({
                             }}
                             style={
                               {
-                                "--item-color": item.color ?? "transparent",
+                                "--item-color": item.color || "transparent",
                               } as React.CSSProperties
                             }
                             className={cn(
@@ -584,7 +584,7 @@ export function MultiSelect({
 
                             {Icon &&
                               (typeof Icon === "string" ? Icon : <Icon />)}
-                            {item.label ?? item.value}
+                            {item.label || item.value}
 
                             <div className="ml-auto size-2 rounded-full bg-[var(--item-color)]" />
                           </CommandItem>

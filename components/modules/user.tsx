@@ -24,7 +24,7 @@ export function UserRoleBadge({
             "border-[var(--badge-color)] text-[var(--badge-color)] capitalize",
           )}
         >
-          <Icon /> {displayName ?? role}
+          <Icon /> {displayName || role}
         </Badge>
       </TooltipTrigger>
       <TooltipContent>{desc}</TooltipContent>

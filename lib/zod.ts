@@ -11,9 +11,9 @@ const { user: userFields } = fieldsMeta;
 
 export const zodSchemas = {
   string: (field: string, options?: { min?: number; max?: number }) => {
-    let schema = z.string().trim();
+    const { invalidType, required, stringTooShort, stringTooLong } = messages;
+    let schema = z.string({ error: invalidType(field, "string") }).trim();
 
-    const { required, stringTooShort, stringTooLong } = messages;
     const min = options?.min;
     const max = options?.max;
 
@@ -28,9 +28,9 @@ export const zodSchemas = {
   },
 
   number: (field: string, options?: { min?: number; max?: number }) => {
-    let schema = z.number();
+    const { invalidType, required, numberTooSmall, numberTooLarge } = messages;
+    let schema = z.number({ error: invalidType(field, "number") });
 
-    const { required, numberTooSmall, numberTooLarge } = messages;
     const min = options?.min;
     const max = options?.max;
 
@@ -92,25 +92,25 @@ export const zodSchemas = {
       optional?: boolean;
       min?: number;
       max?: number;
-      maxSize?: number;
+      maxFileSize?: number;
     },
   ) => {
     const { displayName, size, mimeTypes } = fileMeta[type];
 
     const optional = options?.optional ?? false;
-    const min = options?.min ?? 1;
+    const min = optional ? 0 : options?.min || 1;
     const max = options?.max;
 
-    const maxSize = options?.maxSize ?? size.bytes;
-    const maxSizeInMB = toMegabytes(maxSize).toFixed(2);
+    const maxFileSize = options?.maxFileSize ?? size.bytes;
+    const maxFileSizeInMB = toMegabytes(maxFileSize).toFixed(2);
 
     let schema = z.array(
       z
         .file()
         .mime(mimeTypes, { error: `Tipe ${displayName} tidak valid.` })
         .min(1)
-        .max(maxSize, {
-          error: `Ukuran ${displayName} tidak boleh melebihi ${maxSizeInMB} MB.`,
+        .max(maxFileSize, {
+          error: `Ukuran ${displayName} tidak boleh melebihi ${maxFileSizeInMB} MB.`,
         }),
     );
 

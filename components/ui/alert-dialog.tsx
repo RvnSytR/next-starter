@@ -101,7 +101,7 @@ function AlertDialogTitle({
     <AlertDialogPrimitive.Title
       data-slot="alert-dialog-title"
       className={cn(
-        "text-lg font-semibold [&_svg:not([class*='size-'])]:size-5",
+        "text-lg leading-none font-semibold [&_svg:not([class*='size-'])]:size-5",
         className,
       )}
       {...props}

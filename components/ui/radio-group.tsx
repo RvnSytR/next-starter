@@ -82,7 +82,7 @@ export function RadioGroupField({
           key={item.key ?? item.value}
           style={
             {
-              "--radio-color": item.color ?? "var(--primary)",
+              "--radio-color": item.color || "var(--primary)",
             } as React.CSSProperties
           }
           className={cn(
@@ -100,7 +100,7 @@ export function RadioGroupField({
             <FormLabel
               className={cn("flex items-center", item.classNames?.label)}
             >
-              {getIconOrText(item.icon)} {item.label ?? item.value}
+              {getIconOrText(item.icon)} {item.label || item.value}
             </FormLabel>
 
             <FormControl>

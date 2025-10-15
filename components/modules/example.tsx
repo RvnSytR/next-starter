@@ -119,7 +119,7 @@ export function ExampleForm() {
     },
   });
 
-  const formHandler = async (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: z.infer<typeof schema>) => {
     console.log(formData.file);
     // const res = await uploadFiles({ files: formData.file });
     toast(<p>{JSON.stringify(formData, null, 2)}</p>);
@@ -212,7 +212,7 @@ export function ExampleForm() {
                   {selectAndRadioData.map(
                     ({ value: v, label, icon: Icon, disabled }) => (
                       <SelectItem key={v} value={v} disabled={disabled}>
-                        {Icon && <Icon />} {label ?? v}
+                        {Icon && <Icon />} {label || v}
                       </SelectItem>
                     ),
                   )}
