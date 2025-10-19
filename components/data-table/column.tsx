@@ -1,7 +1,6 @@
 "use client";
 
 import { filterFn } from "@/lib/filters";
-import { fieldsMeta } from "@/lib/meta";
 import { Role, rolesMeta } from "@/lib/permission";
 import { cn, formatDate } from "@/lib/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
@@ -19,8 +18,6 @@ import { UserAvatar, UserRoleBadge, UserVerifiedBadge } from "../modules/user";
 import { UserDetailSheet } from "../modules/user-client";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-
-const { user: userFields } = fieldsMeta;
 
 function headerButton<C, T>(
   column: Column<C, T>,
@@ -80,26 +77,26 @@ export const getUserColumn = (currentUserId: string) => [
     enableSorting: false,
   }),
   createUserColumn.display({
-    id: fieldsMeta.num,
-    header: fieldsMeta.num,
+    id: "no",
+    header: "No",
     cell: ({ row }) => cellNum(row.index + 1),
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
-    id: userFields.avatar,
-    header: userFields.avatar,
+    id: "image",
+    header: "Foto Profil",
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-20" />
       </div>
     ),
     filterFn: filterFn("text"),
-    meta: { displayName: userFields.avatar, type: "text", icon: UserSquare2 },
+    meta: { displayName: "Foto Profil", type: "text", icon: UserSquare2 },
     enableSorting: false,
   }),
   createUserColumn.accessor(({ name }) => name, {
-    id: userFields.name.label,
-    header: ({ column }) => headerButton(column, userFields.name.label),
+    id: "name",
+    header: ({ column }) => headerButton(column, "Nama"),
     cell: ({ row }) => (
       <UserDetailSheet
         data={row.original}
@@ -107,11 +104,11 @@ export const getUserColumn = (currentUserId: string) => [
       />
     ),
     filterFn: filterFn("text"),
-    meta: { displayName: userFields.name.label, type: "text", icon: UserRound },
+    meta: { displayName: "Nama", type: "text", icon: UserRound },
   }),
   createUserColumn.accessor(({ email }) => email, {
-    id: userFields.email.label,
-    header: ({ column }) => headerButton(column, userFields.email.label),
+    id: "email",
+    header: ({ column }) => headerButton(column, "Alamat Email"),
     cell: ({ row }) => {
       const { email, emailVerified } = row.original;
       return (
@@ -121,15 +118,15 @@ export const getUserColumn = (currentUserId: string) => [
       );
     },
     filterFn: filterFn("text"),
-    meta: { displayName: userFields.email.label, type: "text", icon: Mail },
+    meta: { displayName: "Alamat Email", type: "text", icon: Mail },
   }),
   createUserColumn.accessor(({ role }) => role, {
-    id: userFields.role,
-    header: ({ column }) => headerButton(column, userFields.role),
+    id: "role",
+    header: ({ column }) => headerButton(column, "Role"),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
-      displayName: userFields.role,
+      displayName: "Role",
       type: "option",
       icon: CircleDot,
       transformOptionFn: (value) => {
@@ -139,25 +136,21 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ updatedAt }) => updatedAt, {
-    id: fieldsMeta.updatedAt,
-    header: ({ column }) => headerButton(column, fieldsMeta.updatedAt),
+    id: "updatedAt",
+    header: ({ column }) => headerButton(column, "Terakhir Diperbarui"),
     cell: ({ row }) => formatDate(row.original.updatedAt, "PPPp"),
     filterFn: filterFn("date"),
     meta: {
-      displayName: fieldsMeta.updatedAt,
+      displayName: "Terakhir Diperbarui",
       type: "date",
       icon: CalendarSync,
     },
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
-    id: fieldsMeta.createdAt,
-    header: ({ column }) => headerButton(column, fieldsMeta.createdAt),
+    id: "createdAt",
+    header: ({ column }) => headerButton(column, "Waktu Dibuat"),
     cell: ({ row }) => formatDate(row.original.createdAt, "PPPp"),
     filterFn: filterFn("date"),
-    meta: {
-      displayName: fieldsMeta.createdAt,
-      type: "date",
-      icon: CalendarCheck2,
-    },
+    meta: { displayName: "Waktu Dibuat", type: "date", icon: CalendarCheck2 },
   }),
 ];

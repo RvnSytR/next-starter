@@ -23,7 +23,7 @@ export const metadata: Metadata = { title: getTitle("/sign-in") };
 export default function Page() {
   return (
     <main className="container flex min-h-dvh items-center justify-center">
-      <Card className="w-full max-w-md">
+      <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
           <CardTitle className="mx-auto">
             <Link href="/">

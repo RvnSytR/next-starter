@@ -1,11 +1,11 @@
 import { DashboardMain } from "@/components/layout/section";
 import { UserRoleBadge, UserVerifiedBadge } from "@/components/modules/user";
 import {
-  ActiveSessionButton,
   ChangePasswordForm,
   DeleteMyAccountButton,
   PersonalInformation,
   RevokeOtherSessionsButton,
+  RevokeSessionButton,
 } from "@/components/modules/user-client";
 import {
   Card,
@@ -69,7 +69,7 @@ export default async function Page() {
 
         <CardContent className="flex flex-col gap-y-2">
           {sessionList.map((item) => (
-            <ActiveSessionButton
+            <RevokeSessionButton
               key={item.id}
               currentSessionId={session.id}
               {...item}

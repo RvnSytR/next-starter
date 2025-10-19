@@ -39,22 +39,28 @@ export type MultiSelectConfig = {
 type GroupOption = Record<string, MultiSelectConfig[]>;
 
 type MultiSelectProps = {
+  className?: string;
+  badgeClassName?: string;
+  placeholder?: string;
+  disabled?: boolean;
+
   value?: string[]; // value by keys
   defaultValue?: MultiSelectConfig[];
+  onChange?: (selected: MultiSelectConfig[]) => void;
+
   /** manually controlled options */
   options?: MultiSelectConfig[];
-  placeholder?: string;
   /** Loading component. */
   loadingIndicator?: ReactNode;
   /** Empty component. */
   emptyIndicator?: ReactNode;
-  /** Debounce time for async search. Only work with `onSearch`. */
-  delay?: number;
   /**
    * Only work with `onSearch` prop. Trigger search when `onFocus`.
    * For example, when user click on the input, it will trigger the search to get initial options.
    **/
   triggerSearchOnFocus?: boolean;
+  /** Debounce time for async search. Only work with `onSearch`. */
+  delay?: number;
   /** async search */
   onSearch?: (value: string) => Promise<MultiSelectConfig[]>;
   /**
@@ -63,16 +69,13 @@ type MultiSelectProps = {
    * i.e.: creatable, groupBy, delay.
    **/
   onSearchSync?: (value: string) => MultiSelectConfig[];
-  onChange?: (selected: MultiSelectConfig[]) => void;
   /** Limit the maximum number of selected options. */
   maxSelected?: number;
   /** When the number of selected options exceeds the limit, the onMaxSelected will be called. */
   onMaxSelected?: (maxLimit: number) => void;
   /** Hide the placeholder when there are options selected. */
   hidePlaceholderWhenSelected?: boolean;
-  disabled?: boolean;
-  className?: string;
-  badgeClassName?: string;
+
   /**
    * First item selected is a default behavior by cmdk. That is why the default is true.
    * This is a workaround solution by add a dummy item.
@@ -82,15 +85,16 @@ type MultiSelectProps = {
   selectFirstItem?: boolean;
   /** Allow user to create option when there is no option matched. */
   creatable?: boolean;
-  /** Props of `Command` */
-  commandProps?: ComponentPropsWithoutRef<typeof Command>;
-  /** Props of `CommandInput` */
-  inputProps?: Omit<
-    ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
-    "value" | "placeholder" | "disabled"
-  >;
   /** hide the clear all button. */
   hideClearAllButton?: boolean;
+  /** Props of `Command` and `Input` */
+  props?: {
+    command?: ComponentPropsWithoutRef<typeof Command>;
+    input?: Omit<
+      ComponentPropsWithoutRef<typeof CommandPrimitive.Input>,
+      "value" | "placeholder" | "disabled"
+    >;
+  };
 };
 
 export type MultiSelectRef = {
@@ -153,28 +157,27 @@ function getValue(
 }
 
 export function MultiSelect({
-  value,
-  onChange,
+  className,
+  badgeClassName,
   placeholder,
+  disabled,
+  value,
   defaultValue = [],
+  onChange,
   options: arrayOptions,
+  loadingIndicator,
+  emptyIndicator = messages.empty,
+  triggerSearchOnFocus = false,
   delay,
   onSearch,
   onSearchSync,
-  loadingIndicator,
-  emptyIndicator = messages.empty,
   maxSelected = Number.MAX_SAFE_INTEGER,
   onMaxSelected,
   hidePlaceholderWhenSelected,
-  disabled,
-  className,
-  badgeClassName,
   selectFirstItem = true,
   creatable = false,
-  triggerSearchOnFocus = false,
-  commandProps,
-  inputProps,
   hideClearAllButton = false,
+  props,
 }: MultiSelectProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
@@ -313,14 +316,14 @@ export function MultiSelect({
 
   /** Avoid Creatable Selector freezing or lagging when paste a long string. */
   const commandFilter = useCallback(() => {
-    if (commandProps?.filter) return commandProps.filter;
+    if (props?.command?.filter) return props?.command.filter;
     if (creatable) {
       return (value: string, search: string) =>
         value.toLowerCase().includes(search.toLowerCase()) ? 1 : -1;
     }
     // Using default filter in `cmdk`. We don&lsquo;t have to provide it.
     return undefined;
-  }, [creatable, commandProps?.filter]);
+  }, [creatable, props?.command?.filter]);
 
   const CreatableItem = () => {
     if (!creatable) return undefined;
@@ -380,18 +383,18 @@ export function MultiSelect({
   return (
     <Command
       ref={dropdownRef}
-      {...commandProps}
+      {...props?.command}
       onKeyDown={(e) => {
         handleKeyDown(e);
-        commandProps?.onKeyDown?.(e);
+        props?.command?.onKeyDown?.(e);
       }}
       className={cn(
         "h-auto overflow-visible bg-transparent",
-        commandProps?.className,
+        props?.command?.className,
       )}
       shouldFilter={
-        commandProps?.shouldFilter !== undefined
-          ? commandProps.shouldFilter
+        props?.command?.shouldFilter !== undefined
+          ? props?.command.shouldFilter
           : !onSearch
       } // When onSearch is provided, we don&lsquo;t want to filter the options. You can still override it.
       filter={commandFilter()}
@@ -440,7 +443,7 @@ export function MultiSelect({
                   onClick={() => handleUnselect(item)}
                   aria-label="Remove"
                 >
-                  <XIcon aria-hidden="true" />
+                  <XIcon size={16} aria-hidden="true" />
                 </button>
               )}
             </Badge>
@@ -449,22 +452,22 @@ export function MultiSelect({
 
         {/* Avoid having the "Search" Icon */}
         <CommandPrimitive.Input
-          {...inputProps}
+          {...props?.input}
           ref={inputRef}
           value={inputValue}
           disabled={disabled}
           onValueChange={(value) => {
             setInputValue(value);
-            inputProps?.onValueChange?.(value);
+            props?.input?.onValueChange?.(value);
           }}
           onBlur={(event) => {
             if (!onScrollbar) setOpen(false);
-            inputProps?.onBlur?.(event);
+            props?.input?.onBlur?.(event);
           }}
           onFocus={(event) => {
             setOpen(true);
             if (triggerSearchOnFocus) onSearch?.(debouncedSearchTerm);
-            inputProps?.onFocus?.(event);
+            props?.input?.onFocus?.(event);
           }}
           placeholder={
             hidePlaceholderWhenSelected && selected.length !== 0
@@ -476,7 +479,7 @@ export function MultiSelect({
             hidePlaceholderWhenSelected && "w-full",
             selected.length === 0 && "px-3 py-2",
             selected.length !== 0 && "mx-1",
-            inputProps?.className,
+            props?.input?.className,
           )}
         />
 

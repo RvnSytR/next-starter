@@ -33,8 +33,7 @@ export const messages = {
   removeLabel: (thing: string) =>
     `Untuk mengonfirmasi, ketik "${thing}" pada kolom di bawah ini.`,
 
-  noChanges: (thing: string) =>
-    `Tidak ada perubahan pada ${thing.toLowerCase()}.`,
+  noChanges: (thing: string) => `Tidak ada perubahan pada ${thing}.`,
   thingNotMatch: (thing: string) =>
     `${capitalize(thing, "first")} tidak cocok - silakan periksa kembali.`,
 

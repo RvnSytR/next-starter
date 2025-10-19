@@ -4,8 +4,6 @@ import { cn } from "@/lib/utils";
 import { CircleIcon } from "lucide-react";
 import { RadioGroup as RadioGroupPrimitive } from "radix-ui";
 import { ComponentProps } from "react";
-import { FormControl, FormItem, FormLabel } from "./form";
-import { getIconOrText, IconOrText } from "./icons";
 
 type RadioGroupProps = ComponentProps<typeof RadioGroupPrimitive.Root>;
 type RadioGroupItemProps = ComponentProps<typeof RadioGroupPrimitive.Item> & {
@@ -51,83 +49,5 @@ export function RadioGroupItem({
         />
       </RadioGroupPrimitive.Indicator>
     </RadioGroupPrimitive.Item>
-  );
-}
-
-export function RadioGroupField({
-  data,
-  ...props
-}: RadioGroupProps & {
-  data: {
-    value: string;
-    key?: string;
-    label?: string;
-    desc?: React.ReactNode;
-    icon?: IconOrText;
-    color?: string;
-    className?: string;
-    classNames?: {
-      header?: string;
-      label?: string;
-      radioItem?: string;
-      desc?: string;
-    };
-    disabled?: boolean;
-  }[];
-}) {
-  return (
-    <RadioGroup {...props}>
-      {data.map((item) => (
-        <FormItem
-          key={item.key ?? item.value}
-          style={
-            {
-              "--radio-color": item.color || "var(--primary)",
-            } as React.CSSProperties
-          }
-          className={cn(
-            "dark:bg-input/30 border-input relative items-start rounded-md border p-4 shadow-xs has-data-[state=checked]:border-[var(--radio-color)]",
-            item.disabled && "opacity-50",
-            item.className,
-          )}
-        >
-          <div
-            className={cn(
-              "flex w-full justify-between gap-x-2 has-data-[state=checked]:[&>label]:text-[var(--radio-color)]",
-              item.classNames?.header,
-            )}
-          >
-            <FormLabel
-              className={cn("flex items-center", item.classNames?.label)}
-            >
-              {getIconOrText(item.icon)} {item.label || item.value}
-            </FormLabel>
-
-            <FormControl>
-              <RadioGroupItem
-                value={item.value}
-                className={cn(
-                  "after:absolute after:inset-0 has-data-[state=checked]:border-[var(--radio-color)]",
-                  item.classNames?.radioItem,
-                )}
-                classNames={{ circle: "fill-[var(--radio-color)]" }}
-                disabled={item.disabled}
-              />
-            </FormControl>
-          </div>
-
-          {item.desc && (
-            <span
-              className={cn(
-                "text-muted-foreground text-xs text-pretty",
-                item.classNames?.desc,
-              )}
-            >
-              {item.desc}
-            </span>
-          )}
-        </FormItem>
-      ))}
-    </RadioGroup>
   );
 }

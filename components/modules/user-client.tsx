@@ -3,10 +3,9 @@
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
 import { useIsMobile } from "@/lib/hooks";
-import { appMeta, fieldsMeta, fileMeta } from "@/lib/meta";
+import { appMeta, fileMeta } from "@/lib/meta";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
-import { capitalize } from "@/lib/utils";
 import { zodSchemas, zodUser } from "@/lib/zod";
 import {
   deleteProfilePicture,
@@ -24,8 +23,11 @@ import {
   Gamepad2,
   Info,
   Layers2,
+  LockKeyhole,
+  LockKeyholeOpen,
   LogIn,
   LogOut,
+  Mail,
   Monitor,
   MonitorOff,
   MonitorSmartphone,
@@ -36,11 +38,12 @@ import {
   Trash2,
   TriangleAlert,
   TvMinimal,
+  UserRound,
   UserRoundPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import useSWR, { mutate } from "swr";
 import { UAParser } from "ua-parser-js";
@@ -81,12 +84,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import { Form, FormControl, FormField } from "../ui/form";
-import { FormFieldWrapper, TextFields } from "../ui/form-fields";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldLabel,
+  FieldTitle,
+} from "../ui/field";
+import { FieldWrapper } from "../ui/field-wrapper";
 import { GithubIcon } from "../ui/icons";
 import { Input } from "../ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "../ui/input-group";
 import { Label } from "../ui/label";
-import { RadioGroupField } from "../ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import { Separator } from "../ui/separator";
 import {
   Sheet,
@@ -100,8 +114,6 @@ import {
 import { SidebarMenuButton } from "../ui/sidebar";
 import { LoadingSpinner } from "../ui/spinner";
 import { UserAvatar, UserRoleBadge, UserVerifiedBadge } from "./user";
-
-const { user: userFields } = fieldsMeta;
 
 const sharedText = {
   signIn: "Berhasil masuk - Selamat datang!",
@@ -188,9 +200,9 @@ export function UserDetailSheet({
   const [isOpen, setIsOpen] = useState(false);
 
   const details = [
-    { label: userFields.email.label, content: data.email },
-    { label: fieldsMeta.updatedAt, content: messages.dateAgo(data.updatedAt) },
-    { label: fieldsMeta.createdAt, content: messages.dateAgo(data.createdAt) },
+    { label: "Alamat email", content: data.email },
+    { label: "Terakhir diperbarui", content: messages.dateAgo(data.updatedAt) },
+    { label: "Waktu dibuat", content: messages.dateAgo(data.createdAt) },
   ];
 
   return (
@@ -238,7 +250,7 @@ export function UserDetailSheet({
 
               {/* // TODO */}
               <Button variant="outline_destructive" disabled>
-                <Ban /> Ban {data.name}
+                <Ban /> Ban
               </Button>
             </>
           )}
@@ -347,32 +359,73 @@ export function SignInForm() {
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
-      <FormField
-        control={form.control}
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+      <Controller
         name="email"
-        render={({ field }) => (
-          <TextFields type="email" field={field} {...userFields.email} />
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Alamat email"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="email"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Masukan email anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <Mail />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
         )}
       />
 
-      <FormField
+      <Controller
         control={form.control}
         name="password"
-        render={({ field }) => (
-          <TextFields type="password" field={field} {...userFields.password} />
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Kata sandi"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="password"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Masukan kata sandi anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <LockKeyhole />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
         )}
       />
 
-      <FormField
+      <Controller
         control={form.control}
         name="rememberMe"
-        render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper type="checkbox" label="Ingat Saya">
-            <FormControl>
-              <Checkbox checked={value} onCheckedChange={onChange} />
-            </FormControl>
-          </FormFieldWrapper>
+        render={({ field, fieldState }) => (
+          <Field orientation="horizontal" data-invalid={!!fieldState.error}>
+            <Checkbox
+              id={field.name}
+              name={field.name}
+              aria-invalid={!!fieldState.error}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <FieldLabel htmlFor={field.name}>Ingat Saya</FieldLabel>
+          </Field>
         )}
       />
 
@@ -380,7 +433,7 @@ export function SignInForm() {
         <LoadingSpinner loading={isLoading} icon={{ base: <LogIn /> }} />
         Masuk ke Dashboard
       </Button>
-    </Form>
+    </form>
   );
 }
 
@@ -432,60 +485,136 @@ export function SignUpForm() {
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
-      <FormField
-        control={form.control}
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+      <Controller
         name="name"
-        render={({ field }) => (
-          <TextFields type="text" field={field} {...userFields.name} />
-        )}
-      />
-
-      <FormField
         control={form.control}
-        name="email"
-        render={({ field }) => (
-          <TextFields type="email" field={field} {...userFields.email} />
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Nama"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="text"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Masukan nama anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <UserRound />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
         )}
       />
 
-      <FormField
+      <Controller
+        name="email"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Alamat email"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="email"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Masukan email anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <Mail />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
+        )}
+      />
+
+      <Controller
         control={form.control}
         name="newPassword"
-        render={({ field }) => (
-          <TextFields
-            type="password"
-            field={field}
-            {...userFields.newPassword}
-          />
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Kata sandi"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="password"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Masukan kata sandi anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <LockKeyhole />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
         )}
       />
 
-      <FormField
+      <Controller
         control={form.control}
         name="confirmPassword"
-        render={({ field }) => (
-          <TextFields
-            type="password"
-            field={field}
-            {...userFields.confirmPassword}
-          />
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Konfirmasi kata sandi"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <InputGroup>
+              <InputGroupInput
+                type="password"
+                id={field.name}
+                aria-invalid={!!fieldState.error}
+                placeholder="Konfirmasi kata sandi anda"
+                required
+                {...field}
+              />
+              <InputGroupAddon>
+                <LockKeyhole />
+              </InputGroupAddon>
+            </InputGroup>
+          </FieldWrapper>
         )}
       />
 
-      <FormField
+      <Controller
         control={form.control}
         name="agreement"
-        render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper
-            type="checkbox"
-            label="Setujui syarat dan ketentuan"
-            desc={`Saya menyetujui ketentuan layanan dan kebijakan privasi ${appMeta.name}.`}
-          >
-            <FormControl>
-              <Checkbox checked={value} onCheckedChange={onChange} />
-            </FormControl>
-          </FormFieldWrapper>
+        render={({ field, fieldState }) => (
+          <Field orientation="horizontal" data-invalid={!!fieldState.error}>
+            <Checkbox
+              id={field.name}
+              name={field.name}
+              aria-invalid={!!fieldState.error}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+            />
+            <FieldContent>
+              <FieldLabel htmlFor={field.name}>
+                Setujui syarat dan ketentuan
+              </FieldLabel>
+              <FieldDescription>
+                Saya menyetujui{" "}
+                <span className="text-foreground link-underline">
+                  ketentuan layanan dan kebijakan privasi
+                </span>{" "}
+                {appMeta.name}.
+              </FieldDescription>
+            </FieldContent>
+          </Field>
         )}
       />
 
@@ -496,7 +625,7 @@ export function SignUpForm() {
         />
         Daftar Sekarang
       </Button>
-    </Form>
+    </form>
   );
 }
 
@@ -579,7 +708,7 @@ export function ProfilePicture({
       />
 
       <div className="flex flex-col gap-y-2">
-        <Label>{userFields.avatar}</Label>
+        <Label>Foto profil</Label>
         <div className="flex flex-wrap gap-2">
           <Button
             type="button"
@@ -588,7 +717,7 @@ export function ProfilePicture({
             disabled={isChange || isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
           >
-            <LoadingSpinner loading={isChange} /> {actions.upload} Avatar
+            <LoadingSpinner loading={isChange} /> {actions.upload} Foto profil
           </Button>
 
           <AlertDialog>
@@ -662,28 +791,59 @@ export function PersonalInformation({ ...props }: UserWithRole) {
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
       <CardContent className="flex flex-col gap-y-4">
         <ProfilePicture {...props} />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="email"
-          render={({ field }) => (
-            <TextFields
-              type="email"
-              field={field}
-              disabled
-              {...userFields.email}
-            />
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Alamat email"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <InputGroup>
+                <InputGroupInput
+                  type="email"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Masukan email anda"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>
+                  <Mail />
+                </InputGroupAddon>
+              </InputGroup>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="name"
-          render={({ field }) => (
-            <TextFields type="text" field={field} {...userFields.name} />
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Nama"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <InputGroup>
+                <InputGroupInput
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Masukan nama anda"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>
+                  <UserRound />
+                </InputGroupAddon>
+              </InputGroup>
+            </FieldWrapper>
           )}
         />
       </CardContent>
@@ -696,7 +856,7 @@ export function PersonalInformation({ ...props }: UserWithRole) {
 
         <ResetButton onClick={() => form.reset()} />
       </CardFooter>
-    </Form>
+    </form>
   );
 }
 
@@ -734,7 +894,7 @@ export function ChangePasswordForm() {
         setIsLoading(false);
       },
       onSuccess: () => {
-        toast.success(`${userFields.password.label} Anda berhasil diperbarui.`);
+        toast.success("Kata sandi Anda berhasil diperbarui.");
         setIsLoading(false);
         form.reset();
         router.refresh();
@@ -743,56 +903,102 @@ export function ChangePasswordForm() {
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
       <CardContent className="flex flex-col gap-y-4">
-        <FormField
+        <Controller
           control={form.control}
           name="currentPassword"
-          render={({ field }) => (
-            <TextFields
-              type="password"
-              field={field}
-              {...userFields.currentPassword}
-            />
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Kata sandi saat ini"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <InputGroup>
+                <InputGroupInput
+                  type="password"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Masukan kata sandi saat ini"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>
+                  <LockKeyhole />
+                </InputGroupAddon>
+              </InputGroup>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="newPassword"
-          render={({ field }) => (
-            <TextFields
-              type="password"
-              field={field}
-              {...userFields.newPassword}
-            />
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Kata sandi baru"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <InputGroup>
+                <InputGroupInput
+                  type="password"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Masukan kata sandi anda"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>
+                  <LockKeyholeOpen />
+                </InputGroupAddon>
+              </InputGroup>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="confirmPassword"
-          render={({ field }) => (
-            <TextFields
-              type="password"
-              field={field}
-              {...userFields.confirmPassword}
-            />
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Konfirmasi kata sandi"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <InputGroup>
+                <InputGroupInput
+                  type="password"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Konfirmasi kata sandi anda"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>
+                  <LockKeyhole />
+                </InputGroupAddon>
+              </InputGroup>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="revokeOtherSessions"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper
-              type="checkbox"
-              label="Keluar dari perangkat lainnya"
-            >
-              <FormControl>
-                <Checkbox checked={value} onCheckedChange={onChange} />
-              </FormControl>
-            </FormFieldWrapper>
+          render={({ field, fieldState }) => (
+            <Field orientation="horizontal" data-invalid={!!fieldState.error}>
+              <Checkbox
+                id={field.name}
+                name={field.name}
+                aria-invalid={!!fieldState.error}
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldLabel htmlFor={field.name}>
+                Keluar dari perangkat lainnya
+              </FieldLabel>
+            </Field>
           )}
         />
       </CardContent>
@@ -805,11 +1011,11 @@ export function ChangePasswordForm() {
 
         <ResetButton onClick={() => form.reset()} />
       </CardFooter>
-    </Form>
+    </form>
   );
 }
 
-export function ActiveSessionButton({
+export function RevokeSessionButton({
   currentSessionId,
   id,
   updatedAt,
@@ -1090,63 +1296,160 @@ export function AdminCreateUserDialog() {
           </DialogDescription>
         </DialogHeader>
 
-        <Form form={form} onSubmit={formHandler}>
-          <FormField
-            control={form.control}
+        <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+          <Controller
             name="name"
-            render={({ field }) => (
-              <TextFields type="text" field={field} {...userFields.name} />
-            )}
-          />
-
-          <FormField
             control={form.control}
-            name="email"
-            render={({ field }) => (
-              <TextFields type="email" field={field} {...userFields.email} />
+            render={({ field, fieldState }) => (
+              <FieldWrapper
+                label="Nama"
+                htmlFor={field.name}
+                fieldError={fieldState.error}
+              >
+                <InputGroup>
+                  <InputGroupInput
+                    type="text"
+                    id={field.name}
+                    aria-invalid={!!fieldState.error}
+                    placeholder="Masukan nama anda"
+                    required
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <UserRound />
+                  </InputGroupAddon>
+                </InputGroup>
+              </FieldWrapper>
             )}
           />
 
-          <FormField
+          <Controller
+            name="email"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <FieldWrapper
+                label="Alamat email"
+                htmlFor={field.name}
+                fieldError={fieldState.error}
+              >
+                <InputGroup>
+                  <InputGroupInput
+                    type="email"
+                    id={field.name}
+                    aria-invalid={!!fieldState.error}
+                    placeholder="Masukan email anda"
+                    required
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <Mail />
+                  </InputGroupAddon>
+                </InputGroup>
+              </FieldWrapper>
+            )}
+          />
+
+          <Controller
             control={form.control}
             name="newPassword"
-            render={({ field }) => (
-              <TextFields
-                type="password"
-                field={field}
-                {...userFields.newPassword}
-              />
+            render={({ field, fieldState }) => (
+              <FieldWrapper
+                label="Kata sandi"
+                htmlFor={field.name}
+                fieldError={fieldState.error}
+              >
+                <InputGroup>
+                  <InputGroupInput
+                    type="password"
+                    id={field.name}
+                    aria-invalid={!!fieldState.error}
+                    placeholder="Masukan kata sandi anda"
+                    required
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <LockKeyhole />
+                  </InputGroupAddon>
+                </InputGroup>
+              </FieldWrapper>
             )}
           />
 
-          <FormField
+          <Controller
             control={form.control}
             name="confirmPassword"
-            render={({ field }) => (
-              <TextFields
-                type="password"
-                field={field}
-                {...userFields.confirmPassword}
-              />
+            render={({ field, fieldState }) => (
+              <FieldWrapper
+                label="Konfirmasi kata sandi"
+                htmlFor={field.name}
+                fieldError={fieldState.error}
+              >
+                <InputGroup>
+                  <InputGroupInput
+                    type="password"
+                    id={field.name}
+                    aria-invalid={!!fieldState.error}
+                    placeholder="Konfirmasi kata sandi anda"
+                    required
+                    {...field}
+                  />
+                  <InputGroupAddon>
+                    <LockKeyhole />
+                  </InputGroupAddon>
+                </InputGroup>
+              </FieldWrapper>
             )}
           />
 
-          <FormField
+          <Controller
             control={form.control}
             name="role"
-            render={({ field: { value, onChange } }) => (
-              <FormFieldWrapper label={userFields.role}>
-                <RadioGroupField
-                  defaultValue={value}
-                  onValueChange={onChange}
-                  className="grid grid-cols-2 gap-2"
-                  data={allRoles.map((value) => {
-                    const { displayName, ...rest } = rolesMeta[value];
-                    return { value, label: displayName, ...rest };
-                  })}
+            render={({ field, fieldState }) => (
+              <FieldWrapper
+                label="Ubah role"
+                htmlFor={field.name}
+                fieldError={fieldState.error}
+              >
+                <RadioGroup
+                  name={field.name}
+                  value={field.value}
+                  onValueChange={field.onChange}
+                  className="flex-col"
                   required
-                />
-              </FormFieldWrapper>
+                >
+                  {allRoles.map((value) => {
+                    const { icon: Icon, ...meta } = rolesMeta[value];
+                    return (
+                      <FieldLabel
+                        key={value}
+                        htmlFor={value}
+                        color={meta.color}
+                        className="border-[var(--field-color)]/40"
+                      >
+                        <Field
+                          orientation="horizontal"
+                          data-invalid={!!fieldState.error}
+                        >
+                          <FieldContent>
+                            <FieldTitle className="text-[var(--field-color)]">
+                              <Icon /> {meta.displayName}
+                            </FieldTitle>
+                            <FieldDescription className="text-[var(--field-color)]/80">
+                              {meta.desc}
+                            </FieldDescription>
+                          </FieldContent>
+                          <RadioGroupItem
+                            value={value}
+                            id={value}
+                            classNames={{ circle: "fill-[var(--field-color)]" }}
+                            aria-invalid={!!fieldState.error}
+                          />
+                        </Field>
+                      </FieldLabel>
+                    );
+                  })}
+                </RadioGroup>
+              </FieldWrapper>
             )}
           />
 
@@ -1159,7 +1462,7 @@ export function AdminCreateUserDialog() {
               {actions.add}
             </Button>
           </DialogFooter>
-        </Form>
+        </form>
       </DialogContent>
     </Dialog>
   );
@@ -1207,26 +1510,57 @@ function AdminChangeUserRoleForm({
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
-      <FormField
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+      <Controller
         control={form.control}
         name="role"
-        render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper
-            label={capitalize(`Ubah ${userFields.role}`, "first")}
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Ubah role"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
           >
-            <RadioGroupField
-              defaultValue={value}
-              onValueChange={onChange}
-              className="grid gap-2 lg:grid-cols-2"
-              data={allRoles.map((value) => {
-                const { displayName, ...rest } = rolesMeta[value];
-                const disabled = value === data.role;
-                return { value, label: displayName, disabled, ...rest };
-              })}
+            <RadioGroup
+              name={field.name}
+              value={field.value}
+              onValueChange={field.onChange}
+              className="flex-col"
               required
-            />
-          </FormFieldWrapper>
+            >
+              {allRoles.map((value) => {
+                const { icon: Icon, ...meta } = rolesMeta[value];
+                return (
+                  <FieldLabel
+                    key={value}
+                    htmlFor={value}
+                    color={meta.color}
+                    className="border-[var(--field-color)]/40"
+                  >
+                    <Field
+                      orientation="horizontal"
+                      data-invalid={!!fieldState.error}
+                    >
+                      <FieldContent>
+                        <FieldTitle className="text-[var(--field-color)]">
+                          <Icon /> {meta.displayName}
+                        </FieldTitle>
+                        <FieldDescription className="text-[var(--field-color)]/80">
+                          {meta.desc}
+                        </FieldDescription>
+                      </FieldContent>
+                      <RadioGroupItem
+                        value={value}
+                        id={value}
+                        classNames={{ circle: "fill-[var(--field-color)]" }}
+                        aria-invalid={!!fieldState.error}
+                        disabled={data.role === value}
+                      />
+                    </Field>
+                  </FieldLabel>
+                );
+              })}
+            </RadioGroup>
+          </FieldWrapper>
         )}
       />
 
@@ -1234,7 +1568,7 @@ function AdminChangeUserRoleForm({
         <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} />
         {actions.update}
       </Button>
-    </Form>
+    </form>
   );
 }
 
@@ -1307,9 +1641,9 @@ function AdminRemoveUserDialog({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const schema = z
-    .object({ input: zodSchemas.string(userFields.name.label) })
+    .object({ input: zodSchemas.string("Nama") })
     .refine((sc) => sc.input === data.name, {
-      message: messages.thingNotMatch(userFields.name.label),
+      message: messages.thingNotMatch("Nama"),
       path: ["input"],
     });
 
@@ -1361,28 +1695,29 @@ function AdminRemoveUserDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <Form form={form} onSubmit={formHandler}>
-          <FormField
+        <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+          <Controller
             control={form.control}
             name="input"
-            render={({ field: { onChange, ...rest } }) => (
-              <FormFieldWrapper
+            render={({ field: { onChange, ...field }, fieldState }) => (
+              <FieldWrapper
                 label={messages.removeLabel(data.name)}
-                classNames={{ formLabel: "leading-normal" }}
+                fieldError={fieldState.error}
+                htmlFor={field.name}
               >
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={data.name}
-                    required
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                      onChange(e);
-                    }}
-                    {...rest}
-                  />
-                </FormControl>
-              </FormFieldWrapper>
+                <Input
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder={data.name}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    onChange(e);
+                  }}
+                  required
+                  {...field}
+                />
+              </FieldWrapper>
             )}
           />
 
@@ -1397,7 +1732,7 @@ function AdminRemoveUserDialog({
               {actions.confirm}
             </Button>
           </DialogFooter>
-        </Form>
+        </form>
       </DialogContent>
     </Dialog>
   );
@@ -1475,9 +1810,10 @@ function AdminActionRemoveUsersDialog({
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const inputValue = `Hapus ${String(data.length)} pengguna`;
   const schema = z
     .object({ input: zodSchemas.string("Total pengguna yang dihapus") })
-    .refine((sc) => sc.input === String(data.length), {
+    .refine((sc) => sc.input === inputValue, {
       message: messages.thingNotMatch("Total pengguna yang dihapus"),
       path: ["input"],
     });
@@ -1528,28 +1864,29 @@ function AdminActionRemoveUsersDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <Form form={form} onSubmit={formHandler}>
-          <FormField
+        <form onSubmit={form.handleSubmit(formHandler)} noValidate>
+          <Controller
             control={form.control}
             name="input"
-            render={({ field: { onChange, ...rest } }) => (
-              <FormFieldWrapper
-                label={messages.removeLabel(String(data.length))}
-                classNames={{ formLabel: "leading-normal" }}
+            render={({ field: { onChange, ...field }, fieldState }) => (
+              <FieldWrapper
+                label={messages.removeLabel(inputValue)}
+                fieldError={fieldState.error}
+                htmlFor={field.name}
               >
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder={String(data.length)}
-                    required
-                    onChange={(e) => {
-                      setInput(e.target.value);
-                      onChange(e);
-                    }}
-                    {...rest}
-                  />
-                </FormControl>
-              </FormFieldWrapper>
+                <Input
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder={inputValue}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                    onChange(e);
+                  }}
+                  required
+                  {...field}
+                />
+              </FieldWrapper>
             )}
           />
 
@@ -1558,13 +1895,13 @@ function AdminActionRemoveUsersDialog({
             <Button
               type="submit"
               variant="destructive"
-              disabled={input !== String(data.length) || isLoading}
+              disabled={input !== inputValue || isLoading}
             >
               <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
               {actions.confirm}
             </Button>
           </DialogFooter>
-        </Form>
+        </form>
       </DialogContent>
     </Dialog>
   );

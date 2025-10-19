@@ -2,7 +2,7 @@ import { actions } from "@/lib/content";
 import { fileMeta, FileType } from "@/lib/meta";
 import { cn, toMegabytes } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
-import { Dot, X } from "lucide-react";
+import { ArrowUpRight, Dot, X } from "lucide-react";
 import { Route } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,23 +21,23 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "./empty";
-import { FormControl } from "./form";
-import { getIconOrText } from "./icons";
-import { Input } from "./input";
+import { Input, InputProps } from "./input";
 import { Separator } from "./separator";
 
-export type FileUploadProps = {
+export type FileUploadProps = Pick<
+  InputProps,
+  "id" | "name" | "className" | "multiple" | "required"
+> & {
   value: File[];
   onChange: (files: File[]) => void;
   accept?: FileType;
   maxSize?: number;
-  className?: string;
   classNames?: { container?: string; dropzone?: string };
-  multiple?: boolean;
-  required?: boolean;
 };
 
 export function FileUpload({
+  id,
+  name,
   value,
   onChange,
   accept = "file",
@@ -49,10 +49,16 @@ export function FileUpload({
 }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { displayName, mimeTypes, extensions, size, icon } = fileMeta[accept];
-  const iconElement = getIconOrText(icon, { className: "size-4" });
+  const {
+    displayName,
+    mimeTypes,
+    extensions,
+    size,
+    icon: Icon,
+  } = fileMeta[accept];
 
-  const isFiles = value.length > 0;
+  const valueLength = value?.length || 0;
+  const isFiles = valueLength > 0;
   const fileSize = maxSize
     ? { mb: toMegabytes(maxSize), bytes: maxSize }
     : size;
@@ -99,22 +105,22 @@ export function FileUpload({
   return (
     <div
       className={cn(
-        "relative flex w-full flex-col gap-y-3",
+        "relative mb-2 flex w-full flex-col gap-y-4",
         classNames?.container,
       )}
     >
-      <FormControl>
-        <Input
-          type="file"
-          tabIndex={-1}
-          ref={inputRef}
-          multiple={multiple}
-          accept={mimeTypes.join(", ")}
-          className={cn("absolute -z-1 opacity-0")}
-          onChange={({ target }) => changeHandler(target.files)}
-          required={required}
-        />
-      </FormControl>
+      <Input
+        id={id}
+        name={name}
+        type="file"
+        tabIndex={-1}
+        ref={inputRef}
+        multiple={multiple}
+        accept={mimeTypes.join(", ")}
+        className={cn("absolute -z-1 opacity-0")}
+        onChange={({ target }) => changeHandler(target.files)}
+        required={required}
+      />
 
       <Empty
         tabIndex={0}
@@ -124,7 +130,7 @@ export function FileUpload({
         onDragEnter={handleDragEnterAndOver}
         onDragOver={handleDragEnterAndOver}
         className={cn(
-          "group border-input hover:border-muted-foreground dark:bg-input/30 gap-2 border border-dashed transition outline-none hover:cursor-pointer",
+          "group border-input hover:border-muted-foreground gap-2 border border-dashed transition outline-none hover:cursor-pointer",
           "focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px]",
           classNames?.dropzone,
         )}
@@ -137,7 +143,7 @@ export function FileUpload({
             )}
             variant="icon"
           >
-            {iconElement}
+            <Icon />
           </EmptyMedia>
         </EmptyHeader>
 
@@ -145,21 +151,22 @@ export function FileUpload({
           Seret dan lepaskan {displayName} di sini, atau klik untuk mengunggah
         </EmptyTitle>
 
-        <EmptyDescription className="flex items-center text-xs">
-          Maksimal {fileSize.mb} MB
+        <EmptyDescription className="flex flex-col gap-y-2 text-xs md:flex-row md:items-center">
+          <span>Maksimal {fileSize.mb} MB</span>
           {extensions.length > 0 && (
             <>
-              <Dot /> {`( ${extensions.join(" ")} )`}
+              <Dot className="hidden md:block" />
+              <span>{`( ${extensions.join(" ")} )`}</span>
             </>
           )}
         </EmptyDescription>
       </Empty>
 
       {isFiles && multiple && (
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
           <div className="flex items-center gap-x-2 tabular-nums">
             <small className="font-medium capitalize">
-              Total {value.length} {displayName}
+              Total {valueLength} {displayName}
             </small>
             <Separator orientation="vertical" className="h-4" />
             <small className="text-muted-foreground text-xs">
@@ -171,7 +178,6 @@ export function FileUpload({
 
           <Button
             type="button"
-            size="sm"
             variant="outline_destructive"
             onClick={resetFiles}
           >
@@ -186,7 +192,10 @@ export function FileUpload({
             const fileURL = URL.createObjectURL(file);
             const isImage = file.type.startsWith("image/");
 
-            const schema = zodSchemas.file(accept, { maxSize: fileSize.bytes });
+            const schema = zodSchemas.file(accept, {
+              maxFileSize: fileSize.bytes,
+            });
+
             const res = schema.safeParse([file]);
 
             return (
@@ -196,24 +205,37 @@ export function FileUpload({
                   onClick={() => removeFile(index)}
                   size="icon-xs"
                   variant="destructive"
-                  className="absolute -top-2 -right-2 z-10 rounded-full"
+                  className="absolute -top-2 -right-2 z-10 rounded-full hover:cursor-pointer"
                 >
                   <X />
                 </Button>
 
-                <div className="dark:bg-input/30 flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md">
+                <Link
+                  href={fileURL as Route}
+                  target="_blank"
+                  className="group flex aspect-square w-full items-center justify-center overflow-hidden rounded-t-md"
+                >
                   {isImage ? (
                     <Image
                       src={fileURL}
                       alt={file.name}
-                      className="size-full object-cover object-center"
+                      className="size-full object-cover object-center transition-transform group-hover:scale-105"
                       width={100}
                       height={100}
                     />
                   ) : (
-                    iconElement
+                    <div
+                      className={cn(
+                        "bg-muted text-muted-foreground flex size-10 items-center justify-center rounded-full border transition-colors",
+                        !res.success
+                          ? "bg-destructive/60 group-hover:bg-destructive text-foreground border-none"
+                          : "group-hover:border-foreground group-hover:text-foreground",
+                      )}
+                    >
+                      <Icon className="size-4" />
+                    </div>
                   )}
-                </div>
+                </Link>
 
                 <div className="grid gap-y-1 border-t p-3 break-all *:line-clamp-1">
                   <Link
@@ -224,7 +246,9 @@ export function FileUpload({
                       !res.success && "text-destructive",
                     )}
                   >
-                    {file.name}
+                    <span className="flex gap-x-2">
+                      {file.name} <ArrowUpRight className="size-4 shrink-0" />
+                    </span>
                   </Link>
 
                   <small

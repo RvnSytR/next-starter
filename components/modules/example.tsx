@@ -1,29 +1,39 @@
 "use client";
 
 import { actions } from "@/lib/content";
-import { FileType, languageMeta } from "@/lib/meta";
+import { FileType } from "@/lib/meta";
 import { formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
 import { Club, Diamond, Heart, Save, Spade, TextIcon } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "../ui/button";
 import { ResetButton } from "../ui/buttons";
 import { Checkbox } from "../ui/checkbox";
 import { DatePicker } from "../ui/date-picker";
+import {
+  Field,
+  FieldContent,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
+} from "../ui/field";
+import { FieldWrapper } from "../ui/field-wrapper";
 import { FileUpload } from "../ui/file-upload";
-import { Form, FormControl, FormField } from "../ui/form";
-import { FormFieldWrapper } from "../ui/form-fields";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from "../ui/input-group";
 import { MultiSelect } from "../ui/multi-select";
-import { RadioGroupField } from "../ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -31,6 +41,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { Switch } from "../ui/switch";
 import { Textarea } from "../ui/textarea";
 // import { uploadFiles } from "@/server/s3";
 
@@ -75,6 +86,7 @@ const checkboxData = ["firefox", "chrome", "safari", "edge"] as const;
 
 export function ExampleForm() {
   const fileType: FileType = "image";
+
   const schema = z.object({
     text: zodSchemas.string("Text", { min: 1 }),
     numeric: zodSchemas.number("Numeric", { min: 1 }),
@@ -88,19 +100,18 @@ export function ExampleForm() {
     textarea: zodSchemas.string("Text Area", { min: 1, max: 255 }),
     file: zodSchemas.file(fileType, {
       optional: true,
-      // maxSize: toBytes(1),
       // min: 2,
       // max: 5,
+      // maxFileSize: toBytes(1),
     }),
-    checkbox: z.boolean(),
-    multiCheckbox: z
-      .array(z.enum(checkboxData))
-      .refine((v) => v.some((i) => i), {
-        error: "At least one checkbox must be selected",
-      }),
+    switch: z.boolean(),
+    checkbox: z.array(z.enum(checkboxData)).refine((v) => v.some((i) => i), {
+      error: "At least one checkbox must be selected",
+    }),
   });
+  type Schema = z.infer<typeof schema>;
 
-  const form = useForm<z.infer<typeof schema>>({
+  const form = useForm<Schema>({
     resolver: zodResolver(schema),
     defaultValues: {
       text: "Hello World",
@@ -114,100 +125,121 @@ export function ExampleForm() {
       radio: "spade",
       textarea: "The Brown Fox Jumping Over The Lazy Dog",
       file: [],
-      checkbox: false,
-      multiCheckbox: ["firefox"],
+      switch: false,
+      checkbox: ["firefox"],
     },
   });
 
-  const formHandler = (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: Schema) => {
     console.log(formData.file);
     // const res = await uploadFiles({ files: formData.file });
-    toast(<p>{JSON.stringify(formData, null, 2)}</p>);
+    toast(<pre>{JSON.stringify(formData, null, 2)}</pre>);
   };
 
   return (
-    <Form form={form} onSubmit={formHandler}>
+    <form onSubmit={form.handleSubmit(formHandler)} noValidate>
       <div className="grid gap-x-2 gap-y-4 md:grid-cols-5">
-        <FormField
-          control={form.control}
+        <Controller
           name="text"
-          render={({ field }) => (
-            <FormFieldWrapper label="Text" desc="Deskripsi text field">
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Text field"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+              description="Text field description example"
+            >
               <InputGroup>
-                <FormControl>
-                  <InputGroupInput
-                    type="text"
-                    placeholder="Masukkan Text"
-                    required
-                    {...field}
-                  />
-                </FormControl>
+                <InputGroupInput
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  placeholder="Masukan text"
+                  {...field}
+                />
                 <InputGroupAddon>
                   <TextIcon />
                 </InputGroupAddon>
               </InputGroup>
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="numeric"
-          render={({ field: { value, onChange, ...field } }) => (
-            <FormFieldWrapper label="Numeric">
+          control={form.control}
+          render={({ field: { value, onChange, ...field }, fieldState }) => (
+            <FieldWrapper
+              label="Text field"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
               <InputGroup>
-                <FormControl>
-                  <InputGroupInput
-                    type="text"
-                    placeholder="Masukkan Text"
-                    inputMode="numeric"
-                    value={formatNumber(value)}
-                    onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-                    required
-                    {...field}
-                  />
-                </FormControl>
-                <InputGroupAddon>{languageMeta.id.symbol}</InputGroupAddon>
+                <InputGroupInput
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  inputMode="numeric"
+                  value={formatNumber(value)}
+                  onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                  placeholder="Masukkan nomor"
+                  required
+                  {...field}
+                />
+                <InputGroupAddon>123</InputGroupAddon>
               </InputGroup>
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
-          control={form.control}
+        <Controller
           name="phone"
-          render={({ field: { value, onChange, ...field } }) => (
-            <FormFieldWrapper label="Phone">
+          control={form.control}
+          render={({ field: { value, onChange, ...field }, fieldState }) => (
+            <FieldWrapper
+              label="Phone field"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
               <InputGroup>
-                <FormControl>
-                  <InputGroupInput
-                    type="text"
-                    placeholder="Masukkan No HP"
-                    inputMode="tel"
-                    value={formatPhone(value)}
-                    onChange={(e) => onChange(sanitizeNumber(e.target.value))}
-                    className="pl-11"
-                    required
-                    {...field}
-                  />
-                </FormControl>
+                <InputGroupInput
+                  type="text"
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                  inputMode="numeric"
+                  value={formatPhone(value)}
+                  onChange={(e) => onChange(sanitizeNumber(e.target.value))}
+                  placeholder="Masukkan nomor HP"
+                  required
+                  {...field}
+                />
                 <InputGroupAddon>+62</InputGroupAddon>
               </InputGroup>
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="select"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper label="Select">
-              <Select value={value} onValueChange={onChange} required>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih kartu" />
-                  </SelectTrigger>
-                </FormControl>
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Select"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
+              <Select
+                name={field.name}
+                value={field.value}
+                onValueChange={field.onChange}
+                required
+              >
+                <SelectTrigger
+                  id={field.name}
+                  aria-invalid={!!fieldState.error}
+                >
+                  <SelectValue placeholder="Pilih kartu" />
+                </SelectTrigger>
                 <SelectContent>
                   {selectAndRadioData.map(
                     ({ value: v, label, icon: Icon, disabled }) => (
@@ -218,174 +250,264 @@ export function ExampleForm() {
                   )}
                 </SelectContent>
               </Select>
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="multiSelect"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper label="Multi Select">
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Multi Select"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
+            >
               <MultiSelect
                 defaultValue={selectAndRadioData}
                 placeholder="Pilih kartu"
-                value={value}
-                onChange={(item) => onChange(item.map(({ value }) => value))}
-                inputProps={{ required: true }}
+                value={field.value}
+                onChange={(v) => field.onChange(v.map((it) => it.value))}
+                props={{
+                  input: {
+                    id: field.name,
+                    "aria-invalid": !!fieldState.error,
+                    required: true,
+                    ...field,
+                  },
+                }}
               />
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
       </div>
 
       <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
-        <FormField
+        <Controller
           control={form.control}
           name="date"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper
+          render={({ field, fieldState }) => (
+            <FieldWrapper
               label="Date Picker with Calendar"
-              classNames={{ formLabel: "label-required" }}
+              htmlFor={field.name}
+              fieldError={fieldState.error}
             >
               <DatePicker
+                id={field.name}
+                invalid={!!fieldState.error}
                 mode="single"
-                selected={value}
-                onSelect={onChange}
-                withFormControl
+                selected={field.value}
+                onSelect={field.onChange}
                 required
               />
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="dateMultiple"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper
-              label="Multiple Date"
-              classNames={{ formLabel: "label-required" }}
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Multiple Date Picker"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
             >
               <DatePicker
+                id={field.name}
+                invalid={!!fieldState.error}
                 mode="multiple"
-                selected={value}
-                onSelect={onChange}
-                withFormControl
+                selected={field.value}
+                onSelect={field.onChange}
                 required
               />
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
 
-        <FormField
+        <Controller
           control={form.control}
           name="dateRange"
-          render={({ field: { value, onChange } }) => (
-            <FormFieldWrapper
-              label="Date Range"
-              classNames={{ formLabel: "label-required" }}
+          render={({ field, fieldState }) => (
+            <FieldWrapper
+              label="Date Range Picker"
+              htmlFor={field.name}
+              fieldError={fieldState.error}
             >
               <DatePicker
+                id={field.name}
+                invalid={!!fieldState.error}
                 mode="range"
-                selected={value}
-                onSelect={onChange}
-                withFormControl
+                selected={field.value}
+                onSelect={field.onChange}
                 required
               />
-            </FormFieldWrapper>
+            </FieldWrapper>
           )}
         />
       </div>
 
-      <FormField
-        control={form.control}
-        name="radio"
-        render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper label="Radio Group">
-            <RadioGroupField
-              value={value}
-              onValueChange={onChange}
-              data={selectAndRadioData}
-              required
-            />
-          </FormFieldWrapper>
-        )}
-      />
+      {/* Using FieldSet with legend and description instead: */}
 
-      <FormField
-        control={form.control}
-        name="textarea"
-        render={({ field }) => (
-          <FormFieldWrapper label="Text Area">
-            <FormControl>
-              <Textarea placeholder="Masukkan text area" required {...field} />
-            </FormControl>
-          </FormFieldWrapper>
-        )}
-      />
-
-      <FormField
+      <Controller
         control={form.control}
         name="checkbox"
-        render={({ field: { value, onChange } }) => (
-          <FormFieldWrapper
-            type="checkbox"
-            label="Checkbox"
-            desc="Lorem ipsum dolor sit amet consectetur adipisicing elit."
-          >
-            <FormControl>
-              <Checkbox checked={value} onCheckedChange={onChange} />
-            </FormControl>
-          </FormFieldWrapper>
-        )}
-      />
-
-      <FormField
-        control={form.control}
-        name="multiCheckbox"
-        render={() => (
-          <FormFieldWrapper label="Multi Checkbox">
-            {checkboxData.map((item) => (
-              <FormField
-                key={item}
-                control={form.control}
-                name="multiCheckbox"
-                render={({ field: { value, onChange } }) => (
-                  <FormFieldWrapper
-                    type="checkbox"
-                    label={item}
-                    classNames={{
-                      formLabel: "capitalize",
-                      formMessage: "hidden",
+        render={({ field, fieldState }) => (
+          <FieldSet>
+            <FieldLegend>Checkboxes</FieldLegend>
+            <FieldDescription>Checkbox description.</FieldDescription>
+            <FieldGroup data-slot="checkbox-group">
+              {checkboxData.map((value) => (
+                <Field
+                  key={value}
+                  orientation="horizontal"
+                  data-invalid={!!fieldState.error}
+                >
+                  <Checkbox
+                    id={field.name}
+                    name={field.name}
+                    aria-invalid={!!fieldState.error}
+                    checked={field.value.includes(value)}
+                    onCheckedChange={(checked) => {
+                      const newValue = checked
+                        ? [...field.value, value]
+                        : field.value.filter((value) => value !== value);
+                      field.onChange(newValue);
                     }}
+                  />
+                  <FieldLabel
+                    htmlFor={field.name}
+                    className="font-normal capitalize"
                   >
-                    <FormControl>
-                      <Checkbox
-                        checked={value.includes(item)}
-                        onCheckedChange={(checked) => {
-                          return checked
-                            ? onChange([...value, item])
-                            : onChange(value.filter((v) => v !== item));
-                        }}
-                        required
-                      />
-                    </FormControl>
-                  </FormFieldWrapper>
-                )}
-              />
-            ))}
-          </FormFieldWrapper>
+                    {value}
+                  </FieldLabel>
+                </Field>
+              ))}
+            </FieldGroup>
+            <FieldError errors={fieldState.error} />
+          </FieldSet>
         )}
       />
 
-      <FormField
+      <Controller
+        control={form.control}
+        name="radio"
+        render={({ field, fieldState }) => (
+          <FieldSet>
+            <FieldLegend>Radio Group</FieldLegend>
+            <FieldDescription>Radio group description.</FieldDescription>
+            <RadioGroup
+              name={field.name}
+              value={field.value}
+              onValueChange={field.onChange}
+              className="flex-col md:flex-row"
+            >
+              {selectAndRadioData.map(({ icon: Icon, ...item }) => (
+                <FieldLabel
+                  key={item.value}
+                  htmlFor={item.value}
+                  color={item.color}
+                  className="border-[var(--field-color)]/40"
+                >
+                  <Field
+                    orientation="horizontal"
+                    data-invalid={!!fieldState.error}
+                  >
+                    <FieldContent>
+                      <FieldTitle className="text-[var(--field-color)]">
+                        <Icon /> {item.label}
+                      </FieldTitle>
+                      <FieldDescription className="text-[var(--field-color)]/80">
+                        {item.desc}
+                      </FieldDescription>
+                    </FieldContent>
+                    <RadioGroupItem
+                      value={item.value}
+                      id={item.value}
+                      classNames={{ circle: "fill-[var(--field-color)]" }}
+                      aria-invalid={!!fieldState.error}
+                    />
+                  </Field>
+                </FieldLabel>
+              ))}
+            </RadioGroup>
+            <FieldError errors={fieldState.error} />
+          </FieldSet>
+        )}
+      />
+
+      {/* Or field with FieldContent */}
+
+      <Controller
+        control={form.control}
+        name="switch"
+        render={({ field, fieldState }) => (
+          <Field
+            orientation="horizontal"
+            className="w-fit gap-4"
+            data-invalid={!!fieldState.error}
+          >
+            <FieldContent>
+              <FieldLabel htmlFor={field.name}>Switch</FieldLabel>
+              <FieldDescription>
+                Boolean value using Switch or Checkbox
+              </FieldDescription>
+              {fieldState.error && <FieldError errors={[fieldState.error]} />}
+            </FieldContent>
+            <Switch
+              id={field.name}
+              name={field.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              aria-invalid={!!fieldState.error}
+            />
+            <Checkbox
+              // id={field.name}
+              name={field.name}
+              checked={field.value}
+              onCheckedChange={field.onChange}
+              aria-invalid={!!fieldState.error}
+            />
+          </Field>
+        )}
+      />
+
+      <Controller
+        name="textarea"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="Text Area"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <Textarea
+              id={field.name}
+              aria-invalid={!!fieldState.error}
+              placeholder="Masukan text"
+              {...field}
+            />
+          </FieldWrapper>
+        )}
+      />
+
+      <Controller
         control={form.control}
         name="file"
-        render={({ field }) => (
-          <FormFieldWrapper label="File Upload">
-            <FileUpload accept="image" multiple required {...field} />
-          </FormFieldWrapper>
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label="File Upload"
+            htmlFor={field.name}
+            fieldError={fieldState.error}
+          >
+            <FileUpload
+              id={field.name}
+              accept={fileType}
+              multiple
+              required
+              {...field}
+            />
+          </FieldWrapper>
         )}
       />
 
@@ -397,7 +519,7 @@ export function ExampleForm() {
 
         <ResetButton onClick={() => form.reset()} />
       </div>
-    </Form>
+    </form>
   );
 }
 

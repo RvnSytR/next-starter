@@ -1,13 +1,11 @@
 import { z } from "zod";
 import { id } from "zod/locales";
 import { messages } from "./content";
-import { fieldsMeta, fileMeta, FileType } from "./meta";
+import { fileMeta, FileType } from "./meta";
 import { allRoles } from "./permission";
 import { toMegabytes } from "./utils";
 
 z.config(id());
-
-const { user: userFields } = fieldsMeta;
 
 export const zodSchemas = {
   string: (field: string, options?: { min?: number; max?: number }) => {
@@ -45,32 +43,32 @@ export const zodSchemas = {
   },
 
   email: z
-    .email({ error: messages.invalid(userFields.email.label) })
+    .email({ error: messages.invalid("Alamat email") })
     .trim()
     .toLowerCase()
-    .min(1, { error: messages.required(userFields.email.label) })
-    .max(255, { error: messages.stringTooLong(userFields.email.label, 255) }),
+    .min(1, { error: messages.required("Alamat email") })
+    .max(255, { error: messages.stringTooLong("Alamat email", 255) }),
 
   password: z
     .string()
-    .min(1, { error: messages.required(userFields.password.label) })
-    .min(8, { error: messages.stringTooShort(userFields.password.label, 8) })
-    .max(255, { error: messages.stringTooLong(userFields.password.label, 255) })
+    .min(1, { error: messages.required("Kata sandi") })
+    .min(8, { error: messages.stringTooShort("Kata sandi", 8) })
+    .max(255, { error: messages.stringTooLong("Kata sandi", 255) })
     .regex(/[A-Z]/, {
-      error: `${userFields.password.label} harus mengandung huruf kapital. (A-Z)`,
+      error: `Kata sandi harus mengandung huruf kapital. (A-Z)`,
     })
     .regex(/[a-z]/, {
-      error: `${userFields.password.label} harus mengandung huruf kecil. (a-z)`,
+      error: `Kata sandi harus mengandung huruf kecil. (a-z)`,
     })
     .regex(/[0-9]/, {
-      error: `${userFields.password.label} harus mengandung angka. (0-9)`,
+      error: `Kata sandi harus mengandung angka. (0-9)`,
     })
     .regex(/[^A-Za-z0-9]/, {
-      error: `${userFields.password.label} harus mengandung karakter khusus.`,
+      error: `Kata sandi harus mengandung karakter khusus.`,
     }),
 
-  updatedAt: z.coerce.date({ error: `${fieldsMeta.updatedAt} tidak valid.` }),
-  createdAt: z.coerce.date({ error: `${fieldsMeta.createdAt} tidak valid.` }),
+  updatedAt: z.coerce.date({ error: "Field 'updatedAt' tidak valid." }),
+  createdAt: z.coerce.date({ error: "Field 'createdAt' tidak valid." }),
 
   date: z.coerce.date({ error: "Pilih tanggal yang valid." }),
 
@@ -131,16 +129,12 @@ export const zodSchemas = {
 export const zodUser = z.object({
   role: z.enum(allRoles),
   email: zodSchemas.email,
-  name: zodSchemas.string(userFields.name.label, { min: 1 }),
+  name: zodSchemas.string("Nama", { min: 1 }),
 
-  password: zodSchemas.string(userFields.password.label, { min: 1 }),
+  password: zodSchemas.string("Kata sandi", { min: 1 }),
   newPassword: zodSchemas.password,
-  confirmPassword: zodSchemas.string(userFields.confirmPassword.label, {
-    min: 1,
-  }),
-  currentPassword: zodSchemas.string(userFields.currentPassword.label, {
-    min: 1,
-  }),
+  confirmPassword: zodSchemas.string("Konfirmasi kata sandi", { min: 1 }),
+  currentPassword: zodSchemas.string("Kata sandi saat ini", { min: 1 }),
 
   rememberMe: z.boolean(),
   revokeOtherSessions: z.boolean(),

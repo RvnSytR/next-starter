@@ -9,9 +9,9 @@ export const delay = (seconds: number) =>
 
 export function apiResponse<T>(
   code: number,
-  jsonData: { messages: string; data?: T },
+  jsonData: { message: string; data?: T },
 ): ActionResponse<T> {
   const success = code >= 200 && code < 300;
-  const { messages, data = null } = jsonData;
-  return { code, success, messages, data };
+  const { message, data = null } = jsonData;
+  return { code, success, message, data };
 }

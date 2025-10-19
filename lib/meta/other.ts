@@ -13,7 +13,7 @@ export type DataType =
 export type ActionResponse<T> = {
   code: number;
   success: boolean;
-  messages: string;
+  message: string;
   data: T | null;
 };
 

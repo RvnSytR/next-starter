@@ -7,17 +7,16 @@ import {
 } from "lucide-react";
 import { Button } from "./button";
 import { Calendar, CalendarProps } from "./calendar";
-import { FormControl } from "./form";
 import { Popover, PopoverContent, PopoverTrigger } from "./popover";
 
 const defaultPlaceholder = "Pilih Tanggal";
 
 export function DatePicker({
   placeholder = defaultPlaceholder,
-  withFormControl = false,
   numberOfMonths,
+  invalid,
   ...props
-}: CalendarProps & { placeholder?: string; withFormControl?: boolean }) {
+}: CalendarProps & { placeholder?: string; invalid?: boolean }) {
   let isSelected = false;
   let Icon = CalendarIcon;
 
@@ -63,19 +62,18 @@ export function DatePicker({
     }
   }
 
-  const trigger = (
-    <Button
-      variant="outline"
-      className={cn(!isSelected && "text-muted-foreground")}
-    >
-      <Icon /> {placeholder}
-    </Button>
-  );
-
   return (
     <Popover>
       <PopoverTrigger asChild>
-        {withFormControl ? <FormControl>{trigger}</FormControl> : trigger}
+        <Button
+          variant={invalid ? "outline_destructive" : "outline"}
+          className={cn(
+            !isSelected && "text-muted-foreground",
+            invalid && "border-destructive text-destructive",
+          )}
+        >
+          <Icon /> {placeholder}
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="size-fit p-0">
         <Calendar numberOfMonths={numberOfMonths} {...props} />

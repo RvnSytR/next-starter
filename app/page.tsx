@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { LinkLoader, ThemeButton } from "@/components/ui/buttons-client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AreaChart, BarChart, PieChart } from "@/components/ui/charts";
-import { FormBuilder } from "@/components/ui/form-builder";
 import { R } from "@/components/ui/motion";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -79,14 +78,14 @@ const comp = {
   ),
 
   typography: <ExampleTypography />,
-  formBuilder: <FormBuilder />,
 };
 
-const tabs: { section: string; content: (keyof typeof comp)[] }[] = [
+const tabs: { section: string; content?: (keyof typeof comp)[] }[] = [
+  { section: "Form", content: ["form"] },
   { section: "Typography", content: ["typography"] },
   { section: "Chart", content: ["pieChart", "timelineChart"] },
-  { section: "Form", content: ["form"] },
-  { section: "Form Builder", content: ["formBuilder"] },
+  { section: "Form Builder" },
+  { section: "Tabulator" },
 ];
 
 export default function Page() {
@@ -148,9 +147,13 @@ export default function Page() {
           {tabs.map(({ section, content }) => (
             <TabsContent key={section} value={section} className="grid gap-y-4">
               <h2>{section}</h2>
-              {content.map((key, index) => (
-                <Fragment key={index}>{comp[key]}</Fragment>
-              ))}
+              {content ? (
+                content.map((key, index) => (
+                  <Fragment key={index}>{comp[key]}</Fragment>
+                ))
+              ) : (
+                <p>TODO</p>
+              )}
             </TabsContent>
           ))}
         </div>
