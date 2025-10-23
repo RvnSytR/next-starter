@@ -126,6 +126,12 @@ export const zodSchemas = {
   },
 };
 
+export const zodApiResponse = z.object({
+  code: z.number(),
+  message: z.string(),
+  success: z.boolean(),
+});
+
 export const zodUser = z.object({
   role: z.enum(allRoles),
   email: zodSchemas.email,

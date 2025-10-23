@@ -1,22 +1,21 @@
 import { useEffect, useState } from "react";
-import useSWR, { SWRConfiguration, SWRResponse } from "swr";
-import { ZodType } from "zod";
-import { fetcher } from "../utils";
 
 const MOBILE_BREAKPOINT = 768;
 
 export function useIsMobile() {
-  const [isMobile, setIsMobile] = useState<boolean>(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.innerWidth < MOBILE_BREAKPOINT;
+  });
 
   useEffect(() => {
     const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
     mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     return () => mql.removeEventListener("change", onChange);
   }, []);
 
-  return !!isMobile;
+  return isMobile;
 }
 
 export function useDebounce<T>(value: T, delay?: number): T {
@@ -28,13 +27,4 @@ export function useDebounce<T>(value: T, delay?: number): T {
     };
   }, [value, delay]);
   return debouncedValue;
-}
-
-export function useValidatedSWR<T>(
-  key: string,
-  schema: ZodType<T>,
-  config?: { fetcher?: RequestInit; swr?: SWRConfiguration },
-): SWRResponse<T> {
-  const fn = async () => await fetcher(key, schema, config?.fetcher);
-  return useSWR(key, fn, config?.swr);
 }

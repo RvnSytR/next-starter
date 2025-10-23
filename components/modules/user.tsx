@@ -21,7 +21,7 @@ export function UserRoleBadge({
           variant="outline"
           style={{ "--badge-color": color } as React.CSSProperties}
           className={cn(
-            "border-[var(--badge-color)] text-[var(--badge-color)] capitalize",
+            "border-(--badge-color) text-(--badge-color) capitalize",
           )}
         >
           <Icon /> {displayName || role}
