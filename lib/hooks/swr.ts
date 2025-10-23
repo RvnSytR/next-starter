@@ -1,7 +1,6 @@
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { ZodType } from "zod";
-import { fetcher } from "../api";
-import { appMeta } from "../meta";
+import { apiFetcher, ApiFetcherConfig, ApiResponse, fetcher } from "../api";
 
 type UseValidatedSWRConfig = { swr?: SWRConfiguration; fetcher?: RequestInit };
 
@@ -17,11 +16,8 @@ export function useValidatedSWR<T>(
 export function useApiSWR<T>(
   key: string,
   schema: ZodType<T>,
-  config?: Pick<UseValidatedSWRConfig, "swr"> &
-    Omit<Pick<UseValidatedSWRConfig, "fetcher">, "credentials">,
-): SWRResponse<T> {
-  return useValidatedSWR(`${appMeta.apiHost}${key}`, schema, {
-    swr: config?.swr,
-    fetcher: { credentials: "include", ...config?.fetcher },
-  });
+  config?: Pick<UseValidatedSWRConfig, "swr"> & { fetcher: ApiFetcherConfig },
+): SWRResponse<ApiResponse<T>> {
+  const fn = async () => await apiFetcher(key, schema, config?.fetcher);
+  return useSWR(key, fn, config?.swr);
 }

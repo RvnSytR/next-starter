@@ -1426,17 +1426,17 @@ export function AdminCreateUserDialog() {
                         key={value}
                         htmlFor={value}
                         color={meta.color}
-                        className="border-[var(--field-color)]/40"
+                        className="border-(--field-color)/40"
                       >
                         <Field
                           orientation="horizontal"
                           data-invalid={!!fieldState.error}
                         >
                           <FieldContent>
-                            <FieldTitle className="text-[var(--field-color)]">
+                            <FieldTitle className="text-(--field-color)">
                               <Icon /> {meta.displayName}
                             </FieldTitle>
-                            <FieldDescription className="text-[var(--field-color)]/80">
+                            <FieldDescription className="text-(--field-color)/80">
                               {meta.desc}
                             </FieldDescription>
                           </FieldContent>
@@ -1536,17 +1536,17 @@ function AdminChangeUserRoleForm({
                     key={value}
                     htmlFor={value}
                     color={meta.color}
-                    className="border-[var(--field-color)]/40"
+                    className="border-(--field-color)/40"
                   >
                     <Field
                       orientation="horizontal"
                       data-invalid={!!fieldState.error}
                     >
                       <FieldContent>
-                        <FieldTitle className="text-[var(--field-color)]">
+                        <FieldTitle className="text-(--field-color)">
                           <Icon /> {meta.displayName}
                         </FieldTitle>
-                        <FieldDescription className="text-[var(--field-color)]/80">
+                        <FieldDescription className="text-(--field-color)/80">
                           {meta.desc}
                         </FieldDescription>
                       </FieldContent>

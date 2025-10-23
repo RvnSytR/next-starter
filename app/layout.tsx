@@ -7,16 +7,16 @@ import { Metadata, Viewport } from "next";
 import { ThemeProvider } from "next-themes";
 import { Geist, Geist_Mono } from "next/font/google";
 
-const geistFont = Geist({
+const sansFont = Geist({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist",
+  variable: "--font-sans",
 });
 
-const geistMonoFont = Geist_Mono({
+const monoFont = Geist_Mono({
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-geist-mono",
+  variable: "--font-mono",
 });
 
 export const metadata: Metadata = {
@@ -37,7 +37,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang={appMeta.lang} suppressHydrationWarning>
-      <body className={cn(geistFont.variable, geistMonoFont.variable)}>
+      <body className={cn(sansFont.variable, monoFont.variable)}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

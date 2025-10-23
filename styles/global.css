@@ -112,9 +112,6 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-geist);
-  --font-mono: var(--font-geist-mono);
-
   --color-rvns: var(--rvns);
 
   --color-success: var(--success);

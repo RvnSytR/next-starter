@@ -4,7 +4,7 @@ import { getActiveRoute } from "@/lib/utils";
 import { Route } from "next";
 import { usePathname } from "next/navigation";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
-import { ComponentProps, useEffect, useState } from "react";
+import { ComponentProps, useEffect, useEffectEvent, useState } from "react";
 import { Collapsible } from "../ui/collapsible";
 import { SidebarMenuButton, useSidebar } from "../ui/sidebar";
 import { SidebarMenuButtonProps } from "./sidebar-app";
@@ -39,8 +39,9 @@ export function SCCollapsible({
   const isActive = route === getActiveRoute(pathname);
   const [isOpen, setIsOpen] = useState(isActive);
 
+  const onActiveRoute = useEffectEvent(() => setIsOpen(true));
   useEffect(() => {
-    if (isActive) setIsOpen(true);
+    if (isActive) onActiveRoute();
   }, [isActive]);
 
   return <Collapsible open={isOpen} onOpenChange={setIsOpen} {...props} />;

@@ -1,4 +1,4 @@
-import { Language } from "./other";
+import { Language } from ".";
 
 export const appMeta = {
   name: "Nama Proyek",
