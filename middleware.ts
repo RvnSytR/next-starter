@@ -2,17 +2,15 @@ import { getSessionCookie } from "better-auth/cookies";
 import { NextRequest, NextResponse } from "next/server";
 import { dashboardRoute, signInRoute } from "./lib/routes";
 
-export function proxy(req: NextRequest) {
+export function middleware(req: NextRequest) {
   const { pathname, origin } = req.nextUrl;
   const sessionCookie = getSessionCookie(req);
 
-  if (!sessionCookie && !pathname.startsWith(signInRoute)) {
+  if (!sessionCookie && !pathname.startsWith(signInRoute))
     return NextResponse.redirect(new URL(signInRoute, req.url));
-  }
 
-  if (sessionCookie && pathname.startsWith(signInRoute)) {
+  if (sessionCookie && pathname.startsWith(signInRoute))
     return NextResponse.redirect(new URL(dashboardRoute, req.url));
-  }
 
   const requestHeaders = new Headers(req.headers);
 

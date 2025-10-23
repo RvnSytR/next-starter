@@ -135,8 +135,8 @@ export function UserDataTable({
   data: UserWithRole[];
   currentUserId: string;
 }) {
-  const fetcher = async () => (await getUserList()).users;
-  const { data } = useSWR("users", fetcher, { fallbackData });
+  const fn = async () => (await getUserList()).users;
+  const { data } = useSWR("users", fn, { fallbackData });
   const columns = getUserColumn(currentUserId);
   return (
     <DataTable
@@ -1095,7 +1095,9 @@ export function RevokeSessionButton({
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{sharedText.revokeSession}</AlertDialogTitle>
+              <AlertDialogTitle className="flex items-center gap-x-2">
+                <DeviceIcons /> {sharedText.revokeSession}
+              </AlertDialogTitle>
               <AlertDialogDescription>
                 Sesi ini akan segera dihentikan dari perangkat yang dipilih.
                 Yakin ingin melanjutkan?
