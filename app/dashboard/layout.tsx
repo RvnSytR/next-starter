@@ -17,7 +17,6 @@ export default async function DashboardLayout({
     <SWRConfig value={{ fallback: { session } }}>
       <SidebarApp data={session.user}>
         {children}
-
         <footer className="bg-background/90 z-10 mt-auto flex h-12 items-center justify-center border-t text-center">
           <Tagline className="container" />
         </footer>

@@ -13,8 +13,7 @@ export async function fetcher<T>(
 ): Promise<T> {
   const res = await fetch(url, config);
   const json = await res.json();
-  if (!res.ok) throw json;
-  if (!schema) return json;
+  if (!res.ok || !schema) return json;
   return schema.parse(json);
 }
 

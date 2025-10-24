@@ -407,17 +407,17 @@ export function ExampleForm() {
                   key={item.value}
                   htmlFor={item.value}
                   color={item.color}
-                  className="border-[var(--field-color)]/40"
+                  className="border-(--field-color)/40"
                 >
                   <Field
                     orientation="horizontal"
                     data-invalid={!!fieldState.error}
                   >
                     <FieldContent>
-                      <FieldTitle className="text-[var(--field-color)]">
+                      <FieldTitle className="text-(--field-color)">
                         <Icon /> {item.label}
                       </FieldTitle>
-                      <FieldDescription className="text-[var(--field-color)]/80">
+                      <FieldDescription className="text-(--field-color)/80">
                         {item.desc}
                       </FieldDescription>
                     </FieldContent>

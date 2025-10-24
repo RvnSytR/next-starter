@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { motion, useInView, UseInViewOptions } from "motion/react";
 import { useMemo, useRef } from "react";
 
-export type ShimmeringTextProps = {
+export type ShineTextProps = {
   /** Text to display with shimmer effect */
   text: string;
   /** Animation duration in seconds */
@@ -31,7 +31,7 @@ export type ShimmeringTextProps = {
   shimmerColor?: string;
 };
 
-export function ShimmeringText({
+export function ShineText({
   text,
   duration = 1,
   delay = 0,
@@ -44,7 +44,7 @@ export function ShimmeringText({
   spread = 2,
   color,
   shimmerColor,
-}: ShimmeringTextProps) {
+}: ShineTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once, margin: inViewMargin });
 
