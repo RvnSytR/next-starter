@@ -33,7 +33,7 @@ import {
   SidebarMenuButtonProps,
   sidebarMenuButtonVariants,
   SidebarMenuSubButtonProps,
-} from "../layout/sidebar-app";
+} from "../layouts/sidebar-app";
 
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";

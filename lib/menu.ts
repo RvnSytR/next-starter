@@ -1,4 +1,4 @@
-import { SidebarMenuSubButtonProps } from "@/components/layout/sidebar-app";
+import { SidebarMenuSubButtonProps } from "@/components/layouts/sidebar-app";
 import { IconOrText } from "@/components/ui/icons";
 import {
   CircleHelp,

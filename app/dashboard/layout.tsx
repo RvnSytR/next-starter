@@ -1,5 +1,5 @@
-import { Tagline } from "@/components/layout/sections";
-import { SidebarApp } from "@/components/layout/sidebar-app";
+import { Tagline } from "@/components/layouts/sections";
+import { SidebarApp } from "@/components/layouts/sidebar-app";
 import { getTitle } from "@/lib/utils";
 import { getSession } from "@/server/action";
 import { Metadata } from "next";

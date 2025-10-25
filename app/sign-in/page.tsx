@@ -1,4 +1,4 @@
-import { Tagline } from "@/components/layout/sections";
+import { Tagline } from "@/components/layouts/sections";
 import {
   SignInForm,
   SignOnGithubButton,

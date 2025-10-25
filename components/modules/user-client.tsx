@@ -50,7 +50,7 @@ import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
-import { SheetDetails } from "../layout/sections";
+import { SheetDetails } from "../layouts/sections";
 import {
   AlertDialog,
   AlertDialogAction,

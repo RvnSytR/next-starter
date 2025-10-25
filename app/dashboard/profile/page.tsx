@@ -1,4 +1,4 @@
-import { DashboardMain } from "@/components/layout/dashboard";
+import { DashboardMain } from "@/components/layouts/dashboard";
 import { UserRoleBadge, UserVerifiedBadge } from "@/components/modules/user";
 import {
   ChangePasswordForm,
