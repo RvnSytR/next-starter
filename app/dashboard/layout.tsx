@@ -1,4 +1,4 @@
-import { Tagline } from "@/components/layout/section";
+import { Tagline } from "@/components/layout/sections";
 import { SidebarApp } from "@/components/layout/sidebar-app";
 import { getTitle } from "@/lib/utils";
 import { getSession } from "@/server/action";
@@ -17,7 +17,7 @@ export default async function DashboardLayout({
     <SWRConfig value={{ fallback: { session } }}>
       <SidebarApp data={session.user}>
         {children}
-        <footer className="bg-background/90 z-10 mt-auto flex h-12 items-center justify-center border-t text-center">
+        <footer className="bg-background/90 z-10 mt-auto flex items-center justify-center border-t py-4 text-center md:h-12">
           <Tagline className="container" />
         </footer>
       </SidebarApp>

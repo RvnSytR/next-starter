@@ -1,7 +1,7 @@
 "use client";
 
+import { FileType } from "@/lib/constants";
 import { actions } from "@/lib/content";
-import { FileType } from "@/lib/meta";
 import {
   formatDate,
   formatNumber,

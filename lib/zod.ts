@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { id } from "zod/locales";
+import { fileMeta, FileType } from "./constants";
 import { messages } from "./content";
-import { fileMeta, FileType } from "./meta";
 import { allRoles } from "./permission";
 import { toMegabytes } from "./utils";
 

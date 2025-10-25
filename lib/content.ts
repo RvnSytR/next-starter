@@ -1,4 +1,4 @@
-import { DataType } from "./meta";
+import { DataType } from "./constants";
 import { capitalize, formatDate, formatDateDistanceToNow } from "./utils";
 
 export const actions = {

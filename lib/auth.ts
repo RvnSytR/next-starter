@@ -3,7 +3,7 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin as adminPlugins } from "better-auth/plugins";
-import { appMeta } from "./meta";
+import { appMeta } from "./constants";
 import { adminRoles, defaultRole, roles } from "./permission";
 
 export const auth = betterAuth({

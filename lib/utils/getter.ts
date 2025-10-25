@@ -1,6 +1,6 @@
 import { Route } from "next";
+import { appMeta } from "../constants";
 import { dashboardMenu, Menu } from "../menu";
-import { appMeta } from "../meta";
 import { Role } from "../permission";
 import { allRoutes, RouteRole, routesMeta } from "../routes";
 

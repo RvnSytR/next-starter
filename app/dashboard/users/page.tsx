@@ -1,4 +1,4 @@
-import { DashboardMain } from "@/components/layout/section";
+import { DashboardMain } from "@/components/layout/dashboard";
 import {
   AdminCreateUserDialog,
   UserDataTable,

@@ -1,4 +1,4 @@
-import { Tagline } from "@/components/layout/section";
+import { Tagline } from "@/components/layout/sections";
 import {
   SignInForm,
   SignOnGithubButton,
@@ -13,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { appMeta } from "@/lib/meta";
+import { appMeta } from "@/lib/constants";
 import { getTitle } from "@/lib/utils";
 import { Metadata } from "next";
 import Link from "next/link";

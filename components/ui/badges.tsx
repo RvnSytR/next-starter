@@ -1,4 +1,4 @@
-import { Gender, genderMeta } from "@/lib/meta";
+import { Gender, genderMeta } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import { Badge } from "./badge";
 

@@ -1,4 +1,4 @@
-import { DashboardMain } from "@/components/layout/section";
+import { DashboardMain } from "@/components/layout/dashboard";
 import { UserRoleBadge, UserVerifiedBadge } from "@/components/modules/user";
 import {
   ChangePasswordForm,
@@ -16,7 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appMeta } from "@/lib/meta";
+import { appMeta } from "@/lib/constants";
 import { Role } from "@/lib/permission";
 import { getTitle } from "@/lib/utils";
 import { getListSession, requireAuth } from "@/server/action";

@@ -1,6 +1,6 @@
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { Toaster } from "@/components/ui/sonner";
-import { appMeta } from "@/lib/meta";
+import { appMeta } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import "@/styles/global.css";
 import { Metadata, Viewport } from "next";

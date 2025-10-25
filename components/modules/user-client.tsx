@@ -1,9 +1,9 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
+import { appMeta, fileMeta } from "@/lib/constants";
 import { actions, messages } from "@/lib/content";
 import { useIsMobile } from "@/lib/hooks";
-import { appMeta, fileMeta } from "@/lib/meta";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
 import { zodSchemas, zodUser } from "@/lib/zod";
@@ -50,7 +50,7 @@ import { UAParser } from "ua-parser-js";
 import { z } from "zod";
 import { getUserColumn } from "../data-table/column";
 import { DataTable, OtherDataTableProps } from "../data-table/data-table";
-import { SheetDetails } from "../layout/section";
+import { SheetDetails } from "../layout/sections";
 import {
   AlertDialog,
   AlertDialogAction,

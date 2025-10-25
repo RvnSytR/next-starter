@@ -1,6 +1,13 @@
 import { useEffect, useEffectEvent, useState } from "react";
+import { create } from "zustand";
+
+type LayoutStore = {
+  isFullWidth: boolean;
+  setIsFullWidth: (v: boolean) => void;
+};
 
 const MOBILE_BREAKPOINT = 768;
+
 export function useIsMobile() {
   const [isMobile, setIsMobile] = useState<boolean>(false);
   const onMobile = useEffectEvent(() =>
@@ -27,6 +34,16 @@ export function useDebounce<T>(value: T, delay?: number): T {
     };
   }, [value, delay]);
   return debouncedValue;
+}
+
+export function useLayoutStore() {
+  return create<LayoutStore>()((set) => ({
+    isFullWidth: false,
+    setIsFullWidth: (v) => {
+      set({ isFullWidth: v });
+      localStorage.setItem("layout:fullWidth", String(v));
+    },
+  }));
 }
 
 export * from "./swr";

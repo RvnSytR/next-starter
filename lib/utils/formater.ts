@@ -1,4 +1,4 @@
-import { appMeta, Language, languageMeta } from "../meta";
+import { appMeta, Language, languageMeta } from "../constants";
 
 export function capitalize(string: string, mode: "word" | "first" = "word") {
   const handler = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);

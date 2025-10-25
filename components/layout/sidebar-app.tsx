@@ -115,7 +115,7 @@ function Header({
       <SidebarMenuItem>
         <SidebarMenuButton
           size="lg"
-          className="group/head-button group-data-[collapsible=icon]:my-2 group-data-[collapsible=icon]:p-0"
+          className="group/head-button h-13 group-data-[collapsible=icon]:my-2.5 group-data-[collapsible=icon]:p-0"
           asChild
         >
           <Link href={"/dashboard/profile"}>

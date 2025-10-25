@@ -1,5 +1,5 @@
+import { fileMeta, FileType } from "@/lib/constants";
 import { actions } from "@/lib/content";
-import { fileMeta, FileType } from "@/lib/meta";
 import { cn, toMegabytes } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
 import { ArrowUpRight, Dot, X } from "lucide-react";

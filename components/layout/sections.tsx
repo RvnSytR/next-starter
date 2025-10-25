@@ -1,43 +1,8 @@
-import { SidebarTrigger } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { LoaderIcon, PackageX } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
-import { ThemeButton } from "../ui/buttons-client";
-import {
-  DynamicBreadcrumb,
-  DynamicBreadcrumbProps,
-} from "../ui/dynamic-breadcrumb";
 import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
-
-export function DashboardMain({
-  className,
-  children,
-  ...props
-}: DynamicBreadcrumbProps & { className?: string; children?: ReactNode }) {
-  return (
-    <>
-      <nav className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-4 border-b p-4 shadow-xs backdrop-blur-xs">
-        <div className="flex items-center gap-x-2">
-          <SidebarTrigger />
-          <Separator orientation="vertical" className="mr-2 h-4" />
-          <DynamicBreadcrumb {...props} />
-        </div>
-        <ThemeButton size="icon-sm" />
-      </nav>
-
-      <div
-        className={cn(
-          "relative z-10 container flex flex-1 flex-col gap-y-4 py-4",
-          className,
-        )}
-      >
-        {children}
-      </div>
-    </>
-  );
-}
 
 export function Tagline({ className }: { className?: string }) {
   return (
