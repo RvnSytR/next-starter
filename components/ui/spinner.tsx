@@ -1,8 +1,14 @@
 import { cn } from "@/lib/utils";
-import { Loader2Icon, LoaderIcon, LucideProps, RefreshCcw } from "lucide-react";
+import {
+  FrameIcon,
+  Loader2Icon,
+  LoaderIcon,
+  LucideProps,
+  RefreshCcw,
+} from "lucide-react";
 
 export type SpinnerProps = LucideProps & {
-  variant?: "default" | "loader" | "refresh";
+  variant?: "default" | "loader" | "refresh" | "frame";
 };
 
 export type LoadingSpinnerProps = SpinnerProps & {
@@ -19,6 +25,7 @@ export function Spinner({
     default: Loader2Icon,
     loader: LoaderIcon,
     refresh: RefreshCcw,
+    frame: FrameIcon,
   }[variant];
 
   return (

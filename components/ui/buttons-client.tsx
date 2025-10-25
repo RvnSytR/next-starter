@@ -2,7 +2,18 @@
 
 import { actions } from "@/lib/content";
 import { cn, delay } from "@/lib/utils";
-import { ArrowUp, Check, Copy, Moon, RefreshCcw, Sun } from "lucide-react";
+import { useLayout } from "@/providers/layout";
+import {
+  ArrowUp,
+  Check,
+  Copy,
+  Frame,
+  Minimize,
+  Moon,
+  RefreshCcw,
+  Scan,
+  Sun,
+} from "lucide-react";
 import { useTheme } from "next-themes";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
@@ -38,6 +49,31 @@ export function ThemeButton({
       <Sun className="flex dark:hidden" />
       <Moon className="hidden dark:flex" />
       <span className="sr-only">Toggle theme</span>
+    </Button>
+  );
+}
+
+export function LayoutButton({
+  size = "icon",
+  variant = "ghost",
+  onClick,
+  disabled,
+  ...props
+}: ButtonPropsWithoutChildren) {
+  const { isFullWidth, isMounted, toggleLayout } = useLayout();
+  const LayoutIcon = isMounted ? (isFullWidth ? Scan : Minimize) : Frame;
+  return (
+    <Button
+      size={size}
+      variant={variant}
+      onClick={(e) => {
+        onClick?.(e);
+        toggleLayout();
+      }}
+      disabled={disabled || !isMounted}
+      {...props}
+    >
+      <LayoutIcon />
     </Button>
   );
 }

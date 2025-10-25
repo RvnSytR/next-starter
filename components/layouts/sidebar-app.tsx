@@ -2,6 +2,7 @@ import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { routesMeta } from "@/lib/routes";
 import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
+import { LayoutProvider } from "@/providers/layout";
 import { UserWithRole } from "better-auth/plugins";
 import { cva, VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";
@@ -81,26 +82,28 @@ export function SidebarApp({
   children: React.ReactNode;
 }) {
   return (
-    <SidebarProvider>
-      <Sidebar collapsible="icon">
-        <SidebarHeader>
-          <Header {...data} />
-          <SidebarSeparator />
-        </SidebarHeader>
+    <LayoutProvider>
+      <SidebarProvider>
+        <Sidebar collapsible="icon">
+          <SidebarHeader>
+            <Header {...data} />
+            <SidebarSeparator />
+          </SidebarHeader>
 
-        <SidebarContent>
-          <Content {...data} />
-        </SidebarContent>
+          <SidebarContent>
+            <Content {...data} />
+          </SidebarContent>
 
-        <SidebarFooter>
-          <Footer />
-        </SidebarFooter>
+          <SidebarFooter>
+            <Footer />
+          </SidebarFooter>
 
-        <SidebarRail />
-      </Sidebar>
+          <SidebarRail />
+        </Sidebar>
 
-      <SidebarInset>{children}</SidebarInset>
-    </SidebarProvider>
+        <SidebarInset>{children}</SidebarInset>
+      </SidebarProvider>
+    </LayoutProvider>
   );
 }
 
