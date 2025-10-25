@@ -1,6 +1,6 @@
 # Next.js Starter Template
 
-A lightweight, opinionated starter template for **Next.js 15 (App Router)** with just the tools and configurations I use in most projects. Designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
+A lightweight, opinionated starter template for **Next.js 16 (App Router)** with just the tools and configurations I use in most projects. Designed to speed up the setup process so I can get straight to building features—rather than configuring the basics.
 
 ## Features
 
@@ -13,7 +13,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
 ## Tech Stack
 
 - Framework and Language
-  - [Next.js 15](https://nextjs.org)
+  - [Next.js 16](https://nextjs.org)
   - [React 19](https://react.dev)
   - [TypeScript](https://www.typescriptlang.org)
 
@@ -31,6 +31,7 @@ A lightweight, opinionated starter template for **Next.js 15 (App Router)** with
 - Other
   - [AWS SDK for S3](https://github.com/aws/aws-sdk-js-v3/tree/main/clients/client-s3)
   - [Zod v4](https://zod.dev)
+  - [SWR](https://swr.vercel.app/)
   - [Motion](https://motion.dev)
   - [Prettier](https://prettier.io)
 

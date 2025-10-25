@@ -50,6 +50,7 @@ import {
   cloneElement,
   isValidElement,
   useEffect,
+  useEffectEvent,
   useMemo,
   useRef,
   useState,
@@ -192,12 +193,13 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
   const properties = table.getAllColumns().filter(isFilterableColumn);
 
   // const hasFilters = table.getState().columnFilters.length > 0;
+  const onFilter = useEffectEvent(() => {
+    inputRef.current?.focus();
+    setValue("");
+  });
 
   useEffect(() => {
-    if (property && inputRef) {
-      inputRef.current?.focus();
-      setValue("");
-    }
+    if (property && inputRef) onFilter();
   }, [property]);
 
   useEffect(() => {

@@ -2,7 +2,12 @@
 
 import { actions } from "@/lib/content";
 import { FileType } from "@/lib/meta";
-import { formatNumber, formatPhone, sanitizeNumber } from "@/lib/utils";
+import {
+  formatDate,
+  formatNumber,
+  formatPhone,
+  sanitizeNumber,
+} from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addDays } from "date-fns";
@@ -131,7 +136,7 @@ export function ExampleForm() {
   });
 
   const formHandler = (formData: Schema) => {
-    console.log(formData.file);
+    console.log(formatDate(formData.date, "PPPp"));
     // const res = await uploadFiles({ files: formData.file });
     toast(<pre>{JSON.stringify(formData, null, 2)}</pre>);
   };
@@ -242,9 +247,9 @@ export function ExampleForm() {
                 </SelectTrigger>
                 <SelectContent>
                   {selectAndRadioData.map(
-                    ({ value: v, label, icon: Icon, disabled }) => (
-                      <SelectItem key={v} value={v} disabled={disabled}>
-                        {Icon && <Icon />} {label || v}
+                    ({ value, label, icon: Icon, disabled }) => (
+                      <SelectItem key={value} value={value} disabled={disabled}>
+                        {Icon && <Icon />} {label || value}
                       </SelectItem>
                     ),
                   )}
@@ -359,24 +364,24 @@ export function ExampleForm() {
             <FieldGroup data-slot="checkbox-group">
               {checkboxData.map((value) => (
                 <Field
-                  key={value}
+                  key={`cb-${value}`}
                   orientation="horizontal"
                   data-invalid={!!fieldState.error}
                 >
                   <Checkbox
-                    id={field.name}
+                    id={value}
                     name={field.name}
                     aria-invalid={!!fieldState.error}
                     checked={field.value.includes(value)}
                     onCheckedChange={(checked) => {
                       const newValue = checked
                         ? [...field.value, value]
-                        : field.value.filter((value) => value !== value);
+                        : field.value.filter((v) => v !== value);
                       field.onChange(newValue);
                     }}
                   />
                   <FieldLabel
-                    htmlFor={field.name}
+                    htmlFor={`cb-${value}`}
                     className="font-normal capitalize"
                   >
                     {value}
@@ -405,7 +410,7 @@ export function ExampleForm() {
               {selectAndRadioData.map(({ icon: Icon, ...item }) => (
                 <FieldLabel
                   key={item.value}
-                  htmlFor={item.value}
+                  htmlFor={`rd-${item.value}`}
                   color={item.color}
                   className="border-(--field-color)/40"
                 >
@@ -422,8 +427,8 @@ export function ExampleForm() {
                       </FieldDescription>
                     </FieldContent>
                     <RadioGroupItem
+                      id={`rd-${item.value}`}
                       value={item.value}
-                      id={item.value}
                       classNames={{ circle: "fill-[var(--field-color)]" }}
                       aria-invalid={!!fieldState.error}
                     />
@@ -516,7 +521,6 @@ export function ExampleForm() {
           {/* <LoadingSpinner loading={isLoading} icon={{ base: <Save /> }} /> */}
           <Save /> {actions.save}
         </Button>
-
         <ResetButton onClick={() => form.reset()} />
       </div>
     </form>
