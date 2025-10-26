@@ -7,39 +7,41 @@ import {
   useEffectEvent,
   useState,
 } from "react";
+import z from "zod";
+
+const allLayoutMode = ["fullwidth", "centered"] as const;
+type LayoutMode = (typeof allLayoutMode)[number];
+
+const defaultLayout: LayoutMode = "centered";
 
 type LayoutContextType = {
-  isFullWidth: boolean | null;
-  isMounted: boolean;
-  toggleLayout: () => void;
+  layout: LayoutMode | null;
+  setLayout: React.Dispatch<React.SetStateAction<LayoutMode | null>>;
 };
 
 const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 
 export function LayoutProvider({ children }: { children: React.ReactNode }) {
-  const [isFullWidth, setIsFullWidth] = useState<boolean | null>(null);
+  const [layout, setLayout] = useState<LayoutMode | null>(null);
 
   const onMount = useEffectEvent(() => {
-    const stored = localStorage.getItem("layout:fullwidth");
-    if (stored === null) {
-      setIsFullWidth(false);
-      localStorage.setItem("layout:fullwidth", JSON.stringify(false));
-    } else setIsFullWidth(JSON.parse(stored));
+    const stored = localStorage.getItem("layout-preference");
+    const zodRes = z.enum(allLayoutMode).safeParse(stored);
+    if (zodRes.success) setLayout(zodRes.data);
+    else {
+      setLayout(defaultLayout);
+      localStorage.setItem("layout-preference", defaultLayout);
+    }
   });
 
   useEffect(() => onMount(), []);
 
-  const isMounted = isFullWidth !== null;
-  const toggleLayout = () => {
-    setIsFullWidth((prev) => {
-      const updated = !prev;
-      localStorage.setItem("layout:fullwidth", JSON.stringify(updated));
-      return updated;
-    });
-  };
+  useEffect(() => {
+    if (layout) localStorage.setItem("layout-preference", layout);
+  }, [layout]);
 
   return (
-    <LayoutContext.Provider value={{ isFullWidth, isMounted, toggleLayout }}>
+    <LayoutContext.Provider value={{ layout, setLayout }}>
       {children}
     </LayoutContext.Provider>
   );

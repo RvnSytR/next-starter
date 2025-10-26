@@ -60,17 +60,20 @@ export function LayoutButton({
   disabled,
   ...props
 }: ButtonPropsWithoutChildren) {
-  const { isFullWidth, isMounted, toggleLayout } = useLayout();
-  const LayoutIcon = isMounted ? (isFullWidth ? Scan : Minimize) : Frame;
+  const { layout, setLayout } = useLayout();
+  const LayoutIcon = !layout
+    ? Frame
+    : { fullwidth: Scan, centered: Minimize }[layout];
+
   return (
     <Button
       size={size}
       variant={variant}
       onClick={(e) => {
         onClick?.(e);
-        toggleLayout();
+        setLayout((prev) => (prev === "fullwidth" ? "centered" : "fullwidth"));
       }}
-      disabled={disabled || !isMounted}
+      disabled={disabled || !layout}
       {...props}
     >
       <LayoutIcon />
