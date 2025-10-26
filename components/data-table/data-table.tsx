@@ -6,6 +6,7 @@ import { cn } from "@/utils";
 import {
   ColumnDef,
   ColumnFiltersState,
+  ColumnPinningState,
   Table as DataTableType,
   Row,
   SortingState,
@@ -75,10 +76,6 @@ export type TableProps<TData> = { table: DataTableType<TData> };
 export type ToolBoxProps = { withRefresh?: boolean; placeholder?: string };
 
 export type OtherDataTableProps<TData> = ToolBoxProps & {
-  onRowSelection?: (
-    data: Row<TData>[],
-    table: DataTableType<TData>,
-  ) => ReactNode;
   caption?: string;
   className?: string;
   classNames?: {
@@ -88,6 +85,10 @@ export type OtherDataTableProps<TData> = ToolBoxProps & {
     table?: string;
     footer?: string;
   };
+  rowSelectionFn?: (
+    data: Row<TData>[],
+    table: DataTableType<TData>,
+  ) => ReactNode;
 };
 
 const rowsLimitArr = [5, 10, 20, 30, 40, 50, 100];
@@ -99,8 +100,8 @@ export function DataTable<TData>({
   caption,
   className,
   classNames,
-  onRowSelection,
   enableRowSelection,
+  rowSelectionFn,
   ...props
 }: DataTableProps<TData> &
   OtherDataTableProps<TData> &
@@ -111,9 +112,13 @@ export function DataTable<TData>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState({});
+  const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
+    left: [],
+    right: [],
+  });
 
   const isMobile = useIsMobile();
-  const [children, setChildren] = useState<ReactNode>(null);
+  const [rowSelector, setRowSelector] = useState<ReactNode>(null);
 
   const table = useReactTable({
     data,
@@ -135,8 +140,10 @@ export function DataTable<TData>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
 
-    onRowSelectionChange: setRowSelection,
     enableRowSelection,
+    onRowSelectionChange: setRowSelection,
+
+    onColumnPinningChange: setColumnPinning,
 
     initialState: { pagination: { pageIndex: 0, pageSize: defaultRowsLimit } },
     state: {
@@ -145,6 +152,7 @@ export function DataTable<TData>({
       columnFilters,
       columnVisibility,
       rowSelection,
+      columnPinning,
     },
   });
 
@@ -156,9 +164,9 @@ export function DataTable<TData>({
     table.getPageCount() > 0 ? table.getState().pagination.pageIndex + 1 : 1;
 
   useEffect(() => {
-    if (onRowSelection) setChildren(onRowSelection(selectedRows, table));
+    if (rowSelectionFn) setRowSelector(rowSelectionFn(selectedRows, table));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedRows]);
+  }, [rowSelectionFn, selectedRows]);
 
   return (
     <div className={cn("flex flex-col gap-y-4", className)}>
@@ -168,7 +176,7 @@ export function DataTable<TData>({
         className={classNames?.toolbox}
         {...props}
       >
-        {selectedRows.length > 0 && children}
+        {selectedRows.length > 0 && rowSelector}
       </ToolBox>
 
       {table.getState().columnFilters.length > 0 && (
@@ -410,7 +418,7 @@ function Search<TData>({
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+      if (e.key === "/") {
         e.preventDefault();
         searchRef.current?.focus();
       }
@@ -434,8 +442,8 @@ function Search<TData>({
       </InputGroupAddon>
 
       <InputGroupAddon align="inline-end">
-        <Kbd>⌘</Kbd>
-        <Kbd>K</Kbd>
+        {/* <Kbd>⌘</Kbd> */}
+        <Kbd>/</Kbd>
       </InputGroupAddon>
     </InputGroup>
   );

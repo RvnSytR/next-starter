@@ -17,9 +17,11 @@ import {
 import { useTheme } from "next-themes";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useEffectEvent, useState } from "react";
 import { Button, ButtonProps } from "./button";
+import { Kbd } from "./kbd";
 import { LoadingSpinner, LoadingSpinnerProps } from "./spinner";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 type ButtonIconSize = "icon-xs" | "icon-sm" | "icon" | "icon-lg";
@@ -36,20 +38,48 @@ export function ThemeButton({
   ...props
 }: ButtonPropsWithoutChildren) {
   const { setTheme } = useTheme();
+
+  const toggleTheme = () =>
+    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+  const onTheme = useEffectEvent(() => toggleTheme());
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.altKey && e.key === "t") {
+        e.preventDefault();
+        onTheme();
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   return (
-    <Button
-      size={size}
-      variant={variant}
-      onClick={(e) => {
-        onClick?.(e);
-        setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-      }}
-      {...props}
-    >
-      <Sun className="flex dark:hidden" />
-      <Moon className="hidden dark:flex" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          size={size}
+          variant={variant}
+          onClick={(e) => {
+            onClick?.(e);
+            setTheme((prev) => (prev === "dark" ? "light" : "dark"));
+          }}
+          {...props}
+        >
+          <Sun className="flex dark:hidden" />
+          <Moon className="hidden dark:flex" />
+          <span className="sr-only">Toggle theme</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className="flex flex-col items-center gap-2">
+        <span>Toggle Theme</span>
+        <div className="flex items-center gap-x-2">
+          <Kbd>Alt</Kbd>
+          <span>+</span>
+          <Kbd>T</Kbd>
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
@@ -65,19 +95,46 @@ export function LayoutButton({
     ? Frame
     : { fullwidth: Scan, centered: Minimize }[layout];
 
+  const toggleLayout = () =>
+    setLayout((prev) => (prev === "fullwidth" ? "centered" : "fullwidth"));
+  const onLayout = useEffectEvent(() => toggleLayout());
+
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.altKey && e.key === "l") {
+        e.preventDefault();
+        onLayout();
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   return (
-    <Button
-      size={size}
-      variant={variant}
-      onClick={(e) => {
-        onClick?.(e);
-        setLayout((prev) => (prev === "fullwidth" ? "centered" : "fullwidth"));
-      }}
-      disabled={disabled || !layout}
-      {...props}
-    >
-      <LayoutIcon />
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          size={size}
+          variant={variant}
+          onClick={(e) => {
+            onClick?.(e);
+            toggleLayout();
+          }}
+          disabled={disabled || !layout}
+          {...props}
+        >
+          <LayoutIcon />
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className="flex flex-col items-center gap-2">
+        <span>Toggle Layout</span>
+        <div className="flex items-center gap-x-2">
+          <Kbd>Alt</Kbd>
+          <span>+</span>
+          <Kbd>L</Kbd>
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 

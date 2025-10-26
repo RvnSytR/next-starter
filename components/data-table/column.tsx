@@ -6,41 +6,91 @@ import { cn, formatDate } from "@/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
+  ArrowLeft,
+  ArrowRight,
   ArrowUpDown,
   CalendarCheck2,
   CalendarSync,
   CircleDot,
   Mail,
+  Pin,
+  PinOff,
   UserRound,
   UserSquare2,
+  X,
 } from "lucide-react";
 import { UserAvatar, UserRoleBadge, UserVerifiedBadge } from "../modules/user";
 import { UserDetailSheet } from "../modules/user-client";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
-function headerButton<C, T>(
+function headerColumn<C, T>(
   column: Column<C, T>,
-  children: React.ReactNode,
+  title: React.ReactNode,
   center: boolean = false,
 ) {
+  const isColumnPinned = column.getIsPinned();
+  const ColumnPinIcon = isColumnPinned ? PinOff : Pin;
+
   return (
-    <div className={cn("flex", center ? "justify-center" : "justify-start")}>
-      <Button
-        size="sm"
-        variant="ghost"
-        className="h-7 justify-between"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-      >
-        {children}
-        <ArrowUpDown />
-      </Button>
+    <div
+      className={cn(
+        "flex items-center gap-x-2",
+        center ? "justify-center" : "justify-start",
+      )}
+    >
+      <span className="font-medium">{title}</span>
+
+      <div className="flex gap-x-px">
+        {column.getCanSort() && (
+          <Button
+            size="icon-xs"
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDown />
+          </Button>
+        )}
+
+        {column.getCanPin() && (
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button size="icon-xs" variant="ghost">
+                <ColumnPinIcon />
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Button
+                size="icon-xs"
+                variant="ghost"
+                onClick={() => column.pin("left")}
+                disabled={isColumnPinned === "left"}
+              >
+                <ArrowLeft />
+              </Button>
+              <Button
+                size="icon-xs"
+                variant="ghost_destructive"
+                onClick={() => column.pin(false)}
+                disabled={isColumnPinned === false}
+              >
+                <X />
+              </Button>
+              <Button
+                size="icon-xs"
+                variant="ghost"
+                onClick={() => column.pin("right")}
+                disabled={isColumnPinned === "right"}
+              >
+                <ArrowRight />
+              </Button>
+            </PopoverContent>
+          </Popover>
+        )}
+      </div>
     </div>
   );
-}
-
-function cellNum(num: number) {
-  return <div className="text-center">{num}</div>;
 }
 
 function headerCheckbox<T>(table: Table<T>) {
@@ -54,6 +104,10 @@ function headerCheckbox<T>(table: Table<T>) {
       }
     />
   );
+}
+
+function cellNum(num: number) {
+  return <div className="text-center">{num}</div>;
 }
 
 function cellCheckbox<R>(row: Row<R>, disabled: boolean = false) {
@@ -83,8 +137,8 @@ export const getUserColumn = (currentUserId: string) => [
     enableHiding: false,
   }),
   createUserColumn.accessor(({ image }) => image, {
-    id: "image",
-    header: "Foto Profil",
+    id: "Foto Profil",
+    header: ({ column }) => headerColumn(column, "Foto Profil", true),
     cell: ({ row }) => (
       <div className="flex justify-center">
         <UserAvatar {...row.original} className="size-20" />
@@ -93,10 +147,13 @@ export const getUserColumn = (currentUserId: string) => [
     filterFn: filterFn("text"),
     meta: { displayName: "Foto Profil", type: "text", icon: UserSquare2 },
     enableSorting: false,
+    enableColumnFilter: false,
+    enableGlobalFilter: false,
+    enablePinning: true,
   }),
   createUserColumn.accessor(({ name }) => name, {
     id: "name",
-    header: ({ column }) => headerButton(column, "Nama"),
+    header: ({ column }) => headerColumn(column, "Nama"),
     cell: ({ row }) => (
       <UserDetailSheet
         data={row.original}
@@ -108,7 +165,7 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ email }) => email, {
     id: "email",
-    header: ({ column }) => headerButton(column, "Alamat Email"),
+    header: ({ column }) => headerColumn(column, "Alamat Email"),
     cell: ({ row }) => {
       const { email, emailVerified } = row.original;
       return (
@@ -122,7 +179,7 @@ export const getUserColumn = (currentUserId: string) => [
   }),
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
-    header: ({ column }) => headerButton(column, "Role"),
+    header: ({ column }) => headerColumn(column, "Role"),
     cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
     filterFn: filterFn("option"),
     meta: {
@@ -136,8 +193,8 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ updatedAt }) => updatedAt, {
-    id: "updatedAt",
-    header: ({ column }) => headerButton(column, "Terakhir Diperbarui"),
+    id: "Terakhir Diperbarui",
+    header: ({ column }) => headerColumn(column, "Terakhir Diperbarui"),
     cell: ({ row }) => formatDate(row.original.updatedAt, "PPPp"),
     filterFn: filterFn("date"),
     meta: {
@@ -147,8 +204,8 @@ export const getUserColumn = (currentUserId: string) => [
     },
   }),
   createUserColumn.accessor(({ createdAt }) => createdAt, {
-    id: "createdAt",
-    header: ({ column }) => headerButton(column, "Waktu Dibuat"),
+    id: "Waktu Dibuat",
+    header: ({ column }) => headerColumn(column, "Waktu Dibuat"),
     cell: ({ row }) => formatDate(row.original.createdAt, "PPPp"),
     filterFn: filterFn("date"),
     meta: { displayName: "Waktu Dibuat", type: "date", icon: CalendarCheck2 },

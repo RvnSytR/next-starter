@@ -132,9 +132,11 @@ function Header({
               }}
             />
 
-            <div className="grid break-all [&>span]:line-clamp-1">
+            <div className="grid break-all **:line-clamp-1">
               <div className="flex items-center gap-x-2">
-                <span className="text-sm font-semibold">{name}</span>
+                <span className="line-clamp-1 text-sm font-semibold">
+                  {name}
+                </span>
                 {emailVerified && (
                   <UserVerifiedBadge
                     classNames={{ icon: "size-3.5" }}
@@ -179,7 +181,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
                 <SCMenuButton route={route} tooltip={displayName} asChild>
                   <Link href={route}>
                     <LinkLoader icon={{ base: iconElement }} />
-                    {displayName}
+                    <span className="line-clamp-1">{displayName}</span>
                   </Link>
                 </SCMenuButton>
 

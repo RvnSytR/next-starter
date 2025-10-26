@@ -143,10 +143,9 @@ export function UserDataTable({
       data={data}
       columns={columns}
       enableRowSelection={({ original }) => original.id !== currentUserId}
-      onRowSelection={(data, table) => {
+      rowSelectionFn={(data, table) => {
         const filteredData = data.map(({ original }) => original);
         const clearRowSelection = () => table.resetRowSelection();
-
         return (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -15,15 +15,13 @@ import {
 import { Input } from "@/components/ui/input";
 import {
   Popover,
-  PopoverAnchor,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks";
-import { actions } from "@/lib/content";
+import { actions, messages } from "@/lib/content";
 import {
   ColumnDataType,
   ColumnOption,
@@ -56,6 +54,7 @@ import {
   useState,
 } from "react";
 import { DateRange, TZDate } from "react-day-picker";
+import { ButtonGroup } from "../ui/button-group";
 
 export function DataTableFilter<TData, TValue>({
   table,
@@ -221,9 +220,9 @@ export function FilterSelector<TData>({ table }: { table: Table<TData> }) {
             value={value}
             onValueChange={setValue}
             ref={inputRef}
-            placeholder="Search..."
+            placeholder="Cari Kolom..."
           />
-          <CommandEmpty>No results.</CommandEmpty>
+          <CommandEmpty>{messages.empty}</CommandEmpty>
           <CommandList className="max-h-fit">
             <CommandGroup>
               {properties.map((column) => (
@@ -292,7 +291,7 @@ export function FilterableColumn<TData>({
 export function DebouncedInput({
   value: initialValue,
   onChange,
-  debounce = 500,
+  debounce = 250,
   ...props
 }: {
   value: string | number;
@@ -396,33 +395,23 @@ function renderFilter<TData, T extends ColumnDataType>(
   const { value } = filter;
 
   return (
-    <div
-      key={`filter-${filter.id}`}
-      className={cn(
-        buttonVariants({ size: "sm", variant: "outline" }),
-        "gap-0 px-0 text-xs",
-      )}
-    >
+    <ButtonGroup key={`filter-${filter.id}`} className="**:text-xs">
       <FilterSubject meta={meta} />
-      <Separator orientation="vertical" />
       <FilterOperator column={column} columnMeta={meta} filter={value} />
-      <Separator orientation="vertical" />
       <FilterValue
         id={filter.id}
         column={column}
         columnMeta={meta}
         table={table}
       />
-      <Separator orientation="vertical" />
       <Button
         size="icon-sm"
-        variant="ghost"
-        className="rounded-none rounded-r-md"
+        variant="outline"
         onClick={() => table.getColumn(filter.id)?.setFilterValue(undefined)}
       >
         <X />
       </Button>
-    </div>
+    </ButtonGroup>
   );
 }
 
@@ -435,10 +424,14 @@ export function FilterSubject<TData>({
 }) {
   const hasIcon = !!meta?.icon;
   return (
-    <span className="flex items-center gap-1.5 px-2 font-medium whitespace-nowrap select-none">
+    <Button
+      size="sm"
+      variant="outline"
+      className="flex items-center gap-1.5 px-2 font-medium whitespace-nowrap select-none"
+    >
       {hasIcon && <meta.icon />}
       <span>{meta.displayName}</span>
-    </span>
+    </Button>
   );
 }
 
@@ -463,20 +456,14 @@ export function FilterOperator<TData, T extends ColumnDataType>({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          className="m-0 h-full w-fit rounded-none p-0 px-2 text-xs whitespace-nowrap"
-        >
+        <Button size="sm" variant="outline">
           <FilterOperatorDisplay filter={filter} filterType={columnMeta.type} />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-fit origin-(--radix-popover-content-transform-origin) p-0"
-      >
+      <PopoverContent className="min-w-fit p-0">
         <Command loop>
-          <CommandInput placeholder="Search..." />
-          <CommandEmpty>No results.</CommandEmpty>
+          <CommandInput placeholder="Cari Operator..." />
+          <CommandEmpty>{messages.empty}</CommandEmpty>
           <CommandList className="max-h-fit">
             <FilterOperatorController column={column} closeController={close} />
           </CommandList>
@@ -733,12 +720,8 @@ export function FilterValue<TData, TValue>({
 }) {
   return (
     <Popover>
-      <PopoverAnchor className="h-full" />
       <PopoverTrigger asChild>
-        <Button
-          variant="ghost"
-          className="m-0 h-full w-fit rounded-none p-0 px-2 text-xs whitespace-nowrap"
-        >
+        <Button size="sm" variant="outline">
           <FilterValueDisplay
             id={id}
             column={column}
@@ -747,11 +730,7 @@ export function FilterValue<TData, TValue>({
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        side="bottom"
-        className="w-fit origin-(--radix-popover-content-transform-origin) p-0"
-      >
+      <PopoverContent className="w-fit origin-(--radix-popover-content-transform-origin) p-0">
         <FitlerValueController
           id={id}
           column={column}
@@ -962,7 +941,6 @@ export function FilterValueMultiOptionDisplay<TData, TValue>({
   }
 
   const name = columnMeta.displayName.toLowerCase();
-
   const hasOptionIcons = !columnMeta.options?.some((o) => !o.icon);
 
   return (
@@ -1239,8 +1217,11 @@ export function FilterValueOptionController<TData, TValue>({
 
   return (
     <Command loop>
-      <CommandInput autoFocus placeholder="Search..." />
-      <CommandEmpty>No results.</CommandEmpty>
+      <CommandInput
+        autoFocus
+        placeholder={`Cari ${columnMeta.displayName}...`}
+      />
+      <CommandEmpty>{messages.empty}</CommandEmpty>
       <CommandList className="max-h-fit">
         <CommandGroup>
           {options.map((v) => {
@@ -1402,8 +1383,11 @@ export function FilterValueMultiOptionController<
 
   return (
     <Command loop>
-      <CommandInput autoFocus placeholder="Search..." />
-      <CommandEmpty>No results.</CommandEmpty>
+      <CommandInput
+        autoFocus
+        placeholder={`Cari ${columnMeta.displayName}...`}
+      />
+      <CommandEmpty>{messages.empty}</CommandEmpty>
       <CommandList>
         <CommandGroup>
           {options.map((v) => {
@@ -1450,6 +1434,7 @@ export function FilterValueMultiOptionController<
 
 export function FilterValueDateController<TData, TValue>({
   column,
+  columnMeta,
 }: ProperFilterValueMenuProps<TData, TValue>) {
   const filter = column.getFilterValue()
     ? (column.getFilterValue() as FilterModel<"date", TData>)
@@ -1495,8 +1480,8 @@ export function FilterValueDateController<TData, TValue>({
 
   return (
     <Command>
-      {/* <CommandInput placeholder="Search..." /> */}
-      {/* <CommandEmpty>No results.</CommandEmpty> */}
+      {/* <CommandInput placeholder={`Cari ${columnMeta.displayName}...`} /> */}
+      {/* <CommandEmpty>{messages.empty}</CommandEmpty> */}
       <CommandList className="max-h-fit">
         <CommandGroup>
           <Calendar
@@ -1514,6 +1499,7 @@ export function FilterValueDateController<TData, TValue>({
 
 export function FilterValueTextController<TData, TValue>({
   column,
+  columnMeta,
 }: ProperFilterValueMenuProps<TData, TValue>) {
   const filter = column.getFilterValue()
     ? (column.getFilterValue() as FilterModel<"text", TData>)
@@ -1537,7 +1523,7 @@ export function FilterValueTextController<TData, TValue>({
         <CommandGroup>
           <CommandItem>
             <DebouncedInput
-              placeholder="Search..."
+              placeholder={`Cari ${columnMeta.displayName}...`}
               autoFocus
               value={filter?.values[0] ?? ""}
               onChange={changeText}

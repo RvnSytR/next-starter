@@ -34,6 +34,7 @@ import {
   sidebarMenuButtonVariants,
   SidebarMenuSubButtonProps,
 } from "../layouts/sidebar-app";
+import { Kbd } from "./kbd";
 
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
@@ -267,20 +268,32 @@ function SidebarTrigger({
   const { toggleSidebar } = useSidebar();
 
   return (
-    <Button
-      data-sidebar="trigger"
-      data-slot="sidebar-trigger"
-      variant="ghost"
-      size="icon"
-      onClick={(event) => {
-        onClick?.(event);
-        toggleSidebar();
-      }}
-      {...props}
-    >
-      <PanelLeftIcon />
-      <span className="sr-only">Toggle Sidebar</span>
-    </Button>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Button
+          data-sidebar="trigger"
+          data-slot="sidebar-trigger"
+          variant="ghost"
+          size="icon"
+          onClick={(event) => {
+            onClick?.(event);
+            toggleSidebar();
+          }}
+          {...props}
+        >
+          <PanelLeftIcon />
+          <span className="sr-only">Toggle Sidebar</span>
+        </Button>
+      </TooltipTrigger>
+      <TooltipContent className="flex flex-col items-center gap-2">
+        <span>Toggle Sidebar</span>
+        <div className="flex items-center gap-x-2">
+          <Kbd>⌘</Kbd>
+          <span>+</span>
+          <Kbd>B</Kbd>
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
