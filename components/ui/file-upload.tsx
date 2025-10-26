@@ -1,7 +1,7 @@
-import { fileMeta, FileType } from "@/lib/constants";
+import { fileMeta, FileType } from "@/constants";
 import { actions } from "@/lib/content";
-import { cn, toMegabytes } from "@/lib/utils";
 import { zodSchemas } from "@/lib/zod";
+import { cn, toMegabytes } from "@/utils";
 import { ArrowUpRight, Dot, X } from "lucide-react";
 import { Route } from "next";
 import Image from "next/image";

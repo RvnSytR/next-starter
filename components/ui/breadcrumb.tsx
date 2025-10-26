@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { ChevronRight, MoreHorizontal } from "lucide-react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import { Button, ButtonProps } from "./button";

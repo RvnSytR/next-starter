@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 
 type ShineBorderProps = React.HTMLAttributes<HTMLDivElement> & {
   /**

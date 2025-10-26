@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useLayout } from "@/providers/layout";
+import { cn } from "@/utils";
 import { Spinner } from "../ui/spinner";
 
 export function DashboardMainContent({

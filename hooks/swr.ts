@@ -1,6 +1,6 @@
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { ZodType } from "zod";
-import { apiFetcher, ApiFetcherConfig, ApiResponse, fetcher } from "../api";
+import { apiFetcher, ApiFetcherConfig, ApiResponse, fetcher } from "../lib/api";
 
 type UseValidatedSWRConfig = { swr?: SWRConfiguration; fetcher?: RequestInit };
 

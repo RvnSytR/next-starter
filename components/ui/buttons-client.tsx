@@ -1,8 +1,8 @@
 "use client";
 
 import { actions } from "@/lib/content";
-import { cn, delay } from "@/lib/utils";
 import { useLayout } from "@/providers/layout";
+import { cn, delay } from "@/utils";
 import {
   ArrowUp,
   Check,

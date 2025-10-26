@@ -1,8 +1,8 @@
 "use client";
 
+import { useIsMobile } from "@/hooks";
 import { actions, messages } from "@/lib/content";
-import { useIsMobile } from "@/lib/hooks";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import {
   ColumnDef,
   ColumnFiltersState,

@@ -1,5 +1,5 @@
 import { Role, rolesMeta } from "@/lib/permission";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { UserWithRole } from "better-auth/plugins";
 import { BadgeCheck } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";

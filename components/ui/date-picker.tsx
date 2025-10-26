@@ -1,4 +1,4 @@
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/utils";
 import { isSameDay } from "date-fns";
 import {
   CalendarDays,

@@ -13,8 +13,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { appMeta } from "@/lib/constants";
-import { getTitle } from "@/lib/utils";
+import { appMeta } from "@/constants";
+import { getTitle } from "@/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 

@@ -1,8 +1,8 @@
 import { Route } from "next";
 import { appMeta } from "../constants";
-import { dashboardMenu, Menu } from "../menu";
-import { Role } from "../permission";
-import { allRoutes, RouteRole, routesMeta } from "../routes";
+import { dashboardMenu, Menu } from "../lib/menu";
+import { Role } from "../lib/permission";
+import { allRoutes, RouteRole, routesMeta } from "../lib/routes";
 
 export function getTitle(route: Route) {
   return `${routesMeta[route].displayName} | ${appMeta.name}`;

@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { cva, type VariantProps } from "class-variance-authority";
 
 const alertVariants = cva(

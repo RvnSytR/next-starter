@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Collapsible as CollapsiblePrimitive } from "radix-ui";
 
 function Collapsible({

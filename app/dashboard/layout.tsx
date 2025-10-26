@@ -1,7 +1,7 @@
 import { Tagline } from "@/components/layouts/sections";
 import { SidebarApp } from "@/components/layouts/sidebar-app";
-import { getTitle } from "@/lib/utils";
 import { getSession } from "@/server/action";
+import { getTitle } from "@/utils";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { SWRConfig } from "swr";

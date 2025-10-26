@@ -16,10 +16,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { appMeta } from "@/lib/constants";
+import { appMeta } from "@/constants";
 import { Role } from "@/lib/permission";
-import { getTitle } from "@/lib/utils";
 import { getListSession, requireAuth } from "@/server/action";
+import { getTitle } from "@/utils";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/profile") };

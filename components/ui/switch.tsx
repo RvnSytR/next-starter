@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Switch as SwitchPrimitive } from "radix-ui";
 
 export function Switch({

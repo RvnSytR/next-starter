@@ -1,9 +1,9 @@
 "use client";
 
+import { appMeta, fileMeta } from "@/constants";
+import { useIsMobile } from "@/hooks";
 import { authClient } from "@/lib/auth-client";
-import { appMeta, fileMeta } from "@/lib/constants";
 import { actions, messages } from "@/lib/content";
-import { useIsMobile } from "@/lib/hooks";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
 import { dashboardRoute, signInRoute } from "@/lib/routes";
 import { zodSchemas, zodUser } from "@/lib/zod";

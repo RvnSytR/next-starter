@@ -1,7 +1,7 @@
 "use client";
 
 import { actions } from "@/lib/content";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { RotateCcw } from "lucide-react";
 import { Button, ButtonProps, ButtonPropsWithoutChildren } from "./button";
 

@@ -1,8 +1,8 @@
 import { dashboardfooterMenu } from "@/lib/menu";
 import { Role } from "@/lib/permission";
 import { routesMeta } from "@/lib/routes";
-import { cn, getMenuByRole, toKebabCase } from "@/lib/utils";
 import { LayoutProvider } from "@/providers/layout";
+import { cn, getMenuByRole, toKebabCase } from "@/utils";
 import { UserWithRole } from "better-auth/plugins";
 import { cva, VariantProps } from "class-variance-authority";
 import { ChevronRight } from "lucide-react";

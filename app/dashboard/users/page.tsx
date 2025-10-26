@@ -10,8 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { getTitle } from "@/lib/utils";
 import { getUserList, requireAuth } from "@/server/action";
+import { getTitle } from "@/utils";
 import { Metadata } from "next";
 
 export const metadata: Metadata = { title: getTitle("/dashboard/users") };

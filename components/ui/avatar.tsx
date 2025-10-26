@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { Avatar as AvatarPrimitive } from "radix-ui";
 
 function Avatar({

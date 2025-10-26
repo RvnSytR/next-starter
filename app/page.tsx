@@ -6,7 +6,7 @@ import { AreaChart, BarChart, PieChart } from "@/components/ui/charts";
 import { R } from "@/components/ui/motion";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -42,7 +42,7 @@ const comp = {
         <CardTitle>Pie Chart</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="mx-auto aspect-square h-[20rem]">
+        <div className="mx-auto aspect-square h-80">
           <PieChart label="Kategori" data={pieChartData} />
         </div>
       </CardContent>

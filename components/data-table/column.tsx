@@ -2,7 +2,7 @@
 
 import { filterFn } from "@/lib/filters";
 import { Role, rolesMeta } from "@/lib/permission";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/utils";
 import { Column, createColumnHelper, Row, Table } from "@tanstack/react-table";
 import { UserWithRole } from "better-auth/plugins";
 import {
