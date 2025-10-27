@@ -25,10 +25,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = { title: getTitle("/dashboard/profile") };
 
 export default async function Page() {
-  const {
-    session: { session, user },
-    meta,
-  } = await requireAuth("/dashboard/profile");
+  const { session, meta } = await requireAuth("/dashboard/profile");
   const sessionList = await getListSession();
 
   return (
@@ -40,12 +37,12 @@ export default async function Page() {
             Perbarui dan kelola informasi profil {appMeta.name} Anda.
           </CardDescription>
           <CardAction className="flex flex-col items-end gap-2 md:flex-row-reverse">
-            <UserRoleBadge role={user.role as Role} />
-            {user.emailVerified && <UserVerifiedBadge />}
+            <UserRoleBadge role={session.user.role as Role} />
+            {session.user.emailVerified && <UserVerifiedBadge />}
           </CardAction>
         </CardHeader>
 
-        <PersonalInformation {...user} />
+        <PersonalInformation {...session.user} />
       </Card>
 
       <Card id="ubah-kata-sandi" className="w-full scroll-m-20 lg:max-w-xl">
@@ -92,7 +89,7 @@ export default async function Page() {
         </CardHeader>
 
         <CardContent>
-          <DeleteMyAccountButton {...user} />
+          <DeleteMyAccountButton {...session.user} />
         </CardContent>
       </Card>
     </DashboardMain>

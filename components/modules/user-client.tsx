@@ -124,7 +124,7 @@ const sharedText = {
 };
 
 /*
- * --- User ---
+ * --- USER ---
  */
 
 export function UserDataTable({

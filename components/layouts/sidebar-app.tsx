@@ -78,7 +78,7 @@ export function SidebarApp({
   data,
   children,
 }: {
-  data: UserWithRole;
+  data: SidebarData;
   children: React.ReactNode;
 }) {
   return (
