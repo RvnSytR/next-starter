@@ -134,9 +134,7 @@ function Header({
 
             <div className="grid break-all **:line-clamp-1">
               <div className="flex items-center gap-x-2">
-                <span className="line-clamp-1 text-sm font-semibold">
-                  {name}
-                </span>
+                <span className="text-sm font-semibold">{name}</span>
                 {emailVerified && (
                   <UserVerifiedBadge
                     classNames={{ icon: "size-3.5" }}

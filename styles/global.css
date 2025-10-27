@@ -47,6 +47,12 @@
   --sidebar-border: oklch(0.94 0 0);
   --sidebar-ring: oklch(0.2425 0.005 250);
 
+  --shadow-x: 0px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.18;
+  --shadow-color: hsl(0 0% 0%);
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-sm:
@@ -98,6 +104,13 @@
   --sidebar-border: oklch(0.32 0 0);
   --sidebar-ring: oklch(0.72 0 0);
 
+  --radius: 0.75rem;
+  --shadow-x: 0px;
+  --shadow-y: 1px;
+  --shadow-blur: 2px;
+  --shadow-spread: 0px;
+  --shadow-opacity: 0.18;
+  --shadow-color: hsl(0 0% 0%);
   --shadow-2xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-xs: 0px 1px 2px 0px hsl(0 0% 0% / 0.09);
   --shadow-sm:
@@ -289,11 +302,11 @@
   }
 
   .link {
-    @apply after:bg-primary hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
+    @apply after:bg-primary hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-px after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100;
   }
 
   .link-group {
-    @apply after:bg-primary group-hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-[1px] after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out group-hover:after:origin-bottom-left group-hover:after:scale-x-100;
+    @apply after:bg-primary group-hover:text-primary relative h-fit cursor-pointer no-underline after:absolute after:bottom-[-2] after:left-0 after:h-px after:w-full after:origin-bottom-right after:scale-x-0 after:transition-transform after:ease-in-out group-hover:after:origin-bottom-left group-hover:after:scale-x-100;
   }
 
   .link-underline {
