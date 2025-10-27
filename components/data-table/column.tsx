@@ -23,15 +23,20 @@ import { UserAvatar, UserRoleBadge, UserVerifiedBadge } from "../modules/user";
 import { UserDetailSheet } from "../modules/user-client";
 import { Button } from "../ui/button";
 import { Checkbox } from "../ui/checkbox";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 function headerColumn<C, T>(
   column: Column<C, T>,
   title: React.ReactNode,
   center: boolean = false,
 ) {
-  const isColumnPinned = column.getIsPinned();
-  const ColumnPinIcon = isColumnPinned ? PinOff : Pin;
+  const columnPinned = column.getIsPinned();
+  const ColumnPinIcon = columnPinned ? PinOff : Pin;
 
   return (
     <div
@@ -54,39 +59,37 @@ function headerColumn<C, T>(
         )}
 
         {column.getCanPin() && (
-          <Popover>
-            <PopoverTrigger asChild>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
               <Button size="icon-xs" variant="ghost">
                 <ColumnPinIcon />
               </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <Button
-                size="icon-xs"
-                variant="ghost"
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="min-w-fit flex-row">
+              <DropdownMenuItem
+                className="size-6"
                 onClick={() => column.pin("left")}
-                disabled={isColumnPinned === "left"}
+                disabled={columnPinned === "left"}
               >
                 <ArrowLeft />
-              </Button>
-              <Button
-                size="icon-xs"
-                variant="ghost_destructive"
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                className="size-6"
                 onClick={() => column.pin(false)}
-                disabled={isColumnPinned === false}
+                disabled={columnPinned === false}
               >
                 <X />
-              </Button>
-              <Button
-                size="icon-xs"
-                variant="ghost"
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                className="size-6"
                 onClick={() => column.pin("right")}
-                disabled={isColumnPinned === "right"}
+                disabled={columnPinned === "right"}
               >
                 <ArrowRight />
-              </Button>
-            </PopoverContent>
-          </Popover>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
     </div>

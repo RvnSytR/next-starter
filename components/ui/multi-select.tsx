@@ -427,7 +427,7 @@ export function MultiSelect({
               }
               className={cn(
                 "relative h-7 overflow-visible rounded-sm ps-2 pe-7 pl-2 data-fixed:pe-2",
-                "bg-[var(--badge-color)]/10 text-[var(--badge-color)]",
+                "bg-(--badge-color)/10 text-(--badge-color)",
                 badgeClassName,
               )}
             >
@@ -435,7 +435,7 @@ export function MultiSelect({
               {item.label || item.value}
               {!item.fixed && (
                 <button
-                  className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-[var(--badge-color)]/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-[var(--badge-color)] focus-visible:border-[var(--badge-color)]/40 focus-visible:ring-[3px] focus-visible:ring-[var(--badge-color)]/50"
+                  className="absolute -inset-y-px end-0 flex items-center justify-center rounded-e-md border border-transparent px-1 text-(--badge-color)/40 outline-hidden transition-[color,box-shadow] outline-none hover:text-(--badge-color) focus-visible:border-(--badge-color)/40 focus-visible:ring-[3px] focus-visible:ring-(--badge-color)/50"
                   onMouseDown={(e) => {
                     e.preventDefault();
                     e.stopPropagation();
@@ -589,7 +589,7 @@ export function MultiSelect({
                               (typeof Icon === "string" ? Icon : <Icon />)}
                             {item.label || item.value}
 
-                            <div className="ml-auto size-2 rounded-full bg-[var(--item-color)]" />
+                            <div className="ml-auto size-2 rounded-full bg-(--item-color)" />
                           </CommandItem>
                         );
                       })}

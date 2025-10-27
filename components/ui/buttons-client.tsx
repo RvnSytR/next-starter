@@ -87,6 +87,7 @@ export function LayoutButton({
   size = "icon",
   variant = "ghost",
   onClick,
+  className,
   disabled,
   ...props
 }: ButtonPropsWithoutChildren) {
@@ -120,6 +121,7 @@ export function LayoutButton({
             onClick?.(e);
             toggleLayout();
           }}
+          className={cn("hidden md:inline-flex", className)}
           disabled={disabled || !layout}
           {...props}
         >

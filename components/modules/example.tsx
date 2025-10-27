@@ -359,12 +359,12 @@ export function ExampleForm() {
             <FieldGroup data-slot="checkbox-group">
               {checkboxData.map((value) => (
                 <Field
-                  key={`cb-${value}`}
+                  key={value}
                   orientation="horizontal"
                   data-invalid={!!fieldState.error}
                 >
                   <Checkbox
-                    id={value}
+                    id={`cb-${value}`}
                     name={field.name}
                     aria-invalid={!!fieldState.error}
                     checked={field.value.includes(value)}

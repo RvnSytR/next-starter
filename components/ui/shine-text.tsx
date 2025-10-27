@@ -58,7 +58,7 @@ export function ShineText({
     <motion.span
       ref={ref}
       className={cn(
-        "relative inline-block bg-[length:250%_100%,auto] bg-clip-text text-transparent",
+        "relative inline-block bg-size-[250%_100%,auto] bg-clip-text text-transparent",
         "[--base-color:var(--muted-foreground)] [--shimmer-color:var(--foreground)]",
         "[background-repeat:no-repeat,padding-box]",
         "[--shimmer-bg:linear-gradient(90deg,transparent_calc(50%-var(--spread)),var(--shimmer-color),transparent_calc(50%+var(--spread)))]",

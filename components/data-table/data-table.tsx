@@ -8,6 +8,7 @@ import {
   ColumnFiltersState,
   ColumnPinningState,
   Table as DataTableType,
+  InitialTableState,
   Row,
   SortingState,
   TableOptions,
@@ -85,6 +86,7 @@ export type OtherDataTableProps<TData> = ToolBoxProps & {
     table?: string;
     footer?: string;
   };
+  initialState?: InitialTableState;
   rowSelectionFn?: (
     data: Row<TData>[],
     table: DataTableType<TData>,
@@ -100,8 +102,9 @@ export function DataTable<TData>({
   caption,
   className,
   classNames,
-  enableRowSelection,
+  initialState,
   rowSelectionFn,
+  enableRowSelection,
   ...props
 }: DataTableProps<TData> &
   OtherDataTableProps<TData> &
@@ -145,7 +148,10 @@ export function DataTable<TData>({
 
     onColumnPinningChange: setColumnPinning,
 
-    initialState: { pagination: { pageIndex: 0, pageSize: defaultRowsLimit } },
+    initialState: {
+      pagination: { pageIndex: 0, pageSize: defaultRowsLimit },
+      ...initialState,
+    },
     state: {
       sorting,
       globalFilter,
@@ -187,57 +193,82 @@ export function DataTable<TData>({
         </ActiveFiltersMobileContainer>
       )}
 
-      <div className={cn("rounded-lg border", classNames?.tableContainer)}>
-        <Table className={classNames?.table}>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
+      <Table
+        className={classNames?.table}
+        containerClassName={cn("rounded-lg border", classNames?.tableContainer)}
+      >
+        <TableHeader>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map(
+                ({ id, column, isPlaceholder, getContext }) => {
+                  const columnPinned = column.getIsPinned();
                   return (
-                    <TableHead key={header.id} className="text-center">
-                      {header.isPlaceholder
+                    <TableHead
+                      key={id}
+                      className={cn(
+                        "z-10 text-center",
+                        columnPinned && "bg-background/90 sticky z-20",
+                        columnPinned === "left" && "left-0",
+                        columnPinned === "right" && "right-0",
+                      )}
+                      // style={{
+                      //   left: column.getStart("left"),
+                      //   right: column.getAfter("right"),
+                      // }}
+                    >
+                      {isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                        : flexRender(column.columnDef.header, getContext())}
                     </TableHead>
+                  );
+                },
+              )}
+            </TableRow>
+          ))}
+        </TableHeader>
+
+        <TableBody>
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <TableRow
+                key={row.id}
+                data-state={row.getIsSelected() && "selected"}
+              >
+                {row.getVisibleCells().map(({ id, column, getContext }) => {
+                  const columnPinned = column.getIsPinned();
+                  return (
+                    <TableCell
+                      key={id}
+                      className={cn(
+                        "z-10",
+                        columnPinned && "bg-background/90 sticky z-20",
+                        columnPinned === "left" && "left-0",
+                        columnPinned === "right" && "right-0",
+                      )}
+                      // style={{
+                      //   left: column.getStart("left"),
+                      //   right: column.getAfter("right"),
+                      // }}
+                    >
+                      {flexRender(column.columnDef.cell, getContext())}
+                    </TableCell>
                   );
                 })}
               </TableRow>
-            ))}
-          </TableHeader>
-
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="text-muted-foreground py-4 text-center whitespace-pre-line"
-                >
-                  {messages.empty}
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell
+                colSpan={columns.length}
+                className="text-muted-foreground py-4 text-center whitespace-pre-line"
+              >
+                {messages.empty}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
 
       <div
         className={cn(

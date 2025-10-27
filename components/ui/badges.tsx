@@ -14,10 +14,7 @@ export function GenderBadge({
     <Badge
       variant="outline"
       style={{ "--badge-color": color } as React.CSSProperties}
-      className={cn(
-        "border-[var(--badge-color)] text-[var(--badge-color)]",
-        className,
-      )}
+      className={cn("border-(--badge-color) text-(--badge-color)", className)}
     >
       <Icon /> {displayName}
     </Badge>
