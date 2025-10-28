@@ -24,7 +24,7 @@ export function DashboardMain({
 
         <div className="flex items-center gap-x-2">
           <LayoutButton />
-          <ThemeButton />
+          <ThemeButton align="end" />
         </div>
       </nav>
       <DashboardMainContent className={className}>

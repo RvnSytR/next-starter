@@ -170,10 +170,10 @@ export const getUserColumn = (currentUserId: string) => [
     id: "email",
     header: ({ column }) => headerColumn(column, "Alamat Email"),
     cell: ({ row }) => {
-      const { email, emailVerified } = row.original;
       return (
         <div className="flex items-center gap-x-2">
-          {email} {!emailVerified && <UserVerifiedBadge withoutText />}
+          <span>{row.original.email}</span>
+          {!row.original.emailVerified && <UserVerifiedBadge withoutText />}
         </div>
       );
     },
@@ -183,7 +183,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.accessor(({ role }) => role, {
     id: "role",
     header: ({ column }) => headerColumn(column, "Role"),
-    cell: ({ row }) => <UserRoleBadge role={row.original.role as Role} />,
+    cell: ({ cell }) => <UserRoleBadge role={cell.getValue() as Role} />,
     filterFn: filterFn("option"),
     meta: {
       displayName: "Role",
@@ -198,7 +198,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.accessor(({ updatedAt }) => updatedAt, {
     id: "Terakhir Diperbarui",
     header: ({ column }) => headerColumn(column, "Terakhir Diperbarui"),
-    cell: ({ row }) => formatDate(row.original.updatedAt, "PPPp"),
+    cell: ({ cell }) => formatDate(cell.getValue(), "PPPp"),
     filterFn: filterFn("date"),
     meta: {
       displayName: "Terakhir Diperbarui",
@@ -209,7 +209,7 @@ export const getUserColumn = (currentUserId: string) => [
   createUserColumn.accessor(({ createdAt }) => createdAt, {
     id: "Waktu Dibuat",
     header: ({ column }) => headerColumn(column, "Waktu Dibuat"),
-    cell: ({ row }) => formatDate(row.original.createdAt, "PPPp"),
+    cell: ({ cell }) => formatDate(cell.getValue(), "PPPp"),
     filterFn: filterFn("date"),
     meta: { displayName: "Waktu Dibuat", type: "date", icon: CalendarCheck2 },
   }),

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { id } from "zod/locales";
-import { fileMeta, FileType } from "../constants";
+import { allGenders, fileMeta, FileType } from "../constants";
 import { toMegabytes } from "../utils";
 import { messages } from "./content";
 import { allRoles } from "./permission";
@@ -67,10 +67,15 @@ export const zodSchemas = {
       error: `Kata sandi harus mengandung karakter khusus.`,
     }),
 
+  gender: z.enum(allGenders),
+
   updatedAt: z.coerce.date({ error: "Field 'updatedAt' tidak valid." }),
   createdAt: z.coerce.date({ error: "Field 'createdAt' tidak valid." }),
 
-  date: z.coerce.date({ error: "Pilih tanggal yang valid." }),
+  date: (field?: string) =>
+    z.coerce.date({
+      error: `Pilih tanggal${field ? `${field} ` : ""} yang valid.`,
+    }),
 
   dateMultiple: z.array(z.coerce.date({ error: "Pilih tanggal yang valid." }), {
     error: "Beberapa tanggal yang dimasukkan tidak valid.",

@@ -107,7 +107,7 @@ export function SidebarApp({
   );
 }
 
-function Header({
+async function Header({
   name,
   email,
   image,
@@ -152,7 +152,7 @@ function Header({
   );
 }
 
-function Content({ role }: Pick<SidebarData, "role">) {
+async function Content({ role }: Pick<SidebarData, "role">) {
   const menu = getMenuByRole(role as Role);
   return menu.map(({ section, content }, i) => (
     <SidebarGroup key={i}>
@@ -228,7 +228,7 @@ function Content({ role }: Pick<SidebarData, "role">) {
   ));
 }
 
-function Footer() {
+async function Footer() {
   return (
     <SidebarMenu className="gap-2">
       <SidebarMenuItem>

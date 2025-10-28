@@ -87,11 +87,12 @@ const checkboxData = ["firefox", "chrome", "safari", "edge"] as const;
 export function ExampleForm() {
   const fileType: FileType = "image";
 
-  const schema = z.object({
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = z.object({
     text: zodSchemas.string("Text", { min: 1 }),
     numeric: zodSchemas.number("Numeric", { min: 1 }),
     phone: zodSchemas.number("Phone", { min: 1 }),
-    date: zodSchemas.date,
+    date: zodSchemas.date(),
     dateMultiple: zodSchemas.dateMultiple.min(1),
     dateRange: zodSchemas.dateRange,
     select: z.enum(card),
@@ -109,10 +110,9 @@ export function ExampleForm() {
       error: "At least one checkbox must be selected",
     }),
   });
-  type Schema = z.infer<typeof schema>;
 
-  const form = useForm<Schema>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       text: "Hello World",
       numeric: 100000,
@@ -130,7 +130,7 @@ export function ExampleForm() {
     },
   });
 
-  const formHandler = (formData: Schema) => {
+  const formHandler = (formData: FormSchema) => {
     console.log(formatDate(formData.date, "PPPp"));
     // const res = await uploadFiles({ files: formData.file });
     toast(<pre>{JSON.stringify(formData, null, 2)}</pre>);

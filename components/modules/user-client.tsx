@@ -330,18 +330,19 @@ export function SignOnGithubButton() {
 export function SignInForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser.pick({
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser.pick({
     email: true,
     password: true,
     rememberMe: true,
   });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: { email: "", password: "", rememberMe: false },
   });
 
-  const formHandler = (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: FormSchema) => {
     setIsLoading(true);
     authClient.signIn.email(
       { ...formData, callbackURL: dashboardRoute },
@@ -439,7 +440,8 @@ export function SignInForm() {
 export function SignUpForm() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser
     .pick({
       name: true,
       email: true,
@@ -452,8 +454,8 @@ export function SignUpForm() {
       path: ["confirmPassword"],
     });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -463,10 +465,10 @@ export function SignUpForm() {
     },
   });
 
-  const formHandler = ({ newPassword, ...rest }: z.infer<typeof schema>) => {
+  const formHandler = ({ newPassword: password, ...rest }: FormSchema) => {
     setIsLoading(true);
     authClient.signUp.email(
-      { password: newPassword, ...rest },
+      { password, ...rest },
       {
         onError: ({ error }) => {
           toast.error(error.message);
@@ -639,13 +641,13 @@ export function ProfilePicture({
   const [isRemoved, setIsRemoved] = useState<boolean>(false);
 
   const contentType = "image";
-  const schema = zodSchemas.file(contentType);
+  const formSchema = zodSchemas.file(contentType);
 
   const changeHandler = async (fileList: FileList) => {
     setIsChange(true);
     const files = Array.from(fileList).map((f) => f);
 
-    const parseRes = schema.safeParse(files);
+    const parseRes = formSchema.safeParse(files);
     if (!parseRes.success) return toast.error(parseRes.error.message);
 
     const file = files[0];
@@ -762,14 +764,16 @@ export function PersonalInformation({ ...props }: UserWithRole) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { name, email } = props;
-  const schema = zodUser.pick({ name: true, email: true });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser.pick({ name: true, email: true });
+
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: { name, email },
   });
 
-  const formHandler = ({ name: newName }: z.infer<typeof schema>) => {
+  const formHandler = ({ name: newName }: FormSchema) => {
     if (newName === name) return toast.info(messages.noChanges("profil Anda"));
 
     setIsLoading(true);
@@ -863,7 +867,8 @@ export function ChangePasswordForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser
     .pick({
       currentPassword: true,
       newPassword: true,
@@ -875,8 +880,8 @@ export function ChangePasswordForm() {
       path: ["confirmPassword"],
     });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       currentPassword: "",
       newPassword: "",
@@ -885,7 +890,7 @@ export function ChangePasswordForm() {
     },
   });
 
-  const formHandler = (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: FormSchema) => {
     setIsLoading(true);
     authClient.changePassword(formData, {
       onError: ({ error }) => {
@@ -1236,7 +1241,8 @@ export function AdminCreateUserDialog() {
   const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser
     .pick({
       name: true,
       email: true,
@@ -1249,10 +1255,8 @@ export function AdminCreateUserDialog() {
       path: ["confirmPassword"],
     });
 
-  const Icon = UserRoundPlus;
-
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -1262,7 +1266,7 @@ export function AdminCreateUserDialog() {
     },
   });
 
-  const formHandler = ({ newPassword, ...rest }: z.infer<typeof schema>) => {
+  const formHandler = ({ newPassword, ...rest }: FormSchema) => {
     setIsLoading(true);
     authClient.admin.createUser(
       { password: newPassword, ...rest },
@@ -1285,7 +1289,7 @@ export function AdminCreateUserDialog() {
     <Dialog>
       <DialogTrigger asChild>
         <Button size={isMobile ? "default" : "sm"} className="w-full">
-          <Icon /> Tambah Pengguna
+          <UserRoundPlus /> Tambah Pengguna
         </Button>
       </DialogTrigger>
 
@@ -1459,7 +1463,10 @@ export function AdminCreateUserDialog() {
           <DialogFooter>
             <DialogClose>{actions.cancel}</DialogClose>
             <Button type="submit" disabled={isLoading}>
-              <LoadingSpinner loading={isLoading} icon={{ base: <Icon /> }} />
+              <LoadingSpinner
+                loading={isLoading}
+                icon={{ base: <UserRoundPlus /> }}
+              />
               {actions.add}
             </Button>
           </DialogFooter>
@@ -1478,14 +1485,15 @@ function AdminChangeUserRoleForm({
 }) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = zodUser.pick({ role: true });
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = zodUser.pick({ role: true });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: { role: data.role === "user" ? "admin" : "user" },
   });
 
-  const formHandler = (formData: z.infer<typeof schema>) => {
+  const formHandler = (formData: FormSchema) => {
     const newRole = formData.role;
     if (newRole === data.role)
       return toast.info(messages.noChanges(`role ${data.name}`));
@@ -1641,15 +1649,16 @@ function AdminRemoveUserDialog({
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const schema = z
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = z
     .object({ input: zodSchemas.string("Nama") })
     .refine((sc) => sc.input === data.name, {
       message: messages.thingNotMatch("Nama"),
       path: ["input"],
     });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: { input: "" },
   });
 
@@ -1812,15 +1821,17 @@ function AdminActionRemoveUsersDialog({
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const inputValue = `Hapus ${String(data.length)} pengguna`;
-  const schema = z
+
+  type FormSchema = z.infer<typeof formSchema>;
+  const formSchema = z
     .object({ input: zodSchemas.string("Total pengguna yang dihapus") })
     .refine((sc) => sc.input === inputValue, {
       message: messages.thingNotMatch("Total pengguna yang dihapus"),
       path: ["input"],
     });
 
-  const form = useForm<z.infer<typeof schema>>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: { input: "" },
   });
 

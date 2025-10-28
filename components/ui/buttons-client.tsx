@@ -25,6 +25,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 type ButtonIconSize = "icon-xs" | "icon-sm" | "icon" | "icon-lg";
+type TooltipAlign = "end" | "center" | "start";
 
 export function LinkLoader({ ...props }: Omit<LoadingSpinnerProps, "loading">) {
   const { pending } = useLinkStatus();
@@ -32,11 +33,12 @@ export function LinkLoader({ ...props }: Omit<LoadingSpinnerProps, "loading">) {
 }
 
 export function ThemeButton({
+  align,
   size = "icon",
   variant = "ghost",
   onClick,
   ...props
-}: ButtonPropsWithoutChildren) {
+}: ButtonPropsWithoutChildren & { align?: TooltipAlign }) {
   const { setTheme } = useTheme();
 
   const toggleTheme = () =>
@@ -71,7 +73,10 @@ export function ThemeButton({
           <span className="sr-only">Toggle theme</span>
         </Button>
       </TooltipTrigger>
-      <TooltipContent className="flex flex-col items-center gap-2">
+      <TooltipContent
+        align={align}
+        className="flex flex-col items-center gap-2"
+      >
         <span>Toggle Theme</span>
         <div className="flex items-center gap-x-2">
           <Kbd>Alt</Kbd>
@@ -84,13 +89,14 @@ export function ThemeButton({
 }
 
 export function LayoutButton({
+  align,
   size = "icon",
   variant = "ghost",
   onClick,
   className,
   disabled,
   ...props
-}: ButtonPropsWithoutChildren) {
+}: ButtonPropsWithoutChildren & { align?: TooltipAlign }) {
   const { layout, setLayout } = useLayout();
   const LayoutIcon = !layout
     ? Frame
@@ -128,7 +134,10 @@ export function LayoutButton({
           <LayoutIcon />
         </Button>
       </TooltipTrigger>
-      <TooltipContent className="flex flex-col items-center gap-2">
+      <TooltipContent
+        align={align}
+        className="flex flex-col items-center gap-2"
+      >
         <span>Toggle Layout</span>
         <div className="flex items-center gap-x-2">
           <Kbd>Alt</Kbd>

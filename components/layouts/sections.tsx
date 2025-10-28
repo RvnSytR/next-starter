@@ -30,7 +30,7 @@ export function SheetDetails({
     <div key={index} className={cn("grid gap-y-1", className)}>
       <Label className={classNames?.label}>{label}</Label>
       <div className={cn("text-muted-foreground text-sm", classNames?.content)}>
-        {content}
+        {content ?? null}
       </div>
     </div>
   ));

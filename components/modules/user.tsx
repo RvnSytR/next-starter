@@ -27,7 +27,13 @@ export function UserRoleBadge({
           <Icon /> {displayName || role}
         </Badge>
       </TooltipTrigger>
-      <TooltipContent>{desc}</TooltipContent>
+      <TooltipContent
+        style={{ "--tooltip-color": color } as React.CSSProperties}
+        className="bg-(--tooltip-color)"
+        arrowClassName="bg-(--tooltip-color) fill-(--tooltip-color)"
+      >
+        {desc}
+      </TooltipContent>
     </Tooltip>
   );
 }
@@ -74,12 +80,12 @@ export function UserAvatar({
   classNames?: { image?: string; fallback?: string };
 }) {
   return (
-    <Avatar className={cn("rounded-xl", className)}>
+    <Avatar className={cn("rounded-lg", className)}>
       <AvatarImage
         src={image || undefined}
-        className={cn("rounded-xl", classNames?.image)}
+        className={cn("rounded-lg", classNames?.image)}
       />
-      <AvatarFallback className={cn("rounded-xl", classNames?.fallback)}>
+      <AvatarFallback className={cn("rounded-lg", classNames?.fallback)}>
         {name.slice(0, 2)}
       </AvatarFallback>
     </Avatar>

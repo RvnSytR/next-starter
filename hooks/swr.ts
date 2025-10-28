@@ -2,7 +2,13 @@ import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { ZodType } from "zod";
 import { apiFetcher, ApiFetcherConfig, ApiResponse, fetcher } from "../lib/api";
 
-type UseValidatedSWRConfig = { swr?: SWRConfiguration; fetcher?: RequestInit };
+export type UseValidatedSWRConfig = {
+  swr?: SWRConfiguration;
+  fetcher?: RequestInit;
+};
+export type UseApiSWRConfig = Pick<UseValidatedSWRConfig, "swr"> & {
+  fetcher: ApiFetcherConfig;
+};
 
 export function useValidatedSWR<T>(
   key: string,
@@ -16,7 +22,7 @@ export function useValidatedSWR<T>(
 export function useApiSWR<T>(
   key: string,
   schema: ZodType<T>,
-  config?: Pick<UseValidatedSWRConfig, "swr"> & { fetcher: ApiFetcherConfig },
+  config?: UseApiSWRConfig,
 ): SWRResponse<ApiResponse<T>> {
   const fn = async () => await apiFetcher(key, schema, config?.fetcher);
   return useSWR(key, fn, config?.swr);
