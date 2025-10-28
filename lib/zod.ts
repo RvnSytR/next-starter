@@ -74,7 +74,7 @@ export const zodSchemas = {
 
   date: (field?: string) =>
     z.coerce.date({
-      error: `Pilih tanggal${field ? `${field} ` : ""} yang valid.`,
+      error: `Pilih tanggal${field ? `${field.toLowerCase()} ` : ""} yang valid.`,
     }),
 
   dateMultiple: z.array(z.coerce.date({ error: "Pilih tanggal yang valid." }), {

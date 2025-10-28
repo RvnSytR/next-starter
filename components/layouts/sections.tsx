@@ -27,10 +27,10 @@ export function SheetDetails({
   }[];
 }) {
   return data.map(({ label, content, className, classNames }, index) => (
-    <div key={index} className={cn("grid gap-y-1", className)}>
+    <div key={index} className={cn("space-y-1", className)}>
       <Label className={classNames?.label}>{label}</Label>
       <div className={cn("text-muted-foreground text-sm", classNames?.content)}>
-        {content ?? null}
+        {content ?? "-"}
       </div>
     </div>
   ));

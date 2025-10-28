@@ -225,7 +225,7 @@ export function UserDetailSheet({
         <div className="flex flex-col gap-y-3 overflow-y-auto px-4">
           <Separator />
 
-          <div className="flex items-center gap-x-2">
+          <div className="flex items-center gap-2">
             <UserRoleBadge role={data.role as Role} />
             {data.emailVerified && <UserVerifiedBadge />}
           </div>
