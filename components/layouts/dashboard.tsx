@@ -17,7 +17,7 @@ export function DashboardMain({
     <>
       <nav className="bg-background/90 sticky top-0 z-50 flex items-center justify-between gap-x-4 border-b p-4 shadow-xs backdrop-blur-xs">
         <div className="flex items-center gap-x-2">
-          <SidebarTrigger />
+          <SidebarTrigger align="start" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <DynamicBreadcrumb {...props} />
         </div>

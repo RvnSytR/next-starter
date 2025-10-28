@@ -1,7 +1,6 @@
 "use client";
 
 import { appMeta, fileMeta } from "@/constants";
-import { useIsMobile } from "@/hooks";
 import { authClient } from "@/lib/auth-client";
 import { actions, messages } from "@/lib/content";
 import { allRoles, Role, rolesMeta } from "@/lib/permission";
@@ -88,6 +87,7 @@ import {
   Field,
   FieldContent,
   FieldDescription,
+  FieldError,
   FieldLabel,
   FieldTitle,
 } from "../ui/field";
@@ -614,6 +614,7 @@ export function SignUpForm() {
                 </span>{" "}
                 {appMeta.name}.
               </FieldDescription>
+              <FieldError errors={fieldState.error} />
             </FieldContent>
           </Field>
         )}
@@ -623,7 +624,7 @@ export function SignUpForm() {
         <LoadingSpinner
           loading={isLoading}
           icon={{ base: <UserRoundPlus /> }}
-        />
+        />{" "}
         Daftar Sekarang
       </Button>
     </form>
@@ -1238,7 +1239,6 @@ export function DeleteMyAccountButton({ image }: Pick<UserWithRole, "image">) {
  */
 
 export function AdminCreateUserDialog() {
-  const isMobile = useIsMobile();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   type FormSchema = z.infer<typeof formSchema>;
@@ -1288,7 +1288,7 @@ export function AdminCreateUserDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size={isMobile ? "default" : "sm"} className="w-full">
+        <Button className="w-full">
           <UserRoundPlus /> Tambah Pengguna
         </Button>
       </DialogTrigger>
@@ -1674,7 +1674,7 @@ function AdminRemoveUserDialog({
           setIsLoading(false);
         },
         onSuccess: () => {
-          toast.success(`Akun atas nama ${name} berhasil dihapus.`);
+          toast.success(`Akun atas nama ${data.name} berhasil dihapus.`);
           setIsLoading(false);
           setIsOpen(false);
           mutate("users");
@@ -1688,7 +1688,7 @@ function AdminRemoveUserDialog({
       <DialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
-          {`${actions.remove} ${name}`}
+          {`${actions.remove} ${data.name}`}
         </Button>
       </DialogTrigger>
 

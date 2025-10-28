@@ -17,7 +17,7 @@ import {
 import { useTheme } from "next-themes";
 import { useLinkStatus } from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useEffectEvent, useState } from "react";
+import { ComponentProps, useEffect, useEffectEvent, useState } from "react";
 import { Button, ButtonProps } from "./button";
 import { Kbd } from "./kbd";
 import { LoadingSpinner, LoadingSpinnerProps } from "./spinner";
@@ -25,7 +25,6 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./tooltip";
 
 type ButtonPropsWithoutChildren = Omit<ButtonProps, "children">;
 type ButtonIconSize = "icon-xs" | "icon-sm" | "icon" | "icon-lg";
-type TooltipAlign = "end" | "center" | "start";
 
 export function LinkLoader({ ...props }: Omit<LoadingSpinnerProps, "loading">) {
   const { pending } = useLinkStatus();
@@ -38,7 +37,8 @@ export function ThemeButton({
   variant = "ghost",
   onClick,
   ...props
-}: ButtonPropsWithoutChildren & { align?: TooltipAlign }) {
+}: ButtonPropsWithoutChildren &
+  Pick<ComponentProps<typeof TooltipContent>, "align">) {
   const { setTheme } = useTheme();
 
   const toggleTheme = () =>
@@ -96,7 +96,8 @@ export function LayoutButton({
   className,
   disabled,
   ...props
-}: ButtonPropsWithoutChildren & { align?: TooltipAlign }) {
+}: ButtonPropsWithoutChildren &
+  Pick<ComponentProps<typeof TooltipContent>, "align">) {
   const { layout, setLayout } = useLayout();
   const LayoutIcon = !layout
     ? Frame

@@ -205,7 +205,7 @@
     }
   }
 
-  --animate-pulse: pulse var(--duration) ease-out infinite;
+  --animate-button-pulse: pulse var(--duration) ease-out infinite;
   @keyframes pulse {
     0%,
     100% {
