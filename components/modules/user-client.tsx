@@ -1641,12 +1641,13 @@ function AdminRevokeUserSessionsDialog({
 
 function AdminRemoveUserDialog({
   data,
-  setIsOpen,
+  setIsOpen: setSheetOpen,
 }: {
   data: Pick<UserWithRole, "id" | "name" | "image">;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [input, setInput] = useState<string>("");
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   type FormSchema = z.infer<typeof formSchema>;
@@ -1677,6 +1678,7 @@ function AdminRemoveUserDialog({
           toast.success(`Akun atas nama ${data.name} berhasil dihapus.`);
           setIsLoading(false);
           setIsOpen(false);
+          setSheetOpen(false);
           mutate("users");
         },
       },
@@ -1684,7 +1686,7 @@ function AdminRemoveUserDialog({
   };
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline_destructive" disabled={isLoading}>
           <LoadingSpinner loading={isLoading} icon={{ base: <Trash2 /> }} />
@@ -1748,6 +1750,7 @@ function AdminRemoveUserDialog({
   );
 }
 
+// TODO: Close Dialog State
 function AdminActionRevokeUserSessionsDialog({
   ids,
   onSuccess,
@@ -1810,6 +1813,7 @@ function AdminActionRevokeUserSessionsDialog({
   );
 }
 
+// TODO: Close Dialog State
 function AdminActionRemoveUsersDialog({
   data,
   onSuccess,
