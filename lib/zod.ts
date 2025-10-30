@@ -74,17 +74,17 @@ export const zodSchemas = {
 
   date: (field?: string) =>
     z.coerce.date({
-      error: `Pilih tanggal${field ? `${field.toLowerCase()} ` : ""} yang valid.`,
+      error: `Pilih tanggal ${field ? `${field.toLowerCase()} ` : ""}yang valid.`,
     }),
 
-  dateMultiple: z.array(z.coerce.date({ error: "Pilih tanggal yang valid." }), {
+  dateMultiple: z.array(z.date({ error: "Pilih tanggal yang valid." }), {
     error: "Beberapa tanggal yang dimasukkan tidak valid.",
   }),
 
   dateRange: z.object(
     {
-      from: z.coerce.date({ error: "Pilih tanggal mulai yang valid." }),
-      to: z.coerce.date({ error: "Pilih tanggal akhir yang valid." }),
+      from: z.date({ error: "Pilih tanggal mulai yang valid." }),
+      to: z.date({ error: "Pilih tanggal akhir yang valid." }),
     },
     { error: "Pilih rentang tanggal yang valid." },
   ),

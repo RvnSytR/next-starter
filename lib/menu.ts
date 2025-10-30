@@ -1,5 +1,5 @@
-import { SidebarMenuSubButtonProps } from "@/components/layouts/sidebar-app";
 import { IconOrText } from "@/components/ui/icons";
+import { SidebarMenuSubButtonProps } from "@/constants";
 import {
   CircleHelp,
   ExternalLink,

@@ -5,7 +5,7 @@ import { routesMeta } from "@/lib/routes";
 import { Route } from "next";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { getSession } from "./user";
+import { getSession } from "./auth";
 
 export async function getCustomHeaders() {
   const req = await headers();

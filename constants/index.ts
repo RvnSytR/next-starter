@@ -1,7 +1,5 @@
 import { LucideIcon, Mars, Venus } from "lucide-react";
 
-export type Toast = "success" | "error" | "info" | "warning";
-
 export type DataType =
   | "string"
   | "boolean"
@@ -42,4 +40,5 @@ export const languageMeta: Record<
 };
 
 export * from "./app";
+export * from "./components";
 export * from "./file";

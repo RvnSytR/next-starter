@@ -17,6 +17,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  SidebarMenuButtonProps,
+  sidebarMenuButtonVariants,
+  SidebarMenuSubButtonProps,
+} from "@/constants";
 import { useIsMobile } from "@/hooks";
 import { cn } from "@/utils";
 import { PanelLeftIcon } from "lucide-react";
@@ -30,11 +35,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import {
-  SidebarMenuButtonProps,
-  sidebarMenuButtonVariants,
-  SidebarMenuSubButtonProps,
-} from "../layouts/sidebar-app";
 import { Kbd } from "./kbd";
 
 const SIDEBAR_WIDTH = "16rem";
@@ -684,7 +684,6 @@ export {
   SidebarMenuAction,
   SidebarMenuBadge,
   SidebarMenuButton,
-  sidebarMenuButtonVariants,
   SidebarMenuItem,
   SidebarMenuSkeleton,
   SidebarMenuSub,
