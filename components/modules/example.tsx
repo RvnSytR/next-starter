@@ -220,8 +220,8 @@ export function ExampleForm() {
         />
 
         <Controller
-          control={form.control}
           name="select"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Select"
@@ -255,8 +255,8 @@ export function ExampleForm() {
         />
 
         <Controller
-          control={form.control}
           name="multiSelect"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Multi Select"
@@ -284,8 +284,8 @@ export function ExampleForm() {
 
       <div className="grid gap-x-2 gap-y-4 md:grid-cols-3">
         <Controller
-          control={form.control}
           name="date"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Date Picker with Calendar"
@@ -305,8 +305,8 @@ export function ExampleForm() {
         />
 
         <Controller
-          control={form.control}
           name="dateMultiple"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Multiple Date Picker"
@@ -326,8 +326,8 @@ export function ExampleForm() {
         />
 
         <Controller
-          control={form.control}
           name="dateRange"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Date Range Picker"
@@ -350,8 +350,8 @@ export function ExampleForm() {
       {/* Using FieldSet with legend and description instead: */}
 
       <Controller
-        control={form.control}
         name="checkbox"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldSet>
             <FieldLegend>Checkboxes</FieldLegend>
@@ -390,8 +390,8 @@ export function ExampleForm() {
       />
 
       <Controller
-        control={form.control}
         name="radio"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldSet>
             <FieldLegend>Radio Group</FieldLegend>
@@ -439,8 +439,8 @@ export function ExampleForm() {
       {/* Or field with FieldContent */}
 
       <Controller
-        control={form.control}
         name="switch"
+        control={form.control}
         render={({ field, fieldState }) => (
           <Field
             orientation="horizontal"
@@ -492,8 +492,8 @@ export function ExampleForm() {
       />
 
       <Controller
-        control={form.control}
         name="file"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label="File Upload"

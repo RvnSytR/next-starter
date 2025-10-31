@@ -387,8 +387,8 @@ export function SignInForm() {
       />
 
       <Controller
-        control={form.control}
         name="password"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label="Kata sandi"
@@ -413,8 +413,8 @@ export function SignInForm() {
       />
 
       <Controller
-        control={form.control}
         name="rememberMe"
+        control={form.control}
         render={({ field, fieldState }) => (
           <Field orientation="horizontal" data-invalid={!!fieldState.error}>
             <Checkbox
@@ -540,8 +540,8 @@ export function SignUpForm() {
       />
 
       <Controller
-        control={form.control}
         name="newPassword"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label="Kata sandi"
@@ -566,8 +566,8 @@ export function SignUpForm() {
       />
 
       <Controller
-        control={form.control}
         name="confirmPassword"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label="Konfirmasi kata sandi"
@@ -592,8 +592,8 @@ export function SignUpForm() {
       />
 
       <Controller
-        control={form.control}
         name="agreement"
+        control={form.control}
         render={({ field, fieldState }) => (
           <Field orientation="horizontal" data-invalid={!!fieldState.error}>
             <Checkbox
@@ -911,8 +911,8 @@ export function ChangePasswordForm() {
     <form onSubmit={form.handleSubmit(formHandler)} noValidate>
       <CardContent className="flex flex-col gap-y-4">
         <Controller
-          control={form.control}
           name="currentPassword"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Kata sandi saat ini"
@@ -937,8 +937,8 @@ export function ChangePasswordForm() {
         />
 
         <Controller
-          control={form.control}
           name="newPassword"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Kata sandi baru"
@@ -963,8 +963,8 @@ export function ChangePasswordForm() {
         />
 
         <Controller
-          control={form.control}
           name="confirmPassword"
+          control={form.control}
           render={({ field, fieldState }) => (
             <FieldWrapper
               label="Konfirmasi kata sandi"
@@ -989,8 +989,8 @@ export function ChangePasswordForm() {
         />
 
         <Controller
-          control={form.control}
           name="revokeOtherSessions"
+          control={form.control}
           render={({ field, fieldState }) => (
             <Field orientation="horizontal" data-invalid={!!fieldState.error}>
               <Checkbox
@@ -1355,8 +1355,8 @@ export function AdminCreateUserDialog() {
           />
 
           <Controller
-            control={form.control}
             name="newPassword"
+            control={form.control}
             render={({ field, fieldState }) => (
               <FieldWrapper
                 label="Kata sandi"
@@ -1381,8 +1381,8 @@ export function AdminCreateUserDialog() {
           />
 
           <Controller
-            control={form.control}
             name="confirmPassword"
+            control={form.control}
             render={({ field, fieldState }) => (
               <FieldWrapper
                 label="Konfirmasi kata sandi"
@@ -1407,8 +1407,8 @@ export function AdminCreateUserDialog() {
           />
 
           <Controller
-            control={form.control}
             name="role"
+            control={form.control}
             render={({ field, fieldState }) => (
               <FieldWrapper
                 label="Ubah role"
@@ -1521,8 +1521,8 @@ function AdminChangeUserRoleForm({
   return (
     <form onSubmit={form.handleSubmit(formHandler)} noValidate>
       <Controller
-        control={form.control}
         name="role"
+        control={form.control}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label="Ubah role"
@@ -1709,8 +1709,8 @@ function AdminRemoveUserDialog({
 
         <form onSubmit={form.handleSubmit(formHandler)} noValidate>
           <Controller
-            control={form.control}
             name="input"
+            control={form.control}
             render={({ field: { onChange, ...field }, fieldState }) => (
               <FieldWrapper
                 label={messages.removeLabel(data.name)}
@@ -1882,8 +1882,8 @@ function AdminActionRemoveUsersDialog({
 
         <form onSubmit={form.handleSubmit(formHandler)} noValidate>
           <Controller
-            control={form.control}
             name="input"
+            control={form.control}
             render={({ field: { onChange, ...field }, fieldState }) => (
               <FieldWrapper
                 label={messages.removeLabel(inputValue)}
