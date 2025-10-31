@@ -709,7 +709,7 @@ export function ProfilePicture({
         }}
       />
 
-      <div className="flex flex-col gap-y-2">
+      <div className="space-y-2">
         <Label>Foto profil</Label>
         <div className="flex flex-wrap gap-2">
           <Button

@@ -74,7 +74,7 @@ export function SidebarApp({
   );
 }
 
-export function SidebarMain({ data }: SidebarData) {
+function SidebarMain({ data }: SidebarData) {
   const pathname = usePathname();
   const { isMobile, toggleSidebar } = useSidebar();
 
@@ -259,7 +259,7 @@ export function SidebarMain({ data }: SidebarData) {
   );
 }
 
-export function SidebarCollapsible({
+function SidebarCollapsible({
   isActive,
   ...props
 }: ComponentProps<typeof CollapsiblePrimitive.Root> & {
@@ -268,6 +268,7 @@ export function SidebarCollapsible({
   const [isOpen, setIsOpen] = useState(isActive);
 
   const onActiveRoute = useEffectEvent(() => setIsOpen(true));
+
   useEffect(() => {
     if (isActive) onActiveRoute();
   }, [isActive]);
