@@ -1,32 +1,18 @@
 import { cn } from "@/utils";
 
 type ShineBorderProps = React.HTMLAttributes<HTMLDivElement> & {
-  /**
-   * Width of the border in pixels
-   * @default 1
-   */
+  // Width of the border in pixels
   borderWidth?: number;
-  /**
-   * Duration of the animation in seconds
-   * @default 14
-   */
+  // Duration of the animation in seconds
   duration?: number;
-  /**
-   * Color of the border, can be a single color or an array of colors
-   * @default "#000000"
-   */
+  // Color of the border, can be a single color or an array of colors
   shineColor?: string | string[];
 };
 
-/**
- * Shine Border
- *
- * An animated background border effect component with configurable properties.
- */
 export function ShineBorder({
   borderWidth = 1,
   duration = 14,
-  shineColor = "#000000",
+  shineColor = "var(--primary)",
   className,
   style,
   ...props

@@ -28,7 +28,7 @@ export type ShineTextProps = {
   /** Base text color */
   color?: string;
   /** Shimmer gradient color */
-  shimmerColor?: string;
+  shineColor?: string;
 };
 
 export function ShineText({
@@ -43,7 +43,7 @@ export function ShineText({
   inViewMargin,
   spread = 2,
   color,
-  shimmerColor,
+  shineColor,
 }: ShineTextProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const isInView = useInView(ref, { once, margin: inViewMargin });
@@ -68,7 +68,7 @@ export function ShineText({
         {
           "--spread": `${dynamicSpread}px`,
           ...(color && { "--base-color": color }),
-          ...(shimmerColor && { "--shimmer-color": shimmerColor }),
+          ...(shineColor && { "--shimmer-color": shineColor }),
           backgroundImage: `var(--shimmer-bg), linear-gradient(var(--base-color), var(--base-color))`,
         } as React.CSSProperties
       }

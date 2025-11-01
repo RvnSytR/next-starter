@@ -719,7 +719,7 @@ export function ProfilePicture({
             disabled={isChange || isRemoved}
             onClick={() => inputAvatarRef.current?.click()}
           >
-            <LoadingSpinner loading={isChange} /> {actions.upload} Foto profil
+            <LoadingSpinner loading={isChange} /> {actions.upload} foto profil
           </Button>
 
           <AlertDialog>
@@ -1070,7 +1070,7 @@ export function RevokeSessionButton({
           <DeviceIcons className="shrink-0" />
         </div>
 
-        <div className="flex flex-col">
+        <div className="space-y-1">
           <small className="font-medium">
             {`${browser.name || "Browser tidak diketahui"} di ${os.name || "sistem operasi yang tidak diketahui"}`}
           </small>

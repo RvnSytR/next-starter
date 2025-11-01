@@ -85,7 +85,6 @@ const tabs: { section: string; content?: (keyof typeof comp)[] }[] = [
   { section: "Typography", content: ["typography"] },
   { section: "Chart", content: ["pieChart", "timelineChart"] },
   { section: "Form Builder" },
-  { section: "Tabulator" },
 ];
 
 export default function Page() {

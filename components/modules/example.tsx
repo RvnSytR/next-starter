@@ -170,7 +170,7 @@ export function ExampleForm() {
           control={form.control}
           render={({ field: { value, onChange, ...field }, fieldState }) => (
             <FieldWrapper
-              label="Text field"
+              label="Number field"
               htmlFor={field.name}
               fieldError={fieldState.error}
             >

@@ -1,9 +1,12 @@
 import {
   FileArchive,
+  Files,
+  FileSpreadsheet,
   FileText,
   Headphones,
   Image,
   LucideIcon,
+  Presentation,
   Upload,
   Video,
 } from "lucide-react";
@@ -12,7 +15,11 @@ import { toBytes } from "../utils";
 export type FileType =
   | "file"
   | "image"
+  | "pdf"
   | "document"
+  | "spreadsheet"
+  | "presentation"
+  | "office"
   | "archive"
   | "audio"
   | "video";
@@ -28,7 +35,7 @@ type FileMetaProps = Record<
   }
 >;
 
-const meta: Omit<FileMetaProps, "file"> = {
+const meta: Omit<FileMetaProps, "file" | "office"> = {
   image: {
     displayName: "gambar",
     mimeTypes: ["image/png", "image/jpeg", "image/svg+xml", "image/webp"],
@@ -37,20 +44,45 @@ const meta: Omit<FileMetaProps, "file"> = {
     icon: Image,
   },
 
+  pdf: {
+    displayName: "pdf",
+    mimeTypes: ["application/pdf"],
+    extensions: [".pdf"],
+    size: { mb: 2, bytes: toBytes(2) },
+    icon: FileArchive,
+  },
+
   document: {
     displayName: "dokumen",
     mimeTypes: [
-      "application/pdf",
       "application/msword",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ],
+    extensions: [".doc", ".docx"],
+    size: { mb: 2, bytes: toBytes(2) },
+    icon: FileText,
+  },
+
+  spreadsheet: {
+    displayName: "lembar kerja",
+    mimeTypes: [
       "application/vnd.ms-excel",
       "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ],
+    extensions: [".xls", ".xlsx"],
+    size: { mb: 2, bytes: toBytes(2) },
+    icon: FileSpreadsheet,
+  },
+
+  presentation: {
+    displayName: "presentasi",
+    mimeTypes: [
       "application/vnd.ms-powerpoint",
       "application/vnd.openxmlformats-officedocument.presentationml.presentation",
     ],
-    extensions: [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".ppt", ".pptx"],
-    size: { mb: 2, bytes: toBytes(2) },
-    icon: FileText,
+    extensions: [".ppt", ".pptx"],
+    size: { mb: 10, bytes: toBytes(10) },
+    icon: Presentation,
   },
 
   archive: {
@@ -90,6 +122,7 @@ const meta: Omit<FileMetaProps, "file"> = {
 };
 
 const maxFileSize = Math.max(...Object.values(meta).map(({ size }) => size.mb));
+
 export const fileMeta: FileMetaProps = {
   file: {
     displayName: "berkas",
@@ -97,6 +130,24 @@ export const fileMeta: FileMetaProps = {
     extensions: Object.values(meta).flatMap((item) => item.extensions),
     size: { mb: maxFileSize, bytes: toBytes(maxFileSize) },
     icon: Upload,
+  },
+
+  office: {
+    displayName: "dokumen kantor",
+    mimeTypes: [
+      ...meta.pdf.mimeTypes,
+      ...meta.document.mimeTypes,
+      ...meta.spreadsheet.mimeTypes,
+      ...meta.presentation.mimeTypes,
+    ],
+    extensions: [
+      ...meta.pdf.extensions,
+      ...meta.document.extensions,
+      ...meta.spreadsheet.extensions,
+      ...meta.presentation.extensions,
+    ],
+    size: { mb: 10, bytes: toBytes(10) },
+    icon: Files,
   },
 
   ...meta,
